@@ -1,3 +1,44 @@
+# indexed by BP value
+BLUEPRINT = [
+    # 0:
+    {"label": "Not a priority", "area": "49%", "description": "", "color": "#F6F6F6"},
+    # 1:
+    {
+        "label": "Inland waterbodies",
+        "area": "1%",
+        "description": "These are lakes, reservoirs, and ponds not included in the Blueprint 2.2 priorities.",
+        "color": "#004DA8",
+    },
+    # 2:
+    {
+        "label": "Corridors",
+        "area": "5%",
+        "description": "These are connections between large patches of highest priority areas and secured lands, optimized for efficiency and indicator condition in a least cost path analysis.",
+        "color": "#686868",
+    },
+    # 3:
+    {
+        "label": "Medium priority",
+        "area": "20%",
+        "description": "Above-average areas for natural and cultural resources based on indicator condition, capturing potential restoration opportunities.",
+        "color": "#fbb4b9",
+    },
+    # 4:
+    {
+        "label": "High priority",
+        "area": "15%",
+        "description": "Important areas for natural and cultural resources based on indicator condition.",
+        "color": "#c51b8a",
+    },
+    # 5:
+    {
+        "label": "Highest priority",
+        "area": "10%",
+        "description": "The most important areas for natural and cultural resources based on indicator condition.",
+        "color": "#49006a",
+    },
+]
+
 ECOSYSTEMS = [
     {
         "id": "beachanddune",
@@ -64,7 +105,7 @@ ECOSYSTEMS = [
 
 INDICATORS = [
     {
-        "id": "beachbirds",
+        "id": "beachanddune_beachbirds",
         "filename": "BeachAndDune_BeachBirds_V_2_2_BinnedClip.tif",
         "label": "Beach birds",
         "values": {
@@ -81,7 +122,7 @@ INDICATORS = [
         "reportCaption": "The area of beach bird indicator values as they occur within the beach and dune ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "unalteredbeach",
+        "id": "beachanddune_unalteredbeach",
         "filename": "BeachAndDune_UnalteredBeach_V_2_2Clip.tif",
         "label": "Unaltered beach",
         "values": {
@@ -97,7 +138,7 @@ INDICATORS = [
         "reportCaption": "The area of unaltered beach indicator values as they occur within the beach ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "coastalcondition",
+        "id": "estuarine_coastalcondition",
         "filename": "Estuarine_CoastalCondition_V_2_1_BinnedClip.tif",
         "label": "Coastal condition",
         "values": {
@@ -115,7 +156,7 @@ INDICATORS = [
         "reportCaption": "The area of coastal condition indicator values as they occur within the estuarine ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "watervegetationedge",
+        "id": "estuarine_watervegetationedge",
         "filename": "EstuarineMarsh_Water_VegetationEdge_V_2_0Clip.tif",
         "label": "Water - vegetation edge",
         "values": {
@@ -132,7 +173,7 @@ INDICATORS = [
         "reportCaption": "The area of water-vegetation edge indicator values as they occur within the estuarine marsh ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "wetlandpatchsize",
+        "id": "estuarine_wetlandpatchsize",
         "filename": "EstuarineMarsh_WetlandPatchSize_V_2_0Clip.tif",
         "label": "Wetland patch size",
         "values": {
@@ -149,7 +190,7 @@ INDICATORS = [
         "reportCaption": "The area of wetland patch size indicator values as they occur within the estuarine marsh ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "amphibians",
+        "id": "forestedwetland_amphibians",
         "filename": "ForestedWetland_Amphibians_V_2_1Clip.tif",
         "label": "Forested wetland amphibians",
         "values": {
@@ -163,7 +204,7 @@ INDICATORS = [
         "reportCaption": "The area of forested wetland amphibians indicator values as they occur within the forested wetland ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "birds",
+        "id": "forestedwetland_birds",
         "filename": "ForestedWetland_Birds_V_2_1Clip.tif",
         "label": "Forested wetland birds",
         "values": {
@@ -180,7 +221,7 @@ INDICATORS = [
         "reportCaption": "The area of forested wetland birds indicator values as they occur within the forested wetland ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "extent",
+        "id": "forestedwetland_extent",
         "filename": "ForestedWetland_Extent_V_2_2_NoDataTo0_ClipToEcosystemMaskClip.tif",
         "label": "Forested wetland extent",
         "values": {
@@ -189,7 +230,7 @@ INDICATORS = [
         },
     },
     {
-        "id": "birds",
+        "id": "freshwatermarsh_birds",
         "filename": "FreshwaterMarsh_Birds_V_2_1_BinnedClip.tif",
         "label": "Freshwater marsh birds",
         "values": {
@@ -206,7 +247,7 @@ INDICATORS = [
         "reportCaption": "The area of freshwater marsh birds indicator values as they occur within the freshwater marsh ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "extent",
+        "id": "freshwatermarsh_extent",
         "filename": "FreshwaterMarsh_Extent_V_2_2_NoDataTo0_ClipToEcosystemMaskClip.tif",
         "label": "Freshwater wetland extent",
         "values": {
@@ -220,7 +261,7 @@ INDICATORS = [
         "reportCaption": "The area of forested wetland extent indicator values as they occur within the forested wetland ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "extent",
+        "id": "maritimeforest_extent",
         "filename": "MaritimeForest_Extent_V_2_0_NoDataTo0_ClipToEcosystemMaskClip.tif",
         "label": "Maritime forest extent",
         "values": {
@@ -234,7 +275,7 @@ INDICATORS = [
         "reportCaption": "The area of maritime forest extent indicator values as they occur within the maritime forest ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "amphibians",
+        "id": "pineandprairie_amphibians",
         "filename": "PineAndPrairie_Amphibians_V_2_1Clip.tif",
         "label": "Pine and prairie amphibians",
         "values": {
@@ -248,7 +289,7 @@ INDICATORS = [
         "reportCaption": "The area of pine and prairie amphibians indicator values as they occur within the pine and prairie ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "birds",
+        "id": "pineandprairie_birds",
         "filename": "PineAndPrairie_Birds_V_2_1Clip.tif",
         "label": "Pine and prairie birds",
         "values": {
@@ -265,7 +306,7 @@ INDICATORS = [
         "reportCaption": "The area of pine and prairie birds indicator values as they occur within the pine and prairie ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "regularlyburnedhabitat",
+        "id": "pineandprairie_regularlyburnedhabitat",
         "filename": "PineAndPrairie_RegularlyBurnedHabitat_V_2_0Clip.tif",
         "label": "Regularly burned habitat",
         "values": {
@@ -280,7 +321,7 @@ INDICATORS = [
         "reportCaption": "The area of regularly burned habitat indicator values as they occur within the pine and prairie ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "birds",
+        "id": "uplandhardwood_birds",
         "filename": "UplandHardwood_Birds_V_2_0Clip.tif",
         "label": "Upland hardwood birds",
         "values": {
@@ -298,7 +339,7 @@ INDICATORS = [
         "reportCaption": "The area of upland hardwood birds indicator values as they occur within the upland hardwood ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "urbanopenspace",
+        "id": "uplandhardwood_urbanopenspace",
         "filename": "UplandHardwood_UrbanOpenSpace_V_2_1Clip.tif",
         "label": "Urban open space",
         "values": {
@@ -316,7 +357,7 @@ INDICATORS = [
         "reportCaption": "The area of urban open space indicator values as they occur within the upland hardwood ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "birds",
+        "id": "marine_birds",
         "filename": "Marine_Birds_V_2_2_BinnedClip.tif",
         "label": "Marine birds",
         "values": {
@@ -333,7 +374,7 @@ INDICATORS = [
         "reportCaption": "The area of marine bird indicator values as they occur within the marine ecosystem in this lease block. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "mammals",
+        "id": "marine_mammals",
         "filename": "Marine_Mammals_V_2_1_BinnedClip.tif",
         "label": "Marine mammals",
         "values": {
@@ -350,7 +391,7 @@ INDICATORS = [
         "reportCaption": "The area of marine mammals indicator values as they occur within the marine ecosystem in this lease block. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "potentialhardbottomcondition",
+        "id": "marine_potentialhardbottomcondition",
         "filename": "Marine_PotentialHardbottomCondition_V_2_0Clip.tif",
         "label": "Potential hardbottom condition",
         "values": {
@@ -367,7 +408,7 @@ INDICATORS = [
         "reportCaption": "The area of potential hardbottom condition indicator values as they occur within the marine ecosystem in this lease block. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "permeablesurface",
+        "id": "freshwateraquatic_permeablesurface",
         "filename": "FreshwaterAquatic_PermeableSurface_V_2_1_BinnedClip.tif",
         "label": "Permeable surface",
         "values": {
@@ -384,7 +425,7 @@ INDICATORS = [
         "reportCaption": "The area of permeable surface indicator values as they occur in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "riparianbuffers",
+        "id": "freshwateraquatic_riparianbuffers",
         "filename": "FreshwaterAquatic_RiparianBuffers_V_2_1_BinnedClip.tif",
         "label": "Riparian buffers",
         "values": {
@@ -402,7 +443,7 @@ INDICATORS = [
         "reportCaption": "The area of riparian buffers indicator values as they occur within the active river area in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "imperiledaquaticspecies",
+        "id": "freshwateraquatic_imperiledaquaticspecies",
         "filename": "FreshwaterAquatic_ImperiledAquaticSpecies_V_2_1Clip.tif",
         "label": "Imperiled aquatic species",
         "values": {
@@ -419,7 +460,7 @@ INDICATORS = [
         "reportCaption": "The area of imperiled aquatic species indicator values as they occur within the active river area in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "lowroaddensitypatches",
+        "id": "landscapes_lowroaddensitypatches",
         "filename": "Landscapes_LowRoadDensityPatches_V_2_1Clip.tif",
         "label": "Low road density",
         "values": {
@@ -434,7 +475,7 @@ INDICATORS = [
         "reportCaption": "The area of low road density indicator values as they occur in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
-        "id": "lowurbanhistoric",
+        "id": "landscapes_lowurbanhistoric",
         "filename": "Landscapes_LowUrbanHistoric_V_2_1_SOTClip.tif",
         "label": "Low-urban historic landscapes",
         "values": {
@@ -449,7 +490,7 @@ INDICATORS = [
         "reportCaption": "The area of low-urban historic landscapes indicator values as they occur within the historic landscapes in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.  Note: Historic landscapes are rare across the South Atlantic. The presence of any historic landscape, even in high-urban condition, will increase the priority in the Blueprint.",
     },
     {
-        "id": "resilientbiodiversityhotspots",
+        "id": "landscapes_resilientbiodiversityhotspots",
         "filename": "Landscapes_ResilientBiodiversityHotspots_V_2_2Clip.tif",
         "label": "Resilient biodiversity hotspots",
         "values": {
@@ -469,7 +510,7 @@ INDICATORS = [
         "reportCaption": "The area of resilient biodiversity hotspots indicator values as they occur in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "migratoryfishconnectivity",
+        "id": "waterscapes_migratoryfishconnectivity",
         "filename": "Waterscapes_MigratoryFishConnectivity_V_2_1Clip.tif",
         "label": "Migratory fish connectivity",
         "values": {
@@ -485,7 +526,7 @@ INDICATORS = [
         "reportCaption": "The area of migratory fish connectivity indicator values as they occur within the active river area in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
     {
-        "id": "networkcomplexity",
+        "id": "waterscapes_networkcomplexity",
         "filename": "Waterscapes_NetworkComplexity_V_2_1Clip.tif",
         "label": "Network complexity",
         "values": {
@@ -504,3 +545,7 @@ INDICATORS = [
         "reportCaption": "The area of network complexity indicator values as they occur within the active river area in this subwatershed. A good condition threshold is not yet defined for this indicator.",
     },
 ]
+
+
+INDICATORS_INDEX = {indicator["id"]: indicator for indicator in INDICATORS}
+
