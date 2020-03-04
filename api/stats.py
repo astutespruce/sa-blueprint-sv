@@ -64,6 +64,7 @@ start = time()
 # Or do it all in memory from zipfile received by API?
 df = gp.read_file(src_dir / "aoi" / "Razor_prj.shp")[["geometry"]]
 geometries = df.geometry.values
+# df.total_bounds
 
 ### create the mask
 with rasterio.open(blueprint_filename) as src:
@@ -156,23 +157,23 @@ if window.width and window.height:
     print("urbanization", urban_results)
 
 
-### SLR; 30m grid
-slr_results = None
-with rasterio.open(slr_filename) as src:
-    geometry_mask, transform, window = raster_geometry_mask(src, geometries, crop=True)
-    # square meters to acres
-    cellsize = src.res[0] * src.res[1] * 0.000247105
-    geometry_area = (~geometry_mask).sum() * cellsize
+# ### SLR; 30m grid.  DO NOT USE, this is old data!
+# slr_results = None
+# with rasterio.open(slr_filename) as src:
+#     geometry_mask, transform, window = raster_geometry_mask(src, geometries, crop=True)
+#     # square meters to acres
+#     cellsize = src.res[0] * src.res[1] * 0.000247105
+#     geometry_area = (~geometry_mask).sum() * cellsize
 
-if window.width and window.height:
-    bins = [0, 1, 2, 3, 4, 5, 6]  # SLR in foot increments up to 6
-    counts = extract_count_in_geometry(slr_filename, geometry_mask, window, bins)
+# if window.width and window.height:
+#     bins = [0, 1, 2, 3, 4, 5, 6]  # SLR in foot increments up to 6
+#     counts = extract_count_in_geometry(slr_filename, geometry_mask, window, bins)
 
-    area = (counts * cellsize).astype("float32")
-    percent = 100 * (area / geometry_area).astype("float32")
+#     area = (counts * cellsize).astype("float32")
+#     percent = 100 * (area / geometry_area).astype("float32")
 
-    slr_results = pd.DataFrame({"slr_ft": bins, "acres": area, "percent": percent})
-    print("slr", slr_results)
+#     slr_results = pd.DataFrame({"slr_ft": bins, "acres": area, "percent": percent})
+#     print("slr", slr_results)
 
 
 print("All done in {:.2f}s".format(time() - start))

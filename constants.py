@@ -1,3 +1,5 @@
+CRS = "EPSG:5070"
+
 # indexed by BP value
 BLUEPRINT = [
     # 0:
