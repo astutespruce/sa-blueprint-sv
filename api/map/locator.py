@@ -14,10 +14,10 @@ MBGL_SERVER_URL = os.getenv("MBGL_SERVER_URL", "http://localhost:8001/render")
 
 # TODO: derive from SA_bounds poly
 # BOUNDS = [-91.538086, 24.647017, -72.202148, 38.822591]
-ZOOM = 2.5
+ZOOM = 3
 CENTER = [-81, 31.734804]
-WIDTH = 150
-HEIGHT = 125
+WIDTH = 200
+HEIGHT = 200
 
 
 LOCATOR_STYLE = {
@@ -38,7 +38,7 @@ LOCATOR_STYLE = {
             "source": "states",
             "source-layer": "states",
             "type": "line",
-            "paint": {"line-color": "#000000", "line-width": 0.5, "line-opacity": 1},
+            "paint": {"line-color": "#444444", "line-width": 1, "line-opacity": 1},
         },
         {
             "id": "marker",
@@ -91,10 +91,8 @@ def get_locator_map(longitude, latitude):
     try:
         r = httpx.post(MBGL_SERVER_URL, json=params)
         r.raise_for_status()
-        img = Image.open(BytesIO(r.content))
+        return Image.open(BytesIO(r.content))
 
     except Exception:
-        img = Image.new("RGBA", (width, height), color="#EEE")
-
-    return img
+        return None
 
