@@ -1,3 +1,6 @@
+# Set to true to output intermediate rasters for validation
+DEBUG = True
+
 DATA_CRS = "EPSG:5070"
 GEO_CRS = "EPSG:4326"
 MAP_CRS = "EPSG:3857"
