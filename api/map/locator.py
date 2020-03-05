@@ -1,20 +1,14 @@
 from copy import deepcopy
 from io import BytesIO
-import os
 
-from dotenv import load_dotenv
 import httpx
 from PIL import Image
 
 
-load_dotenv()
-ACCESS_TOKEN = os.getenv("MAPBOX_ACCESS_TOKEN")
-MBGL_SERVER_URL = os.getenv("MBGL_SERVER_URL", "http://localhost:8001/render")
+from settings import MBGL_SERVER_URL
 
-
-# TODO: derive from SA_bounds poly
-# BOUNDS = [-91.538086, 24.647017, -72.202148, 38.822591]
 ZOOM = 3
+# TODO: derive from SA_bounds poly
 CENTER = [-81, 31.734804]
 WIDTH = 200
 HEIGHT = 200
@@ -54,20 +48,16 @@ LOCATOR_STYLE = {
 }
 
 
-def get_locator_map(longitude, latitude):
+def get_locator_map_image(longitude, latitude):
     """
     Create a rendered locator map image.
 
     Parameters
     ----------
     latitude : float
-        latitude of centerpoint
+        latitude of area of interest marker
     longitude : float
-        longitude of centerpoint
-    width: int
-        width of the image in pixels
-    height: int
-        height of the image in pixels
+        longitude of area of interest marker
 
     Returns
     -------

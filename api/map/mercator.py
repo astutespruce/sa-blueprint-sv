@@ -147,13 +147,12 @@ def get_zoom(bounds, target_width, target_height):
     return zoom
 
 
-def get_bounds(center_longitude, center_latitude, zoom, width, height):
-    """Calculate bounds of image based on center and zoom.
+def get_map_bounds(center, zoom, width, height):
+    """Calculate bounds of map image based on center and zoom.
 
     Parameters
     ----------
-    center_longitude : float
-    center_latitude : float
+    center : [longitude, latitude]
     zoom : float
         zoom level at which tiles will be rendered in map
     width : int
@@ -167,6 +166,9 @@ def get_bounds(center_longitude, center_latitude, zoom, width, height):
     """
     half_width = width / 2
     half_height = height / 2
+    zoom = zoom + 1  # to align with actual zoom used to render map images
+
+    center_longitude, center_latitude = center
 
     cx, cy = to_tile_px(center_longitude, center_latitude, zoom)
 
