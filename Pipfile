@@ -19,6 +19,7 @@ raster-tilecutter = {editable = true,path = "./../raster-tilecutter"}
 python-dotenv = "*"
 httpx = "*"
 pillow = "*"
+affine = "*"
 
 [requires]
 python_version = "3.8"

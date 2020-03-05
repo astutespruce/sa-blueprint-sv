@@ -56,7 +56,7 @@ def extract_count_in_geometry(filename, geometry_mask, window, bins):
 
 src_dir = Path("data")
 blueprint_filename = src_dir / "Blueprint_2_2.tif"
-slr_filename = src_dir / "threats" / f"slr_binned.tif"
+
 
 start = time()
 
@@ -69,19 +69,20 @@ geometries = df.geometry.values
 ### create the mask
 with rasterio.open(blueprint_filename) as src:
     geometry_mask, transform, window = raster_geometry_mask(
-        src, geometries, crop=True  # , all_touched=True
+        src, geometries, crop=True, all_touched=True
     )
     # square meters to acres
     cellsize = src.res[0] * src.res[1] * 0.000247105
     geometry_area = (~geometry_mask).sum() * cellsize
 
-    meta = src.meta.copy()
-    meta["width"] = geometry_mask.shape[1]
-    meta["height"] = geometry_mask.shape[0]
-    meta["transform"] = transform
+    # To write out mask
+    # meta = src.meta.copy()
+    # meta["width"] = geometry_mask.shape[1]
+    # meta["height"] = geometry_mask.shape[0]
+    # meta["transform"] = transform
 
-    with rasterio.open("/tmp/mask.tif", "w", **meta) as out:
-        out.write(geometry_mask.astype("int8"), 1)
+    # with rasterio.open("/tmp/mask2.tif", "w", **meta) as out:
+    #     out.write(geometry_mask.astype("int8"), 1)
 
 
 # TODO: if not (window.width and window.height) then bail early; not in SA region
@@ -123,7 +124,9 @@ for entry in ECOSYSTEMS:
 
 ### Calculate urbanization stats; 60m grid
 with rasterio.open(src_dir / "threats" / "serap_urb2020_IsNull0.tif") as src:
-    geometry_mask, transform, window = raster_geometry_mask(src, geometries, crop=True)
+    geometry_mask, transform, window = raster_geometry_mask(
+        src, geometries, crop=True, all_touched=True
+    )
 
     # square meters to acres
     cellsize = src.res[0] * src.res[1] * 0.000247105
@@ -158,6 +161,7 @@ if window.width and window.height:
 
 
 # ### SLR; 30m grid.  DO NOT USE, this is old data!
+# slr_filename = src_dir / "threats" / f"slr_binned.tif"
 # slr_results = None
 # with rasterio.open(slr_filename) as src:
 #     geometry_mask, transform, window = raster_geometry_mask(src, geometries, crop=True)

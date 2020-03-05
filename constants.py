@@ -1,4 +1,7 @@
-CRS = "EPSG:5070"
+DATA_CRS = "EPSG:5070"
+GEO_CRS = "EPSG:4326"
+MAP_CRS = "EPSG:3857"
+
 
 # indexed by BP value
 BLUEPRINT = [
