@@ -1,5 +1,5 @@
 # Set to true to output intermediate rasters for validation
-DEBUG = True
+DEBUG = False
 
 DATA_CRS = "EPSG:5070"
 GEO_CRS = "EPSG:4326"
@@ -240,7 +240,7 @@ INDICATORS = [
             0: "Not a Priority Amphibian and Reptile Conservation Area (PARCA) within forested wetlands",
             1: "Priority Amphibian and Reptile Conservation Area (PARCA) within forested wetlands",
         },
-        "colors": {0: "#96FF60", 1: "#457C02"},
+        "colors": {0: "#A3FF73", 1: "#568C00"},
         "domain": [0, 1],
         "datasetID": "7971445641934255b319b5971600eb47",
         "description": "Forested wetland amphibians draws from the Priority Amphibian and Reptile Conservation Areas (PARCAs) located in forested wetland habitat. PARCA is an expert-driven, nonregulatory designation that captures places capable of supporting viable amphibian and reptile populations. PARCAs include areas where rare or at-risk species have been observed or are likely to occur (like embedded, isolated wetlands).",

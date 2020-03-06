@@ -23,6 +23,8 @@ from api.map.io import write_raster
 def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
     """Extract, reproject, and clip data within bounds for map images.
 
+    Returns None if there is only nodata within the bounds.
+
     Parameters
     ----------
     src : rasterio.RasterReader
@@ -36,7 +38,7 @@ def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
 
     Returns
     -------
-    2d ndarray
+    2d ndarray or None
     """
 
     src_crs = src.crs
@@ -72,6 +74,10 @@ def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
     # convert data before reproject
     if nodata != src.nodata:
         data[data == src.nodata] = nodata
+
+    if not np.any(data != nodata):
+        # entire area is nodata, no point in warping nodata pixels
+        return None
 
     # Calculate initial transform to project to Spherical Mercator
     src_height, src_width = data.shape
@@ -140,9 +146,6 @@ def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
 
 
 def render_raster(data, colors, nodata):
-    # render raster
-    nodata = 127
-
     num_colors = max(colors.keys())
     nodata_index = num_colors + 1
 
@@ -178,7 +181,7 @@ def render_raster(data, colors, nodata):
     # Convert to part transparent
     arr = np.array(img)
     a = arr[:, :, 3]
-    a[a == 255] = 100  # set alpha value to part transparent
+    a[a == 255] = 175  # set alpha value to part transparent
 
     img = Image.fromarray(arr)
 
