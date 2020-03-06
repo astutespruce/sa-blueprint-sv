@@ -6,9 +6,12 @@ from api.map.locator import get_locator_map_image
 from api.map.raster import render_raster
 
 
-def merge_maps(basemap, raster, aoi):
+def merge_maps(basemap, aoi, raster=None):
     img = basemap.copy()
-    img = Image.alpha_composite(img, raster)
+
+    if raster is not None:
+        img = Image.alpha_composite(img, raster)
+
     img = Image.alpha_composite(img, aoi)
 
     return img
