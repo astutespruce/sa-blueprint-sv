@@ -9,7 +9,7 @@ MAP_CRS = "EPSG:3857"
 # indexed by BP value
 BLUEPRINT = [
     # 0:
-    {"label": "Not a priority", "area": "49%", "description": "", "color": "#F6F6F6"},
+    {"label": "Not a priority", "area": "49%", "description": ""},
     # 1:
     {
         "label": "Inland waterbodies",
@@ -46,6 +46,10 @@ BLUEPRINT = [
         "color": "#49006a",
     },
 ]
+
+BLUEPRINT_COLORS = {
+    i: entry["color"] for i, entry in enumerate(BLUEPRINT) if "color" in entry
+}
 
 ECOSYSTEMS = [
     {
