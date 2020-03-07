@@ -15,43 +15,9 @@ import geopandas as gp
 import numpy as np
 import pandas as pd
 
-from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS_INDEX
-
-
-def extract_count_in_geometry(filename, geometry_mask, window, bins):
-    """Apply the geometry mask to values read from filename, and generate a list
-    of pixel counts for each bin in bins.
-
-    Parameters
-    ----------
-    filename : str
-        input GeoTIFF filename
-    geometry_mask : 2D boolean ndarray
-        True for all pixels outside geometry, False inside.
-    window : rasterio.windows.Window
-        Window that defines the footprint of the geometry_mask within the raster.
-    bins : list-like
-        List-like of values ranging from 0 to max value (not sparse!).
-        Counts will be generated that correspond to this list of bins.
-
-    Returns
-    -------
-    ndarray
-        Total number of pixels for each bin
-    """
-
-    with rasterio.open(filename) as src:
-        data = src.read(1, window=window)
-        nodata = src.nodatavals[0]
-
-    mask = (data == nodata) | geometry_mask
-
-    # slice out flattened array of values that are not masked
-    values = data[~mask]
-
-    # count number of pixels in each bin
-    counts = np.bincount(values, minlength=len(bins))
-    return counts
+from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS_INDEX, DEBUG
+from util.io import write_raster
+from stats import extract_count_in_geometry
 
 
 src_dir = Path("data")
@@ -64,7 +30,6 @@ start = time()
 # Or do it all in memory from zipfile received by API?
 df = gp.read_file(src_dir / "aoi" / "Razor_prj.shp")[["geometry"]]
 geometries = df.geometry.values
-# df.total_bounds
 
 ### create the mask
 with rasterio.open(blueprint_filename) as src:
@@ -75,18 +40,17 @@ with rasterio.open(blueprint_filename) as src:
     cellsize = src.res[0] * src.res[1] * 0.000247105
     geometry_area = (~geometry_mask).sum() * cellsize
 
-    # To write out mask
-    # meta = src.meta.copy()
-    # meta["width"] = geometry_mask.shape[1]
-    # meta["height"] = geometry_mask.shape[0]
-    # meta["transform"] = transform
-
-    # with rasterio.open("/tmp/mask2.tif", "w", **meta) as out:
-    #     out.write(geometry_mask.astype("int8"), 1)
+    if DEBUG:
+        write_raster(
+            "/tmp/mask.tif",
+            geometry_mask.astype("int8"),
+            transform,
+            src.crs,
+            src.nodata,
+        )
 
 
 # TODO: if not (window.width and window.height) then bail early; not in SA region
-
 
 ### Calculate Blueprint stats
 bins = np.arange(0, len(BLUEPRINT))

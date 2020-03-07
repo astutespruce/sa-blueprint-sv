@@ -17,7 +17,7 @@ from tilecutter.rgb import hex_to_rgb
 from tilecutter.png import to_paletted_png
 
 from constants import DATA_CRS, MAP_CRS, GEO_CRS, DEBUG
-from api.map.io import write_raster
+from util.io import write_raster
 
 
 def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
