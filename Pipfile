@@ -20,6 +20,7 @@ python-dotenv = "*"
 httpx = "*"
 pillow = "*"
 affine = "*"
+progress = "*"
 
 [requires]
 python_version = "3.8"
