@@ -7,7 +7,6 @@ import warnings
 import pandas as pd
 import geopandas as gp
 
-# from geofeather.pygeos import from_geofeather
 from geofeather import from_geofeather
 from geofeather.pygeos import from_geofeather as from_geofeather_as_pygeos
 import numpy as np
@@ -26,6 +25,16 @@ from stats import (
 )
 
 
+def get_minimum_type(max_value):
+    if max_value <= 255:
+        return "uint8"
+    if max_value <= 65535:
+        return "uint16"
+    if max_value <= 4294967295:
+        return "uint32"
+    return "uint64"
+
+
 data_dir = Path("data")
 out_dir = data_dir / "derived/huc12"
 huc12_filename = data_dir / "summary_units/HUC12.feather"
@@ -37,76 +46,78 @@ start = time()
 
 # TODO: pygeos version and map to __geo_interface__
 print("Reading HUC12 boundaries")
-geometries = from_geofeather(huc12_filename, columns=["geometry"]).geometry
+geometries = (
+    from_geofeather(huc12_filename, columns=["HUC12", "geometry"])
+    .set_index("HUC12")
+    .geometry
+)
 
 ### Calculate counts of each category in blueprint and indicators and put into a DataFrame
 results = []
-for i, geometry in Bar(
+index = []
+for huc12, geometry in Bar(
     "Calculating Blueprint and Indicator counts for HUC12", max=len(geometries)
 ).iter(geometries.iteritems()):
     counts = extract_blueprint_indicator_counts([geometry], inland=True)
     if counts is None:
         continue
 
+    index.append(huc12)
     results.append(counts)
 
-df = pd.DataFrame(results)
-df["id"] = df.index.copy()
-df.id = df.id.astype("uint16")  # TODO: double check count of marine
+df = pd.DataFrame(results, index=index)
+df["shape_mask"] = df.shape_mask.astype(get_minimum_type(df.shape_mask.max()))
 
 ### Export the Blueprint and each indicator to a separate file
 # each column is an array of counts for each
-for col in df.columns.difference(["id", "mask"]):
+for col in df.columns.difference(["id", "shape_mask"]):
     s = df[col].apply(pd.Series)
-    # add mask column
-    s["mask"] = df["mask"]
 
-    max_count = s.max().max()
-    if max_count <= 255:
-        s = s.astype("uint8")
-    elif max_count <= 65535:
-        s = s.astype("uint16")
-    else:
-        s = s.astype("uint32")
-
-    s["id"] = df["id"]  # preserve index values
     # drop rows that do not have this indicator present
-    s = s.loc[s.sum(axis=1) > 0].reset_index(drop=True)
+    s = s.loc[s.sum(axis=1) > 0].copy()
     if not len(s):
         warnings.warn(
             f"Indicator does not have any data present anywhere in region: {col}"
         )
         continue
 
+    # cast to smallest types
+    for c in s.columns:
+        s[c] = s[c].astype(get_minimum_type(s[c].max()))
+
+    # add mask column
+    s = s.join(df.shape_mask)
+
     # order columns
-    s = s[["id", "mask"] + list(s.columns.difference(["id", "mask"]))]
+    s = (
+        s[["shape_mask"] + list(s.columns.difference(["id", "shape_mask"]))]
+        .reset_index()
+        .rename(columns={"index": "huc12"})
+    )
     s.columns = [str(c) for c in s.columns]
     s.to_feather(out_dir / f"{col}.feather")
     s.to_csv(out_dir / f"{col}.csv", index=False)
 
 ### Calculate counts for urbanization
+index = []
 results = []
-for i, geometry in Bar(
+for huc12, geometry in Bar(
     "Calculating Urbanization counts for HUC12", max=len(geometries)
 ).iter(geometries.iteritems()):
     counts = extract_urbanization_counts([geometry])
     if counts is None:
         continue
 
+    index.append(huc12)
     results.append(counts)
 
 
-cols = ["mask"] + URBAN_YEARS
-df = pd.DataFrame(results)[cols]
+cols = ["shape_mask"] + URBAN_YEARS
+df = pd.DataFrame(results, index=index)[cols]
+for col in df.columns:
+    df[col] = df[col].astype(get_minimum_type(df[col].max()))
 
-max_count = df.max().max()
-if max_count < 65535:
-    df = df.astype("uint16")
-else:
-    df = df.astype("uint32")
-
-df["id"] = df.index.copy()
-df.id = df.id.astype("uint16")
+df = df.reset_index().rename(columns={"index": "huc12"})
 df.columns = [str(c) for c in df.columns]
 df.to_feather(out_dir / "urban.feather")
 df.to_csv(out_dir / "urban.csv", index=False)
@@ -120,46 +131,36 @@ tree = pg.STRtree(bounds.geometry)
 # convert to pygeos geometries; there are some invalid data, so buffer them by 0
 geoms = pg.buffer(pg.from_shapely(geometries.geometry), 0)
 
+slr_geometries = geometries.copy()
 # find the indexes of the geometries that overlap with SLR bounds; these are the only
 # ones that need to be analyzed for SLR impacts
 slr_geom_idx = np.unique(tree.query_bulk(geoms, predicate="intersects")[0])
-
-slr_geometries = pd.DataFrame(geometries.copy())
-
-# add in original index
-slr_geometries["id"] = slr_geometries.index.copy()
-slr_geometries.id = slr_geometries.id.astype("uint16")
-
-slr_geometries = slr_geometries.loc[slr_geom_idx]
+slr_geometries = slr_geometries.iloc[slr_geom_idx]
 
 results = []
-ids = []
-for i, row in Bar("Calculating SLR counts for HUC12", max=len(slr_geometries)).iter(
-    slr_geometries.iterrows()
-):
-    counts = extract_slr_counts([row.geometry])
+index = []
+for huc12, geometry in Bar(
+    "Calculating SLR counts for HUC12", max=len(slr_geometries)
+).iter(slr_geometries.iteritems()):
+    counts = extract_slr_counts([geometry])
     if counts is None:
         continue
 
-    ids.append(row.id)
+    index.append(huc12)
     results.append(counts)
 
-df = pd.DataFrame(results)
-df["id"] = np.array(ids, dtype="uint16")
+df = pd.DataFrame(results, index=index)
+
 # reorder columns
-df = df[["id", "mask"] + list(df.columns.difference(["id", "mask"]))]
+df = df[["shape_mask"] + list(df.columns.difference(["shape_mask"]))]
 # extract only areas that actually had SLR pixels
-df = df[df[df.columns[2:]].sum(axis=1) > 0].reset_index(drop=True)
+df = df[df[df.columns[1:]].sum(axis=1) > 0]
 
 for col in df.columns[1:]:
-    dtype = "uint64"
-
-    if df[col].max() < 4294967295:
-        dtype = "uint32"
-
-    df[col] = df[col].astype(dtype)
+    df[col] = df[col].astype(get_minimum_type(df[col].max()))
 
 df.columns = [str(c) for c in df.columns]
+df = df.reset_index().rename(columns={"index": "huc12"})
 df.to_feather(out_dir / "slr.feather")
 df.to_csv(out_dir / "slr.csv", index=False)
 
@@ -167,4 +168,3 @@ df.to_csv(out_dir / "slr.csv", index=False)
 print(
     "Processed {:,} zones in {:.2f}m".format(len(geometries), (time() - start) / 60.0)
 )
-
