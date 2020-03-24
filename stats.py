@@ -70,9 +70,9 @@ def extract_blueprint_indicator_counts(geometries, inland=True):
             src, geometries, crop=True, all_touched=True
         )
 
-    results["mask"] = (~geometry_mask).sum()
+    results["shape_mask"] = (~geometry_mask).sum()
 
-    if results["mask"] == 0:
+    if results["shape_mask"] == 0:
         return None
 
     blueprint_counts = extract_count_in_geometry(
@@ -123,15 +123,35 @@ def extract_urbanization_counts(geometries):
             src, geometries, crop=True, all_touched=True
         )
 
-    results["mask"] = (~geometry_mask).sum()
+    results["shape_mask"] = (~geometry_mask).sum()
 
-    if results["mask"] == 0:
+    if results["shape_mask"] == 0:
         return None
 
     # values are probability of urbanization per timestep * 1000 (uint16)
+    # NOTE: index 0 = not predicted to urbanize
+    # index 1 = already urban, so given a probability of 1
+    # actual probabilities start at 0.025
     probabilities = (
         np.array(
-            [0, 1, 25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950, 975, 1000]
+            [
+                0,
+                1000,
+                25,
+                50,
+                100,
+                200,
+                300,
+                400,
+                500,
+                600,
+                700,
+                800,
+                900,
+                950,
+                975,
+                1000,
+            ]
         )
         / 1000
     )
@@ -148,7 +168,10 @@ def extract_urbanization_counts(geometries):
 
 def extract_slr_counts(geometries):
     """Calculate the area of overlap between geometries and each level of SLR
-    between 1 and 6 meters.
+    between 0 (currently inundated) and 6 meters.
+
+    Values are cumulative, so to get the total amount inundated by 6 feet,
+    you must sum up everything from 0-6 feet.
 
     This is only applicable to inland (non-marine) areas that are near the coast.
 
@@ -164,7 +187,7 @@ def extract_slr_counts(geometries):
     -------
     dict
         keys are mask, <decade>, ...
-        values are the total amount of urbanization for each decade
+        values are the area of incremental (not total!) sea level rise by foot
     """
     vrt = slr_dir / "slr.vrt"
 
@@ -181,9 +204,9 @@ def extract_slr_counts(geometries):
         mask = (data == nodata) | geometry_mask
         data = np.where(mask, nodata, data)
 
-    results["mask"] = (~geometry_mask).sum()
+    results["shape_mask"] = (~geometry_mask).sum()
 
-    if results["mask"] == 0:
+    if results["shape_mask"] == 0:
         return None
 
     counts = extract_count_in_geometry(vrt, geometry_mask, window, bins=np.arange(7))

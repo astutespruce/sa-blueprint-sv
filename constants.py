@@ -601,3 +601,155 @@ INDICATORS_INDEX = {indicator["id"]: indicator for indicator in INDICATORS}
 
 
 URBAN_YEARS = [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]
+
+
+OWNERSHIP = {
+    "FED": {"color": "#2ca02c", "label": "Federal"},
+    "STP": {"color": "#1f77b4", "label": "State/province"},
+    "LOC": {"color": "#aec7e8", "label": "Local"},
+    "TNC": {"color": "#98df8a", "label": "The Nature Conservancy"},
+    "PNP": {"color": "#ad494a", "label": "Private non-profit"},
+    "PFP": {"color": "#ff7f0e", "label": "Private for-profit"},
+    "PLO": {"color": "#7D3E07", "label": "Private land owner"},
+    "TRB": {"color": "#9467bd", "label": "Tribal"},
+    "UNK": {"color": "#c49c94", "label": "Ownership unknown"},
+}
+
+PROTECTION = {
+    "1": {
+        "color": "#637939",
+        "label": "Permanently protected for biodiversity",
+        "description": " Nature reserves, research natural areas, wilderness areas, Forever Wild easements",
+    },
+    "2": {
+        "color": "#b5cf6b",
+        "label": "Permanently protected to maintain a primarily natural state",
+        "description": " National Wildlife Refuges, many State Parks, high-use National Parks",
+    },
+    "3": {
+        "color": "#98df8a",
+        "label": "Permanently secured for multiple uses and in natural cover",
+        "description": " State forests, lands protected from development by forest easements",
+    },
+    "39": {
+        "color": "#e7cb94",
+        "label": "Permanently secured and in agriculture or maintained grass cover",
+        "description": " Agricultural easements",
+    },
+    "4": {
+        "color": "#7D3E07",
+        "label": "Unsecured (already developed temporary easements and/or municipal lands)",
+        "description": " Private lands with no easements, city parks, undesignated state lands ",
+    },
+    "9": {
+        "color": "#9edae5",
+        "label": "Unknown - protected lands status unknown",
+        "description": "Protection status unknown",
+    },
+}
+
+
+PLANS = {
+    "ACJV": {
+        "label": "ACJV migratory bird priority areas",
+        "description": "Atlantic Coast Joint Venture (ACJV)/ South Atlantic Migratory Bird Initiative (SAMBI) Priority Areas",
+        "url": "http://acjv.org/planning/bird-conservation-regions/sambi/",
+        "type": "regional",
+    },
+    "EPA": {
+        "label": "EPA priority watersheds",
+        "description": "Environmental Protection Agency (EPA) Region 4 Priority Watersheds (except Virginia)",
+        "url": "http://www.epa.gov/region4/water/watersheds/priority.html",
+        "type": "regional",
+    },
+    "PARCA": {
+        "label": "Amphibian and reptile conservation",
+        "description": "Partners in Amphibian & Reptile Conservation (PARC) Priority Areas",
+        "url": "http://www.separc.org/",
+        "type": "regional",
+    },
+    "NBCI": {
+        "label": "Bobwhite conservation areas",
+        "description": "National Bobwhite Conservation Initiative (NBCI) Plan",
+        "url": "http://bringbackbobwhites.org/",
+        "type": "regional",
+    },
+    "TNC": {
+        "label": "TNC's conservation priorities",
+        "description": "The Nature Conservancy's (TNC) Ecoregional Priorities for the Mid-Atlantic Coastal Plain, South Atlantic Coastal Plain, and Piedmont",
+        "url": "http://www.landscope.org/focus/understand/tnc_portfolio/",
+        "type": "regional",
+    },
+    "Alabama": {
+        "label": "AL Strategic Habitat Units",
+        "description": "Alabama Strategic Habitat Units",
+        "url": "http://www.alh2o.org/shus/",
+        "type": "state",
+    },
+    "Florida": {
+        "label": "FL Critical Lands & Waters",
+        "description": "Florida Critical Lands and Waters (CLIP)",
+        "url": "http://www.fnai.org/clip.cfm",
+        "type": "state",
+    },
+    "Georgia": {
+        "label": "GA Priority Waters",
+        "description": "Georgia Priority Waters",
+        "url": "http://www.georgiawildlife.com/node/1377",
+        "type": "state",
+    },
+    "NorthCarolina": {
+        "label": "NC Green Growth Toolbox",
+        "description": "Integrated priorities from the NC Green Growth Toolbox",
+        "url": "http://www.ncwildlife.org/Conserving/Programs/GreenGrowthToolbox.aspx",
+        "type": "state",
+    },
+    "Virginia": {
+        "label": "VA Natural Landscapes Assessment",
+        "description": "Virginia Natural Landscapes Assessment",
+        "url": "http://www.dcr.virginia.gov/natural_heritage/vaconvisvnla.shtml",
+        "type": "state",
+    },
+    "ImportantBirdAreas": {
+        "label": "Important Bird Areas",
+        "description": "Important Bird Areas",
+        "url": "",
+        "type": "marine",
+    },
+    "NC_Capes": {
+        "label": "NC Seashore Viewsheds",
+        "description": "5 mile buffer around NC Capes",
+        "url": "",
+        "type": "marine",
+    },
+    "RightWhale": {
+        "label": "Right Whale Habitat",
+        "description": "Right Whale Critical Habitat",
+        "url": "http://www.nmfs.noaa.gov/pr/species/mammals/cetaceans/rightwhale_northatlantic.htm",
+        "type": "marine",
+    },
+    "SAFMC_HAPC_wDeepwater_Coral": {
+        "label": "Habitat areas of particular concern",
+        "description": "All habitat areas of particular concern (HAPC) from the South Atlantic Fisheries Management Council",
+        "url": "http://safmc.net/",
+        "type": "marine",
+    },
+    "SnapperHAPC": {
+        "label": "Snapper habitat areas",
+        "description": "Snapper habitat areas of particular concern (HAPC) from the South Atlantic Fisheries Management Council",
+        "url": "http://safmc.net/",
+        "type": "marine",
+    },
+    "ViewSheds": {
+        "label": "Viewsheds",
+        "description": "Buffer around National Seashores",
+        "url": "",
+        "type": "marine",
+    },
+    "ShelfBreak": {
+        "label": "Shelf Breaks",
+        "description": "Shelf Breaks",
+        "url": "",
+        "type": "marine",
+    },
+}

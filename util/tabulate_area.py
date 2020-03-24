@@ -38,6 +38,7 @@ def get_minimum_type(max_value):
 data_dir = Path("data")
 huc12_filename = data_dir / "summary_units/HUC12.feather"
 marine_filename = data_dir / "summary_units/marine_blocks.feather"
+ownership_filename = data_dir / "boundaries/ownership.feather"
 
 start = time()
 
@@ -55,51 +56,51 @@ geometries = (
     .geometry
 )
 
-# ### Calculate counts of each category in blueprint and indicators and put into a DataFrame
-# results = []
-# index = []
-# for huc12, geometry in Bar(
-#     "Calculating Blueprint and Indicator counts for HUC12", max=len(geometries)
-# ).iter(geometries.iteritems()):
-#     counts = extract_blueprint_indicator_counts([geometry], inland=True)
-#     if counts is None:
-#         continue
+### Calculate counts of each category in blueprint and indicators and put into a DataFrame
+results = []
+index = []
+for huc12, geometry in Bar(
+    "Calculating Blueprint and Indicator counts for HUC12", max=len(geometries)
+).iter(geometries.iteritems()):
+    counts = extract_blueprint_indicator_counts([geometry], inland=True)
+    if counts is None:
+        continue
 
-#     index.append(huc12)
-#     results.append(counts)
+    index.append(huc12)
+    results.append(counts)
 
-# df = pd.DataFrame(results, index=index)
-# df["shape_mask"] = df.shape_mask.astype(get_minimum_type(df.shape_mask.max()))
+df = pd.DataFrame(results, index=index)
+df["shape_mask"] = df.shape_mask.astype(get_minimum_type(df.shape_mask.max()))
 
-# ### Export the Blueprint and each indicator to a separate file
-# # each column is an array of counts for each
-# for col in df.columns.difference(["shape_mask"]):
-#     s = df[col].apply(pd.Series)
+### Export the Blueprint and each indicator to a separate file
+# each column is an array of counts for each
+for col in df.columns.difference(["shape_mask"]):
+    s = df[col].apply(pd.Series)
 
-#     # drop rows that do not have this indicator present
-#     s = s.loc[s.sum(axis=1) > 0].copy()
-#     if not len(s):
-#         warnings.warn(
-#             f"Indicator does not have any data present anywhere in region: {col}"
-#         )
-#         continue
+    # drop rows that do not have this indicator present
+    s = s.loc[s.sum(axis=1) > 0].copy()
+    if not len(s):
+        warnings.warn(
+            f"Indicator does not have any data present anywhere in region: {col}"
+        )
+        continue
 
-#     # cast to smallest types
-#     for c in s.columns:
-#         s[c] = s[c].astype(get_minimum_type(s[c].max()))
+    # cast to smallest types
+    for c in s.columns:
+        s[c] = s[c].astype(get_minimum_type(s[c].max()))
 
-#     # add mask column
-#     s = s.join(df.shape_mask)
+    # add mask column
+    s = s.join(df.shape_mask)
 
-#     # order columns
-#     s = (
-#         s[["shape_mask"] + list(s.columns.difference(["shape_mask"]))]
-#         .reset_index()
-#         .rename(columns={"index": "huc12"})
-#     )
-#     s.columns = [str(c) for c in s.columns]
-#     s.to_feather(out_dir / f"{col}.feather")
-#     s.to_csv(out_dir / f"{col}.csv", index=False)
+    # order columns
+    s = (
+        s[["shape_mask"] + list(s.columns.difference(["shape_mask"]))]
+        .reset_index()
+        .rename(columns={"index": "huc12"})
+    )
+    s.columns = [str(c) for c in s.columns]
+    s.to_feather(out_dir / f"{col}.feather")
+    s.to_csv(out_dir / f"{col}.csv", index=False)
 
 ### Calculate counts for urbanization
 index = []
@@ -125,104 +126,146 @@ df.to_feather(out_dir / "urban.feather")
 df.to_csv(out_dir / "urban.csv", index=False)
 
 
-# ### Calculate counts for SLR
+### Calculate counts for SLR
 
-# bounds = from_geofeather_as_pygeos(data_dir / "threats/slr/slr_bounds.feather")
-# tree = pg.STRtree(bounds.geometry)
+bounds = from_geofeather_as_pygeos(data_dir / "threats/slr/slr_bounds.feather")
+tree = pg.STRtree(bounds.geometry)
 
-# # convert to pygeos geometries; there are some invalid data, so buffer them by 0
-# geoms = pg.buffer(pg.from_shapely(geometries.geometry), 0)
+# convert to pygeos geometries; there are some invalid data, so buffer them by 0
+geoms = pg.buffer(pg.from_shapely(geometries.geometry), 0)
 
-# slr_geometries = geometries.copy()
-# # find the indexes of the geometries that overlap with SLR bounds; these are the only
-# # ones that need to be analyzed for SLR impacts
-# slr_geom_idx = np.unique(tree.query_bulk(geoms, predicate="intersects")[0])
-# slr_geometries = slr_geometries.iloc[slr_geom_idx]
+slr_geometries = geometries.copy()
+# find the indexes of the geometries that overlap with SLR bounds; these are the only
+# ones that need to be analyzed for SLR impacts
+slr_geom_idx = np.unique(tree.query_bulk(geoms, predicate="intersects")[0])
+slr_geometries = slr_geometries.iloc[slr_geom_idx]
 
-# results = []
-# index = []
-# for huc12, geometry in Bar(
-#     "Calculating SLR counts for HUC12", max=len(slr_geometries)
-# ).iter(slr_geometries.iteritems()):
-#     counts = extract_slr_counts([geometry])
-#     if counts is None:
-#         continue
+results = []
+index = []
+for huc12, geometry in Bar(
+    "Calculating SLR counts for HUC12", max=len(slr_geometries)
+).iter(slr_geometries.iteritems()):
+    counts = extract_slr_counts([geometry])
+    if counts is None:
+        continue
 
-#     index.append(huc12)
-#     results.append(counts)
+    index.append(huc12)
+    results.append(counts)
 
-# df = pd.DataFrame(results, index=index)
+df = pd.DataFrame(results, index=index)
 
-# # reorder columns
-# df = df[["shape_mask"] + list(df.columns.difference(["shape_mask"]))]
-# # extract only areas that actually had SLR pixels
-# df = df[df[df.columns[1:]].sum(axis=1) > 0]
+# reorder columns
+df = df[["shape_mask"] + list(df.columns.difference(["shape_mask"]))]
+# extract only areas that actually had SLR pixels
+df = df[df[df.columns[1:]].sum(axis=1) > 0]
 
-# for col in df.columns[1:]:
-#     df[col] = df[col].astype(get_minimum_type(df[col].max()))
+for col in df.columns[1:]:
+    df[col] = df[col].astype(get_minimum_type(df[col].max()))
 
-# df.columns = [str(c) for c in df.columns]
-# df = df.reset_index().rename(columns={"index": "huc12"})
-# df.to_feather(out_dir / "slr.feather")
-# df.to_csv(out_dir / "slr.csv", index=False)
+df.columns = [str(c) for c in df.columns]
+df = df.reset_index().rename(columns={"index": "huc12"})
+df.to_feather(out_dir / "slr.feather")
+df.to_csv(out_dir / "slr.csv", index=False)
 
 
-# ### Marine blocks
-# out_dir = data_dir / "derived/marine"
-# if not out_dir.exists():
-#     os.makedirs(out_dir)
+### Calculate overlap with ownership and protection
+print("Calculating overlap with land ownership and protection")
+geometries = (
+    from_geofeather_as_pygeos(huc12_filename, columns=["HUC12", "geometry"]).set_index(
+        "HUC12"
+    )
+)[["geometry"]]
 
-# print("Reading marine blocks boundaries")
-# df = from_geofeather(marine_filename, columns=["PROT_NUMBE", "BLOCK_NUMB", "geometry"])
-# # create composite id field
-# df["id"] = df.PROT_NUMBE + "-" + df.BLOCK_NUMB
-# geometries = df.set_index("id").geometry
+df = from_geofeather_as_pygeos(ownership_filename)
 
-# ### Calculate counts of each category in blueprint and indicators and put into a DataFrame
-# results = []
-# index = []
-# for id, geometry in Bar(
-#     "Calculating Blueprint and Indicator counts for marine blocks", max=len(geometries)
-# ).iter(geometries.iteritems()):
-#     counts = extract_blueprint_indicator_counts([geometry], inland=False)
-#     if counts is None:
-#         continue
+# create and query tree for join
+tree = pg.STRtree(df.geometry)
+left_idx, right_idx = tree.query_bulk(geometries.geometry, predicate="intersects")
+right = pd.DataFrame(
+    df.iloc[right_idx].index.values,
+    index=geometries.iloc[left_idx].index.values,
+    columns=["index_right"],
+).join(df, on="index_right")
+joined = geometries.join(right, how="inner", rsuffix="_right")
+joined["acres"] = (
+    pg.area(pg.intersection(joined.geometry, joined.geometry_right)) * 0.000247105
+)
 
-#     index.append(id)
-#     results.append(counts)
+by_owner = (
+    joined[["FEE_ORGTYP", "acres"]]
+    .groupby(by=[joined.index.get_level_values(0), "FEE_ORGTYP"])
+    .acres.sum()
+    .astype("float32")
+    .reset_index()
+    .rename(columns={"level_0": "HUC12"})
+)
+by_owner.to_feather(out_dir / "ownership.feather")
+by_owner.to_csv(out_dir / "ownership.csv", index=False)
 
-# df = pd.DataFrame(results, index=index)
-# df["shape_mask"] = df.shape_mask.astype(get_minimum_type(df.shape_mask.max()))
+by_protection = (
+    joined[["GAP_STATUS", "acres"]]
+    .groupby(by=[joined.index.get_level_values(0), "GAP_STATUS"])
+    .acres.sum()
+    .astype("float32")
+    .reset_index()
+    .rename(columns={"level_0": "HUC12"})
+)
+by_protection.to_feather(out_dir / "protection.feather")
+by_protection.to_csv(out_dir / "protection.csv", index=False)
 
-# ### Export the Blueprint and each indicator to a separate file
-# # each column is an array of counts for each
-# for col in df.columns.difference(["shape_mask"]):
-#     s = df[col].apply(pd.Series)
+### Marine blocks
+out_dir = data_dir / "derived/marine"
+if not out_dir.exists():
+    os.makedirs(out_dir)
 
-#     # drop rows that do not have this indicator present
-#     s = s.loc[s.sum(axis=1) > 0].copy()
-#     if not len(s):
-#         warnings.warn(
-#             f"Indicator does not have any data present anywhere in region: {col}"
-#         )
-#         continue
+print("Reading marine blocks boundaries")
+df = from_geofeather(marine_filename, columns=["id", "geometry"]).set_index('id)
 
-#     # cast to smallest types
-#     for c in s.columns:
-#         s[c] = s[c].astype(get_minimum_type(s[c].max()))
+### Calculate counts of each category in blueprint and indicators and put into a DataFrame
+results = []
+index = []
+for id, geometry in Bar(
+    "Calculating Blueprint and Indicator counts for marine blocks", max=len(geometries)
+).iter(geometries.iteritems()):
+    counts = extract_blueprint_indicator_counts([geometry], inland=False)
+    if counts is None:
+        continue
 
-#     # add mask column
-#     s = s.join(df.shape_mask)
+    index.append(id)
+    results.append(counts)
 
-#     # order columns
-#     s = (
-#         s[["shape_mask"] + list(s.columns.difference(["shape_mask"]))]
-#         .reset_index()
-#         .rename(columns={"index": "id"})
-#     )
-#     s.columns = [str(c) for c in s.columns]
-#     s.to_feather(out_dir / f"{col}.feather")
-#     s.to_csv(out_dir / f"{col}.csv", index=False)
+df = pd.DataFrame(results, index=index)
+df["shape_mask"] = df.shape_mask.astype(get_minimum_type(df.shape_mask.max()))
+
+### Export the Blueprint and each indicator to a separate file
+# each column is an array of counts for each
+for col in df.columns.difference(["shape_mask"]):
+    s = df[col].apply(pd.Series)
+
+    # drop rows that do not have this indicator present
+    s = s.loc[s.sum(axis=1) > 0].copy()
+    if not len(s):
+        warnings.warn(
+            f"Indicator does not have any data present anywhere in region: {col}"
+        )
+        continue
+
+    # cast to smallest types
+    for c in s.columns:
+        s[c] = s[c].astype(get_minimum_type(s[c].max()))
+
+    # add mask column
+    s = s.join(df.shape_mask)
+
+    # order columns
+    s = (
+        s[["shape_mask"] + list(s.columns.difference(["shape_mask"]))]
+        .reset_index()
+        .rename(columns={"index": "id"})
+    )
+    s.columns = [str(c) for c in s.columns]
+    s.to_feather(out_dir / f"{col}.feather")
+    s.to_csv(out_dir / f"{col}.csv", index=False)
 
 
 print(
