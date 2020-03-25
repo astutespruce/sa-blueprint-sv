@@ -48,3 +48,34 @@ for year in [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]:
         ) as out:
             out.write(data.astype("uint8"), 1)
 
+
+### Convert ecosystems to indexed
+# original raster values
+# values = {
+#     6: "Upland hardwood",
+#     8: "Pine and prairie",
+#     10: "Freshwater marsh",
+#     12: "Forested wetland",
+#     14: "Waterbodies",
+#     16: "Estuaries - estuarine marsh",
+#     17: "Estuaries - open water",
+#     18: "Beach and dune",
+#     20: "Maritime forest",
+#     22: "Marine",
+# }
+
+# mapped to value of ECOSYSTEMS (others not present are across region)
+values_to_index = {6: 6, 8: 5, 10: 3, 12: 2, 14: 8, 16: 1, 17: 1, 18: 0, 20: 4, 22: 7}
+
+with rasterio.open(
+    src_dir / "EcosystemMask_20160229_Blueprint_2_1_AnalysisArea.tif"
+) as src:
+    data = src.read(1)
+    for src_value, target_value in values_to_index.items():
+        data[data == src_value] = target_value
+
+    meta = src.meta.copy()
+    meta["dtype"] = "uint8"
+
+    with rasterio.open(src_dir / "ecosystems_indexed.tif", "w", **meta) as out:
+        out.write(data.astype("uint8"), 1)

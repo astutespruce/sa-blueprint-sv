@@ -46,7 +46,7 @@ body {
 
 /* table of contents */
 ol.toc li {
-    border-bottom: 1pt dotted #eee;
+    border-bottom: 1pt dotted #666;
     margin-top: 0.25em;
 }
 
@@ -97,7 +97,7 @@ table thead th {
 
 table td {
     padding: 2pt 4pt;
-    border: 1px solid #aaa;
+    border: 1px solid #666;
 }
 
 table.centered th + th,

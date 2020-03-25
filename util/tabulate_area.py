@@ -56,6 +56,7 @@ geometries = (
     .geometry
 )
 
+
 ### Calculate counts of each category in blueprint and indicators and put into a DataFrame
 results = []
 index = []
@@ -219,7 +220,7 @@ if not out_dir.exists():
     os.makedirs(out_dir)
 
 print("Reading marine blocks boundaries")
-df = from_geofeather(marine_filename, columns=["id", "geometry"]).set_index('id)
+df = from_geofeather(marine_filename, columns=["id", "geometry"]).set_index("id")
 
 ### Calculate counts of each category in blueprint and indicators and put into a DataFrame
 results = []

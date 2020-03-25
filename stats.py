@@ -5,10 +5,11 @@ import pandas as pd
 import rasterio
 from rasterio.mask import raster_geometry_mask
 
-from constants import BLUEPRINT, INDICATORS, URBAN_YEARS
+from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS, URBAN_YEARS
 
 src_dir = Path("data")
 blueprint_filename = src_dir / "Blueprint_2_2.tif"
+ecosystems_filename = src_dir / "ecosystems_indexed.tif"
 urban_dir = src_dir / "threats/urban"
 slr_dir = src_dir / "threats/slr"
 
@@ -79,6 +80,11 @@ def extract_blueprint_indicator_counts(geometries, inland=True):
         blueprint_filename, geometry_mask, window, np.arange(len(BLUEPRINT))
     )
     results["blueprint"] = blueprint_counts
+
+    ecosystem_counts = extract_count_in_geometry(
+        ecosystems_filename, geometry_mask, window, np.arange(9)
+    )
+    results["ecosystems"] = ecosystem_counts
 
     if inland:
         indicators = [i for i in INDICATORS if not i["id"].startswith("marine_")]

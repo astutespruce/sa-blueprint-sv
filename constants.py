@@ -56,38 +56,52 @@ ECOSYSTEMS = [
         "id": "beachanddune",
         "label": "Beach and dune",
         "indicators": ["beachbirds", "unalteredbeach"],
+        "value": 0,
     },
     {
         "id": "estuarine",
         "label": "Estuarine",
         "indicators": ["coastalcondition", "watervegetationedge", "wetlandpatchsize"],
+        "value": 1,
     },
     {
         "id": "forestedwetland",
         "label": "Forested wetland",
         "indicators": ["amphibians", "birds", "extent"],
+        "value": 2,
     },
     {
         "id": "freshwatermarsh",
         "label": "Freshwater marsh",
         "indicators": ["birds", "extent"],
+        "value": 3,
     },
-    {"id": "maritimeforest", "label": "Maritime forest", "indicators": ["extent"]},
+    {
+        "id": "maritimeforest",
+        "label": "Maritime forest",
+        "indicators": ["extent"],
+        "value": 4,
+    },
     {
         "id": "pineandprairie",
         "label": "Pine and prairie",
         "indicators": ["amphibians", "birds", "regularlyburnedhabitat"],
+        "value": 5,
     },
     {
         "id": "uplandhardwood",
         "label": "Upland hardwood",
         "indicators": ["birds", "urbanopenspace"],
+        "value": 6,
     },
     {
         "id": "marine",
         "label": "Marine",
         "indicators": ["birds", "mammals", "potentialhardbottomcondition"],
+        "value": 7,
     },
+    {"id": "waterbodies", "label": "Inland waterbodies", "indicators": [], "value": 8},
+    # region-wide ecosystems
     {
         "id": "freshwateraquatic",
         "label": "Freshwater aquatic",
@@ -111,7 +125,6 @@ ECOSYSTEMS = [
         "label": "Waterscapes",
         "indicators": ["migratoryfishconnectivity", "networkcomplexity"],
     },
-    {"id": "waterbodies", "label": "Inland waterbodies", "indicators": []},
 ]
 
 
