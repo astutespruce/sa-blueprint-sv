@@ -1,0 +1,100 @@
+<section>
+    <h2 id="Blueprint">Blueprint Priorities</h2>
+
+    {% if blueprint_map %}
+        <img src="data:image/png;base64,{{blueprint_map}}" alt="Conservation Blueprint map" class="map">
+    {% else %}
+        <div class="map-placeholder text-center">
+            map could not be created
+        </div>
+    {% endif %}
+
+    <div class="flex space-between">
+        <div class="legend">
+            {% for item in blueprint_legend %}
+            <div class="flex align-center">
+                <div class="legend-patch" style="background: {{item.color}}"></div>
+                <div>{{item.label}}</div>
+            </div>
+            {% endfor %}
+        </div>
+
+        <div class="locator-map">
+            {% if locator_map %}
+                <img src="data:image/png;base64,{{locator_map}}" alt="Locator map" class="map-locator">
+            {% else %}
+                <div class="map-locator-placeholder text-center">
+                    map could not be created
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section>
+    <h2>Priority Categories</h2>
+    <ul>
+        <li>
+            <b>Highest priority for shared action:</b>
+            the most important areas for natural and cultural resources based on
+            indicator condition. This class covers 10% of the South Atlantic
+            geography.
+        </li>
+        <li>
+            <b>High priority for shared action:</b>
+            important areas for natural and cultural resources based on
+            indicator condition. This class covers an additional 15% of the
+            South Atlantic geography; together, the highest and high priority
+            categories cover 25%.
+        </li>
+        <li>
+            <b>Medium priority for shared action:</b>
+            above-average areas for natural and cultural resources based on
+            indicator condition, capturing potential restoration opportunities.
+            This class covers 20% of the South Atlantic geography; together, the
+            highest, high, and medium priority categories cover 45%.
+        </li>
+        <li>
+            <b>Corridors:</b>
+            connections between large patches of highest priority areas and
+            secured lands, optimized for efficiency and indicator condition in a
+            least cost path analysis. This category covers an additional 5% of
+            the South Atlantic geography; in total, the Blueprint covers 50%.
+        </li>
+        <li>
+            <b>Inland waterbodies:</b>
+            lakes, reservoirs, and ponds not included in the Blueprint 2.2
+            priorities.
+        </li>
+    </ul>
+</section>
+
+<section>
+TODO: chart of blueprint results?
+<br><br>
+
+{% with number=1,label="Extent of each Blueprint priority category" %}
+    {% include "elements/table_caption.html" %}
+{% endwith %}
+
+<table class="centered">
+    <thead>
+        <tr>
+            <th>Priority Category</th>
+            <th>Acres</th>
+            <th>Percent of Area</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for (label,acres,percent) in blueprint_results %}
+        <tr>
+            <td>{{label}}</td>
+            <td>{{acres}}</td>
+            <td>{{percent}}%</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+</section>

@@ -37,7 +37,12 @@ inland_atts = df
 
 
 # It's already in that projection but has wrong EPSG code assigned by ArcGIS
-df = gp.read_file(unit_dir / "HUC12_prj.shp").to_crs(DATA_CRS).set_index("HUC12")
+df = (
+    gp.read_file(unit_dir / "HUC12_prj.shp")[["geometry", "HUC12", "HU_12_NAME"]]
+    .to_crs(DATA_CRS)
+    .set_index("HUC12")
+    .rename(columns={"HU_12_NAME": "name"})
+)
 df = df.join(inland_atts).reset_index()
 # convert to bool columns if nonempty
 plan_cols = df.columns.intersection(PLANS.keys())

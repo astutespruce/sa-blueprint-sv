@@ -1,0 +1,51 @@
+<section>
+
+<h2 id="Indicators">Indicators</h2>
+
+<p>
+    The indicators are the data building blocks of the Blueprint. They also
+    serve as shared metrics of success for conservation in the South Atlantic.
+    They are intended to capture both the natural and cultural resource
+    components of ecosystem integrity. Ecosystem-specific indicators only apply
+    within one distinct ecosystem. Cross-ecosystem indicators cover multiple
+    ecosystems and capture the connections across terrestrial and aquatic
+    systems.
+    <br/><br/>
+    The following tables summarize all the indicator values in this subwatershed.
+    For some indicators, you’ll also see a threshold for good condition to help you
+    interpret the indicator values. These thresholds are based on the best available
+    science and reflect the range of indicator values that occur in healthy,
+    functioning ecosystems. The good condition thresholds were initially defined in
+    the <a href="http://www.southatlanticlcc.org/state-of-the-south-atlantic/">State of the South Atlantic 2015</a>.
+    This report card measured the current condition of the indicators and used
+    the thresholds to score the health of the region’s ecosystems. While good
+    condition thresholds have not yet been defined for all indicators, all the
+    indicators are used in the Blueprint.
+</p>
+
+
+{% with number=2,label="Extent of each ecosystem" %}
+    {% include "elements/table_caption.html" %}
+{% endwith %}
+
+<table class="centered">
+    <thead>
+        <tr>
+            <th>Ecosystem</th>
+            <th>Acres</th>
+            <th>Percent of Area</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for (label,acres,percent) in ecosystem_results %}
+        <tr>
+            <td>{{label}}</td>
+            <td>{{acres}}</td>
+            <td>{{percent}}%</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+
+</section>

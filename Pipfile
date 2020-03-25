@@ -9,10 +9,8 @@ pylint = "*"
 
 [packages]
 rasterio = "*"
-geopandas = "*"
 pandas = "*"
 numpy = "*"
-pygeos = {editable = true,path = "./../pygeos"}
 fastapi = "*"
 sa-reports = {editable = true,path = "."}
 raster-tilecutter = {editable = true,path = "./../raster-tilecutter"}
@@ -21,6 +19,10 @@ httpx = "*"
 pillow = "*"
 affine = "*"
 progress = "*"
+geopandas = "*"
+pygeos = {editable = true,path = "./../pygeos"}
+jinja2 = "*"
+weasyprint = "*"
 
 [requires]
 python_version = "3.8"
