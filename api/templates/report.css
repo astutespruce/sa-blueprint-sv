@@ -121,6 +121,10 @@ table.centered td + td {
     margin-top: 12pt;
 }
 
+.spacer {
+    height: 36pt;
+}
+
 .text-center {
     text-align: center;
 }
