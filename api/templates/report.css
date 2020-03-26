@@ -134,7 +134,7 @@ table.centered td + td {
 }
 
 .map {
-    margin-bottom: 4pt;
+    margin-bottom: 12pt;
     width: 100%;
 }
 
@@ -147,6 +147,11 @@ table.centered td + td {
     align-items: center;
     justify-content: center;
     margin-bottom: 24pt;
+}
+
+.map-locator-container {
+    flex: 0 0 auto;
+    margin-right: 12pt;
 }
 
 .map-locator-placeholder {
@@ -163,13 +168,17 @@ table.centered td + td {
     align-items: center;
 }
 
-.legend-patch {
-    height: 12pt;
-    width: 18pt;
-    display: inline-block;
-    margin-right: 2pt;
+.legend {
+    flex: 1 1 auto;
 }
 
-.legend-patch + .legend-patch {
+.legend-patch {
+    height: 16pt;
+    width: 20pt;
+    display: inline-block;
+    margin-right: 4pt;
+}
+
+.legend-element + .legend-element {
     margin-top: 6pt;
 }

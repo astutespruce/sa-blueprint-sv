@@ -8,9 +8,8 @@ import geopandas as gp
 import pygeos as pg
 
 from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, INDICATORS
-from api.map.util import to_geojson, pad_bounds, get_center
-
-from api.map import get_maps
+from api.map.util import to_geojson
+from api.map import render_maps
 
 # HUC12
 UNIT_ID = "030602040601"
@@ -31,7 +30,7 @@ UNIT_ID = "030602040601"
 # bounds = geometry.total_bounds
 # geojson = to_geojson(geometry)
 
-# maps = get_maps(bounds, geojson=geojson, indicators=[i["id"] for i in INDICATORS[:8]])
+# maps = render_maps(bounds, geojson=geojson, indicators=[i["id"] for i in INDICATORS[:8]])
 # for name, data in maps.items():
 #     with open(out_dir / f"{name}.png", "wb") as out:
 #         out.write(b64decode(data))
@@ -46,7 +45,7 @@ df = from_geofeather("data/summary_units/units.feather").set_index("id")
 geometry = df.loc[UNIT_ID].geometry
 bounds = pg.total_bounds(geometry)
 
-maps = get_maps(
+maps = render_maps(
     bounds, summary_unit_id=UNIT_ID, indicators=[i["id"] for i in INDICATORS[:8]]
 )
 

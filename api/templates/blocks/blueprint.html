@@ -1,32 +1,32 @@
 <section>
     <h2 id="Blueprint">Blueprint Priorities</h2>
 
-    {% if blueprint_map %}
-        <img src="data:image/png;base64,{{blueprint_map}}" alt="Conservation Blueprint map" class="map">
+    {% if maps.blueprint %}
+        <img src="data:image/png;base64,{{maps.blueprint}}" alt="Conservation Blueprint map" class="map">
     {% else %}
         <div class="map-placeholder text-center">
             map could not be created
         </div>
     {% endif %}
 
-    <div class="flex space-between">
-        <div class="legend">
-            {% for item in blueprint_legend %}
-            <div class="flex align-center">
-                <div class="legend-patch" style="background: {{item.color}}"></div>
-                <div>{{item.label}}</div>
-            </div>
-            {% endfor %}
-        </div>
-
-        <div class="locator-map">
-            {% if locator_map %}
-                <img src="data:image/png;base64,{{locator_map}}" alt="Locator map" class="map-locator">
+    <div class="flex">
+        <div class="map-locator-container">
+            {% if maps.locator %}
+                <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
             {% else %}
                 <div class="map-locator-placeholder text-center">
                     map could not be created
                 </div>
             {% endif %}
+        </div>
+
+        <div class="legend">
+            {% for item in blueprint_legend %}
+            <div class="legend-element flex align-center">
+                <div class="legend-patch" style="background: {{item.color}}"></div>
+                <div>{{item.label}}</div>
+            </div>
+            {% endfor %}
         </div>
     </div>
 </section>

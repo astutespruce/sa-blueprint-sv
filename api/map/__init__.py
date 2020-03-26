@@ -25,7 +25,7 @@ blueprint_filename = src_dir / "Blueprint_2_2.tif"
 
 # TODO: pass in list of indicators that had data
 # TODO: SLR, urbanization
-def get_maps(bounds, geojson=None, summary_unit_id=None, indicators=None):
+def render_maps(bounds, geojson=None, summary_unit_id=None, indicators=None):
     maps = {}
 
     bounds = pad_bounds(bounds, PADDING)
@@ -36,7 +36,6 @@ def get_maps(bounds, geojson=None, summary_unit_id=None, indicators=None):
     maps["locator"] = to_base64(locator)
 
     bounds = get_map_bounds(center, zoom, WIDTH, HEIGHT)
-    print("map image bounds", bounds)
 
     # get basemap image
     basemap_image = get_basemap_image(center, zoom, WIDTH, HEIGHT)
@@ -64,7 +63,7 @@ def get_maps(bounds, geojson=None, summary_unit_id=None, indicators=None):
     if indicators is not None:
         for id in indicators:
             indicator = INDICATORS_INDEX[id]
-            print("Processing map for", id)
+            # print("Processing map for", id)
 
             with rasterio.open(src_dir / "indicators" / indicator["filename"]) as src:
                 data = extract_data_for_map(src, bounds, WIDTH, HEIGHT)
