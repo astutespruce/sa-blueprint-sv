@@ -19,3 +19,14 @@ varying footprints and resolution. To use here, we constructed a VRT using GDAL,
 
 TNC Secured Lands 2018 were downloaded from: https://www.conservationgateway.org/ConservationByGeography/NorthAmerica/UnitedStates/edc/reportsdata/terrestrial/secured/Pages/default.aspx
 on 3/23/2020.
+
+## Tiles
+
+State boundary tiles were generated from CENSUS TIGER state boundaries.
+
+Summary units where consolidated using `util/prep_summary_units.py` then
+converted to vector tiles using tippecanoe:
+
+```
+tippecanoe -f -pg -z 15 -o ./tiles/units.mbtiles -l "units" ./data/summary_units/units.geojson
+```

@@ -13,7 +13,7 @@ CENTER = [-81, 31.734804]
 WIDTH = 200
 HEIGHT = 200
 
-
+# TODO: add south atlantic mask
 LOCATOR_STYLE = {
     "version": 8,
     "sources": {
@@ -85,4 +85,3 @@ def get_locator_map_image(longitude, latitude):
 
     except Exception:
         return None
-

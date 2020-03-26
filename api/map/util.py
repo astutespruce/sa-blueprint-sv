@@ -1,4 +1,8 @@
+from base64 import b64encode
+from io import BytesIO
 import math
+
+from PIL import Image
 
 
 def get_center(bounds):
@@ -19,6 +23,30 @@ def get_center(bounds):
         ((bounds[2] - bounds[0]) / 2.0) + bounds[0],
         ((bounds[3] - bounds[1]) / 2.0) + bounds[1],
     ]
+
+
+def merge_maps(maps):
+    """Merge maps together in order provided
+
+    Parameters
+    ----------
+    maps: list-like of PIL Image objects
+
+    Returns
+    -------
+    PIL Image
+    """
+
+    if not maps:
+        return None
+
+    img = maps[0].copy()
+
+    for map in maps[1:]:
+        if map is not None:
+            img = Image.alpha_composite(img, map)
+
+    return img
 
 
 def pad_bounds(bounds, percent=0):
@@ -52,3 +80,19 @@ def to_geojson(series):
         "geometries": series.apply(lambda x: x.__geo_interface__).to_list(),
     }
 
+
+def to_base64(img):
+    """Convert a PIL Image to base64 encoded PNG.
+
+    Parameters
+    ----------
+    img : PIL Image object
+
+    Returns
+    -------
+    bytes
+        base64 encoded byte string
+    """
+    buffer = BytesIO()
+    img.save(buffer, format="PNG")
+    return b64encode(buffer.getvalue())

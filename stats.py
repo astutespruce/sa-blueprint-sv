@@ -87,8 +87,10 @@ def extract_blueprint_indicator_counts(geometries, inland=True):
     results["ecosystems"] = ecosystem_counts
 
     if inland:
-        indicators = [i for i in INDICATORS if not i["id"].startswith("marine_")]
+        # since some HUCs overlap marine areas, we should include all indicators
+        indicators = INDICATORS
     else:
+        # marine areas only have marine indicators
         indicators = [i for i in INDICATORS if i["id"].startswith("marine_")]
 
     for indicator in indicators:
