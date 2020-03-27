@@ -21,7 +21,7 @@
         </div>
 
         <div class="legend">
-            {% for item in blueprint_legend %}
+            {% for item in blueprint %}
             <div class="legend-element flex align-center">
                 <div class="legend-patch" style="background: {{item.color}}"></div>
                 <div>{{item.label}}</div>
@@ -33,45 +33,24 @@
 
 <section>
     <h2>Priority Categories</h2>
-    <ul>
-        <li>
-            <b>Highest priority for shared action:</b>
-            the most important areas for natural and cultural resources based on
-            indicator condition. This class covers 10% of the South Atlantic
-            geography.
-        </li>
-        <li>
-            <b>High priority for shared action:</b>
-            important areas for natural and cultural resources based on
-            indicator condition. This class covers an additional 15% of the
-            South Atlantic geography; together, the highest and high priority
-            categories cover 25%.
-        </li>
-        <li>
-            <b>Medium priority for shared action:</b>
-            above-average areas for natural and cultural resources based on
-            indicator condition, capturing potential restoration opportunities.
-            This class covers 20% of the South Atlantic geography; together, the
-            highest, high, and medium priority categories cover 45%.
-        </li>
-        <li>
-            <b>Corridors:</b>
-            connections between large patches of highest priority areas and
-            secured lands, optimized for efficiency and indicator condition in a
-            least cost path analysis. This category covers an additional 5% of
-            the South Atlantic geography; in total, the Blueprint covers 50%.
-        </li>
-        <li>
-            <b>Inland waterbodies:</b>
-            lakes, reservoirs, and ponds not included in the Blueprint 2.2
-            priorities.
-        </li>
-    </ul>
+    {% for item in blueprint %}
+        <h4>
+            {{item.label}}
+            {% if 'priority' in item.label %}
+            for conservation action
+            {% endif %}
+        </h4>
+        <p class="indent">
+            {{item.description}}
+            {{item.report_description}}
+        </p>
+    {% endfor %}
 
 <div class="spacer"></div>
 
-<!-- TODO: chart of blueprint results? -->
-
+<!-- TODO: chart of blueprint results?
+or just a donut chart of the highest priority?
+-->
 
 {% with number=1,label="Extent of each Blueprint priority category" %}
     {% include "elements/table_caption.html" %}

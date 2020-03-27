@@ -7,16 +7,39 @@ from geofeather.pygeos import (
     to_geofeather as to_geofeather_from_pygeos,
 )
 import pygeos as pg
-from constants import DATA_CRS, PLANS
 
+from constants import DATA_CRS, GEO_CRS, PLANS
+from util.pygeos_util import to_pygeos
 
 data_dir = Path("data")
 unit_dir = data_dir / "summary_units"
+out_dir = data_dir / "derived"
 boundary_dir = data_dir / "boundaries"
 
 
 ### Inland (HUC12) summary units
+
+# It's already in that projection but has wrong EPSG code assigned by ArcGIS
+print("Reading HUC12...")
+huc12 = (
+    gp.read_file(unit_dir / "HUC12_prj.shp")[["geometry", "HUC12", "HU_12_NAME"]]
+    .to_crs(DATA_CRS)
+    .set_index("HUC12")
+    .rename(columns={"HU_12_NAME": "name"})
+)
+
+# save for analysis
+to_geofeather(huc12[["geometry"]].reset_index(), unit_dir / "huc12_prj.feather")
+
+# calculate area
+huc12["acres"] = huc12.area * 0.000247105
+
+# reproject to WGS84
+huc12 = huc12.to_crs(GEO_CRS)
+
+
 # Read in inland attributes from older version of blueprint
+print("Reading HUC12 attributes...")
 cols = list(PLANS.keys()) + ["Justification"]
 df = pd.read_csv(
     unit_dir / "JustifiationCleanUp2017_InlandBlueprint_1_0_07Sept2014.csv",
@@ -33,25 +56,32 @@ df["Justification"] = (
     .str.replace(" ... ", ". ")
 )
 
-inland_atts = df
-
-
-# It's already in that projection but has wrong EPSG code assigned by ArcGIS
-df = (
-    gp.read_file(unit_dir / "HUC12_prj.shp")[["geometry", "HUC12", "HU_12_NAME"]]
-    .to_crs(DATA_CRS)
-    .set_index("HUC12")
-    .rename(columns={"HU_12_NAME": "name"})
-)
-df = df.join(inland_atts).reset_index()
+huc12 = huc12.join(df)
 # convert to bool columns if nonempty
-plan_cols = df.columns.intersection(PLANS.keys())
-df[plan_cols] = df[plan_cols].astype("bool")
-to_geofeather(df, unit_dir / "huc12.feather")
+plan_cols = huc12.columns.intersection(PLANS.keys())
+huc12[plan_cols] = huc12[plan_cols].astype("bool")
+
+to_geofeather(huc12.reset_index(), out_dir / "huc12" / "huc12.feather")
 
 
 ### Marine summary units
+print("Reading marine blocks...")
+df = gp.read_file(unit_dir / "marine_blocks_prj.shp").to_crs(DATA_CRS)
+df["id"] = df.PROT_NUMBE.str.strip() + "-" + df.BLOCK_NUMB.str.strip()
+df = df.set_index("id")[["PROT_NUMBE", "BLOCK_NUMB", "geometry"]]
+
+# save for analysis
+to_geofeather(df[["geometry"]].reset_index(), unit_dir / "marine_blocks_prj.feather")
+
+# calculate area
+df["acres"] = df.area * 0.000247105
+
+# reproject to WGS84
+df = df.to_crs(GEO_CRS)
+marine = df
+
 # Read in inland attributes from older version of blueprint
+print("Readng marine attributes...")
 cols = list(PLANS.keys()) + ["Justification"]
 df = pd.read_csv(
     unit_dir / "marine_v2.csv", dtype={"PROT_NUMBE": str, "BLOCK_NUMB": str}
@@ -63,28 +93,19 @@ df = df[df.columns.intersection(cols)].copy()
 for col in df.columns:
     df[col] = df[col].str.strip()
 
+marine = marine.join(df)
 
-marine_atts = df
-
-df = gp.read_file(unit_dir / "marine_blocks_prj.shp").to_crs(DATA_CRS)
-df["id"] = df.PROT_NUMBE.str.strip() + "-" + df.BLOCK_NUMB.str.strip()
-df = (
-    df.set_index("id")[["PROT_NUMBE", "BLOCK_NUMB", "geometry"]]
-    .join(marine_atts)
-    .reset_index()
-)
 # convert to bool columns if nonempty
-plan_cols = df.columns.intersection(PLANS.keys())
-df[plan_cols] = df[plan_cols].fillna(False).astype("bool")
-to_geofeather(df, unit_dir / "marine_blocks.feather")
+plan_cols = marine.columns.intersection(PLANS.keys())
+marine[plan_cols] = marine[plan_cols].fillna(False).astype("bool")
+to_geofeather(marine.reset_index(), out_dir / "marine" / "marine_blocks.feather")
 
 
 ### Extract the boundary
 sa_df = gp.read_file(boundary_dir / "source/SALCCboundary.gdb")
 to_geofeather(sa_df[["geometry"]], boundary_dir / "sa_boundary.feather")
 
-bnd = pg.from_wkb(sa_df.geometry.apply(lambda g: g.to_wkb()))[0]
-
+bnd = to_pygeos(sa_df.geometry)[0]
 
 ### Process TNC secured lands
 print("Processing TNC secured lands...")
@@ -95,12 +116,13 @@ df = gp.read_file(boundary_dir / "source/TNC_SA2018_InterimPublic.gdb")[
 ]
 
 # Select out areas within the SA boundary
-geoms = pg.from_wkb(df.geometry.apply(lambda g: g.to_wkb()))
+geoms = to_pygeos(df.geometry)
 tree = pg.STRtree(geoms)
 idx = tree.query(bnd, predicate="intersects")
 
-df = df.iloc[idx].copy()
-geoms = geoms.iloc[idx].copy()
+df = pd.DataFrame(df.iloc[idx].drop(columns=["geometry"]))
+
+geoms = geoms[idx].copy()
 
 # TODO: explode the multipolygons for better indexing (~1.1k polys)
 
@@ -108,6 +130,7 @@ geoms = geoms.iloc[idx].copy()
 # TODO: make_valid instead
 fix_idx = ~pg.is_valid(geoms)
 geoms[fix_idx] = pg.buffer(geoms[fix_idx], 0)
-df = pd.DataFrame(df).reset_index(drop=True)
 df["geometry"] = geoms
-to_geofeather_from_pygeos(df, boundary_dir / "ownership.feather", crs=DATA_CRS)
+to_geofeather_from_pygeos(
+    df.reset_index(), boundary_dir / "ownership.feather", crs=DATA_CRS
+)

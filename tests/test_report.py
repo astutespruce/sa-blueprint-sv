@@ -14,7 +14,7 @@ from util.format import format_number
 UNIT_ID = "030602040601"
 
 
-data_dir = Path("/Users/bcward/projects/sa-reports/data")
+data_dir = Path("data")
 
 
 print("Rendering maps...")

@@ -21,8 +21,8 @@ def create_report(maps, blueprint_results, aoi_name=None, aoi_type_label=None):
         "aoi_name": aoi_name,
         "aoi_type_label": aoi_type_label,
         "maps": maps,
-        # omit Not a priority
-        "blueprint_legend": BLUEPRINT[:0:-1],
+        # omit Not a priority, sort from highest to lowest
+        "blueprint": BLUEPRINT[:0:-1],
         "blueprint_results": blueprint_results,
     }
 

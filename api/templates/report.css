@@ -71,6 +71,18 @@ h1 {
     margin: 0 0 48pt 0;
 }
 
+h4 {
+    margin-bottom: 2pt;
+}
+
+p {
+    margin-top: 0;
+}
+
+p.indent {
+    margin-left: 12pt;
+}
+
 section {
     /* FIXME: debug only */
     border-top: 4px solid #aaa;

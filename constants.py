@@ -5,6 +5,8 @@ DATA_CRS = "EPSG:5070"
 GEO_CRS = "EPSG:4326"
 MAP_CRS = "EPSG:3857"
 
+ACRES_PRECISION = 1
+
 
 # indexed by BP value
 BLUEPRINT = [
@@ -22,6 +24,7 @@ BLUEPRINT = [
         "label": "Corridors",
         "area": "5%",
         "description": "These are connections between large patches of highest priority areas and secured lands, optimized for efficiency and indicator condition in a least cost path analysis.",
+        "report_description": "This category covers an additional 5% of the South Atlantic geography; in total, the Blueprint covers 50%.",
         "color": "#686868",
     },
     # 3:
@@ -29,6 +32,7 @@ BLUEPRINT = [
         "label": "Medium priority",
         "area": "20%",
         "description": "Above-average areas for natural and cultural resources based on indicator condition, capturing potential restoration opportunities.",
+        "report_description": "This class covers 20% of the South Atlantic geography; together, the highest, high, and medium priority categories cover 45%.",
         "color": "#fbb4b9",
     },
     # 4:
@@ -36,6 +40,7 @@ BLUEPRINT = [
         "label": "High priority",
         "area": "15%",
         "description": "Important areas for natural and cultural resources based on indicator condition.",
+        "report_description": "This class covers an additional 15% of the South Atlantic geography; together, the highest and high priority categories cover 25%.",
         "color": "#c51b8a",
     },
     # 5:
@@ -43,6 +48,7 @@ BLUEPRINT = [
         "label": "Highest priority",
         "area": "10%",
         "description": "The most important areas for natural and cultural resources based on indicator condition.",
+        "report_description": "This class covers 10% of the South Atlantic geography.",
         "color": "#49006a",
     },
 ]

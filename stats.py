@@ -5,7 +5,7 @@ import pandas as pd
 import rasterio
 from rasterio.mask import raster_geometry_mask
 
-from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS, URBAN_YEARS
+from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS, URBAN_YEARS, ACRES_PRECISION
 
 src_dir = Path("data")
 blueprint_filename = src_dir / "Blueprint_2_2.tif"
@@ -49,7 +49,7 @@ def extract_count_in_geometry(filename, geometry_mask, window, bins):
     return np.bincount(values, minlength=len(bins)).astype("uint32")
 
 
-def extract_blueprint_indicator_counts(geometries, inland=True):
+def extract_blueprint_indicator_area(geometries, inland=True):
     """Calculate the area of overlap between geometries and Blueprint and indicators.
 
     NOTE: Blueprint and indicators are on a 30m grid.
@@ -57,12 +57,14 @@ def extract_blueprint_indicator_counts(geometries, inland=True):
     Parameters
     ----------
     geometries : list-like of geometry objects that provide __geo_interface__
-    inland : if True, will only use inland indicators, otherwise will use only marine indicators
+    inland : bool (default False)
+        if False will use only marine indicators
 
     Returns
     -------
     dict or None (if does not overlap Blueprint data)
         keys are mask, blueprint, <indicator_id>, ...
+        values are total areas for each value in each theme
     """
     results = {}
     # create mask and window
@@ -71,24 +73,34 @@ def extract_blueprint_indicator_counts(geometries, inland=True):
             src, geometries, crop=True, all_touched=True
         )
 
-    results["shape_mask"] = (~geometry_mask).sum()
+        # square meters to acres
+        cellsize = src.res[0] * src.res[1] * 0.000247105
 
+    results["shape_mask"] = (
+        ((~geometry_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
+    )
+
+    # Does not overlap Blueprint extent, return
     if results["shape_mask"] == 0:
         return None
 
     blueprint_counts = extract_count_in_geometry(
         blueprint_filename, geometry_mask, window, np.arange(len(BLUEPRINT))
     )
-    results["blueprint"] = blueprint_counts
-
-    ecosystem_counts = extract_count_in_geometry(
-        ecosystems_filename, geometry_mask, window, np.arange(9)
+    results["blueprint"] = (
+        (blueprint_counts * cellsize).round(ACRES_PRECISION).astype("float32")
     )
-    results["ecosystems"] = ecosystem_counts
 
     if inland:
         # since some HUCs overlap marine areas, we should include all indicators
         indicators = INDICATORS
+
+        ecosystem_counts = extract_count_in_geometry(
+            ecosystems_filename, geometry_mask, window, np.arange(9)
+        )
+        results["ecosystems"] = (
+            (ecosystem_counts * cellsize).round(ACRES_PRECISION).astype("float32")
+        )
     else:
         # marine areas only have marine indicators
         indicators = [i for i in INDICATORS if i["id"].startswith("marine_")]
@@ -100,12 +112,12 @@ def extract_blueprint_indicator_counts(geometries, inland=True):
 
         bins = np.arange(0, max(values) + 1)
         counts = extract_count_in_geometry(filename, geometry_mask, window, bins)
-        results[id] = counts
+        results[id] = (counts * cellsize).round(ACRES_PRECISION).astype("float32")
 
     return results
 
 
-def extract_urbanization_counts(geometries):
+def extract_urbanization_area(geometries):
     """Calculate the area of overlap between geometries and urbanization
     for each decade from 2020 to 2100.
 
@@ -121,7 +133,7 @@ def extract_urbanization_counts(geometries):
     -------
     dict
         keys are mask, <decade>, ...
-        values are the total amount of urbanization for each decade
+        values are the total acres of urbanization for each decade
     """
     results = {}
 
@@ -131,7 +143,12 @@ def extract_urbanization_counts(geometries):
             src, geometries, crop=True, all_touched=True
         )
 
-    results["shape_mask"] = (~geometry_mask).sum()
+        # square meters to acres
+        cellsize = src.res[0] * src.res[1] * 0.000247105
+
+    results["shape_mask"] = (
+        ((~geometry_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
+    )
 
     if results["shape_mask"] == 0:
         return None
@@ -169,22 +186,25 @@ def extract_urbanization_counts(geometries):
         filename = urban_dir / f"urb_indexed_{year}.tif"
         counts = extract_count_in_geometry(filename, geometry_mask, window, bins)
         # total urbanization is sum of pixel counts * probability
-        results[year] = (counts * probabilities).sum()
+        results[year] = (
+            ((counts * probabilities).sum() * cellsize)
+            .round(ACRES_PRECISION)
+            .astype("float32")
+        )
 
     return results
 
 
-def extract_slr_counts(geometries):
+def extract_slr_area(geometries):
     """Calculate the area of overlap between geometries and each level of SLR
     between 0 (currently inundated) and 6 meters.
 
-    Values are cumulative, so to get the total amount inundated by 6 feet,
-    you must sum up everything from 0-6 feet.
+    Values are cumulative; the total area inundated is added to each higher
+    level of SLR
 
     This is only applicable to inland (non-marine) areas that are near the coast.
 
     NOTE: SLR is in a VRT with a cell size derived from the underlying rasters.
-
 
     Parameters
     ----------
@@ -207,6 +227,9 @@ def extract_slr_counts(geometries):
             src, geometries, crop=True, all_touched=True
         )
 
+        # square meters to acres
+        cellsize = src.res[0] * src.res[1] * 0.000247105
+
         data = src.read(1, window=window)
         nodata = src.nodatavals[0]
         mask = (data == nodata) | geometry_mask
@@ -217,8 +240,14 @@ def extract_slr_counts(geometries):
     if results["shape_mask"] == 0:
         return None
 
-    counts = extract_count_in_geometry(vrt, geometry_mask, window, bins=np.arange(7))
+    bins = np.arange(7)
+    counts = extract_count_in_geometry(vrt, geometry_mask, window, bins=bins)
 
-    results.update({i: count for i, count in enumerate(counts)})
+    # accumulate values
+    for bin in bins[1:]:
+        counts[bin] = counts[bin] + counts[bin - 1]
+
+    acres = (counts * cellsize).round(ACRES_PRECISION).astype("float32")
+    results.update({i: a for i, a in enumerate(acres)})
 
     return results
