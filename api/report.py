@@ -4,9 +4,15 @@ from io import BytesIO
 from weasyprint import HTML
 from jinja2 import Environment, PackageLoader
 
-from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS
+from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS_INDEX
+
+
+def reverse_filter(iterable):
+    return list(iterable)[::-1]
+
 
 env = Environment(loader=PackageLoader("api", "templates"))
+env.filters["reverse"] = reverse_filter
 
 
 def create_report(maps, results):
@@ -27,7 +33,7 @@ def create_report(maps, results):
         "maps": maps,
         "blueprint": BLUEPRINT,
         "ecosystems": ECOSYSTEMS,
-        "indicators": INDICATORS,
+        "indicators": INDICATORS_INDEX,
         "results": results,
     }
 

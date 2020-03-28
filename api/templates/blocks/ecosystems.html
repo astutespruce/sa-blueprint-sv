@@ -11,22 +11,23 @@
         </tr>
     </thead>
     <tbody>
-        {% if results.ecosystems %}
-            {% for item in ecosystems %}
-                {% if results.ecosystems[loop.index-1] %}
-                <tr>
-                    <td>{{item.label}}</td>
-                    <td>{{results.ecosystems[loop.index-1]|round|int}}</td>
-                    <td>{{(100 * results.ecosystems[loop.index-1] / results.blueprint_acres)|round|int}}%</td>
-                </tr>
-                {% endif %}
-            {% endfor %}
-        {% else %}
+        {% for ecosystem in ecosystems %}
+            {% if results.ecosystems[loop.index-1] %}
             <tr>
-                <td>Marine</td>
-                <td>{{results.blueprint_acres}}</td>
-                <td>100%</td>
+                <td>{{ecosystem.label}}</td>
+                <td>{{results.ecosystems[loop.index-1]|round|int}}</td>
+                <td>{{(100 * results.ecosystems[loop.index-1] / results.blueprint_acres)|round|int}}%</td>
             </tr>
-        {% endif %}
+            {% endif %}
+        {% endfor %}
     </tbody>
 </table>
+
+
+{% for ecosystem in ecosystems %}
+    {% if results.ecosystems[loop.index-1] or ecosystem.extent=='region' %}
+        {% with index=loop.index-1 %}
+            {% include "blocks/ecosystem.html" %}
+        {% endwith %}
+    {% endif %}
+{% endfor %}

@@ -40,7 +40,7 @@ id = "030602040601"
 huc12 = SummaryUnits("huc12")
 results = huc12.get_results(id)
 
-out_dir = Path(f"/tmp/{id}")
+out_dir = Path(f"/tmp/{id}/maps")
 if not out_dir.exists():
     os.makedirs(out_dir)
 

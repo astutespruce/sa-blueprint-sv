@@ -1,0 +1,16 @@
+<h2>
+    {{ecosystem.label}}:
+    {% if results.ecosystems[index] %}
+        {{(100 * results.ecosystems[index] / results.blueprint_acres)|round|int}}% of area
+    {% endif %}
+</h2>
+
+{% for indicator_id in ecosystem.indicators %}
+    {% with indicator_id=ecosystem.id + "_" + indicator_id %}
+        {% if indicator_id in results.indicators %}
+            {% with indicator=indicators[indicator_id] %}
+                {% include "blocks/indicator.html" %}
+            {% endwith %}
+        {% endif %}
+    {% endwith %}
+{% endfor %}

@@ -110,8 +110,10 @@ table td {
     border: 1px solid #666;
 }
 
-table.centered th + th,
-table.centered td + td {
+table.centered th:last-child,
+table.centered td:last-child,
+table.centered th:nth-last-child(2),
+table.centered td:nth-last-child(2) {
     text-align: center;
 }
 
