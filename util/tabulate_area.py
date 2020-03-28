@@ -185,7 +185,7 @@ by_protection.to_csv(out_dir / "protection.csv", index=False)
 
 
 ### Marine blocks
-out_dir = data_dir / "derived/marine"
+out_dir = data_dir / "derived/marine_blocks"
 if not out_dir.exists():
     os.makedirs(out_dir)
 
@@ -217,8 +217,8 @@ for col in df.columns.difference(["shape_mask"]):
     results = results.join(s)
 
 results.index.name = "id"
-results.to_csv(out_dir / "blueprint_results.csv", index_label="id")
-results.reset_index().to_feather(out_dir / "blueprint_results.feather")
+results.to_csv(out_dir / "blueprint.csv", index_label="id")
+results.reset_index().to_feather(out_dir / "blueprint.feather")
 
 print(
     "Processed {:,} zones in {:.2f}m".format(len(geometries), (time() - start) / 60.0)

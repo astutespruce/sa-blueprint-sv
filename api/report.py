@@ -4,26 +4,31 @@ from io import BytesIO
 from weasyprint import HTML
 from jinja2 import Environment, PackageLoader
 
-from constants import BLUEPRINT
+from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS
 
 env = Environment(loader=PackageLoader("api", "templates"))
 
 
-def create_report(maps, blueprint_results, aoi_name=None, aoi_type_label=None):
+def create_report(maps, results):
     template = env.get_template("report.html")
 
     title = "South Atlantic Conservation Blueprint Summary"
+    subtitle = ""
+    if "name" in results:
+        subtitle = f"for {results['name']}"
+        if "type" in results:
+            subtitle += " " + results["type"]
 
     context = {
         "date": date.today().strftime("%m/%d/%y"),
         "title": title,
+        "subtitle": subtitle,
         "url": "TODO: URL",
-        "aoi_name": aoi_name,
-        "aoi_type_label": aoi_type_label,
         "maps": maps,
-        # omit Not a priority, sort from highest to lowest
-        "blueprint": BLUEPRINT[:0:-1],
-        "blueprint_results": blueprint_results,
+        "blueprint": BLUEPRINT,
+        "ecosystems": ECOSYSTEMS,
+        "indicators": INDICATORS,
+        "results": results,
     }
 
     # Render variables as needed into the CSS

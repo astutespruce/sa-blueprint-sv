@@ -10,7 +10,7 @@ body {
     margin: 1in 0.5in 0.5in;
 
     @top-left {
-        content: "{{title}}";
+        content: "{{title}} {{subtitle}}";
         font-size: 10pt;
         color: #aaaaaa;
     }
@@ -84,8 +84,6 @@ p.indent {
 }
 
 section {
-    /* FIXME: debug only */
-    border-top: 4px solid #aaa;
     break-before: always;
 }
 

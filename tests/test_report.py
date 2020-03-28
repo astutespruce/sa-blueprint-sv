@@ -1,71 +1,33 @@
 from pathlib import Path
 import pandas as pd
 
-from geofeather.pygeos import from_geofeather
-import pygeos as pg
 
 from api.report import create_report
 from api.map import render_maps
 from constants import BLUEPRINT, INDICATORS
 from util.format import format_number
+from api.summary_units import SummaryUnits
 
 
 # Testing: construct results from a HUC12
-UNIT_ID = "030602040601"
+id = "030602040601"
+huc12 = SummaryUnits("huc12")
+results = huc12.get_results(id)
 
 
 data_dir = Path("data")
 
 
 print("Rendering maps...")
-df = from_geofeather(data_dir / "summary_units/units.feather").set_index("id")
-geometry = df.loc[UNIT_ID].geometry
-bounds = pg.total_bounds(geometry)
-maps = render_maps(
-    bounds, summary_unit_id=UNIT_ID, indicators=[i["id"] for i in INDICATORS[:8]]
-)
 
-print("Fetching results...")
-huc12 = pd.read_feather(
-    data_dir / "summary_units/huc12.feather",
-    columns=[
-        "HUC12",
-        "name",
-        "Justification",
-        "PARCA",
-        "TNC",
-        "EPA",
-        "ACJV",
-        "NBCI",
-        "Alabama",
-        "Florida",
-        "NorthCarolina",
-        "Virginia",
-        "Georgia",
-    ],
-).set_index("HUC12")
-unit = huc12.loc[UNIT_ID]
+# maps = render_maps(
+#     results["bounds"], summary_unit_id=id, indicators=results["indicators"]
+# )
 
-blueprint = pd.read_feather(data_dir / "derived/huc12/blueprint.feather").set_index(
-    "huc12"
-)
-cellsize = 200 * 200 * 0.000247105
-result = blueprint.loc[UNIT_ID]
-labels = [e["label"] for e in BLUEPRINT]
-acres = [format_number(r) for r in (result[1:] * cellsize)]
-percents = (100 * result[1:].astype("float32") / result[1:].sum()).astype("uint8")
-blueprint_results = list(zip(labels, acres, percents))
+# FIXME
+maps = []
 
-
-params = {
-    "aoi_name": unit["name"],
-    "aoi_type_label": "subwatershed",
-    "maps": maps,
-    "blueprint_results": blueprint_results[::-1],
-}
-
-
-pdf = create_report(**params)
+pdf = create_report(maps=maps, results=results)
 
 with open("/tmp/test_report.pdf", "wb") as out:
     out.write(pdf)

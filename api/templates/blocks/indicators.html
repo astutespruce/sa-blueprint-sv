@@ -24,28 +24,7 @@
 </p>
 
 
-{% with number=2,label="Extent of each ecosystem" %}
-    {% include "elements/table_caption.html" %}
-{% endwith %}
-
-<table class="centered">
-    <thead>
-        <tr>
-            <th>Ecosystem</th>
-            <th>Acres</th>
-            <th>Percent of Area</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for (label,acres,percent) in ecosystem_results %}
-        <tr>
-            <td>{{label}}</td>
-            <td>{{acres}}</td>
-            <td>{{percent}}%</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% include "blocks/ecosystems.html" %}
 
 
 </section>

@@ -116,6 +116,7 @@ ECOSYSTEMS = [
             "permeablesurface",
             "riparianbuffers",
         ],
+        "extent": "region",
     },
     {
         "id": "landscapes",
@@ -125,11 +126,13 @@ ECOSYSTEMS = [
             "lowurbanhistoric",
             "resilientbiodiversityhotspots",
         ],
+        "extent": "region",
     },
     {
         "id": "waterscapes",
         "label": "Waterscapes",
         "indicators": ["migratoryfishconnectivity", "networkcomplexity"],
+        "extent": "region",
     },
 ]
 

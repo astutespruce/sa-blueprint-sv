@@ -10,9 +10,7 @@ import pygeos as pg
 from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, INDICATORS
 from api.map.util import to_geojson
 from api.map import render_maps
-
-# HUC12
-UNIT_ID = "030602040601"
+from api.summary_units import SummaryUnits
 
 
 # ### Write maps for an aoi
@@ -37,16 +35,17 @@ UNIT_ID = "030602040601"
 
 
 ### Write maps for a summary unit
-out_dir = Path("/tmp/summary_unit")
+# HUC12
+id = "030602040601"
+huc12 = SummaryUnits("huc12")
+results = huc12.get_results(id)
+
+out_dir = Path(f"/tmp/{id}")
 if not out_dir.exists():
     os.makedirs(out_dir)
 
-df = from_geofeather("data/summary_units/units.feather").set_index("id")
-geometry = df.loc[UNIT_ID].geometry
-bounds = pg.total_bounds(geometry)
-
 maps = render_maps(
-    bounds, summary_unit_id=UNIT_ID, indicators=[i["id"] for i in INDICATORS[:8]]
+    results["bounds"], summary_unit_id=id, indicators=results["indicators"]
 )
 
 for name, data in maps.items():
