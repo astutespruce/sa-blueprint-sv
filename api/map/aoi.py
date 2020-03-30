@@ -8,14 +8,24 @@ from settings import MBGL_SERVER_URL
 
 STYLE = {
     "version": 8,
-    "sources": {"aoi": {"type": "geojson", "data": ""}},
+    "sources": {
+        "aoi": {"type": "geojson", "data": ""},
+        "sa_units": {"type": "vector", "url": "mbtiles://sa_units", "tileSize": 256},
+    },
     "layers": [
+        {
+            "id": "mask",
+            "source": "sa_units",
+            "source-layer": "mask",
+            "type": "fill",
+            "paint": {"fill-color": "#333333", "fill-opacity": 0.5},
+        },
         {
             "id": "aoi",
             "source": "aoi",
             "type": "line",
             "paint": {"line-width": 2, "line-color": "#000000", "line-opacity": 1},
-        }
+        },
     ],
 }
 
@@ -50,4 +60,3 @@ def get_aoi_map_image(geojson, center, zoom, width, height):
 
     r = httpx.post(MBGL_SERVER_URL, json=params)
     return Image.open(BytesIO(r.content))
-
