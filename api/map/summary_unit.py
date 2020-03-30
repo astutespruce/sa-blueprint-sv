@@ -12,14 +12,6 @@ STYLE = {
         "sa_units": {"type": "vector", "url": "mbtiles://sa_units", "tileSize": 256}
     },
     "layers": [
-        # there are unsightly gaps between marine units and HUC12s that don't work with this approach
-        # {
-        #     "id": "units-fill",
-        #     "source": "units",
-        #     "source-layer": "units",
-        #     "type": "fill",
-        #     "paint": {"fill-color": "#333333", "fill-opacity": 0.5},
-        # },
         {
             "id": "mask",
             "source": "sa_units",
@@ -58,12 +50,8 @@ def get_summary_unit_map_image(id, center, zoom, width, height):
     """
 
     style = deepcopy(STYLE)
-    # filter OUT current unit
-    # style["layers"][0]["filter"] = ["!=", ["get", "id"], id]
     # filter IN current unit
-    # style["layers"][1]["filter"] = ["==", ["get", "id"], id]
-
-    style["layers"][0]["filter"] = ["==", ["get", "id"], id]
+    style["layers"][1]["filter"] = ["==", ["get", "id"], id]
 
     params = {
         "style": style,

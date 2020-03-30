@@ -7,13 +7,11 @@ from PIL import Image
 
 from settings import MBGL_SERVER_URL
 
-ZOOM = 3
-# TODO: derive from SA_bounds poly
-CENTER = [-81, 31.734804]
-WIDTH = 200
-HEIGHT = 200
+ZOOM = 2.8
+CENTER = [-78.593, 33.221]
+WIDTH = 160
+HEIGHT = 160
 
-# TODO: add south atlantic mask
 LOCATOR_STYLE = {
     "version": 8,
     "sources": {

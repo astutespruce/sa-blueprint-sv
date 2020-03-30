@@ -1,74 +1,80 @@
 
 
-<section>
-<h3>{{indicator.label}}</h3>
+<div class="indicator">
 
-<p>{{indicator.description}}</p>
+<div class="no-break">
+    <h3 class="indicator-header">{{indicator.label}}</h3>
 
-{% if maps[indicator_id] %}
-    <img src="data:image/png;base64,{{maps[indicator_id]}}" alt="Map for {{indicator.label}}" class="map">
-{% else %}
-    <div class="map-placeholder text-center">
-        map could not be created
-    </div>
-{% endif %}
+    <p>{{indicator.description}}</p>
 
-<div class="flex">
-    <div class="map-locator-container">
-        {% if maps.locator %}
-            <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
-        {% else %}
-            <div class="map-locator-placeholder text-center">
-                map could not be created
-            </div>
-        {% endif %}
-    </div>
+    {% if maps[indicator_id] %}
+        <img src="data:image/png;base64,{{maps[indicator_id]}}" alt="Map for {{indicator.label}}" class="map">
+    {% else %}
+        <div class="map-placeholder text-center">
+            map could not be created
+        </div>
+    {% endif %}
 
-    <div class="legend">
-        TODO: legend
-        <!-- {% for item in blueprint[:0:-1] %}
-            <div class="legend-element flex align-center">
-                <div class="legend-patch" style="background: {{item.color}}"></div>
-                <div>{{item.label}}</div>
-            </div>
-        {% endfor %} -->
+    <div class="flex">
+        <div class="map-locator-container">
+            {% if maps.locator %}
+                <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
+            {% else %}
+                <div class="map-locator-placeholder text-center">
+                    map could not be created
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="legend">
+            TODO: legend
+            <!-- {% for item in blueprint[:0:-1] %}
+                <div class="legend-element flex align-center">
+                    <div class="legend-patch" style="background: {{item.color}}"></div>
+                    <div>{{item.label}}</div>
+                </div>
+            {% endfor %} -->
+        </div>
     </div>
 </div>
 
 
-<!-- todo: better table counters -->
-<div class="caption">
-    Table {{2+loop.index}}: {{indicator.reportCaption}}
-</div>
+<div class="no-break">
+
+    <!-- todo: better table counters -->
+    <div class="caption">
+        Table {{2+loop.index}}: {{indicator.reportCaption}}
+    </div>
 
 
-<table class="centered">
-    <thead>
-        <tr>
-            <th></th>
-            <th>Indicator Values</th>
-            <th>Acres</th>
-            <th>Percent of Area</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% with acres=results[indicator_id][::-1] %}
-        {% for value, label in indicator['values'].items()|reverse %}
+    <table class="centered">
+        <thead>
             <tr>
-                <td>
-                    {% if loop.first %}
-                        High
-                    {% elif loop.last %}
-                        Low
-                    {% endif %}
-                </td>
-                <td>{{label}}</td>
-                <td>{{acres[loop.index-1]|round|int}}</td>
-                <td>{{(100 * acres[loop.index-1] / results.blueprint_acres)|round|int}}%</td>
+                <th></th>
+                <th>Indicator Values</th>
+                <th>Acres</th>
+                <th>Percent of Area</th>
             </tr>
-        {% endfor %}
-        {% endwith %}
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            {% with acres=results[indicator_id][::-1] %}
+            {% for value, label in indicator['values'].items()|reverse %}
+                <tr>
+                    <td>
+                        {% if loop.first %}
+                            High
+                        {% elif loop.last %}
+                            Low
+                        {% endif %}
+                    </td>
+                    <td>{{label}}</td>
+                    <td>{{acres[loop.index-1]|format_number}}</td>
+                    <td>{{(100 * acres[loop.index-1] / results.blueprint_acres)|format_number}}%</td>
+                </tr>
+            {% endfor %}
+            {% endwith %}
+        </tbody>
+    </table>
+</div>
 
-</section>
+</div>

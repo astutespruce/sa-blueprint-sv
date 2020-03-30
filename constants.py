@@ -60,53 +60,53 @@ BLUEPRINT_COLORS = {
 ECOSYSTEMS = [
     {
         "id": "beachanddune",
+        "value": 0,
         "label": "Beach and dune",
         "indicators": ["beachbirds", "unalteredbeach"],
-        "value": 0,
     },
     {
         "id": "estuarine",
+        "value": 1,
         "label": "Estuarine",
         "indicators": ["coastalcondition", "watervegetationedge", "wetlandpatchsize"],
-        "value": 1,
     },
     {
         "id": "forestedwetland",
+        "value": 2,
         "label": "Forested wetland",
         "indicators": ["amphibians", "birds", "extent"],
-        "value": 2,
     },
     {
         "id": "freshwatermarsh",
+        "value": 3,
         "label": "Freshwater marsh",
         "indicators": ["birds", "extent"],
-        "value": 3,
     },
     {
         "id": "maritimeforest",
+        "value": 4,
         "label": "Maritime forest",
         "indicators": ["extent"],
-        "value": 4,
     },
     {
         "id": "pineandprairie",
+        "value": 5,
         "label": "Pine and prairie",
         "indicators": ["amphibians", "birds", "regularlyburnedhabitat"],
-        "value": 5,
     },
     {
         "id": "uplandhardwood",
+        "value": 6,
         "label": "Upland hardwood",
         "indicators": ["birds", "urbanopenspace"],
-        "value": 6,
     },
     {
         "id": "marine",
+        "value": 7,
         "label": "Marine",
         "indicators": ["birds", "mammals", "potentialhardbottomcondition"],
-        "value": 7,
     },
-    {"id": "waterbodies", "label": "Inland waterbodies", "indicators": [], "value": 8},
+    {"id": "waterbodies", "value": 8, "label": "Inland waterbodies", "indicators": []},
     # region-wide ecosystems
     {
         "id": "freshwateraquatic",

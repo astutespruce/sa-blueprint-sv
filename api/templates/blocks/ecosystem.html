@@ -1,9 +1,14 @@
-<h2>
-    {{ecosystem.label}}:
-    {% if results.ecosystems[index] %}
-        {{(100 * results.ecosystems[index] / results.blueprint_acres)|round|int}}% of area
-    {% endif %}
-</h2>
+<div class="ecosystem">
+
+<div class="ecosystem-header flex align-center">
+    <img src="{{(ecosystem.id + '.svg')|load_asset}}" alt="Icon for {{ecosystem.label}}"/>
+    <h2>
+        {{ecosystem.label}}:
+        {% if results.ecosystems[index] %}
+            {{(100 * results.ecosystems[index] / results.blueprint_acres)|round|int}}% of area
+        {% endif %}
+    </h2>
+</div>
 
 {% for indicator_id in ecosystem.indicators %}
     {% with indicator_id=ecosystem.id + "_" + indicator_id %}
@@ -14,3 +19,5 @@
         {% endif %}
     {% endwith %}
 {% endfor %}
+
+</div>

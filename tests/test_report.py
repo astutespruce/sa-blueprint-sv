@@ -32,7 +32,8 @@ def read_cache(path):
     maps = {}
     for filename in path.glob("*.png"):
         name = filename.stem
-        maps[name] = b64encode(open(filename, "rb").read())
+        maps[name] = b64encode(open(filename, "rb").read()).decode("utf-8")
+        # maps[name] = open(filename, "rb").read()
     print("CACHE: loaded maps from cache")
 
     return maps

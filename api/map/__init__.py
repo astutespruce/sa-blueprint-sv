@@ -14,8 +14,8 @@ from api.map.mercator import get_zoom, get_map_bounds
 from constants import BLUEPRINT_COLORS, INDICATORS_INDEX
 
 
-WIDTH = 800
-HEIGHT = 600
+WIDTH = 740
+HEIGHT = 500
 PADDING = 5
 
 

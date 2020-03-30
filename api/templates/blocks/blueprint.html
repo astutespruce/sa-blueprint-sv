@@ -40,7 +40,7 @@
             for conservation action
             {% endif %}
         </h4>
-        <p class="indent">
+        <p>
             {{item.description}}
             {{item.report_description}}
         </p>
@@ -69,8 +69,8 @@ or just a donut chart of the highest priority?
         {% for item in blueprint[::-1] %}
         <tr>
             <td>{{item.label}}</td>
-            <td>{{acres[loop.index-1]|round|int}}</td>
-            <td>{{(100 * acres[loop.index-1] / results.blueprint_acres)|round|int}}%</td>
+            <td>{{acres[loop.index-1]|format_number}}</td>
+            <td>{{(100 * acres[loop.index-1] / results.blueprint_acres)|format_number}}%</td>
         </tr>
         {% endfor %}
         {% endwith %}

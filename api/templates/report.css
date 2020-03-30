@@ -45,30 +45,39 @@ body {
 }
 
 /* table of contents */
-ol.toc li {
+#TableOfContents {
+    margin: 48pt 0 72pt;
+}
+
+#TableOfContents li {
     border-bottom: 1pt dotted #666;
     margin-top: 0.25em;
 }
 
-ol.toc a {
+#TableOfContents a {
     text-decoration: none;
 }
 
-.toctext::before {
+#TableOfContents .toctext::before {
     content: target-text(attr(href));
 }
 
-.tocpagenr {
+#TableOfContents .tocpagenr {
     float: right;
 }
 
-.tocpagenr::after {
+#TableOfContents .tocpagenr::after {
     content: target-counter(attr(href), page);
 }
 
 h1 {
-    font-size: 38pt;
-    margin: 0 0 48pt 0;
+    font-size: 28pt;
+    line-height: 1.2;
+    margin: 0 0 12pt 0;
+}
+
+h2 {
+    margin: 0 0 12pt 0;
 }
 
 h4 {
@@ -77,10 +86,6 @@ h4 {
 
 p {
     margin-top: 0;
-}
-
-p.indent {
-    margin-left: 12pt;
 }
 
 section {
@@ -117,6 +122,11 @@ table.centered td:nth-last-child(2) {
     text-align: center;
 }
 
+.no-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+}
+
 .caption {
     font-size: 10pt;
     font-weight: bold;
@@ -124,6 +134,7 @@ table.centered td:nth-last-child(2) {
 
 .box {
     padding: 10pt;
+    margin-bottom: 12pt;
     border-radius: 10pt;
     background: #2e465b;
     color: #ffffff;
@@ -150,8 +161,8 @@ table.centered td:nth-last-child(2) {
 }
 
 .map {
-    margin-bottom: 12pt;
     width: 100%;
+    margin-bottom: 12pt;
 }
 
 .map-placeholder {
@@ -183,6 +194,12 @@ table.centered td:nth-last-child(2) {
 .flex.align-center {
     align-items: center;
 }
+.flex.justify-center {
+    justify-content: center;
+}
+.flex.flex-column {
+    flex-direction: column;
+}
 
 .legend {
     flex: 1 1 auto;
@@ -197,4 +214,44 @@ table.centered td:nth-last-child(2) {
 
 .legend-element + .legend-element {
     margin-top: 6pt;
+}
+
+.ecosystem {
+    break-before: always;
+}
+
+.ecosystem-header {
+    margin-bottom: 12pt;
+    padding: 6pt 12pt;
+    background: #eef7fc;
+    border-bottom: 1px solid #bae0f2;
+    border-top: 1px solid #bae0f2;
+}
+
+.ecosystem-header h2 {
+    margin-bottom: 0;
+}
+
+.ecosystem-header img {
+    margin-right: 12pt;
+}
+
+.indicator + .indicator {
+    margin-top: 36pt;
+}
+
+.indicator-header {
+    font-style: italic;
+    margin-bottom: 4pt;
+}
+
+img.logo {
+    margin-right: 12pt;
+    display: block;
+    width: 100px;
+}
+
+.cover-footer {
+    margin-top: 36pt;
+    width: 100%;
 }
