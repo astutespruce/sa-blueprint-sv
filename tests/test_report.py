@@ -43,7 +43,7 @@ id = "030602040601"
 
 
 out_dir = Path(f"/tmp/{id}")
-cache_dir = out_dir / "map"
+cache_dir = out_dir / "maps"
 
 if not out_dir.exists():
     os.makedirs(out_dir)

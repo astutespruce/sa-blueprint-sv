@@ -8,7 +8,9 @@ from settings import MBGL_SERVER_URL
 
 STYLE = {
     "version": 8,
-    "sources": {"units": {"type": "vector", "url": "mbtiles://units", "tileSize": 256}},
+    "sources": {
+        "sa_units": {"type": "vector", "url": "mbtiles://sa_units", "tileSize": 256}
+    },
     "layers": [
         # there are unsightly gaps between marine units and HUC12s that don't work with this approach
         # {
@@ -20,11 +22,18 @@ STYLE = {
         # },
         {
             "id": "units-outline",
-            "source": "units",
+            "source": "sa_units",
             "source-layer": "units",
             "type": "line",
             "paint": {"line-width": 2, "line-color": "#000000", "line-opacity": 1},
-        }
+        },
+        {
+            "id": "mask",
+            "source": "sa_units",
+            "source-layer": "mask",
+            "type": "fill",
+            "paint": {"fill-color": "#333333", "fill-opacity": 0.5},
+        },
     ],
 }
 

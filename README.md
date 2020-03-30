@@ -22,11 +22,38 @@ on 3/23/2020.
 
 ## Tiles
 
-State boundary tiles were generated from CENSUS TIGER state boundaries.
+### State boundaries
+
+Used for overview map in report.
+
+Downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=States+%28and+equivalent%29
+
+Rendered to vector tiles:
+
+```bash
+ogr2ogr -t_srs EPSG:4326 -f GeoJSONSeq -select STATEFP /tmp/states.json tl_2019_us_state.shp
+tippecanoe -f -pg -z0 -z5 -o ../../../tiles/states.mbtiles -l states /tmp/states.json
+```
+
+### Summary units
 
 Summary units where consolidated using `util/prep_summary_units.py` then
 converted to vector tiles using tippecanoe:
 
 ```
 tippecanoe -f -pg -z 15 -o ./tiles/units.mbtiles -l "units" ./data/summary_units/units.geojson
+```
+
+### Region mask
+
+Mask was created using `util/prep_summary_units.py` then converted to vector tiles using tippecanoe:
+
+```
+tippecanoe -f -pg -z 8 -o ./tiles/sa_mask.mbtiles -l "mask" ./data/boundaries/mask.geojson
+```
+
+### Merged tiles
+
+```
+tile-join -f -o ./tiles/sa_units.mbtiles ./tiles/sa_mask.mbtiles ./tiles/units.mbtiles
 ```

@@ -1,6 +1,9 @@
+import geopandas as gp
 import numpy as np
+import pandas as pd
 import pygeos as pg
 from pyproj.transformer import Transformer
+from shapely.wkb import loads
 
 
 def to_crs(geometries, src_crs, target_crs):
@@ -32,3 +35,26 @@ def to_pygeos(geometries):
     ndarray of pygeos geometries
     """
     return pg.from_wkb(geometries.apply(lambda g: g.to_wkb()))
+
+
+def from_pygeos(geometries):
+    """Converts a Series or ndarray of pygeos geometry objects to a GeoSeries.
+
+    Parameters
+    ----------
+    geometries : Series or ndarray of pygeos geometry objects
+
+    Returns
+    -------
+    GeoSeries
+    """
+
+    def load_wkb(wkb):
+        return loads(wkb)
+
+    wkb = pg.to_wkb(geometries)
+
+    if isinstance(geometries, pd.Series):
+        return gp.GeoSeries(wkb.apply(load_wkb))
+
+    return gp.GeoSeries(np.vectorize(load_wkb, otypes=[np.object])(wkb))

@@ -23,6 +23,7 @@ LOCATOR_STYLE = {
             "tileSize": 256,
         },
         "states": {"type": "vector", "url": "mbtiles://states", "tileSize": 256},
+        "sa_units": {"type": "vector", "url": "mbtiles://sa_units", "tileSize": 256},
         "marker": {"type": "geojson", "data": ""},
     },
     "layers": [
@@ -33,6 +34,13 @@ LOCATOR_STYLE = {
             "source-layer": "states",
             "type": "line",
             "paint": {"line-color": "#444444", "line-width": 1, "line-opacity": 1},
+        },
+        {
+            "id": "mask",
+            "source": "sa_units",
+            "source-layer": "mask",
+            "type": "fill",
+            "paint": {"fill-color": "#333333", "fill-opacity": 0.5},
         },
         {
             "id": "marker",
