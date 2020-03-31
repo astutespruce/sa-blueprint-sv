@@ -22,17 +22,17 @@ Values derived from:
 <table class="centered">
     <thead>
         <tr>
-            <th>Ownership</th>
-            <th>Acres</th>
-            <th>Percent of Area</th>
+            <th class="label">Ownership</th>
+            <th class="acres">Acres</th>
+            <th class="percent">Percent of Area</th>
         </tr>
     </thead>
     <tbody>
         {% for entry in results['ownership'] %}
             <tr>
-                <td>{{entry.label}}</td>
-                <td>{{entry.acres|format_number}}</td>
-                <td>{{(100 * entry.acres / results.acres)|format_number}}%</td>
+                <td class="label">{{entry.label}}</td>
+                <td class="acres">{{entry.acres|format_number}}</td>
+                <td class="percent">{{(100 * entry.acres / results.acres)|format_number}}%</td>
             </tr>
         {% endfor %}
     </tbody>
@@ -57,17 +57,17 @@ Values derived from:
     <table class="centered">
         <thead>
             <tr>
-                <th>Land Protection Status</th>
-                <th>Acres</th>
-                <th>Percent of Area</th>
+                <th class="label">Land Protection Status</th>
+                <th class="acres">Acres</th>
+                <th class="percent">Percent of Area</th>
             </tr>
         </thead>
         <tbody>
             {% for entry in results['protection'] %}
             <tr>
-                <td>{{entry.label}}</td>
-                <td>{{entry.acres|format_number}}</td>
-                <td>{{(100 * entry.acres / results.acres)|format_number}}%</td>
+                <td class="label">{{entry.label}}</td>
+                <td class="acres">{{entry.acres|format_number}}</td>
+                <td class="percent">{{(100 * entry.acres / results.acres)|format_number}}%</td>
             </tr>
         {% endfor %}
         </tbody>

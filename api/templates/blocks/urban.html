@@ -5,7 +5,6 @@
 
     <!-- TODO: Urban figure - construct SVG? -->
 
-    <!-- todo: better table counters -->
     <div class="caption">
         Table {{table.counter}}: Extent of projected urbanization by decade{% if results.name %}within the {{results.name}} {{results.type}}{% endif %}.
         Values from the <a href="http://www.basic.ncsu.edu/dsl/urb.html">SLEUTH urban growth model</a>.
@@ -16,17 +15,17 @@
     <table class="centered">
         <thead>
             <tr>
-                <th>Decade</th>
-                <th>Acres</th>
-                <th>Percent of Area</th>
+                <th class="label">Decade</th>
+                <th class="acres">Acres</th>
+                <th class="percent">Percent of Area</th>
             </tr>
         </thead>
         <tbody>
             {% for acres in results['urban'] %}
             <tr>
-                <td>{{2020 + (10*(loop.index-1))}}</td>
-                <td>{{acres|format_number}}</td>
-                <td>{{(100 * acres / results.urban_acres)|format_number}}%</td>
+                <td class="label">{{2020 + (10*(loop.index-1))}}</td>
+                <td class="percent">{{acres|format_number}}</td>
+                <td class="percent">{{(100 * acres / results.urban_acres)|format_number}}%</td>
             </tr>
         {% endfor %}
         </tbody>

@@ -77,6 +77,8 @@ def create_report(maps, results):
         reverse=True,
     )
 
+    ecosystem_acres = sum([e["acres"] for e in ecosystems])
+
     legends = {
         # sort descending, omit not a priority
         "blueprint": BLUEPRINT[:0:-1]
@@ -90,7 +92,7 @@ def create_report(maps, results):
                 legend.append({"value": value, "label": label, "color": colors[value]})
 
         legend.reverse()
-        legends[indicator_id] = legend  # {e["value"]: e for e in legend}
+        legends[indicator_id] = legend
 
     context = {
         "date": date.today().strftime("%m/%d/%y"),
@@ -101,6 +103,7 @@ def create_report(maps, results):
         "legends": legends,
         "blueprint": BLUEPRINT,
         "ecosystems": ecosystems,
+        "ecosystem_acres": ecosystem_acres,
         "indicators": INDICATORS_INDEX,
         "results": results,
     }

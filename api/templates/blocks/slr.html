@@ -14,17 +14,17 @@
     <table class="centered">
         <thead>
             <tr>
-                <th>Depth of inundation (ft)</th>
-                <th>Acres</th>
-                <th>Percent of Area</th>
+                <th class="label">Depth of inundation (ft)</th>
+                <th class="acres">Acres</th>
+                <th class="percent">Percent of Area</th>
             </tr>
         </thead>
         <tbody>
             {% for acres in results['slr'] %}
             <tr>
-                <td>{{loop.index - 1}}</td>
-                <td>{{acres|format_number}}</td>
-                <td>{{(100 * acres / results.slr_acres)|format_number}}%</td>
+                <td class="label">{{loop.index - 1}} foot inundation depth</td>
+                <td class="acres">{{acres|format_number}}</td>
+                <td class="percent">{{(100 * acres / results.slr_acres)|format_number}}%</td>
             </tr>
         {% endfor %}
         </tbody>

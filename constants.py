@@ -394,7 +394,11 @@ INDICATORS = [
             0: "Not recently burned or not open canopy",
             1: "Recently burned and open canopy",
         },
-        "colors": {0: "#E1E1E1", 1: "#FF0000"},
+        "colors": {
+            # 0: "#E1E1E1", # not sufficiently visible on basemap
+            0: "#ccece6",
+            1: "#FF0000",
+        },
         "domain": [0, 1],
         "goodThreshold": 1,
         "datasetID": "ea13b5d4f83d4e27bc8bfc8878a85b2c",
@@ -513,7 +517,13 @@ INDICATORS = [
             2: "Hardbottom less likely to be stressed by human activities",
             3: "Hardbottom likely to be in best condition due to additional protections",
         },
-        "colors": {0: "#E1E1E1", 1: "#73FFDF", 2: "#00A9E6", 3: "#002673"},
+        "colors": {
+            # 0: "#E1E1E1", # not sufficiently visible on basemap
+            0: "#fff7bc",
+            1: "#73FFDF",
+            2: "#00A9E6",
+            3: "#002673",
+        },
         "domain": [0, 3],
         "goodThreshold": 2,
         "datasetID": "cbb923b746fc435b93d079f9261fa7c2",

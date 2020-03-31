@@ -1,3 +1,5 @@
+<div class="spacer"></div>
+
 {% with number=table.counter,label="Extent of each ecosystem" %}
     {% include "elements/table_caption.html" %}
 {% endwith %}
@@ -6,21 +8,27 @@
 <table class="centered">
     <thead>
         <tr>
-            <th>Ecosystem</th>
-            <th>Acres</th>
-            <th>Percent of Area</th>
+            <th class="label">Ecosystem</th>
+            <th class="acres">Acres</th>
+            <th class="percent">Percent of Area</th>
         </tr>
     </thead>
     <tbody>
         {% for ecosystem in ecosystems %}
             {% if ecosystem.acres %}
             <tr>
-                <td>{{ecosystem.label}}</td>
-                <td>{{ecosystem.acres|format_number}}</td>
-                <td>{{(100 * ecosystem.acres / results.blueprint_acres)|format_number}}%</td>
+                <td class="label">{{ecosystem.label}}</td>
+                <td class="acres">{{ecosystem.acres|format_number}}</td>
+                <td class="percent">{{(100 * ecosystem.acres / results.blueprint_acres)|format_number}}%</td>
             </tr>
             {% endif %}
         {% endfor %}
+
+        <tr class="total-row">
+            <td class="label align-right">Total ecosystem area</td>
+            <td class="acres">{{ecosystem_acres|format_number}}</td>
+            <td class="percent">{{(100 * ecosystem_acres / results.blueprint_acres)|format_number}}%</td>
+        </tr>
     </tbody>
 </table>
 
