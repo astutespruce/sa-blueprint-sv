@@ -52,12 +52,12 @@
                 <th></th>
                 <th>Indicator Values</th>
                 <th>Acres</th>
-                <th>Percent of Ecosystem</th>
+                <th>Percent of Indicator Area</th>
             </tr>
         </thead>
         <tbody>
             <!-- use sum of area in regionwide indicators -->
-            {% with acres=results[indicator_id][::-1],total_acres=ecosystem.acres or (results[indicator_id]|sum) %}
+            {% with acres=results[indicator_id][::-1],total_acres=results[indicator_id]|sum %}
             {% for value, label in indicator['values'].items()|reverse %}
                 <tr>
                     <td>
@@ -72,6 +72,14 @@
                     <td>{{(100 * acres[loop.index-1] / total_acres)|format_number}}%</td>
                 </tr>
             {% endfor %}
+
+            <tr class="total-row">
+                <td></td>
+                <td>Total indicator area</td>
+                <td>{{total_acres|format_number}}</td>
+                <td>100%</td>
+            </tr>
+
             {% endwith %}
         </tbody>
     </table>

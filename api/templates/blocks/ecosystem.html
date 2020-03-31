@@ -3,7 +3,7 @@
 <div class="ecosystem-header flex align-center">
     <img src="{{(ecosystem.id + '.svg')|load_asset}}" alt="Icon for {{ecosystem.label}}"/>
     <h2>
-        {{ecosystem.label}}:
+        <span id="{{ecosystem.id}}">{{ecosystem.label}}</span>:
         {% if ecosystem.acres %}
             {{(100 * ecosystem.acres / results.blueprint_acres)|round|int}}% of area
         {% endif %}

@@ -14,12 +14,37 @@
     <li>
         <a href="#Indicators" class="toctext"></a>
         <a href="#Indicators" class="tocpagenr"></a>
+        <ol>
+            {% for ecosystem in ecosystems %}
+                {% if ecosystem.indicators %}
+                    <li>
+                        <a href="#{{ecosystem.id}}" class="toctext"></a>
+                        <a href="#{{ecosystem.id}}" class="tocpagenr"></a>
+                    </li>
+                {% endif %}
+            {% endfor %}
+        </ol>
     </li>
 
     {% if results.slr_acres or results.urban_acres %}
         <li>
             <a href="#Threats" class="toctext"></a>
             <a href="#Threats" class="tocpagenr"></a>
+            <ol>
+                {% if results.slr_acres %}
+                    <li>
+                        <a href="#SLR" class="toctext"></a>
+                        <a href="#SLR" class="tocpagenr"></a>
+                    </li>
+                {% endif %}
+
+                {% if results.urban_acres %}
+                    <li>
+                        <a href="#Urban" class="toctext"></a>
+                        <a href="#Urban" class="tocpagenr"></a>
+                    </li>
+                {% endif %}
+            </ol>
         </li>
     {% endif %}
 
@@ -27,6 +52,21 @@
         <li>
             <a href="#Ownership" class="toctext"></a>
             <a href="#Ownership" class="tocpagenr"></a>
+            <ol>
+                {% if results.ownership %}
+                    <li>
+                        <a href="#LandOwnership" class="toctext"></a>
+                        <a href="#LandOwnership" class="tocpagenr"></a>
+                    </li>
+                {% endif %}
+
+                {% if results.protection %}
+                    <li>
+                        <a href="#Protection" class="toctext"></a>
+                        <a href="#Protection" class="tocpagenr"></a>
+                    </li>
+                {% endif %}
+            </ol>
         </li>
     {% endif %}
 
