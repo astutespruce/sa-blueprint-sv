@@ -1,10 +1,12 @@
 from pathlib import Path
+import pandas as pd
 import pygeos as pg
 import geopandas as gp
 from geofeather import from_geofeather, to_geofeather
+from geofeather.pygeos import to_geofeather as to_geofeather_from_pygeos
 
-from util.pygeos_util import to_pygeos, from_pygeos
-from constants import GEO_CRS
+from util.pygeos_util import to_pygeos, from_pygeos, sjoin, to_crs
+from constants import GEO_CRS, DATA_CRS
 
 ### Consolidate HUC12 and marine blocks and output as geojson
 working_dir = Path("data/summary_units")
@@ -44,3 +46,36 @@ mask = from_pygeos(mask)
 
 df = gp.GeoDataFrame({"geometry": mask}, crs=GEO_CRS)
 df.to_file(working_dir / "mask.geojson", driver="GeoJSONSeq")
+
+
+### Extract counties within SA bounds
+states = (
+    gp.read_file(working_dir / "source/tl_2019_us_state.shp")[["STATEFP", "NAME"]]
+    .rename(columns={"NAME": "state"})
+    .set_index("STATEFP")
+)
+
+# coordinates are in geographic coordinates (NAD83 vs WGS84)
+df = gp.read_file(working_dir / "source/tl_2018_us_county.shp")
+crs = df.crs
+df = pd.DataFrame(df.copy())
+df["geometry"] = to_pygeos(df.geometry)
+
+in_bnd = sjoin(df, pd.DataFrame({"geometry": sa_bnd}), how="inner")
+
+df = (
+    in_bnd[["STATEFP", "GEOID", "NAME", "geometry"]]
+    .rename(columns={"GEOID": "FIPS", "NAME": "county"})
+    .join(states, on="STATEFP")
+)
+df = df[["FIPS", "state", "county", "geometry"]].reset_index(drop=True)
+
+df["geometry"] = to_crs(df.geometry, crs, DATA_CRS)
+
+to_geofeather_from_pygeos(df, working_dir / "counties.feather", crs=DATA_CRS)
+
+df["geometry"] = from_pygeos(df.geometry)
+
+df = gp.GeoDataFrame(df, crs=DATA_CRS)
+df.to_file("/tmp/counties.shp")
+

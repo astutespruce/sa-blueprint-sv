@@ -17,6 +17,10 @@
             {% include "blocks/threats.html" %}
         {% endif %}
 
+        {% if results.plans or results.counties %}
+            {% include "blocks/partners.html" %}
+        {% endif %}
+
         {% if results.ownership or results.protection %}
             {% include "blocks/ownership.html" %}
         {% endif %}

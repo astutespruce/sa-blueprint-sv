@@ -776,7 +776,9 @@ PLANS = {
     "EPA": {
         "label": "EPA priority watersheds",
         "description": "Environmental Protection Agency (EPA) Region 4 Priority Watersheds (except Virginia)",
-        "url": "http://www.epa.gov/region4/water/watersheds/priority.html",
+        # broken
+        # "url": "http://www.epa.gov/region4/water/watersheds/priority.html",
+        "url": "",
         "type": "regional",
     },
     "PARCA": {

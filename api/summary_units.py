@@ -1,10 +1,18 @@
+from collections import defaultdict
 from pathlib import Path
 
 from geofeather.pygeos import from_geofeather
 import pandas as pd
 import pygeos as pg
 
-from constants import BLUEPRINT, INDICATORS, INDICATORS_INDEX, OWNERSHIP, PROTECTION
+from constants import (
+    BLUEPRINT,
+    INDICATORS,
+    INDICATORS_INDEX,
+    OWNERSHIP,
+    PROTECTION,
+    PLANS,
+)
 
 
 class SummaryUnits(object):
@@ -32,9 +40,14 @@ class SummaryUnits(object):
             self.ownership = pd.read_feather(
                 working_dir / "ownership.feather"
             ).set_index(id_field)
+
             self.protection = pd.read_feather(
                 working_dir / "protection.feather"
             ).set_index(id_field)
+
+            self.counties = pd.read_feather(working_dir / "counties.feather").set_index(
+                id_field
+            )
 
         else:
             # TODO: set marine ecosystem to 100%
@@ -50,6 +63,19 @@ class SummaryUnits(object):
         results["type"] = (
             "subwatershed" if self.unit_type == "huc12" else "marine lease block"
         )
+
+        # extract all non-empty plans
+        plans = defaultdict(list)
+        cols = unit.index.intersection(PLANS.keys())
+        for col in cols:
+            if unit[col]:
+                plans[PLANS[col]["type"]].append(col)
+
+        if plans:
+            for group in plans:
+                plans[group] = sorted(plans[group])
+
+            results["plans"] = dict(plans)
 
         blueprint = None
         try:
@@ -112,7 +138,7 @@ class SummaryUnits(object):
             pass
 
         try:
-            protection = self.protection.loc[id]
+            protection = self.protection.loc[self.protection.index.isin([id])]
             protection_present = protection.GAP_STATUS.unique()
             # use the native order of PROTECTION to drive order of results
             protection_results = [
@@ -125,6 +151,15 @@ class SummaryUnits(object):
             ]
 
             results["protection"] = protection_results
+
+        except KeyError:
+            pass
+
+        try:
+            counties = self.counties.loc[self.counties.index.isin([id])].sort_values(
+                by=["state", "county"]
+            )
+            results["counties"] = counties.to_dict(orient="records")
 
         except KeyError:
             pass

@@ -8,7 +8,7 @@ from pathlib import Path
 from weasyprint import HTML
 from jinja2 import Environment, PackageLoader
 
-from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS_INDEX
+from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS_INDEX, PLANS
 from util.format import format_number as format_number
 
 
@@ -105,6 +105,7 @@ def create_report(maps, results):
         "ecosystems": ecosystems,
         "ecosystem_acres": ecosystem_acres,
         "indicators": INDICATORS_INDEX,
+        "plans": PLANS,
         "results": results,
     }
 

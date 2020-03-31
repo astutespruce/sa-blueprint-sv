@@ -19,7 +19,7 @@ import rasterio
 from rasterio.mask import raster_geometry_mask
 
 from util.io import write_raster
-from util.pygeos_util import to_crs, to_pygeos
+from util.pygeos_util import to_crs, to_pygeos, sjoin
 from constants import BLUEPRINT, INDICATORS, URBAN_YEARS, DATA_CRS, GEO_CRS
 from stats import (
     extract_count_in_geometry,
@@ -33,6 +33,7 @@ data_dir = Path("data")
 huc12_filename = data_dir / "summary_units/HUC12.feather"
 marine_filename = data_dir / "summary_units/marine_blocks.feather"
 ownership_filename = data_dir / "boundaries/ownership.feather"
+county_filename = data_dir / "boundaries/counties.feather"
 
 start = time()
 
@@ -146,6 +147,7 @@ print("Calculating overlap with land ownership and protection")
 df = from_geofeather_as_pygeos(ownership_filename)
 
 # create and query tree for join
+TODO: convert to sjoin
 tree = pg.STRtree(df.geometry)
 left_idx, right_idx = tree.query_bulk(pg_geometries.geometry, predicate="intersects")
 right = pd.DataFrame(
@@ -180,8 +182,15 @@ by_protection = (
 by_protection.to_feather(out_dir / "protection.feather")
 by_protection.to_csv(out_dir / "protection.csv", index=False)
 
+### Calculate spatial join with counties
+print("Calculating spatial join with counties")
+df = from_geofeather_as_pygeos(county_filename)
+df = sjoin(pg_geometries, df)[["FIPS", "state", "county"]].reset_index()
+df.to_feather(out_dir / "counties.feather")
+df.to_csv(out_dir / "counties.csv", index=False)
 
-##########################################################################
+
+# ##########################################################################
 
 
 ### Marine blocks

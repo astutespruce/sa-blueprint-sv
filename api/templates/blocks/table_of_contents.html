@@ -48,11 +48,18 @@
         </li>
     {% endif %}
 
+    {% if results.plans or results.counties %}
+        <li>
+            <a href="#Partners" class="toctext"></a>
+            <a href="#Partners" class="tocpagenr"></a>
+        </li>
+    {% endif %}
+
     {% if results.ownership or results.protection %}
         <li>
             <a href="#Ownership" class="toctext"></a>
             <a href="#Ownership" class="tocpagenr"></a>
-            <ol>
+            <!-- <ol>
                 {% if results.ownership %}
                     <li>
                         <a href="#LandOwnership" class="toctext"></a>
@@ -66,7 +73,7 @@
                         <a href="#Protection" class="tocpagenr"></a>
                     </li>
                 {% endif %}
-            </ol>
+            </ol> -->
         </li>
     {% endif %}
 
