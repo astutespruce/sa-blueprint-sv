@@ -1,18 +1,19 @@
 <div class="no-break">
     <h3>Sea-level rise</h3>
 
+    <!-- TODO: SLR map -->
+
     <!-- TODO: SLR figure - construct SV2G? -->
 
-    <!-- todo: better table counters -->
     <div class="caption">
-        Table N: Extent of inundation by projected average highest daily tide due to sea level rise
+        Table {{table.counter}}: Extent of inundation by projected average highest daily tide due to sea level rise
         {% if results.name %}
             within the {{results.name}} {{results.type}}
         {% endif %}
         .
         Values from the <a href="https://coast.noaa.gov/slrdata/">NOAA sea-level rise inundation data</a>.
     </div>
-
+    {% set table.counter=table.counter+1 %}
 
     <table class="centered">
         <thead>

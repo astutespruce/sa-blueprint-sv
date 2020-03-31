@@ -297,8 +297,12 @@ INDICATORS = [
             0: "Not currently forested wetland (within forested wetland ecosystem)",
             1: "Currently forested wetland (within forested wetland ecosystem)",
         },
-        # TODO: binary extent indicators only show presence
-        "colors": {0: "#FFFFFF", 1: "#083F28"},
+        "colors": {1: "#083F28"},
+        "domain": [0, 1],
+        "datasetID": "72e6a105442444679fc61714feec49b4",
+        "description": "Forested wetland extent represents the amount of overall acres of existing forested wetlands present in the South Atlantic geography. Overall acreage of existing forested wetlands provides an indicator of whether forested wetlands being inundated by sea level rise are being replaced or restored somewhere else.",
+        "caption": "Indicator values within the forested wetland ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
+        "reportCaption": "The area of forested wetland extent indicator values as they occur within the forested wetland ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "freshwatermarsh_birds",
@@ -327,10 +331,7 @@ INDICATORS = [
             0: "Not currently freshwater marsh (within extent of freshwater marsh ecosystem)",
             1: "Currently freshwater marsh (within extent of freshwater marsh ecosystem)",
         },
-        "colors": {
-            # 0: "#FFFFFF",
-            1: "#607835"
-        },
+        "colors": {1: "#607835"},
         "domain": [0, 1],
         "datasetID": "72e6a105442444679fc61714feec49b4",
         "description": "Forested wetland extent represents the amount of overall acres of existing forested wetlands present in the South Atlantic geography. Overall acreage of existing forested wetlands provides an indicator of whether forested wetlands being inundated by sea level rise are being replaced or restored somewhere else.",
@@ -345,10 +346,7 @@ INDICATORS = [
             0: "Not currently maritime forest (within extent of maritime forest ecosystem)",
             1: "Currently maritime forest (within extent of maritime forest ecosystem)",
         },
-        "colors": {
-            # 0: "#FFFFFF",
-            1: "#00734B"
-        },
+        "colors": {1: "#00734B"},
         "domain": [0, 1],
         "datasetID": "a5969b1b865b470482071d5ff2b1bbbc",
         "description": "Maritime forest extent represents the overall acres of maritime forest currently present in the South Atlantic geography. Since maritime forest has been substantially reduced from its historic extent, protecting the remaining acreage of existing maritime forest is important.",

@@ -241,7 +241,8 @@ table.centered th:nth-last-child(2) {
 }
 
 .ecosystem-header img {
-    margin-right: 12pt;
+    margin-right: 6pt;
+    height: 28pt;
 }
 
 .indicator + .indicator {

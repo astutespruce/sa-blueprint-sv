@@ -40,10 +40,10 @@
 
 <div class="no-break">
 
-    <!-- todo: better table counters -->
     <div class="caption">
-        Table {{2+loop.index}}: {{indicator.reportCaption}}
+        Table {{table.counter}}: {{indicator.reportCaption}}
     </div>
+    {% set table.counter=table.counter+1 %}
 
 
     <table class="centered">

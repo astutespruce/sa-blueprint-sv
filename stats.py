@@ -235,7 +235,9 @@ def extract_slr_area(geometries):
         mask = (data == nodata) | geometry_mask
         data = np.where(mask, nodata, data)
 
-    results["shape_mask"] = (~geometry_mask).sum()
+    results["shape_mask"] = (
+        ((~geometry_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
+    )
 
     if results["shape_mask"] == 0:
         return None

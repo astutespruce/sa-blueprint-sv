@@ -1,17 +1,21 @@
 <div class="no-break">
     <h3>Urban growth</h3>
 
+    <!-- TODO: urban map -->
+
     <!-- TODO: Urban figure - construct SVG? -->
 
     <!-- todo: better table counters -->
     <div class="caption">
-        Table N: Extent of projected urbanization by decade
+        Table {{table.counter}}: Extent of projected urbanization by decade
         {% if results.name %}
             within the {{results.name}} {{results.type}}
         {% endif %}
         .
         Values from the <a href="http://www.basic.ncsu.edu/dsl/urb.html">SLEUTH urban growth model</a>.
     </div>
+
+    {% set table.counter=table.counter+1 %}
 
     <table class="centered">
         <thead>

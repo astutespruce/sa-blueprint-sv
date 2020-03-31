@@ -1,6 +1,7 @@
-{% with number=2,label="Extent of each ecosystem" %}
+{% with number=table.counter,label="Extent of each ecosystem" %}
     {% include "elements/table_caption.html" %}
 {% endwith %}
+{% set table.counter=table.counter+1 %}
 
 <table class="centered">
     <thead>
@@ -25,7 +26,9 @@
 
 
 {% for ecosystem in ecosystems %}
-    {% with index=loop.index-1 %}
-        {% include "blocks/ecosystem.html" %}
-    {% endwith %}
+    {% if ecosystem.indicators %}
+        {% with index=loop.index-1 %}
+            {% include "blocks/ecosystem.html" %}
+        {% endwith %}
+    {% endif %}
 {% endfor %}

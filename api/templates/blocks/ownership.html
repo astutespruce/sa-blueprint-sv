@@ -11,9 +11,13 @@ Values derived from:
 {% if results['ownership'] %}
 <h4>Conserved lands ownership</h4>
 
-{% with number="N",label="Extent of ownership class" %}
+<!-- TODO: ownership map -->
+
+{% with number=table.counter,label="Extent of ownership class" %}
     {% include "elements/table_caption.html" %}
 {% endwith %}
+
+{% set table.counter=table.counter+1 %}
 
 <table class="centered">
     <thead>
@@ -42,9 +46,13 @@ Values derived from:
 <div class="no-break">
     <h4>Land protection status</h4>
 
-    {% with number="N",label="Extent of land protection status" %}
+<!-- TODO: protection map -->
+
+    {% with number=table.counter,label="Extent of land protection status" %}
         {% include "elements/table_caption.html" %}
     {% endwith %}
+
+    {% set table.counter=table.counter+1 %}
 
     <table class="centered">
         <thead>
