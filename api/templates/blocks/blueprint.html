@@ -33,7 +33,7 @@
 
 <section>
     <h2>Priority Categories</h2>
-    {% for item in blueprint[:0:-1] %}
+    {% for item in legends.blueprint %}
         <h4>
             {{item.label}}
             {% if 'priority' in item.label %}

@@ -1,0 +1,13 @@
+<section>
+<h2 id="Threats">Threats</h2>
+
+{% if results.slr_acres %}
+    {% include "blocks/slr.html" %}
+{% endif %}
+
+
+{% if results.urban_acres %}
+    {% include "blocks/urban.html" %}
+{% endif %}
+
+</section>

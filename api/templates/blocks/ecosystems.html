@@ -12,11 +12,11 @@
     </thead>
     <tbody>
         {% for ecosystem in ecosystems %}
-            {% if results.ecosystems[loop.index-1] %}
+            {% if ecosystem.acres %}
             <tr>
                 <td>{{ecosystem.label}}</td>
-                <td>{{results.ecosystems[loop.index-1]|round|int}}</td>
-                <td>{{(100 * results.ecosystems[loop.index-1] / results.blueprint_acres)|round|int}}%</td>
+                <td>{{ecosystem.acres|format_number}}</td>
+                <td>{{(100 * ecosystem.acres / results.blueprint_acres)|format_number}}%</td>
             </tr>
             {% endif %}
         {% endfor %}
@@ -25,9 +25,7 @@
 
 
 {% for ecosystem in ecosystems %}
-    {% if results.ecosystems[loop.index-1] or ecosystem.extent=='region' %}
-        {% with index=loop.index-1 %}
-            {% include "blocks/ecosystem.html" %}
-        {% endwith %}
-    {% endif %}
+    {% with index=loop.index-1 %}
+        {% include "blocks/ecosystem.html" %}
+    {% endwith %}
 {% endfor %}

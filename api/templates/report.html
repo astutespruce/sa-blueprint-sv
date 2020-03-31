@@ -10,6 +10,15 @@
         {% include "blocks/about.html" %}
         {% include "blocks/blueprint.html" %}
         {% include "blocks/indicators.html" %}
+
+        {% if results.slr_acres or results.urban_acres %}
+            {% include "blocks/threats.html" %}
+        {% endif %}
+
+        {% if results.ownership or results.protection %}
+            {% include "blocks/ownership.html" %}
+        {% endif %}
+
         {% include "blocks/credits.html" %}
     </body>
 </html>

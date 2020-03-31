@@ -1,0 +1,36 @@
+<div class="no-break">
+    <h3>Sea-level rise</h3>
+
+    <!-- TODO: SLR figure - construct SV2G? -->
+
+    <!-- todo: better table counters -->
+    <div class="caption">
+        Table N: Extent of inundation by projected average highest daily tide due to sea level rise
+        {% if results.name %}
+            within the {{results.name}} {{results.type}}
+        {% endif %}
+        .
+        Values from the <a href="https://coast.noaa.gov/slrdata/">NOAA sea-level rise inundation data</a>.
+    </div>
+
+
+    <table class="centered">
+        <thead>
+            <tr>
+                <th>Depth of inundation (ft)</th>
+                <th>Acres</th>
+                <th>Percent of Area</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for acres in results['slr'] %}
+            <tr>
+                <td>{{loop.index - 1}}</td>
+                <td>{{acres|format_number}}</td>
+                <td>{{(100 * acres / results.slr_acres)|format_number}}%</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>

@@ -4,8 +4,8 @@
     <img src="{{(ecosystem.id + '.svg')|load_asset}}" alt="Icon for {{ecosystem.label}}"/>
     <h2>
         {{ecosystem.label}}:
-        {% if results.ecosystems[index] %}
-            {{(100 * results.ecosystems[index] / results.blueprint_acres)|round|int}}% of area
+        {% if ecosystem.acres %}
+            {{(100 * ecosystem.acres / results.blueprint_acres)|round|int}}% of area
         {% endif %}
     </h2>
 </div>

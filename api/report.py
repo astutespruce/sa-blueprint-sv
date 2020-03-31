@@ -1,6 +1,8 @@
 from base64 import b64encode
+from copy import deepcopy
 from datetime import date
 from io import BytesIO
+from operator import itemgetter
 from pathlib import Path
 
 from weasyprint import HTML
@@ -39,6 +41,7 @@ env = Environment(loader=PackageLoader("api", "templates"))
 env.filters["reverse"] = reverse_filter
 env.filters["format_number"] = format_number
 env.filters["load_asset"] = load_asset
+env.filters["sum"] = sum
 
 
 def create_report(maps, results):
@@ -51,14 +54,53 @@ def create_report(maps, results):
         if "type" in results:
             subtitle += " " + results["type"]
 
+    # Extract ecosystems with results
+    ecosystems = []
+    for ecosystem in ECOSYSTEMS:
+        ecosystem = deepcopy(ecosystem)
+
+        if ecosystem.get("extent", None) == "region":
+            if results["type"] == "huc12":
+                ecosystem["acres"] = 0  # just to force sort at end
+                ecosystems.append(ecosystem)
+
+            continue
+
+        ecosystem["acres"] = results["ecosystems"][ecosystem["value"]]
+        if ecosystem["acres"]:
+            ecosystems.append(ecosystem)
+
+    # sort on acres, inner sort alphabetic on label
+    ecosystems = sorted(
+        sorted(ecosystems, key=itemgetter("label")),
+        key=itemgetter("acres"),
+        reverse=True,
+    )
+
+    legends = {
+        # sort descending, omit not a priority
+        "blueprint": BLUEPRINT[:0:-1]
+    }
+    for indicator_id in results["indicators"]:
+        indicator = INDICATORS_INDEX[indicator_id]
+        colors = indicator["colors"]
+        legend = []
+        for value, label in indicator["values"].items():
+            if value in colors:
+                legend.append({"value": value, "label": label, "color": colors[value]})
+
+        legend.reverse()
+        legends[indicator_id] = legend  # {e["value"]: e for e in legend}
+
     context = {
         "date": date.today().strftime("%m/%d/%y"),
         "title": title,
         "subtitle": subtitle,
         "url": "https://blueprint.southatlanticlcc.org/",
         "maps": maps,
+        "legends": legends,
         "blueprint": BLUEPRINT,
-        "ecosystems": ECOSYSTEMS,
+        "ecosystems": ecosystems,
         "indicators": INDICATORS_INDEX,
         "results": results,
     }

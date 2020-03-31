@@ -4,7 +4,7 @@ from geofeather.pygeos import from_geofeather
 import pandas as pd
 import pygeos as pg
 
-from constants import BLUEPRINT, INDICATORS, INDICATORS_INDEX
+from constants import BLUEPRINT, INDICATORS, INDICATORS_INDEX, OWNERSHIP, PROTECTION
 
 
 class SummaryUnits(object):
@@ -90,5 +90,61 @@ class SummaryUnits(object):
                 indicators.append(indicator)
 
         results["indicators"] = indicators
+
+        if self.unit_type != "huc12":
+            return results
+
+        try:
+            ownership = self.ownership.loc[self.ownership.index.isin([id])]
+            ownerships_present = ownership.FEE_ORGTYP.unique()
+            # use the native order of OWNERSHIP to drive order of results
+            ownership_results = [
+                {
+                    "label": value["label"],
+                    "acres": ownership.loc[ownership.FEE_ORGTYP == key].iloc[0].acres,
+                }
+                for key, value in OWNERSHIP.items()
+                if key in ownerships_present
+            ]
+            results["ownership"] = ownership_results
+
+        except KeyError:
+            pass
+
+        try:
+            protection = self.protection.loc[id]
+            protection_present = protection.GAP_STATUS.unique()
+            # use the native order of PROTECTION to drive order of results
+            protection_results = [
+                {
+                    "label": value["label"],
+                    "acres": protection.loc[protection.GAP_STATUS == key].iloc[0].acres,
+                }
+                for key, value in PROTECTION.items()
+                if key in protection_present
+            ]
+
+            results["protection"] = protection_results
+
+        except KeyError:
+            pass
+
+        try:
+            slr = self.slr.loc[id]
+            if slr[1:].max():
+                results["slr_acres"] = slr.shape_mask
+                results["slr"] = slr[1:].tolist()
+
+        except KeyError:
+            pass
+
+        try:
+            urban = self.urban.loc[id]
+            if urban[1:].max():
+                results["urban_acres"] = urban.shape_mask
+                results["urban"] = urban[1:].tolist()
+
+        except KeyError:
+            pass
 
         return results

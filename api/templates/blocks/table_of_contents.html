@@ -15,6 +15,26 @@
         <a href="#Indicators" class="toctext"></a>
         <a href="#Indicators" class="tocpagenr"></a>
     </li>
+
+    {% if results.slr_acres or results.urban_acres %}
+        <li>
+            <a href="#Threats" class="toctext"></a>
+            <a href="#Threats" class="tocpagenr"></a>
+        </li>
+    {% endif %}
+
+    {% if results.ownership or results.protection %}
+        <li>
+            <a href="#Ownership" class="toctext"></a>
+            <a href="#Ownership" class="tocpagenr"></a>
+        </li>
+    {% endif %}
+
+    <li>
+        <a href="#Credits" class="toctext"></a>
+        <a href="#Credits" class="tocpagenr"></a>
+    </li>
+
 </ol>
 
 </div>
