@@ -40,12 +40,19 @@ id = "030602040601"
 huc12 = SummaryUnits("huc12")
 results = huc12.get_results(id)
 
+has_urban = "urban" in results
+has_slr = "slr" in results
+
 out_dir = Path(f"/tmp/{id}/maps")
 if not out_dir.exists():
     os.makedirs(out_dir)
 
 maps = render_maps(
-    results["bounds"], summary_unit_id=id, indicators=results["indicators"]
+    results["bounds"],
+    summary_unit_id=id,
+    indicators=results["indicators"],
+    urban=has_urban,
+    slr=has_slr,
 )
 
 for name, data in maps.items():

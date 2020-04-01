@@ -11,7 +11,7 @@ from api.map.summary_unit import get_summary_unit_map_image
 from api.map.util import pad_bounds, get_center, to_base64, merge_maps
 from api.map.mercator import get_zoom, get_map_bounds
 
-from constants import BLUEPRINT_COLORS, INDICATORS_INDEX
+from constants import BLUEPRINT_COLORS, INDICATORS_INDEX, URBAN_LEGEND
 
 
 WIDTH = 740
@@ -21,11 +21,13 @@ PADDING = 5
 
 src_dir = Path("data")
 blueprint_filename = src_dir / "Blueprint_2_2.tif"
+urban_filename = src_dir / "threats/urban/urb_indexed_2060.tif"
 
 
-# TODO: pass in list of indicators that had data
 # TODO: SLR, urbanization
-def render_maps(bounds, geojson=None, summary_unit_id=None, indicators=None):
+def render_maps(
+    bounds, geojson=None, summary_unit_id=None, indicators=None, urban=False, slr=False
+):
     maps = {}
 
     bounds = pad_bounds(bounds, PADDING)
@@ -63,7 +65,6 @@ def render_maps(bounds, geojson=None, summary_unit_id=None, indicators=None):
     if indicators is not None:
         for id in indicators:
             indicator = INDICATORS_INDEX[id]
-            # print("Processing map for", id)
 
             with rasterio.open(src_dir / "indicators" / indicator["filename"]) as src:
                 data = extract_data_for_map(src, bounds, WIDTH, HEIGHT)
@@ -74,7 +75,16 @@ def render_maps(bounds, geojson=None, summary_unit_id=None, indicators=None):
                     map_image = merge_maps([basemap_image, raster_img, aoi_image])
                     maps[id] = to_base64(map_image)
 
-                else:
-                    print("Only nodata...")
+    if urban:
+        with rasterio.open(urban_filename) as src:
+            data = extract_data_for_map(src, bounds, WIDTH, HEIGHT)
+
+            raster_img = None
+            if data is not None:
+                colors = {i: e["color"] for i, e in enumerate(URBAN_LEGEND)}
+                # 0 = not urban nor predicted to be, make it transparent
+                raster_img = render_raster(data, colors, 0)
+                map_image = merge_maps([basemap_image, raster_img, aoi_image])
+                maps["urban_2060"] = to_base64(map_image)
 
     return maps

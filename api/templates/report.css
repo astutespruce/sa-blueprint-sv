@@ -23,6 +23,7 @@ body {
 
     @bottom-right {
         font-size: 10pt;
+        color: #666;
         content: "Page " counter(page) " of " counter(pages);
         text-align: right;
     }
@@ -210,6 +211,10 @@ table tr.above-threshold td {
     break-inside: avoid;
 }
 
+.no-margin {
+    margin: 0 !important;
+}
+
 .caption {
     font-size: 10pt;
     font-weight: bold;
@@ -291,7 +296,8 @@ table tr.above-threshold td {
 }
 
 .legend-patch {
-    height: 16pt;
+    flex: 0 0 auto;
+    height: 15pt;
     width: 20pt;
     display: inline-block;
     margin-right: 4pt;

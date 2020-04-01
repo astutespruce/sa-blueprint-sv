@@ -1,12 +1,43 @@
 <div class="no-break">
     <h3 id="Urban">Urban growth</h3>
 
-    <!-- TODO: urban map -->
+    {% if maps.urban_2060 %}
+        <img src="data:image/png;base64,{{maps.urban_2060}}" alt="Map for projected urban growth - 2060" class="map">
+    {% else %}
+        <div class="map-placeholder text-center">
+            map could not be created
+        </div>
+    {% endif %}
 
+    <div class="flex">
+        <div class="map-locator-container">
+            {% if maps.locator %}
+                <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
+            {% else %}
+                <div class="map-locator-placeholder text-center">
+                    map could not be created
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="legend">
+            <b>Probability of urbanization by 2060</b>
+            <br/><br/>
+            {% for item in legends.urban %}
+                <div class="legend-element flex align-center {{'no-margin' if loop.index > 2 else ''}}">
+                    <div class="legend-patch" style="background: {{item.color}}"></div>
+                    <div>{{item.label}}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div class="no-break">
     <!-- TODO: Urban figure - construct SVG? -->
 
     <div class="caption">
-        Table {{table.counter}}: Extent of projected urbanization by decade{% if results.name %}within the {{results.name}} {{results.type}}{% endif %}.
+        Table {{table.counter}}: Extent of projected urbanization by decade{% if results.name %} within the {{results.name}} {{results.type}}{% endif %}.
         Values from the <a href="http://www.basic.ncsu.edu/dsl/urb.html">SLEUTH urban growth model</a>.
     </div>
 

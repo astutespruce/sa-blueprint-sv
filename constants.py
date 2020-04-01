@@ -715,6 +715,25 @@ INDICATORS_INDEX = {indicator["id"]: indicator for indicator in INDICATORS}
 
 URBAN_YEARS = [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]
 
+URBAN_LEGEND = [
+    {"label": "0", "color": "#FFFFFF"},  # spacer; not actually displayed
+    {"label": "Urban in 2009", "color": "#333333"},
+    {"label": "<0.025 probability", "color": "#FFBFBA"},
+    {"label": "0.05", "color": "#FFB1A8"},
+    {"label": "0.1", "color": "#FFA496"},
+    {"label": "0.2", "color": "#FF9787"},
+    {"label": "0.3", "color": "#FC8B76"},
+    {"label": "0.4", "color": "#FC806B"},
+    {"label": "0.5", "color": "#FA735A"},
+    {"label": "0.6", "color": "#F5654B"},
+    {"label": "0.7", "color": "#F25740"},
+    {"label": "0.8", "color": "#F04D35"},
+    {"label": "0.9", "color": "#EB402A"},
+    {"label": "0.95", "color": "#E5311B"},
+    {"label": "0.975", "color": "#E12114"},
+    {"label": ">0.975 probability", "color": "#DB0000"},
+]
+
 
 OWNERSHIP = OrderedDict(
     {
