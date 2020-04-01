@@ -718,7 +718,7 @@ URBAN_YEARS = [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]
 URBAN_LEGEND = [
     {"label": "0", "color": "#FFFFFF"},  # spacer; not actually displayed
     {"label": "Urban in 2009", "color": "#333333"},
-    {"label": "<0.025 probability", "color": "#FFBFBA"},
+    {"label": "< 0.025 probability", "color": "#FFBFBA"},
     {"label": "0.05", "color": "#FFB1A8"},
     {"label": "0.1", "color": "#FFA496"},
     {"label": "0.2", "color": "#FF9787"},
@@ -731,7 +731,18 @@ URBAN_LEGEND = [
     {"label": "0.9", "color": "#EB402A"},
     {"label": "0.95", "color": "#E5311B"},
     {"label": "0.975", "color": "#E12114"},
-    {"label": ">0.975 probability", "color": "#DB0000"},
+    {"label": "> 0.975 probability", "color": "#DB0000"},
+]
+
+
+SLR_LEGEND = [
+    {"label": "< 1 foot", "color": "#2B00A1"},
+    {"label": "1", "color": "#403EB9"},
+    {"label": "2", "color": "#4567CF"},
+    {"label": "3", "color": "#4495E5"},
+    {"label": "4", "color": "#74B0EB"},
+    {"label": "5", "color": "#94CBEF"},
+    {"label": "≥ 6 feet", "color": "#C0F0F3"},
 ]
 
 

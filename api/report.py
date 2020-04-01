@@ -8,7 +8,14 @@ from pathlib import Path
 from weasyprint import HTML
 from jinja2 import Environment, PackageLoader
 
-from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS_INDEX, PLANS, URBAN_LEGEND
+from constants import (
+    BLUEPRINT,
+    ECOSYSTEMS,
+    INDICATORS_INDEX,
+    PLANS,
+    URBAN_LEGEND,
+    SLR_LEGEND,
+)
 from util.format import format_number as format_number
 
 
@@ -102,6 +109,9 @@ def create_report(maps, results):
             + URBAN_LEGEND[11:12]
             + URBAN_LEGEND[-1:]
         )
+
+    if "slr" in results:
+        legends["slr"] = SLR_LEGEND
 
     context = {
         "date": date.today().strftime("%m/%d/%y"),

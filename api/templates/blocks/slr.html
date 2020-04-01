@@ -1,9 +1,42 @@
 <div class="no-break">
     <h3 id="SLR">Sea-level rise</h3>
 
-    <!-- TODO: SLR map -->
+    {% if maps.slr %}
+        <img src="data:image/png;base64,{{maps.slr}}" alt="Map for projected sea-level rise" class="map">
+    {% else %}
+        <div class="map-placeholder text-center">
+            map could not be created
+        </div>
+    {% endif %}
 
-    <!-- TODO: SLR figure - construct SV2G? -->
+    <div class="flex">
+        <div class="map-locator-container">
+            {% if maps.locator %}
+                <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
+            {% else %}
+                <div class="map-locator-placeholder text-center">
+                    map could not be created
+                </div>
+            {% endif %}
+        </div>
+
+        <div class="legend flex-grow">
+            <b>Depth of inundation by projected average highest daily tide due to sea level rise</b>
+            <br/><br/>
+            {% for item in legends.slr %}
+                <div class="legend-element flex align-center no-margin">
+                    <div class="legend-patch" style="background: {{item.color}}"></div>
+                    <div class="legend-label">{{item.label}}</div>
+                </div>
+            {% endfor %}
+            <!-- space is required or last label doesn't render -->
+            &nbsp;
+        </div>
+    </div>
+</div>
+
+<div class="no-break">
+    <!-- TODO: SLR figure - construct SVG? -->
 
     <div class="caption">
         Table {{table.counter}}: Extent of inundation by projected average highest daily tide due to sea level rise{% if results.name %} within the {{results.name}} {{results.type}}{% endif %}.
@@ -22,7 +55,17 @@
         <tbody>
             {% for acres in results['slr'] %}
             <tr>
-                <td class="label">{{loop.index - 1}} foot inundation depth</td>
+                <td class="label">
+                    {% if loop.first %}
+                        &lt; {{loop.index}} foot
+                    {% elif loop.index == 2 %}
+                        {{loop.index - 1}} foot
+                    {% elif loop.last %}
+                        &ge; {{loop.index - 1}} feet
+                    {% else %}
+                        {{loop.index - 1}} feet
+                    {% endif %}
+                </td>
                 <td class="acres">{{acres|format_number}}</td>
                 <td class="percent">{{(100 * acres / results.slr_acres)|format_number}}%</td>
             </tr>

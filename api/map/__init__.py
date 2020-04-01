@@ -11,7 +11,7 @@ from api.map.summary_unit import get_summary_unit_map_image
 from api.map.util import pad_bounds, get_center, to_base64, merge_maps
 from api.map.mercator import get_zoom, get_map_bounds
 
-from constants import BLUEPRINT_COLORS, INDICATORS_INDEX, URBAN_LEGEND
+from constants import BLUEPRINT_COLORS, INDICATORS_INDEX, URBAN_LEGEND, SLR_LEGEND
 
 
 WIDTH = 740
@@ -22,6 +22,7 @@ PADDING = 5
 src_dir = Path("data")
 blueprint_filename = src_dir / "Blueprint_2_2.tif"
 urban_filename = src_dir / "threats/urban/urb_indexed_2060.tif"
+slr_filename = src_dir / "threats/slr/slr.vrt"
 
 
 # TODO: SLR, urbanization
@@ -86,5 +87,16 @@ def render_maps(
                 raster_img = render_raster(data, colors, 0)
                 map_image = merge_maps([basemap_image, raster_img, aoi_image])
                 maps["urban_2060"] = to_base64(map_image)
+
+    if slr:
+        with rasterio.open(slr_filename) as src:
+            data = extract_data_for_map(src, bounds, WIDTH, HEIGHT)
+
+            raster_img = None
+            if data is not None:
+                colors = {i: e["color"] for i, e in enumerate(SLR_LEGEND)}
+                raster_img = render_raster(data, colors, src.nodata)
+                map_image = merge_maps([basemap_image, raster_img, aoi_image])
+                maps["slr"] = to_base64(map_image)
 
     return maps
