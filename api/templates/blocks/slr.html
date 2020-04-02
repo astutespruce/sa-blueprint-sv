@@ -3,13 +3,15 @@
 
     {% if maps.slr %}
         <img src="data:image/png;base64,{{maps.slr}}" alt="Map for projected sea-level rise" class="map">
+
+        {% include "elements/map_credits.html" %}
     {% else %}
         <div class="map-placeholder text-center">
             map could not be created
         </div>
     {% endif %}
 
-    <div class="flex">
+    <div class="flex map-footer">
         <div class="map-locator-container">
             {% if maps.locator %}
                 <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">

@@ -67,7 +67,7 @@ def create_report(maps, results):
         ecosystem = deepcopy(ecosystem)
 
         if ecosystem.get("extent", None) == "region":
-            if results["type"] == "huc12":
+            if results["type"] == "subwatershed":
                 ecosystem["acres"] = 0  # just to force sort at end
                 ecosystems.append(ecosystem)
 
@@ -85,6 +85,9 @@ def create_report(maps, results):
     )
 
     ecosystem_acres = sum([e["acres"] for e in ecosystems])
+
+    ownership_acres = sum([e["acres"] for e in results.get("ownership", [])])
+    protection_acres = sum([e["acres"] for e in results.get("protection", [])])
 
     legends = {
         # sort descending, omit not a priority
@@ -123,6 +126,8 @@ def create_report(maps, results):
         "blueprint": BLUEPRINT,
         "ecosystems": ecosystems,
         "ecosystem_acres": ecosystem_acres,
+        "ownership_acres": ownership_acres,
+        "protection_acres": protection_acres,
         "indicators": INDICATORS_INDEX,
         "plans": PLANS,
         "results": results,

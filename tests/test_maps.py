@@ -18,11 +18,11 @@ from api.summary_units import SummaryUnits
 # if not out_dir.exists():
 #     os.makedirs(out_dir)
 
-# src_dir = Path("data")
-# # filename = "Razor_prj.shp"
-# # filename = "ACF_prj.shp"
-# filename = "Groton_prj.shp"
-# geometry = gp.read_file(f"data/aoi/{filename}").geometry
+# # src_dir = Path("data")
+# # # filename = "Razor_prj.shp"
+# # # filename = "ACF_prj.shp"
+# # filename = "Groton_prj.shp"
+# # geometry = gp.read_file(f"data/aoi/{filename}").geometry
 
 # geometry = geometry.to_crs("EPSG:4326")
 # bounds = geometry.total_bounds
@@ -35,29 +35,39 @@ from api.summary_units import SummaryUnits
 
 
 ### Write maps for a summary unit
-# HUC12
-id = "030602040601"
-huc12 = SummaryUnits("huc12")
-results = huc12.get_results(id)
 
-has_urban = "urban" in results
-has_slr = "slr" in results
+ids = {
+    "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
+    "marine_blocks": ["NI18-07-6210"],
+}
 
-out_dir = Path(f"/tmp/{id}/maps")
-if not out_dir.exists():
-    os.makedirs(out_dir)
 
-maps = render_maps(
-    results["bounds"],
-    summary_unit_id=id,
-    indicators=results["indicators"],
-    urban=has_urban,
-    slr=has_slr,
-)
+for summary_type in ids:
+    units = SummaryUnits(summary_type)
 
-for name, data in maps.items():
-    with open(out_dir / f"{name}.png", "wb") as out:
-        out.write(b64decode(data))
+    for id in ids[summary_type]:
+        print(f"Making maps for {id}...")
+
+        results = units.get_results(id)
+
+        has_urban = "urban" in results
+        has_slr = "slr" in results
+
+        out_dir = Path(f"/tmp/{id}/maps")
+        if not out_dir.exists():
+            os.makedirs(out_dir)
+
+        maps = render_maps(
+            results["bounds"],
+            summary_unit_id=id,
+            indicators=results["indicators"],
+            urban=has_urban,
+            slr=has_slr,
+        )
+
+        for name, data in maps.items():
+            with open(out_dir / f"{name}.png", "wb") as out:
+                out.write(b64decode(data))
 
 ### Write bounds as a polygon for display on map (DEBUG)
 # xmin, ymin, xmax, ymax = bounds

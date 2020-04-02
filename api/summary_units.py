@@ -2,8 +2,10 @@ from collections import defaultdict
 from pathlib import Path
 
 from geofeather.pygeos import from_geofeather
+import numpy as np
 import pandas as pd
 import pygeos as pg
+
 
 from constants import (
     BLUEPRINT,
@@ -49,10 +51,6 @@ class SummaryUnits(object):
                 id_field
             )
 
-        else:
-            # TODO: set marine ecosystem to 100%
-            raise NotImplementedError("Not done yet!")
-
     def get_results(self, id):
         if not id in self.units.index:
             raise ValueError("ID not in units index")
@@ -80,6 +78,7 @@ class SummaryUnits(object):
         blueprint = None
         try:
             blueprint = self.blueprint.loc[id]
+
         except KeyError:
             # no Blueprint results, there won't be other results
             return results
@@ -99,6 +98,11 @@ class SummaryUnits(object):
                 for c in blueprint.index
                 if c.startswith("ecosystems_")
             ]
+
+        elif self.unit_type == "marine_blocks":
+            ecosystems = np.zeros(shape=(9,))
+            ecosystems[7] = results["blueprint_acres"]
+            results["ecosystems"] = ecosystems.tolist()
 
         indicators = []
         for indicator in INDICATORS_INDEX.keys():

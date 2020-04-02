@@ -35,6 +35,22 @@ Values derived from:
                 <td class="percent">{{(100 * entry.acres / results.acres)|format_number}}%</td>
             </tr>
         {% endfor %}
+
+        {% with gap=results.acres - ownership_acres %}
+            {% if gap %}
+                <tr>
+                    <td class="label">Not conserved</td>
+                    <td class="acres">{{gap|format_number}}</td>
+                    <td class="percent">{{(100 * gap / results.acres)|format_number}}%</td>
+                </tr>
+            {% endif %}
+        {% endwith %}
+
+        <tr class="total-row">
+            <td class="align-right">Total area</td>
+            <td class="acres">{{ownership_acres|format_number}}</td>
+            <td class="percent">100%</td>
+        </tr>
     </tbody>
 </table>
 
@@ -69,7 +85,23 @@ Values derived from:
                 <td class="acres">{{entry.acres|format_number}}</td>
                 <td class="percent">{{(100 * entry.acres / results.acres)|format_number}}%</td>
             </tr>
-        {% endfor %}
+            {% endfor %}
+
+            {% with gap=results.acres - protection_acres %}
+            {% if gap %}
+                <tr>
+                    <td class="label">Not conserved</td>
+                    <td class="acres">{{gap|format_number}}</td>
+                    <td class="percent">{{(100 * gap / results.acres)|format_number}}%</td>
+                </tr>
+            {% endif %}
+        {% endwith %}
+
+            <tr class="total-row">
+                <td class="align-right">Total area</td>
+                <td class="acres">{{protection_acres|format_number}}</td>
+                <td class="percent">100%</td>
+            </tr>
         </tbody>
     </table>
 </div>

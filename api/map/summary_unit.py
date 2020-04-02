@@ -24,7 +24,7 @@ STYLE = {
             "source": "sa_units",
             "source-layer": "units",
             "type": "line",
-            "paint": {"line-width": 2, "line-color": "#000000", "line-opacity": 1},
+            "paint": {"line-width": 3, "line-color": "#000000", "line-opacity": 1},
         },
     ],
 }

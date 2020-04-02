@@ -39,35 +39,46 @@ def read_cache(path):
     return maps
 
 
-# Testing: construct results from a HUC12
-id = "030602040601"
+ids = {
+    "huc12": [
+        # "030602040601",
+        "030601030510",
+        # "031501040301",
+        # "030102020505"
+    ],
+    # "marine_blocks": ["NI18-07-6210"]
+}
 
 
-out_dir = Path(f"/tmp/{id}")
-cache_dir = out_dir / "maps"
+for summary_type in ids:
+    units = SummaryUnits(summary_type)
 
-if not out_dir.exists():
-    os.makedirs(out_dir)
+    for id in ids[summary_type]:
+        print(f"Creating report for for {id}...")
 
+        out_dir = Path(f"/tmp/{id}")
+        cache_dir = out_dir / "maps"
 
-# Fetch results
-huc12 = SummaryUnits("huc12")
-results = huc12.get_results(id)
+        if not out_dir.exists():
+            os.makedirs(out_dir)
 
-maps = None
-if CACHE_MAPS:
-    maps = read_cache(cache_dir)
+        # Fetch results
+        results = units.get_results(id)
 
-if not maps:
-    print("Rendering maps...")
-    maps = render_maps(
-        results["bounds"], summary_unit_id=id, indicators=results["indicators"]
-    )
+        maps = None
+        if CACHE_MAPS:
+            maps = read_cache(cache_dir)
 
-    if CACHE_MAPS:
-        write_cache(maps, cache_dir)
+        if not maps:
+            print("Rendering maps...")
+            maps = render_maps(
+                results["bounds"], summary_unit_id=id, indicators=results["indicators"]
+            )
 
-pdf = create_report(maps=maps, results=results)
+            if CACHE_MAPS:
+                write_cache(maps, cache_dir)
 
-with open("/tmp/test_report.pdf", "wb") as out:
-    out.write(pdf)
+        pdf = create_report(maps=maps, results=results)
+
+        with open(out_dir / f"{id}_report.pdf", "wb") as out:
+            out.write(pdf)

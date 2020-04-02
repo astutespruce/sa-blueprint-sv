@@ -9,6 +9,8 @@
 
     {% if maps[indicator_id] %}
         <img src="data:image/png;base64,{{maps[indicator_id]}}" alt="Map for {{indicator.label}}" class="map">
+
+        {% include "elements/map_credits.html" %}
     {% else %}
         <div class="map-placeholder text-center">
             map could not be created
@@ -127,7 +129,7 @@
 
                 <tr class="total-row">
                     <td class="no-border no-background"></td>
-                    <td>Total indicator area</td>
+                    <td class="align-right">Total indicator area</td>
                     <td class="acres">{{total_acres|format_number}}</td>
                     <td class="percent">100%</td>
                 </tr>

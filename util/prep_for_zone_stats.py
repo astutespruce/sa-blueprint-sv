@@ -81,13 +81,16 @@ df = df.to_crs(GEO_CRS)
 marine = df
 
 # Read in inland attributes from older version of blueprint
-print("Readng marine attributes...")
-cols = list(PLANS.keys()) + ["Justification"]
+print("Reading marine attributes...")
+cols = ["name"] + list(PLANS.keys()) + ["Justification"]
 df = pd.read_csv(
     unit_dir / "marine_v2.csv", dtype={"PROT_NUMBE": str, "BLOCK_NUMB": str}
 )
 df["id"] = df.PROT_NUMBE.str.strip() + "-" + df.BLOCK_NUMB.str.strip()
 df = df.set_index("id")
+
+df["name"] = df.PROT_NUMBE.str.strip() + ": Block " + df.BLOCK_NUMB.str.strip()
+
 
 df = df[df.columns.intersection(cols)].copy()
 for col in df.columns:
@@ -98,7 +101,7 @@ marine = marine.join(df)
 # convert to bool columns if nonempty
 plan_cols = marine.columns.intersection(PLANS.keys())
 marine[plan_cols] = marine[plan_cols].fillna(False).astype("bool")
-to_geofeather(marine.reset_index(), out_dir / "marine" / "marine_blocks.feather")
+to_geofeather(marine.reset_index(), out_dir / "marine_blocks" / "marine_blocks.feather")
 
 
 ### Extract the boundary
