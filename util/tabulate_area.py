@@ -7,11 +7,7 @@ import warnings
 import pandas as pd
 import geopandas as gp
 
-from geofeather import from_geofeather
-from geofeather.pygeos import (
-    from_geofeather as from_geofeather_as_pygeos,
-    to_geofeather,
-)
+from geofeather.pygeos import from_geofeather, to_geofeather
 import numpy as np
 from progress.bar import Bar
 import pygeos as pg
@@ -19,8 +15,15 @@ import rasterio
 from rasterio.mask import raster_geometry_mask
 
 from util.io import write_raster
-from util.pygeos_util import to_crs, to_pygeos, sjoin
-from constants import BLUEPRINT, INDICATORS, URBAN_YEARS, DATA_CRS, GEO_CRS
+from util.pygeos_util import (
+    to_crs,
+    to_pygeos,
+    sjoin,
+    to_dict,
+    sjoin_geometry,
+    intersection,
+)
+from constants import BLUEPRINT, INDICATORS, URBAN_YEARS, DATA_CRS, GEO_CRS, M2_ACRES
 from stats import (
     extract_count_in_geometry,
     extract_blueprint_indicator_area,
@@ -34,6 +37,7 @@ huc12_filename = data_dir / "summary_units/HUC12.feather"
 marine_filename = data_dir / "summary_units/marine_blocks.feather"
 ownership_filename = data_dir / "boundaries/ownership.feather"
 county_filename = data_dir / "boundaries/counties.feather"
+slr_bounds_filename = data_dir / "threats/slr/slr_bounds.feather"
 
 start = time()
 
@@ -51,18 +55,13 @@ geometries = (
     .geometry
 )
 
-pg_geometries = pd.DataFrame(
-    {"geometry": to_pygeos(geometries)}, index=geometries.index
-)
-
-
 ### Calculate counts of each category in blueprint and indicators and put into a DataFrame
 results = []
 index = []
 for huc12, geometry in Bar(
     "Calculating Blueprint and Indicator counts for HUC12", max=len(geometries)
 ).iter(geometries.iteritems()):
-    zone_results = extract_blueprint_indicator_area([geometry], inland=True)
+    zone_results = extract_blueprint_indicator_area([to_dict(geometry)], inland=True)
     if zone_results is None:
         continue
 
@@ -90,7 +89,7 @@ results = []
 for huc12, geometry in Bar(
     "Calculating Urbanization counts for HUC12", max=len(geometries)
 ).iter(geometries.iteritems()):
-    zone_results = extract_urbanization_area([geometry])
+    zone_results = extract_urbanization_area([to_dict(geometry)])
     if zone_results is None:
         continue
 
@@ -106,24 +105,18 @@ df.to_csv(out_dir / "urban.csv", index=False)
 
 
 ### Calculate counts for SLR
-bounds = from_geofeather_as_pygeos(data_dir / "threats/slr/slr_bounds.feather")
-tree = pg.STRtree(bounds.geometry)
-
-# convert to pygeos geometries; there are some invalid data, so buffer them by 0
-geoms = pg.buffer(pg.from_shapely(geometries.geometry), 0)
-
-slr_geometries = geometries.copy()
 # find the indexes of the geometries that overlap with SLR bounds; these are the only
 # ones that need to be analyzed for SLR impacts
-slr_geom_idx = np.unique(tree.query_bulk(geoms, predicate="intersects")[0])
-slr_geometries = slr_geometries.iloc[slr_geom_idx]
+slr_bounds = from_geofeather(slr_bounds_filename).geometry
+idx = sjoin_geometry(geometries, slr_bounds.values, how="inner")
+slr_geometries = geometries.iloc[idx]
 
 results = []
 index = []
 for huc12, geometry in Bar(
     "Calculating SLR counts for HUC12", max=len(slr_geometries)
 ).iter(slr_geometries.iteritems()):
-    zone_results = extract_slr_area([geometry])
+    zone_results = extract_slr_area([to_dict(geometry)])
     if zone_results is None:
         continue
 
@@ -144,25 +137,19 @@ df.to_csv(out_dir / "slr.csv", index=False)
 
 ### Calculate overlap with ownership and protection
 print("Calculating overlap with land ownership and protection")
-df = from_geofeather_as_pygeos(ownership_filename)
-
-# create and query tree for join
-# TODO: convert to sjoin
-tree = pg.STRtree(df.geometry)
-left_idx, right_idx = tree.query_bulk(pg_geometries.geometry, predicate="intersects")
-right = pd.DataFrame(
-    df.iloc[right_idx].index.values,
-    index=pg_geometries.iloc[left_idx].index.values,
-    columns=["index_right"],
-).join(df, on="index_right")
-joined = pg_geometries.join(right, how="inner", rsuffix="_right")
-joined["acres"] = (
-    pg.area(pg.intersection(joined.geometry, joined.geometry_right)) * 0.000247105
+ownership = from_geofeather(
+    ownership_filename, columns=["geometry", "FEE_ORGTYP", "GAP_STATUS"]
 )
 
+df = intersection(pd.DataFrame({"geometry": geometries}), ownership)
+df["acres"] = pg.area(df.geometry_right) * M2_ACRES
+
+# drop areas that touch but have no overlap
+df = df.loc[df.acres > 0].copy()
+
 by_owner = (
-    joined[["FEE_ORGTYP", "acres"]]
-    .groupby(by=[joined.index.get_level_values(0), "FEE_ORGTYP"])
+    df[["FEE_ORGTYP", "acres"]]
+    .groupby(by=[df.index.get_level_values(0), "FEE_ORGTYP"])
     .acres.sum()
     .astype("float32")
     .reset_index()
@@ -172,8 +159,8 @@ by_owner.to_feather(out_dir / "ownership.feather")
 by_owner.to_csv(out_dir / "ownership.csv", index=False)
 
 by_protection = (
-    joined[["GAP_STATUS", "acres"]]
-    .groupby(by=[joined.index.get_level_values(0), "GAP_STATUS"])
+    df[["GAP_STATUS", "acres"]]
+    .groupby(by=[df.index.get_level_values(0), "GAP_STATUS"])
     .acres.sum()
     .astype("float32")
     .reset_index()
@@ -184,8 +171,10 @@ by_protection.to_csv(out_dir / "protection.csv", index=False)
 
 ### Calculate spatial join with counties
 print("Calculating spatial join with counties")
-df = from_geofeather_as_pygeos(county_filename)
-df = sjoin(pg_geometries, df)[["FIPS", "state", "county"]].reset_index()
+df = from_geofeather(county_filename)
+df = sjoin(
+    pd.DataFrame({"geometry": geometries}, index=geometries.index), df, how="inner"
+)[["FIPS", "state", "county"]].reset_index()
 df.to_feather(out_dir / "counties.feather")
 df.to_csv(out_dir / "counties.csv", index=False)
 
@@ -208,7 +197,7 @@ index = []
 for id, geometry in Bar(
     "Calculating Blueprint and Indicator counts for marine blocks", max=len(geometries)
 ).iter(geometries.iteritems()):
-    zone_results = extract_blueprint_indicator_area([geometry], inland=False)
+    zone_results = extract_blueprint_indicator_area([to_dict(geometry)], inland=False)
     if zone_results is None:
         continue
 

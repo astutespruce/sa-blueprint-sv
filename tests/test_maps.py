@@ -5,15 +5,13 @@ import json
 
 import numpy as np
 import pygeos as pg
+from pyogrio import read_dataframe
 
 from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, DATA_CRS, INDICATORS
 
-# from api.map.util import to_geojson
-from util.pyogrio_util import read_dataframe
 from util.pygeos_util import to_crs, to_dict
 from api.map import render_maps
 from api.stats import calculate_results
-from api.summary_units import SummaryUnits
 
 
 # aoi_names = ["Razor", "Groton_all"]
@@ -23,11 +21,11 @@ for aoi_name in aoi_names:
     print(f"Making maps for {aoi_name}...")
 
     ### Write maps for an aoi
-    out_dir = Path("/tmp/aoi") / aoi_name
+    out_dir = Path("/tmp/aoi") / aoi_name / "maps"
     if not out_dir.exists():
         os.makedirs(out_dir)
 
-    df = read_dataframe(f"data/aoi/{aoi_name}.shp")
+    df = read_dataframe(f"data/aoi/{aoi_name}.shp", as_pygeos=True)
     geometry = pg.make_valid(df.geometry)
 
     # dissolve
@@ -36,7 +34,6 @@ for aoi_name in aoi_names:
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
     results = calculate_results(to_crs(geometry, df.crs, DATA_CRS))
-    results["name"] = aoi_name
 
     ### Convert to WGS84 for mapping
     geometry = to_crs(geometry, df.crs, GEO_CRS)

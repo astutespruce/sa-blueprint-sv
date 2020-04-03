@@ -147,6 +147,53 @@ def sjoin_geometry(left, right, predicate="intersects", how="inner"):
     return pd.Series(values, index=index, name="index_right")
 
 
+def intersection(left, right):
+    """Intersect the geometries from the left with the right.
+
+    New, intersected geometries are stored in "geometry_right".
+
+    Uses spatial index operations for faster operations.  Wholly contained
+    geometries from right are copied intact, only those that intersect but are
+    not wholly contained are intersected.
+
+    Parameters
+    ----------
+    left : DataFrame
+        pygeos geometry in "geometry" column
+    right : DataFrame
+        pygeos geometry in "geometry" column
+
+    Returns
+    -------
+    DataFrame
+        output geometries are in "geometry_right"
+    """
+    intersects = sjoin_geometry(left.geometry, right.geometry)
+
+    if not len(intersects):
+        # empty dataframe with correct columns
+        return left.join(intersects, how="inner").join(
+            right, on="index_right", rsuffix="_right"
+        )
+
+    contains = sjoin_geometry(
+        left.geometry, right.geometry.iloc[intersects], predicate="contains"
+    )
+
+    # any geometries that are completely contained can be copied intact
+    out = left.join(contains, how="inner").join(
+        right, on="index_right", rsuffix="_right"
+    )
+
+    # the remainder need to be intersected
+    rest = intersects.loc[~intersects.isin(contains)]
+
+    rest = left.join(rest, how="inner").join(right, on="index_right", rsuffix="_right")
+    rest["geometry_right"] = pg.intersection(rest.geometry, rest.geometry_right)
+
+    return out.append(rest, ignore_index=False)
+
+
 def signed_area(ring):
     """Calculate signed area of a ring.  If positive, is counterclockwise ordering.
     Adapted from shapely::signed_area to numpy
@@ -182,6 +229,18 @@ GEOJSON_TYPE = {
 
 
 def to_dict(geometry):
+    """Convert pygeos Geometry object to a dictionary representation.
+    Equivalent to structure of GeoJSON.
+
+    Parameters
+    ----------
+    geometry : pygeos Geometry object (singular)
+
+    Returns
+    -------
+    dict
+        GeoJSON dict representation of geometry
+    """
     geometry = pg.normalize(geometry)
 
     def get_ring_coords(polygon):
@@ -212,6 +271,17 @@ def to_dict(geometry):
 
 
 def to_json(geometry, *args, **kwargs):
+    """Convert a pygeos geometry to GeoJSON.
+
+    Parameters
+    ----------
+    geometry : pygeos Geometry (singular)
+
+    Returns
+    -------
+    str
+        GeoJSON string
+    """
     return json.dumps(to_dict(geometry), *args, **kwargs)
 
 

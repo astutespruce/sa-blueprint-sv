@@ -23,7 +23,7 @@ STYLE = {
             "id": "aoi-mask",
             "source": "aoi-mask",
             "type": "fill",
-            "paint": {"fill-color": "#333333", "fill-opacity": 0.5},
+            "paint": {"fill-color": "#FFFFFF", "fill-opacity": 0.5},
         },
         {
             "id": "aoi",

@@ -8,6 +8,8 @@ GEO_CRS = "EPSG:4326"
 MAP_CRS = "EPSG:3857"
 
 ACRES_PRECISION = 1
+# meters to acres
+M2_ACRES = 0.000247105
 
 
 # indexed by BP value

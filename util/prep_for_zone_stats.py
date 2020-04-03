@@ -8,7 +8,7 @@ from geofeather.pygeos import (
 )
 import pygeos as pg
 
-from constants import DATA_CRS, GEO_CRS, PLANS
+from constants import DATA_CRS, GEO_CRS, PLANS, M2_ACRES
 from util.pygeos_util import to_pygeos
 
 data_dir = Path("data")
@@ -32,7 +32,7 @@ huc12 = (
 to_geofeather(huc12[["geometry"]].reset_index(), unit_dir / "huc12_prj.feather")
 
 # calculate area
-huc12["acres"] = huc12.area * 0.000247105
+huc12["acres"] = huc12.area * M2_ACRES
 
 # reproject to WGS84
 huc12 = huc12.to_crs(GEO_CRS)
@@ -74,7 +74,7 @@ df = df.set_index("id")[["PROT_NUMBE", "BLOCK_NUMB", "geometry"]]
 to_geofeather(df[["geometry"]].reset_index(), unit_dir / "marine_blocks_prj.feather")
 
 # calculate area
-df["acres"] = df.area * 0.000247105
+df["acres"] = df.area * M2_ACRES
 
 # reproject to WGS84
 df = df.to_crs(GEO_CRS)

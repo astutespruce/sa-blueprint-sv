@@ -15,7 +15,14 @@ import rasterio
 from rasterio.mask import raster_geometry_mask
 
 from util.io import write_raster
-from util.pygeos_util import to_crs, to_pygeos, to_dict, sjoin, sjoin_geometry
+from util.pygeos_util import (
+    to_crs,
+    to_pygeos,
+    to_dict,
+    sjoin,
+    sjoin_geometry,
+    intersection,
+)
 from constants import (
     BLUEPRINT,
     INDICATORS_INDEX,
@@ -24,6 +31,7 @@ from constants import (
     GEO_CRS,
     OWNERSHIP,
     PROTECTION,
+    M2_ACRES
 )
 from stats import (
     extract_count_in_geometry,
@@ -112,16 +120,12 @@ def get_ownership(geometry):
         ownership_filename, columns=["geometry", "FEE_ORGTYP", "GAP_STATUS"]
     )
 
-    df = sjoin(pd.DataFrame({"geometry": geometry}), ownership, how="inner")
+    df = intersection(pd.DataFrame({"geometry": geometry}), ownership)
 
     if not len(df):
         return None
 
-    df = df.join(ownership.geometry, on="index_right", rsuffix="_right")
-
-    # NOTE: this will be slow until prepared geometries land in pygeos
-    df["acres"] = pg.area(pg.intersection(df.geometry, df.geometry_right)) * 0.000247105
-
+    df["acres"] = pg.area(df.geometry_right) * M2_ACRES
     df = df.loc[df.acres > 0].copy()
 
     if not len(df):
@@ -164,7 +168,7 @@ def calculate_results(geometry):
     # wrap geometry as a dict for rasterio
     shapes = np.asarray([to_dict(geometry[0])])
 
-    results = {"type": "area of interest"}
+    results = {"type": "", "acres": pg.area(geometry).sum() * M2_ACRES
 
     blueprint_results = get_blueprint(shapes)
     if blueprint_results is not None:

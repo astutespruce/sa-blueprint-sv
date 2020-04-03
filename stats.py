@@ -5,7 +5,14 @@ import pandas as pd
 import rasterio
 from rasterio.mask import raster_geometry_mask
 
-from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS, URBAN_YEARS, ACRES_PRECISION
+from constants import (
+    BLUEPRINT,
+    ECOSYSTEMS,
+    INDICATORS,
+    URBAN_YEARS,
+    ACRES_PRECISION,
+    M2_ACRES,
+)
 
 src_dir = Path("data")
 blueprint_filename = src_dir / "Blueprint_2_2.tif"
@@ -74,7 +81,7 @@ def extract_blueprint_indicator_area(geometries, inland=True):
         )
 
         # square meters to acres
-        cellsize = src.res[0] * src.res[1] * 0.000247105
+        cellsize = src.res[0] * src.res[1] * M2_ACRES
 
     results["shape_mask"] = (
         ((~geometry_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
@@ -144,7 +151,7 @@ def extract_urbanization_area(geometries):
         )
 
         # square meters to acres
-        cellsize = src.res[0] * src.res[1] * 0.000247105
+        cellsize = src.res[0] * src.res[1] * M2_ACRES
 
     results["shape_mask"] = (
         ((~geometry_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
@@ -228,7 +235,7 @@ def extract_slr_area(geometries):
         )
 
         # square meters to acres
-        cellsize = src.res[0] * src.res[1] * 0.000247105
+        cellsize = src.res[0] * src.res[1] * M2_ACRES
 
         data = src.read(1, window=window)
         nodata = src.nodatavals[0]
