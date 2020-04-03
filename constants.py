@@ -710,7 +710,7 @@ INDICATORS = [
 ]
 
 
-INDICATORS_INDEX = {indicator["id"]: indicator for indicator in INDICATORS}
+INDICATORS_INDEX = OrderedDict({indicator["id"]: indicator for indicator in INDICATORS})
 
 
 URBAN_YEARS = [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]

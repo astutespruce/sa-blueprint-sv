@@ -6,6 +6,7 @@ verify_ssl = true
 [dev-packages]
 black = "==19.3b0"
 pylint = "*"
+geofeather = {editable = true,path = "./../geofeather"}
 
 [packages]
 rasterio = "*"
@@ -20,7 +21,6 @@ pillow = "*"
 affine = "*"
 progress = "*"
 geopandas = "*"
-pygeos = {editable = true,path = "./../pygeos"}
 jinja2 = "*"
 weasyprint = "*"
 

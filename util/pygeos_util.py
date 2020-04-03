@@ -1,3 +1,5 @@
+import json
+
 import geopandas as gp
 import numpy as np
 import pandas as pd
@@ -15,6 +17,9 @@ def to_crs(geometries, src_crs, target_crs):
     src_crs : CRS or params to create it
     target_crs : CRS or params to create it
     """
+
+    if src_crs == target_crs:
+        return geometries.copy()
 
     transformer = Transformer.from_crs(src_crs, target_crs, always_xy=True)
     coords = pg.get_coordinates(geometries)
@@ -140,3 +145,75 @@ def sjoin_geometry(left, right, predicate="intersects", how="inner"):
         values[hits[0]] = right_index[hits[1]]
 
     return pd.Series(values, index=index, name="index_right")
+
+
+def signed_area(ring):
+    """Calculate signed area of a ring.  If positive, is counterclockwise ordering.
+    Adapted from shapely::signed_area to numpy
+
+    Parameters
+    ----------
+    ring : LinearRing
+
+    Returns
+    -------
+    float
+    """
+
+    x, y = pg.get_coordinates(ring).T
+    n = x.shape[0]
+    y1 = y.take(np.arange(-n + 1, 1))
+    y2 = y.take(np.arange(-1, n - 1))
+    return (x * (y1 - y2)).sum() / 2.0
+
+
+# GeoJSON geometry type names
+GEOJSON_TYPE = {
+    # -1: "", # Not a geometry
+    0: "Point",
+    1: "LineString",
+    2: "LinearRing",  # NOTE: not valid GeoJSON, TODO: could be converted to LineString
+    3: "Polygon",
+    4: "MultiPoint",
+    5: "MultiLineString",
+    6: "MultiPolygon",
+    7: "GeometryCollection",
+}
+
+
+def to_dict(geometry):
+    geometry = pg.normalize(geometry)
+
+    def get_ring_coords(polygon):
+        # outer ring must be reversed to be counterclockwise[::-1]
+        coords = [pg.get_coordinates(pg.get_exterior_ring(polygon)).tolist()]
+        for i in range(pg.get_num_interior_rings(polygon)):
+            # inner rings must be reversed to be clockwise[::-1]
+            coords.append(pg.get_coordinates(pg.get_interior_ring(polygon, i)).tolist())
+
+        return coords
+
+    geom_type = GEOJSON_TYPE[pg.get_type_id(geometry)]
+    coords = []
+
+    if geom_type == "MultiPolygon":
+        coords = []
+        geoms = pg.get_geometry(geometry, range(pg.get_num_geometries(geometry)))
+        for geom in geoms:
+            coords.append(get_ring_coords(geom))
+
+    elif geom_type == "Polygon":
+        coords = get_ring_coords(geometry)
+
+    else:
+        raise NotImplementedError("Not built")
+
+    return {"type": geom_type, "coordinates": coords}
+
+
+def to_json(geometry, *args, **kwargs):
+    return json.dumps(to_dict(geometry), *args, **kwargs)
+
+
+to_dict_all = np.vectorize(to_dict)
+to_json_all = np.vectorize(to_json)

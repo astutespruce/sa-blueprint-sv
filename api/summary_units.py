@@ -91,7 +91,6 @@ class SummaryUnits(object):
 
         groups = {c.rsplit("_", 1)[0] for c in blueprint.index}
 
-        # TODO: handle marine
         if "ecosystems" in groups:
             results["ecosystems"] = [
                 getattr(blueprint, c)

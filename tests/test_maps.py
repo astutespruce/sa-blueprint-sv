@@ -3,71 +3,95 @@ import os
 from pathlib import Path
 import json
 
-from geofeather.pygeos import from_geofeather
-import geopandas as gp
+import numpy as np
 import pygeos as pg
 
-from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, INDICATORS
-from api.map.util import to_geojson
+from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, DATA_CRS, INDICATORS
+
+# from api.map.util import to_geojson
+from util.pyogrio_util import read_dataframe
+from util.pygeos_util import to_crs, to_dict
 from api.map import render_maps
+from api.stats import calculate_results
 from api.summary_units import SummaryUnits
 
 
-# ### Write maps for an aoi
-# out_dir = Path("/tmp/aoi")
-# if not out_dir.exists():
-#     os.makedirs(out_dir)
+# aoi_names = ["Razor", "Groton_all"]
+aoi_names = ["ACF_area"]
 
-# # src_dir = Path("data")
-# # # filename = "Razor_prj.shp"
-# # # filename = "ACF_prj.shp"
-# # filename = "Groton_prj.shp"
-# # geometry = gp.read_file(f"data/aoi/{filename}").geometry
+for aoi_name in aoi_names:
+    print(f"Making maps for {aoi_name}...")
 
-# geometry = geometry.to_crs("EPSG:4326")
-# bounds = geometry.total_bounds
-# geojson = to_geojson(geometry)
+    ### Write maps for an aoi
+    out_dir = Path("/tmp/aoi") / aoi_name
+    if not out_dir.exists():
+        os.makedirs(out_dir)
 
-# maps = render_maps(bounds, geojson=geojson, indicators=[i["id"] for i in INDICATORS[:8]])
-# for name, data in maps.items():
-#     with open(out_dir / f"{name}.png", "wb") as out:
-#         out.write(b64decode(data))
+    df = read_dataframe(f"data/aoi/{aoi_name}.shp")
+    geometry = pg.make_valid(df.geometry)
+
+    # dissolve
+    geometry = np.asarray([pg.union_all(geometry)])
+
+    ### calculate results, data must be in DATA_CRS
+    print("Calculating results...")
+    results = calculate_results(to_crs(geometry, df.crs, DATA_CRS))
+    results["name"] = aoi_name
+
+    ### Convert to WGS84 for mapping
+    geometry = to_crs(geometry, df.crs, GEO_CRS)
+    bounds = pg.total_bounds(geometry)
+
+    has_urban = "urban" in results
+    has_slr = "slr" in results
+
+    print("Creating maps...")
+    maps = render_maps(
+        bounds,
+        geometry=geometry[0],
+        indicators=results["indicators"],
+        urban=has_urban,
+        slr=has_slr,
+    )
+    for name, data in maps.items():
+        with open(out_dir / f"{name}.png", "wb") as out:
+            out.write(b64decode(data))
 
 
-### Write maps for a summary unit
+# ### Write maps for a summary unit
 
-ids = {
-    "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
-    "marine_blocks": ["NI18-07-6210"],
-}
+# ids = {
+#     "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
+#     "marine_blocks": ["NI18-07-6210"],
+# }
 
 
-for summary_type in ids:
-    units = SummaryUnits(summary_type)
+# for summary_type in ids:
+#     units = SummaryUnits(summary_type)
 
-    for id in ids[summary_type]:
-        print(f"Making maps for {id}...")
+#     for id in ids[summary_type]:
+#         print(f"Making maps for {id}...")
 
-        results = units.get_results(id)
+#         results = units.get_results(id)
 
-        has_urban = "urban" in results
-        has_slr = "slr" in results
+#         has_urban = "urban" in results
+#         has_slr = "slr" in results
 
-        out_dir = Path(f"/tmp/{id}/maps")
-        if not out_dir.exists():
-            os.makedirs(out_dir)
+#         out_dir = Path(f"/tmp/{id}/maps")
+#         if not out_dir.exists():
+#             os.makedirs(out_dir)
 
-        maps = render_maps(
-            results["bounds"],
-            summary_unit_id=id,
-            indicators=results["indicators"],
-            urban=has_urban,
-            slr=has_slr,
-        )
+#         maps = render_maps(
+#             results["bounds"],
+#             summary_unit_id=id,
+#             indicators=results["indicators"],
+#             urban=has_urban,
+#             slr=has_slr,
+#         )
 
-        for name, data in maps.items():
-            with open(out_dir / f"{name}.png", "wb") as out:
-                out.write(b64decode(data))
+#         for name, data in maps.items():
+#             with open(out_dir / f"{name}.png", "wb") as out:
+#                 out.write(b64decode(data))
 
 ### Write bounds as a polygon for display on map (DEBUG)
 # xmin, ymin, xmax, ymax = bounds

@@ -1,148 +1,189 @@
-"""
-standard projection is: ESRI:102039 / EPSG:5070 (CONUS albers)
-
-to convert to projection (can also add simplify option and drop attributes, but need to know which one to keep)
-ogr2ogr -overwrite -t_srs "EPSG:5070" ACF_prj.shp ACF_area.shp
-
-"""
-
+import csv
+import os
 from pathlib import Path
 from time import time
+import warnings
 
+import pandas as pd
+import geopandas as gp
+
+from geofeather.pygeos import from_geofeather, to_geofeather
+import numpy as np
+from progress.bar import Bar
+import pygeos as pg
 import rasterio
 from rasterio.mask import raster_geometry_mask
-import geopandas as gp
-import numpy as np
-import pandas as pd
 
-from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS_INDEX, DEBUG
 from util.io import write_raster
-from stats import extract_count_in_geometry
-
-
-src_dir = Path("data")
-blueprint_filename = src_dir / "Blueprint_2_2.tif"
-
-
-start = time()
-
-# TODO: project file before passing in here?
-# Or do it all in memory from zipfile received by API?
-df = gp.read_file(src_dir / "aoi" / "Razor_prj.shp")[["geometry"]]
-geometries = df.geometry.values
-
-### create the mask
-with rasterio.open(blueprint_filename) as src:
-    geometry_mask, transform, window = raster_geometry_mask(
-        src, geometries, crop=True, all_touched=True
-    )
-    # square meters to acres
-    cellsize = src.res[0] * src.res[1] * 0.000247105
-    geometry_area = (~geometry_mask).sum() * cellsize
-
-    if DEBUG:
-        write_raster(
-            "/tmp/mask.tif",
-            geometry_mask.astype("int8"),
-            transform,
-            src.crs,
-            src.nodata,
-        )
-
-
-# TODO: if not (window.width and window.height) then bail early; not in SA region
-
-### Calculate Blueprint stats
-bins = np.arange(0, len(BLUEPRINT))
-counts = extract_count_in_geometry(blueprint_filename, geometry_mask, window, bins)
-area = (counts * cellsize).astype("float32")
-percent = 100 * (area / geometry_area).astype("float32")
-
-blueprint_results = pd.DataFrame({"value": bins, "acres": area, "percent": percent})
-
-print("Blueprint", blueprint_results)
-
-print("\n-------------\nIndicators:")
-
-### Calculate stats by indicator; 200m grid
-indicator_results = {}
-for entry in ECOSYSTEMS:
-    ecosystem = entry["id"]
-    for indicator in entry["indicators"]:
-        id = f"{ecosystem}_{indicator}"
-        indicator = INDICATORS_INDEX[id]
-        filename = src_dir / "indicators" / indicator["filename"]
-        values = indicator["values"].keys()
-
-        bins = np.arange(0, max(values) + 1)
-        counts = extract_count_in_geometry(filename, geometry_mask, window, bins)
-        area = (counts * cellsize).astype("float32")
-        percent = 100 * (area / geometry_area).astype("float32")
-
-        results = pd.DataFrame({"value": bins, "acres": area, "percent": percent})
-        # drop any values from [0...max] that were not present in original values (usually 0's)
-        results = results[results.value.isin(values)].copy()
-        indicator_results[id] = results
-
-        print(id, results)
-
-### Calculate urbanization stats; 60m grid
-with rasterio.open(src_dir / "threats" / "serap_urb2020_IsNull0.tif") as src:
-    geometry_mask, transform, window = raster_geometry_mask(
-        src, geometries, crop=True, all_touched=True
-    )
-
-    # square meters to acres
-    cellsize = src.res[0] * src.res[1] * 0.000247105
-    geometry_area = (~geometry_mask).sum() * cellsize
-
-
-# values are probability of urbanization per timestep * 1000 (uint16)
-years = [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]
-probabilities = (
-    np.array(
-        [0, 1, 25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950, 975, 1000]
-    )
-    / 1000
+from util.pygeos_util import to_crs, to_pygeos, to_dict, sjoin, sjoin_geometry
+from constants import (
+    BLUEPRINT,
+    INDICATORS_INDEX,
+    URBAN_YEARS,
+    DATA_CRS,
+    GEO_CRS,
+    OWNERSHIP,
+    PROTECTION,
 )
-bins = np.arange(0, len(probabilities))
-
-print("Processing urbanization")
-urban_results = None
-if window.width and window.height:
-    urban_percents = []
-    for year in years:
-        print(year)
-        filename = src_dir / "threats" / f"urb_indexed_{year}.tif"
-        counts = extract_count_in_geometry(filename, geometry_mask, window, bins)
-        # percent urbanization is sum of area of each pixel * probability
-        percent = 100 * (counts * probabilities * cellsize).sum() / geometry_area
-        urban_percents.append(percent)
-
-    urban_results = pd.DataFrame({"year": years, "percent": urban_percents})
-
-    print("urbanization", urban_results)
+from stats import (
+    extract_count_in_geometry,
+    extract_blueprint_indicator_area,
+    extract_urbanization_area,
+    extract_slr_area,
+)
 
 
-# ### SLR; 30m grid.  DO NOT USE, this is old data!
-# slr_filename = src_dir / "threats" / f"slr_binned.tif"
-# slr_results = None
-# with rasterio.open(slr_filename) as src:
-#     geometry_mask, transform, window = raster_geometry_mask(src, geometries, crop=True)
-#     # square meters to acres
-#     cellsize = src.res[0] * src.res[1] * 0.000247105
-#     geometry_area = (~geometry_mask).sum() * cellsize
-
-# if window.width and window.height:
-#     bins = [0, 1, 2, 3, 4, 5, 6]  # SLR in foot increments up to 6
-#     counts = extract_count_in_geometry(slr_filename, geometry_mask, window, bins)
-
-#     area = (counts * cellsize).astype("float32")
-#     percent = 100 * (area / geometry_area).astype("float32")
-
-#     slr_results = pd.DataFrame({"slr_ft": bins, "acres": area, "percent": percent})
-#     print("slr", slr_results)
+data_dir = Path("data")
+ownership_filename = data_dir / "boundaries/ownership.feather"
+county_filename = data_dir / "boundaries/counties.feather"
+slr_bounds_filename = data_dir / "threats/slr/slr_bounds.feather"
 
 
-print("All done in {:.2f}s".format(time() - start))
+def get_blueprint(shapes):
+    blueprint = extract_blueprint_indicator_area(shapes)
 
+    if blueprint is None:
+        return None
+
+    results = {
+        "blueprint_acres": blueprint["shape_mask"],
+        "blueprint": blueprint["blueprint"],
+        "ecosystems": blueprint["ecosystems"],
+    }
+
+    indicators = []
+    for indicator in INDICATORS_INDEX.keys():
+        # drop indicators that are not present
+        if blueprint[indicator].max() > 0:
+            results[indicator] = blueprint[indicator]
+            indicators.append(indicator)
+
+    results["indicators"] = indicators
+
+    return results
+
+
+def get_urban(shapes):
+    urban_results = extract_urbanization_area(shapes)
+
+    if urban_results is None:
+        return None
+
+    return {
+        "urban_acres": urban_results["shape_mask"],
+        "urban": [urban_results[year] for year in URBAN_YEARS],
+    }
+
+
+def get_slr(geometry, shapes):
+    slr_bounds = from_geofeather(slr_bounds_filename).geometry
+    idx = sjoin_geometry(geometry, slr_bounds.values, how="inner")
+    if not len(idx):
+        return None
+
+    slr_results = extract_slr_area(shapes.take(idx.index.unique()))
+
+    return {
+        "slr_acres": slr_results["shape_mask"],
+        "slr": [slr_results[i] for i in range(7)],
+    }
+
+
+def get_counties(geometry):
+    counties = from_geofeather(
+        county_filename, columns=["geometry", "FIPS", "state", "county"]
+    )
+    df = (
+        sjoin(pd.DataFrame({"geometry": geometry}), counties)[
+            ["FIPS", "state", "county"]
+        ]
+        .reset_index(drop=True)
+        .sort_values(by=["state", "county"])
+    )
+
+    if not len(df):
+        return None
+
+    return {"counties": df.to_dict(orient="records")}
+
+
+def get_ownership(geometry):
+    ownership = from_geofeather(
+        ownership_filename, columns=["geometry", "FEE_ORGTYP", "GAP_STATUS"]
+    )
+
+    df = sjoin(pd.DataFrame({"geometry": geometry}), ownership, how="inner")
+
+    if not len(df):
+        return None
+
+    df = df.join(ownership.geometry, on="index_right", rsuffix="_right")
+
+    # NOTE: this will be slow until prepared geometries land in pygeos
+    df["acres"] = pg.area(pg.intersection(df.geometry, df.geometry_right)) * 0.000247105
+
+    df = df.loc[df.acres > 0].copy()
+
+    if not len(df):
+        return None
+
+    results = dict()
+
+    by_owner = (
+        df[["FEE_ORGTYP", "acres"]]
+        .groupby(by="FEE_ORGTYP")
+        .acres.sum()
+        .astype("float32")
+        .to_dict()
+    )
+    # use the native order of OWNERSHIP to drive order of results
+    results["ownership"] = [
+        {"label": value["label"], "acres": by_owner[key]}
+        for key, value in OWNERSHIP.items()
+        if key in by_owner
+    ]
+
+    by_protection = (
+        df[["GAP_STATUS", "acres"]]
+        .groupby(by="GAP_STATUS")
+        .acres.sum()
+        .astype("float32")
+        .to_dict()
+    )
+    # use the native order of PROTECTION to drive order of results
+    results["protection"] = [
+        {"label": value["label"], "acres": by_protection[key]}
+        for key, value in PROTECTION.items()
+        if key in by_protection
+    ]
+
+    return results
+
+
+def calculate_results(geometry):
+    # wrap geometry as a dict for rasterio
+    shapes = np.asarray([to_dict(geometry[0])])
+
+    results = {"type": "area of interest"}
+
+    blueprint_results = get_blueprint(shapes)
+    if blueprint_results is not None:
+        results.update(blueprint_results)
+
+    urban_results = get_urban(shapes)
+    if urban_results is not None:
+        results.update(urban_results)
+
+    slr_results = get_slr(geometry, shapes)
+    if slr_results is not None:
+        results.update(slr_results)
+
+    ownership_results = get_ownership(geometry)
+    if ownership_results is not None:
+        results.update(ownership_results)
+
+    county_results = get_counties(geometry)
+    if county_results is not None:
+        results.update(county_results)
+
+    return results

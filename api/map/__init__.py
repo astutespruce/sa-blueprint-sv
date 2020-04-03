@@ -27,7 +27,7 @@ slr_filename = src_dir / "threats/slr/slr.vrt"
 
 # TODO: SLR, urbanization
 def render_maps(
-    bounds, geojson=None, summary_unit_id=None, indicators=None, urban=False, slr=False
+    bounds, geometry=None, summary_unit_id=None, indicators=None, urban=False, slr=False
 ):
     maps = {}
 
@@ -35,7 +35,7 @@ def render_maps(
     center = get_center(bounds)
     zoom = get_zoom(bounds, WIDTH, HEIGHT)
 
-    locator = get_locator_map_image(*center)
+    locator = get_locator_map_image(*center, bounds=bounds)
     maps["locator"] = to_base64(locator)
 
     bounds = get_map_bounds(center, zoom, WIDTH, HEIGHT)
@@ -45,9 +45,9 @@ def render_maps(
 
     aoi_image = None
 
-    if geojson:
+    if geometry:
         # get AOI image
-        aoi_image = get_aoi_map_image(geojson, center, zoom, WIDTH, HEIGHT)
+        aoi_image = get_aoi_map_image(geometry, center, zoom, WIDTH, HEIGHT)
 
     elif summary_unit_id:
         aoi_image = get_summary_unit_map_image(

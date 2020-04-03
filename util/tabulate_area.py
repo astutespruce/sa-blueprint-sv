@@ -147,7 +147,7 @@ print("Calculating overlap with land ownership and protection")
 df = from_geofeather_as_pygeos(ownership_filename)
 
 # create and query tree for join
-TODO: convert to sjoin
+# TODO: convert to sjoin
 tree = pg.STRtree(df.geometry)
 left_idx, right_idx = tree.query_bulk(pg_geometries.geometry, predicate="intersects")
 right = pd.DataFrame(
