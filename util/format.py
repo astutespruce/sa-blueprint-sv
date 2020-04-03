@@ -19,6 +19,9 @@ def format_number(number):
     if number == 0:
         return "0"
 
+    if number < 0.01:
+        return "< 0.01"
+
     if number < 1:
         round1 = int(number*10) / 10
         if round1 == number:

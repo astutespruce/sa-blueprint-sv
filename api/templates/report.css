@@ -29,7 +29,9 @@ body {
     }
 }
 
-@page:first {
+@page :first {
+    margin-bottom: 2in;
+
     @top-left {
         content: none;
     }
@@ -43,6 +45,14 @@ body {
     @bottom-left {
         content: none;
     }
+    @bottom-center {
+        width: 100%;
+        content: element(footer);
+    }
+}
+
+footer {
+    position: running(footer);
 }
 
 /* table of contents */
