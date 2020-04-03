@@ -2,7 +2,11 @@
     <h3 id="SLR">Sea-level rise</h3>
 
     {% if maps.slr %}
-        <img src="data:image/png;base64,{{maps.slr}}" alt="Map for projected sea-level rise" class="map">
+        <div class="map-container">
+            <img src="data:image/png;base64,{{maps.slr}}" alt="Map for projected sea-level rise" class="map">
+
+            {% include "elements/scalebar.html" %}
+        </div>
 
         {% include "elements/map_credits.html" %}
     {% else %}

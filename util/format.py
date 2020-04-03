@@ -18,9 +18,21 @@ def format_number(number):
     """
     if number == 0:
         return "0"
+
     if number < 1:
-        return f"{number:.2f}"
+        round1 = int(number*10) / 10
+        if round1 == number:
+            return f"{round1:.1f}"
+        else:
+            number = int(number*100) / 100
+            return f"{number:.2f}"
+
     if number < 10:
+        if int(number) == number:
+            return f"{number:.0f}"
+
+        number = int(number*10) / 10
         return f"{number:.1f}"
+
     return f"{number:,.0f}"
 

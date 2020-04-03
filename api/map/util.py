@@ -3,6 +3,7 @@ from io import BytesIO
 import math
 
 from PIL import Image
+from constants import M_MILES
 
 
 def get_center(bounds):
@@ -98,3 +99,46 @@ def to_base64(img):
     buffer = BytesIO()
     img.save(buffer, format="PNG")
     return b64encode(buffer.getvalue()).decode("utf-8")
+
+
+def get_scale(bounds, map_width, max_width=None):
+    """Calculate properties of a scalebar given bounds and map width.
+
+    Parameters
+    ----------
+    bounds : list-like of [xmin, ymin, xmax, ymax]
+        must be in equal area projection.
+    map_width : int
+        width of map in pixels
+    max_width : int
+        max width of scalebar in pixels
+    """
+
+    max_width = max_width or map_width // 3
+    miles_per_px = (bounds[2] - bounds[0]) * M_MILES / map_width
+
+    max_miles = max_width * miles_per_px
+
+    if max_miles < 1:
+        # round to nearest decimal place
+        max_miles = int(round(max_miles * 10)) / 10
+
+    elif max_miles < 10:
+        # round to nearest mile
+        max_miles = int(round(max_miles))
+
+    elif max_miles < 100:
+        # round to nearest 10 miles
+        max_miles = (max_miles // 10) * 10
+
+    width = int(max_miles // miles_per_px)
+
+    # make sure we can divide by 2
+    # if width % 2:
+    #     width = width - 1
+
+    # max_miles = int(round(width * miles_per_px * 10)) / 10
+    # if int(max_miles) == max_miles:
+    #     max_miles = int(max_miles)
+
+    return {"width": width, "increments": [width // 4, width // 2], "miles": max_miles}

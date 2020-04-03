@@ -10,6 +10,7 @@ from pyogrio import read_dataframe
 from api.report import create_report
 from api.map import render_maps
 from constants import BLUEPRINT, INDICATORS, GEO_CRS, DATA_CRS
+from api.map import get_scale, WIDTH as map_width
 from util.format import format_number
 from api.summary_units import SummaryUnits
 from api.stats import calculate_results
@@ -45,9 +46,6 @@ def read_cache(path):
 
 
 ### Create reports for an AOI
-aoi_names = ["Razor", "Groton_all"]
-# aoi_names = ["ACF_area"]
-
 aois = [
     # {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
     # {"name": "Groton Plantation", "path": "Groton_all"},
@@ -59,8 +57,8 @@ aois = [
     # {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
     # TODO: doesn't overlap, need to handle
     # {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},
-    {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
-    {"name": "ACF", "path": "ACF_area"},
+    # {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
+    {"name": "ACF", "path": "ACF_area"}
 ]
 
 
@@ -76,7 +74,7 @@ for aoi in aois:
 
     cache_dir = out_dir / "maps"
 
-    df = read_dataframe(f"data/aoi/{path}.shp")
+    df = read_dataframe(f"data/aoi/{path}.shp", as_pygeos=True)
     geometry = pg.make_valid(df.geometry)
 
     # dissolve
@@ -84,7 +82,9 @@ for aoi in aois:
 
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
-    results = calculate_results(to_crs(geometry, df.crs, DATA_CRS))
+    analysis_geom = to_crs(geometry, df.crs, DATA_CRS)
+    results = calculate_results(analysis_geom)
+    results["scale"] = get_scale(pg.total_bounds(analysis_geom), map_width)
     results["name"] = name
 
     maps = None

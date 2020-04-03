@@ -2,7 +2,11 @@
     <h2 id="Blueprint">Blueprint Priorities</h2>
 
     {% if maps.blueprint %}
-        <img src="data:image/png;base64,{{maps.blueprint}}" alt="Conservation Blueprint map" class="map">
+        <div class="map-container">
+            <img src="data:image/png;base64,{{maps.blueprint}}" alt="Conservation Blueprint map" class="map">
+
+            {% include "elements/scalebar.html" %}
+        </div>
 
         {% include "elements/map_credits.html" %}
     {% else %}

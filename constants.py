@@ -10,6 +10,7 @@ MAP_CRS = "EPSG:3857"
 ACRES_PRECISION = 1
 # meters to acres
 M2_ACRES = 0.000247105
+M_MILES = 0.000621371
 
 
 # indexed by BP value

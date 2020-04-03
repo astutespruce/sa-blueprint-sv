@@ -10,7 +10,7 @@ from pyogrio import read_dataframe
 from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, DATA_CRS, INDICATORS
 
 from util.pygeos_util import to_crs, to_dict
-from api.map import render_maps
+from api.map import render_maps, get_scale, WIDTH
 from api.stats import calculate_results
 
 
@@ -33,7 +33,11 @@ for aoi_name in aoi_names:
 
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
-    results = calculate_results(to_crs(geometry, df.crs, DATA_CRS))
+    analysis_geom = to_crs(geometry, df.crs, DATA_CRS)
+    results = calculate_results(analysis_geom)
+
+    results["scale"] = get_scale(pg.total_bounds(analysis_geom), WIDTH)
+    print(results["scale"])
 
     ### Convert to WGS84 for mapping
     geometry = to_crs(geometry, df.crs, GEO_CRS)

@@ -2,7 +2,11 @@
     <h3 id="Urban">Urban growth</h3>
 
     {% if maps.urban_2060 %}
-        <img src="data:image/png;base64,{{maps.urban_2060}}" alt="Map for projected urban growth - 2060" class="map">
+        <div class="map-container">
+            <img src="data:image/png;base64,{{maps.urban_2060}}" alt="Map for projected urban growth - 2060" class="map">
+
+            {% include "elements/scalebar.html" %}
+        </div>
 
         {% include "elements/map_credits.html" %}
     {% else %}

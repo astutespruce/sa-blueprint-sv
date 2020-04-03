@@ -8,7 +8,11 @@
     <p>{{indicator.description}}</p>
 
     {% if maps[indicator_id] %}
-        <img src="data:image/png;base64,{{maps[indicator_id]}}" alt="Map for {{indicator.label}}" class="map">
+        <div class="map-container">
+            <img src="data:image/png;base64,{{maps[indicator_id]}}" alt="Map for {{indicator.label}}" class="map">
+
+            {% include "elements/scalebar.html" %}
+        </div>
 
         {% include "elements/map_credits.html" %}
     {% else %}
