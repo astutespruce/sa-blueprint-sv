@@ -25,7 +25,6 @@ urban_filename = src_dir / "threats/urban/urb_indexed_2060.tif"
 slr_filename = src_dir / "threats/slr/slr.vrt"
 
 
-# TODO: SLR, urbanization
 def render_maps(
     bounds, geometry=None, summary_unit_id=None, indicators=None, urban=False, slr=False
 ):

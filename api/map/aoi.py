@@ -69,9 +69,12 @@ def get_aoi_map_image(geometry, center, zoom, width, height):
 
     try:
         r = httpx.post(MBGL_SERVER_URL, json=params)
-        r.raise_for_status()
+        if r.status_code != 200:
+            log.error(f"Error generating AOI image: {r.text[:255]}")
+            return None
+
         return Image.open(BytesIO(r.content))
 
     except Exception as ex:
-        log.error(ex)
+        log.error(f"Error generating AOI image: {ex}")
         return None

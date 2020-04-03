@@ -31,7 +31,7 @@ from constants import (
     GEO_CRS,
     OWNERSHIP,
     PROTECTION,
-    M2_ACRES
+    M2_ACRES,
 )
 from stats import (
     extract_count_in_geometry,
@@ -168,7 +168,7 @@ def calculate_results(geometry):
     # wrap geometry as a dict for rasterio
     shapes = np.asarray([to_dict(geometry[0])])
 
-    results = {"type": "", "acres": pg.area(geometry).sum() * M2_ACRES
+    results = {"type": "", "acres": pg.area(geometry).sum() * M2_ACRES}
 
     blueprint_results = get_blueprint(shapes)
     if blueprint_results is not None:

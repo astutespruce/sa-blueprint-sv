@@ -37,6 +37,8 @@ def merge_maps(maps):
     PIL Image
     """
 
+    maps = [map for map in maps if map is not None]
+
     if not maps:
         return None
 

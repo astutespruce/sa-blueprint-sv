@@ -14,8 +14,8 @@ from api.map import render_maps
 from api.stats import calculate_results
 
 
-# aoi_names = ["Razor", "Groton_all"]
-aoi_names = ["ACF_area"]
+aoi_names = ["Razor", "Groton_all"]
+# aoi_names = ["ACF_area"]
 
 for aoi_name in aoi_names:
     print(f"Making maps for {aoi_name}...")

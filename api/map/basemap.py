@@ -1,10 +1,14 @@
 from io import BytesIO
+import logging
 
 import httpx
 from PIL import Image
 
-
 from settings import MBGL_SERVER_URL
+
+
+log = logging.getLogger(__name__)
+
 
 STYLE = {
     "version": 8,
@@ -45,6 +49,14 @@ def get_basemap_image(center, zoom, width, height):
         "height": height,
     }
 
-    r = httpx.post(MBGL_SERVER_URL, json=params)
-    return Image.open(BytesIO(r.content))
+    try:
+        r = httpx.post(MBGL_SERVER_URL, json=params)
+        if r.status_code != 200:
+            log.error(f"Error generating basemap image: {r.text[:255]}")
+            return None
 
+        return Image.open(BytesIO(r.content))
+
+    except Exception as ex:
+        log.error(f"Error generating basemap image: {ex}")
+        return None

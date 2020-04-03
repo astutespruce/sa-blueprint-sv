@@ -25,8 +25,6 @@ LOCATOR_STYLE = {
         },
         "states": {"type": "vector", "url": "mbtiles://states", "tileSize": 256},
         "sa_units": {"type": "vector", "url": "mbtiles://sa_units", "tileSize": 256},
-        # "marker": {"type": "geojson", "data": ""},
-        # "box": {"type": "geojson", "data": ""},
     },
     "layers": [
         {"id": "basemap", "type": "raster", "source": "basemap"},
@@ -119,9 +117,12 @@ def get_locator_map_image(longitude, latitude, bounds):
 
     try:
         r = httpx.post(MBGL_SERVER_URL, json=params)
-        r.raise_for_status()
+        if r.status_code != 200:
+            log.error(f"Error generating locator image: {r.text[:255]}")
+            return None
+
         return Image.open(BytesIO(r.content))
 
     except Exception as ex:
-        log.error(ex)
+        log.error(f"Error generating locator image: {ex}")
         return None
