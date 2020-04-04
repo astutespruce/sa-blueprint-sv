@@ -1,5 +1,7 @@
 import math
 
+from constants import M_MILES
+
 
 R2D = 180 / math.pi
 D2R = math.pi / 180
@@ -24,7 +26,7 @@ def to_mercator(longitude, latitude):
     x = A * math.radians(longitude)
     if latitude <= -90:
         y = float("-inf")
-    elif lat >= 90:
+    elif latitude >= 90:
         y = float("inf")
     else:
         y = A * math.log(math.tan((math.pi * 0.25) + (0.5 * math.radians(latitude))))
@@ -183,3 +185,42 @@ def get_map_bounds(center, zoom, width, height):
     east, north = from_tile_px(right, top, zoom)
 
     return west, south, east, north
+
+
+def get_map_scale(bounds, map_width, max_width=None):
+    """Calculate properties of a scalebar given bounds and map width.
+
+    Parameters
+    ----------
+    bounds : list-like of [xmin, ymin, xmax, ymax]
+        must be in geographic coordinates.
+    map_width : int
+        width of map in pixels
+    max_width : int
+        max width of scalebar in pixels
+    """
+
+    # calculate x pixel dimensions in Mercator coordinates along bottom edge
+    xmin, _ = to_mercator(*bounds[:2])
+    xmax, _ = to_mercator(bounds[2], bounds[1])
+
+    max_width = max_width or map_width // 3
+    miles_per_px = (xmax - xmin) * M_MILES / map_width
+
+    max_miles = max_width * miles_per_px
+
+    if max_miles < 1:
+        # round to nearest decimal place
+        max_miles = int(round(max_miles * 10)) / 10
+
+    elif max_miles < 10:
+        # round to nearest mile
+        max_miles = int(round(max_miles))
+
+    elif max_miles < 100:
+        # round to nearest 10 miles
+        max_miles = (max_miles // 10) * 10
+
+    width = int(max_miles // miles_per_px)
+
+    return {"width": width, "increments": [width // 4, width // 2], "miles": max_miles}

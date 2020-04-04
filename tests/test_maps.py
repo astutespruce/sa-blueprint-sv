@@ -10,8 +10,9 @@ from pyogrio import read_dataframe
 from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, DATA_CRS, INDICATORS
 
 from util.pygeos_util import to_crs, to_dict
-from api.map import render_maps, get_scale, WIDTH
+from api.map import render_maps
 from api.stats import calculate_results
+from api.summary_units import SummaryUnits
 
 
 aoi_names = ["Razor", "Groton_all"]
@@ -36,9 +37,6 @@ for aoi_name in aoi_names:
     analysis_geom = to_crs(geometry, df.crs, DATA_CRS)
     results = calculate_results(analysis_geom)
 
-    results["scale"] = get_scale(pg.total_bounds(analysis_geom), WIDTH)
-    print(results["scale"])
-
     ### Convert to WGS84 for mapping
     geometry = to_crs(geometry, df.crs, GEO_CRS)
     bounds = pg.total_bounds(geometry)
@@ -47,52 +45,59 @@ for aoi_name in aoi_names:
     has_slr = "slr" in results
 
     print("Creating maps...")
-    maps = render_maps(
+    maps, scale = render_maps(
         bounds,
         geometry=geometry[0],
         indicators=results["indicators"],
         urban=has_urban,
         slr=has_slr,
     )
+
     for name, data in maps.items():
         with open(out_dir / f"{name}.png", "wb") as out:
             out.write(b64decode(data))
 
-
-# ### Write maps for a summary unit
-
-# ids = {
-#     "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
-#     "marine_blocks": ["NI18-07-6210"],
-# }
+    with open(out_dir / f"scale.json", "w") as out:
+        out.write(json.dumps(scale))
 
 
-# for summary_type in ids:
-#     units = SummaryUnits(summary_type)
+### Write maps for a summary unit
 
-#     for id in ids[summary_type]:
-#         print(f"Making maps for {id}...")
+ids = {
+    "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
+    "marine_blocks": ["NI18-07-6210"],
+}
 
-#         results = units.get_results(id)
 
-#         has_urban = "urban" in results
-#         has_slr = "slr" in results
+for summary_type in ids:
+    units = SummaryUnits(summary_type)
 
-#         out_dir = Path(f"/tmp/{id}/maps")
-#         if not out_dir.exists():
-#             os.makedirs(out_dir)
+    for id in ids[summary_type]:
+        print(f"Making maps for {id}...")
 
-#         maps = render_maps(
-#             results["bounds"],
-#             summary_unit_id=id,
-#             indicators=results["indicators"],
-#             urban=has_urban,
-#             slr=has_slr,
-#         )
+        results = units.get_results(id)
 
-#         for name, data in maps.items():
-#             with open(out_dir / f"{name}.png", "wb") as out:
-#                 out.write(b64decode(data))
+        has_urban = "urban" in results
+        has_slr = "slr" in results
+
+        out_dir = Path(f"/tmp/{id}/maps")
+        if not out_dir.exists():
+            os.makedirs(out_dir)
+
+        maps, scale = render_maps(
+            results["bounds"],
+            summary_unit_id=id,
+            indicators=results["indicators"],
+            urban=has_urban,
+            slr=has_slr,
+        )
+
+        for name, data in maps.items():
+            with open(out_dir / f"{name}.png", "wb") as out:
+                out.write(b64decode(data))
+
+        with open(out_dir / f"scale.json", "w") as out:
+            out.write(json.dumps(scale))
 
 ### Write bounds as a polygon for display on map (DEBUG)
 # xmin, ymin, xmax, ymax = bounds

@@ -301,20 +301,17 @@ table tr.above-threshold td {
 }
 
 .scalebar {
-    position: absolute;
-    bottom: 7px;
-    left: 1px;
+    flex: 0 0 auto;
     line-height: 0.9;
-    border-radius: 0 6px 0 0;
-    padding: 6px 10px;
+    margin-left: 10pt;
 }
 
 .scalebar .bar {
     position: relative;
     z-index: 0;
-    border: 2px solid #333;
+    border: 1px solid #666;
     background: #fff;
-    height: 8px;
+    height: 6px;
 }
 
 .scalebar .increment {
@@ -322,7 +319,7 @@ table tr.above-threshold td {
     top: 0;
     bottom: 0;
     left: 0;
-    background: #333;
+    background: #666;
 }
 
 .scalebar .increment + .increment {
@@ -331,17 +328,15 @@ table tr.above-threshold td {
 
 .scalebar .increment-label {
     position: absolute;
-    top: -12px;
+    bottom: -12px;
     font-size: 8pt;
-    color: #333;
-    text-shadow: 0 0 2px #fff;
+    color: #666;
 }
 
 .scalebar .label {
     margin-left: 4pt;
-    font-size: 10pt;
-    color: #333;
-    text-shadow: 0 0 2px #fff;
+    font-size: 8pt;
+    color: #666;
     flex: 0 0 auto;
 }
 
@@ -350,6 +345,9 @@ table tr.above-threshold td {
 }
 .flex.justify-center {
     justify-content: center;
+}
+.flex.justify-end {
+    justify-content: flex-end;
 }
 .flex.flex-column {
     flex-direction: column;

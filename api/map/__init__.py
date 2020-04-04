@@ -8,8 +8,8 @@ from api.map.basemap import get_basemap_image
 from api.map.locator import get_locator_map_image
 from api.map.raster import render_raster, extract_data_for_map
 from api.map.summary_unit import get_summary_unit_map_image
-from api.map.util import pad_bounds, get_center, to_base64, merge_maps, get_scale
-from api.map.mercator import get_zoom, get_map_bounds
+from api.map.util import pad_bounds, get_center, to_base64, merge_maps
+from api.map.mercator import get_zoom, get_map_bounds, get_map_scale
 
 from constants import BLUEPRINT_COLORS, INDICATORS_INDEX, URBAN_LEGEND, SLR_LEGEND
 
@@ -38,6 +38,8 @@ def render_maps(
     maps["locator"] = to_base64(locator)
 
     bounds = get_map_bounds(center, zoom, WIDTH, HEIGHT)
+
+    scale = get_map_scale(bounds, WIDTH)
 
     # get basemap image
     basemap_image = get_basemap_image(center, zoom, WIDTH, HEIGHT)
@@ -98,4 +100,4 @@ def render_maps(
                 map_image = merge_maps([basemap_image, raster_img, aoi_image])
                 maps["slr"] = to_base64(map_image)
 
-    return maps
+    return maps, scale

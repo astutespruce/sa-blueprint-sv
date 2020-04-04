@@ -5,10 +5,8 @@
         <div class="map-container">
             <img src="data:image/png;base64,{{maps.slr}}" alt="Map for projected sea-level rise" class="map">
 
-            {% include "elements/scalebar.html" %}
+            {% include "elements/map_footer.html" %}
         </div>
-
-        {% include "elements/map_credits.html" %}
     {% else %}
         <div class="map-placeholder text-center">
             map could not be created

@@ -170,9 +170,15 @@ def calculate_results(geometry):
 
     results = {"type": "", "acres": pg.area(geometry).sum() * M2_ACRES}
 
-    blueprint_results = get_blueprint(shapes)
-    if blueprint_results is not None:
-        results.update(blueprint_results)
+    try:
+        blueprint_results = get_blueprint(shapes)
+        if blueprint_results is not None:
+            results.update(blueprint_results)
+
+    except ValueError:
+        # geometry does not overlap Blueprint.  There are no valid results here,
+        # move along.
+        return None
 
     urban_results = get_urban(shapes)
     if urban_results is not None:

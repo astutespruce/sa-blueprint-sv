@@ -76,9 +76,13 @@ def extract_blueprint_indicator_area(geometries, inland=True):
     results = {}
     # create mask and window
     with rasterio.open(blueprint_filename) as src:
-        geometry_mask, transform, window = raster_geometry_mask(
-            src, geometries, crop=True, all_touched=True
-        )
+        try:
+            geometry_mask, transform, window = raster_geometry_mask(
+                src, geometries, crop=True, all_touched=True
+            )
+
+        except ValueError:
+            return None
 
         # square meters to acres
         cellsize = src.res[0] * src.res[1] * M2_ACRES
@@ -146,9 +150,13 @@ def extract_urbanization_area(geometries):
 
     # create mask and window
     with rasterio.open(urban_dir / "urb_indexed_2020.tif") as src:
-        geometry_mask, transform, window = raster_geometry_mask(
-            src, geometries, crop=True, all_touched=True
-        )
+        try:
+            geometry_mask, transform, window = raster_geometry_mask(
+                src, geometries, crop=True, all_touched=True
+            )
+
+        except ValueError:
+            return None
 
         # square meters to acres
         cellsize = src.res[0] * src.res[1] * M2_ACRES
@@ -230,9 +238,13 @@ def extract_slr_area(geometries):
 
     # create mask and window
     with rasterio.open(vrt) as src:
-        geometry_mask, transform, window = raster_geometry_mask(
-            src, geometries, crop=True, all_touched=True
-        )
+        try:
+            geometry_mask, transform, window = raster_geometry_mask(
+                src, geometries, crop=True, all_touched=True
+            )
+
+        except ValueError:
+            return None
 
         # square meters to acres
         cellsize = src.res[0] * src.res[1] * M2_ACRES
