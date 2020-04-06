@@ -168,6 +168,7 @@ def extract_urbanization_area(geometries):
     if results["shape_mask"] == 0:
         return None
 
+
     # values are probability of urbanization per timestep * 1000 (uint16)
     # NOTE: index 0 = not predicted to urbanize
     # index 1 = already urban, so given a probability of 1
@@ -200,6 +201,13 @@ def extract_urbanization_area(geometries):
     for year in URBAN_YEARS:
         filename = urban_dir / f"urb_indexed_{year}.tif"
         counts = extract_count_in_geometry(filename, geometry_mask, window, bins)
+
+        if year == 2020:
+            # extract area already urban (in index 1)
+            results["urban"] = (
+                (counts[1] * cellsize).round(ACRES_PRECISION).astype("float32")
+            )
+
         # total urbanization is sum of pixel counts * probability
         results[year] = (
             ((counts * probabilities).sum() * cellsize)

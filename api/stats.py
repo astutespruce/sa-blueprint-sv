@@ -79,7 +79,8 @@ def get_urban(shapes):
 
     return {
         "urban_acres": urban_results["shape_mask"],
-        "urban": [urban_results[year] for year in URBAN_YEARS],
+        "urban": urban_results["urban"],
+        "proj_urban": [urban_results[year] for year in URBAN_YEARS],
     }
 
 
@@ -172,8 +173,10 @@ def calculate_results(geometry):
 
     try:
         blueprint_results = get_blueprint(shapes)
-        if blueprint_results is not None:
-            results.update(blueprint_results)
+        if blueprint_results is None:
+            return None
+
+        results.update(blueprint_results)
 
     except ValueError:
         # geometry does not overlap Blueprint.  There are no valid results here,

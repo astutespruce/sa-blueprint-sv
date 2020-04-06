@@ -96,7 +96,7 @@ for huc12, geometry in Bar(
     index.append(huc12)
     results.append(zone_results)
 
-cols = ["shape_mask"] + URBAN_YEARS
+cols = ["shape_mask", "urban"] + URBAN_YEARS
 df = pd.DataFrame(results, index=index)[cols]
 df = df.reset_index().rename(columns={"index": "HUC12"})
 df.columns = [str(c) for c in df.columns]

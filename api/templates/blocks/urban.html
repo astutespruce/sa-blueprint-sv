@@ -58,7 +58,15 @@
             </tr>
         </thead>
         <tbody>
-            {% for acres in results['urban'] %}
+            {% with acres=results.urban %}
+            <tr>
+                <td class="label">Urban in 2009</td>
+                <td class="percent">{{acres|format_number}}</td>
+                <td class="percent">{{(100 * acres / results.urban_acres)|format_number}}%</td>
+            </tr>
+            {% endwith %}
+
+            {% for acres in results['proj_urban'] %}
             <tr>
                 <td class="label">{{2020 + (10*(loop.index-1))}}</td>
                 <td class="percent">{{acres|format_number}}</td>

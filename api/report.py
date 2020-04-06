@@ -67,7 +67,7 @@ def create_report(maps, results):
         ecosystem = deepcopy(ecosystem)
 
         if ecosystem.get("extent", None) == "region":
-            if results["type"] == "subwatershed":
+            if results["type"] != "marine lease block":
                 ecosystem["acres"] = 0  # just to force sort at end
                 ecosystems.append(ecosystem)
 

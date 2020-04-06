@@ -180,7 +180,8 @@ class SummaryUnits(object):
             urban = self.urban.loc[id]
             if urban[1:].max():
                 results["urban_acres"] = urban.shape_mask
-                results["urban"] = urban[1:].tolist()
+                results["urban"] = urban[1]
+                results["proj_urban"] = urban[2:].tolist()
 
         except KeyError:
             pass

@@ -54,8 +54,9 @@ for aoi_name in aoi_names:
     )
 
     for name, data in maps.items():
-        with open(out_dir / f"{name}.png", "wb") as out:
-            out.write(b64decode(data))
+        if data is not None:
+            with open(out_dir / f"{name}.png", "wb") as out:
+                out.write(b64decode(data))
 
     with open(out_dir / f"scale.json", "w") as out:
         out.write(json.dumps(scale))
@@ -93,8 +94,9 @@ for summary_type in ids:
         )
 
         for name, data in maps.items():
-            with open(out_dir / f"{name}.png", "wb") as out:
-                out.write(b64decode(data))
+            if data is not None:
+                with open(out_dir / f"{name}.png", "wb") as out:
+                    out.write(b64decode(data))
 
         with open(out_dir / f"scale.json", "w") as out:
             out.write(json.dumps(scale))

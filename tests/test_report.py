@@ -26,8 +26,9 @@ def write_cache(maps, scale, path):
         os.makedirs(path)
 
     for name, data in maps.items():
-        with open(path / f"{name}.png", "wb") as out:
-            out.write(b64decode(data))
+        if data is not None:
+            with open(path / f"{name}.png", "wb") as out:
+                out.write(b64decode(data))
 
     with open(path / f"scale.json", "w") as out:
         out.write(json.dumps(scale))
@@ -36,7 +37,7 @@ def write_cache(maps, scale, path):
 def read_cache(path):
     if not path.exists():
         # cache miss
-        return None
+        return None, None
 
     maps = {}
     for filename in path.glob("*.png"):
@@ -52,17 +53,18 @@ def read_cache(path):
 
 ### Create reports for an AOI
 aois = [
-    # {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
+    {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
     # {"name": "Groton Plantation", "path": "Groton_all"},
+    # {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
+    # {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
+    # # TODO: handle correctly
+    # {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},
+    # # Big areas:
+    # {"name": "ACF", "path": "ACF_area"},
     # {
     #     "name": "80-mile sourcing radius for Enviva’s Hamlet, NC plant",
     #     "path": "Enviva_Hamlet_80_mile_sourcing_radius",
     # },
-    # {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
-    # TODO: doesn't overlap, need to handle
-    # {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},
-    # {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
-    # {"name": "ACF", "path": "ACF_area"},
 ]
 
 
@@ -70,13 +72,6 @@ for aoi in aois:
     name = aoi["name"]
     path = aoi["path"]
     print(f"Creating report for {name}...")
-
-    ### Write maps for an aoi
-    out_dir = Path("/tmp/aoi") / path
-    if not out_dir.exists():
-        os.makedirs(out_dir)
-
-    cache_dir = out_dir / "maps"
 
     df = read_dataframe(f"data/aoi/{path}.shp", as_pygeos=True)
     geometry = pg.make_valid(df.geometry)
@@ -90,8 +85,14 @@ for aoi in aois:
     results = calculate_results(analysis_geom)
 
     if results is None:
-        print("AOI: {path} does not overlap Blueprint")
+        print(f"AOI: {path} does not overlap Blueprint")
         continue
+
+    out_dir = Path("/tmp/aoi") / path
+    if not out_dir.exists():
+        os.makedirs(out_dir)
+
+    cache_dir = out_dir / "maps"
 
     results["name"] = name
 
@@ -129,8 +130,8 @@ for aoi in aois:
 
 ### Create reports for summary units
 ids = {
-    # "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
-    "marine_blocks": ["NI18-07-6210"]
+    "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
+    # "marine_blocks": ["NI18-07-6210"],
 }
 
 

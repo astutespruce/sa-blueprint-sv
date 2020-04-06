@@ -12,8 +12,8 @@ log = logging.getLogger(__name__)
 
 ZOOM = 2.8
 CENTER = [-78.593, 33.221]
-WIDTH = 160
-HEIGHT = 160
+WIDTH = 150
+HEIGHT = 150
 
 LOCATOR_STYLE = {
     "version": 8,
