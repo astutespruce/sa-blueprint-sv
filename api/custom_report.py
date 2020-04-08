@@ -11,7 +11,7 @@ import pygeos as pg
 
 from api.report.map import render_maps
 from api.report import create_report
-from api.stats.aoi import calculate_results
+from api.stats import CustomArea
 
 from util.pygeos_util import to_crs
 from constants import DATA_CRS, GEO_CRS
@@ -28,13 +28,10 @@ def create_custom_report(zip_filename, dataset, layer, name):
 
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
-    analysis_geom = to_crs(geometry, df.crs, DATA_CRS)
-    results = calculate_results(analysis_geom)
+    results = CustomArea(geometry, df.crs, name).get_results()
 
     if results is None:
         raise ValueError("Area of interest does not overlap South Atlantic Blueprint")
-
-    results["name"] = name
 
     print("Rendering maps...")
     geometry = to_crs(geometry, df.crs, GEO_CRS)

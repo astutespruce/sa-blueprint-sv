@@ -11,12 +11,12 @@ from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, DATA_CRS, IN
 
 from util.pygeos_util import to_crs, to_dict
 from api.report.map import render_maps
-from api.stats import calculate_results
-from api.summary_units import SummaryUnits
+from api.stats import SummaryUnits, CustomArea
 
 
 aoi_names = ["Razor", "Groton_all"]
 # aoi_names = ["ACF_area"]
+# aoi_names = []
 
 for aoi_name in aoi_names:
     print(f"Making maps for {aoi_name}...")
@@ -34,8 +34,7 @@ for aoi_name in aoi_names:
 
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
-    analysis_geom = to_crs(geometry, df.crs, DATA_CRS)
-    results = calculate_results(analysis_geom)
+    results = CustomArea(geometry, df.crs, name="Test").get_results()
 
     ### Convert to WGS84 for mapping
     geometry = to_crs(geometry, df.crs, GEO_CRS)
@@ -65,8 +64,11 @@ for aoi_name in aoi_names:
 ### Write maps for a summary unit
 
 ids = {
-    "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
-    "marine_blocks": ["NI18-07-6210"],
+    "huc12": [
+        "030602040601",
+        # "030601030510", "031501040301", "030102020505"
+    ],
+    # "marine_blocks": ["NI18-07-6210"],
 }
 
 

@@ -12,8 +12,7 @@ from api.report import create_report
 from api.report.map import render_maps
 from constants import BLUEPRINT, INDICATORS, GEO_CRS, DATA_CRS
 from util.format import format_number
-from api.stats.summary_units import SummaryUnits
-from api.stats.aoi import calculate_results
+from api.stats import SummaryUnits, CustomArea
 from util.pygeos_util import to_crs
 
 
@@ -81,8 +80,7 @@ for aoi in aois:
 
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
-    analysis_geom = to_crs(geometry, df.crs, DATA_CRS)
-    results = calculate_results(analysis_geom)
+    results = CustomArea(geometry, df.crs, name="Test").get_results()
 
     if results is None:
         print(f"AOI: {path} does not overlap Blueprint")
@@ -93,8 +91,6 @@ for aoi in aois:
         os.makedirs(out_dir)
 
     cache_dir = out_dir / "maps"
-
-    results["name"] = name
 
     maps = None
     scale = None
