@@ -23,6 +23,9 @@ progress = "*"
 geopandas = "*"
 jinja2 = "*"
 weasyprint = "*"
+python-multipart = "*"
+uvicorn = "*"
+aiofiles = "*"
 
 [requires]
 python_version = "3.8"

@@ -3,13 +3,13 @@ from pathlib import Path
 
 import rasterio
 
-from api.map.aoi import get_aoi_map_image
-from api.map.basemap import get_basemap_image
-from api.map.locator import get_locator_map_image
-from api.map.raster import render_raster, extract_data_for_map
-from api.map.summary_unit import get_summary_unit_map_image
-from api.map.util import pad_bounds, get_center, to_base64, merge_maps
-from api.map.mercator import get_zoom, get_map_bounds, get_map_scale
+from .aoi import get_aoi_map_image
+from .basemap import get_basemap_image
+from .locator import get_locator_map_image
+from .raster import render_raster, extract_data_for_map
+from .summary_unit import get_summary_unit_map_image
+from .mercator import get_zoom, get_map_bounds, get_map_scale
+from .util import pad_bounds, get_center, to_base64, merge_maps
 
 from constants import BLUEPRINT_COLORS, INDICATORS_INDEX, URBAN_LEGEND, SLR_LEGEND
 

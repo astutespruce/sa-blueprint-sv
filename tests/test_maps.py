@@ -10,7 +10,7 @@ from pyogrio import read_dataframe
 from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, DATA_CRS, INDICATORS
 
 from util.pygeos_util import to_crs, to_dict
-from api.map import render_maps
+from api.report.map import render_maps
 from api.stats import calculate_results
 from api.summary_units import SummaryUnits
 

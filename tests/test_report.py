@@ -9,11 +9,11 @@ import pygeos as pg
 from pyogrio import read_dataframe
 
 from api.report import create_report
-from api.map import render_maps
+from api.report.map import render_maps
 from constants import BLUEPRINT, INDICATORS, GEO_CRS, DATA_CRS
 from util.format import format_number
-from api.summary_units import SummaryUnits
-from api.stats import calculate_results
+from api.stats.summary_units import SummaryUnits
+from api.stats.aoi import calculate_results
 from util.pygeos_util import to_crs
 
 
@@ -131,7 +131,7 @@ for aoi in aois:
 ### Create reports for summary units
 ids = {
     "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
-    # "marine_blocks": ["NI18-07-6210"],
+    "marine_blocks": ["NI18-07-6210"],
 }
 
 

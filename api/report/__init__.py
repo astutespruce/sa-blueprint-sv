@@ -44,7 +44,7 @@ def load_asset(path):
     return f"{prefix}{data}"
 
 
-env = Environment(loader=PackageLoader("api", "templates"))
+env = Environment(loader=PackageLoader("api", "report/templates"))
 env.filters["reverse"] = reverse_filter
 env.filters["format_number"] = format_number
 env.filters["load_asset"] = load_asset
