@@ -1,11 +1,8 @@
 """
 TODO:
 * validate max size (on nginx side)
-* background task:
-* unzip (exclude macos folders: __MACOSX, .DS_Store)
-* validate single dataset
-* validate CRS info is present
 * add CORS support (either here or nginx)
+* background task:
 """
 
 import logging
@@ -95,10 +92,6 @@ def delete_file(path: str):
         path.unlink()
 
 
-# def escape_name(name: str):
-#     return name.replace(' ', '_')
-
-
 @app.post("/report/custom/")
 async def custom_report_endpoint(
     background_tasks: BackgroundTasks,
@@ -140,7 +133,3 @@ async def custom_report_endpoint(
         media_type="application/pdf",
         headers={"Content-Disposition": f"attachment;{name}.pdf"},
     )
-
-    # return FileResponse(
-    #     "/tmp/030102020505/030102020505_report.pdf", filename=pdf_filename
-    # )

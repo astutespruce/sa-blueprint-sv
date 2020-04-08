@@ -7,14 +7,7 @@ import pandas as pd
 import pygeos as pg
 
 
-from constants import (
-    BLUEPRINT,
-    INDICATORS,
-    INDICATORS_INDEX,
-    OWNERSHIP,
-    PROTECTION,
-    PLANS,
-)
+from constants import BLUEPRINT, INDICATORS, INDICATORS_INDEX, OWNERSHIP, PROTECTION
 
 
 class SummaryUnits(object):
@@ -61,19 +54,6 @@ class SummaryUnits(object):
         results["type"] = (
             "subwatershed" if self.unit_type == "huc12" else "marine lease block"
         )
-
-        # extract all non-empty plans
-        plans = defaultdict(list)
-        cols = unit.index.intersection(PLANS.keys())
-        for col in cols:
-            if unit[col]:
-                plans[PLANS[col]["type"]].append(col)
-
-        if plans:
-            for group in plans:
-                plans[group] = sorted(plans[group])
-
-            results["plans"] = dict(plans)
 
         blueprint = None
         try:

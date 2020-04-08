@@ -1,41 +1,6 @@
 <section>
     <h2 id="Partners">Partners</h2>
 
-    {% if results.plans %}
-        {% if results.plans['regional'] %}
-        <h3 id="RegionalPlans">Regional Conservation Plans</h3>
-        <ul>
-            {% for plan_id in results.plans['regional'] %}
-                {% with plan=plans[plan_id] %}
-                    {% include "elements/plan.html" %}
-                {% endwith %}
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        {% if results.plans['marine'] %}
-        <h3 id="MarinePlans">Marine Conservation Plans</h3>
-        <ul>
-            {% for plan_id in results.plans['marine'] %}
-                {% with plan=plans[plan_id] %}
-                    {% include "elements/plan.html" %}
-                {% endwith %}
-            {% endfor %}
-        </ul>
-        {% endif %}
-
-        {% if results.plans['state'] %}
-        <h3 id="StatePlans">Statewide Conservation Plans</h3>
-        <ul>
-            {% for plan_id in results.plans['state'] %}
-                {% with plan=plans[plan_id] %}
-                    {% include "elements/plan.html" %}
-                {% endwith %}
-            {% endfor %}
-        </ul>
-        {% endif %}
-    {% endif %}
-
     {% if results.counties %}
         <h3>
             <span id="LandTrusts">Land Trusts</span>

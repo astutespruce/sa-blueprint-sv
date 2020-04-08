@@ -5,7 +5,6 @@ from time import time
 import warnings
 
 import pandas as pd
-import geopandas as gp
 
 from geofeather.pygeos import from_geofeather, to_geofeather
 import numpy as np

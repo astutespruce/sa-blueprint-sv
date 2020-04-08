@@ -287,3 +287,24 @@ def to_json(geometry, *args, **kwargs):
 
 to_dict_all = np.vectorize(to_dict)
 to_json_all = np.vectorize(to_json)
+
+
+def explode(df):
+    """Explodes multipart geometries to single parts.  Attributes are copied
+    to each individual geometry.
+
+    NOTE: Not yet supported in pygeos, in https://github.com/pygeos/pygeos/pull/130
+
+    Parameters
+    ----------
+    df : DataFrame
+
+    Returns
+    -------
+    DataFrame
+    """
+
+    ix, parts = pg.get_parts(df.geometry)
+    series = pd.Series(parts, index=df.index[ix], name="geometry")
+
+    return df.drop(columns=["geometry"]).join(series)
