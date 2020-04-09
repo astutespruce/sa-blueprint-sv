@@ -147,42 +147,19 @@ def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
 
 def render_raster(data, colors, nodata):
     num_colors = max(colors.keys())
-    nodata_index = num_colors + 1
 
-    # TODO: probably a much easier way to create RGBA from colors using numpy
-    # alpha is 0 for transparent and <= 255 for opaque parts
+    # fully transparent image by default
+    rgba = np.zeros(shape=data.shape + (4,), dtype="uint8")
 
-    # convert nodata
-    data[data == nodata] = nodata_index
-    # create palette and set missing indexes to nodata index
-    palette = []
-    for i in range(0, num_colors + 1):
+    for i in range(0, num_colors):
+        idx = data == i
+
         if i in colors:
-            palette.append(hex_to_rgb(colors[i]))
-        else:
-            # convert pixel value to nodata
-            data[data == i] = nodata_index
-            palette.append((0, 0, 0))
+            r, g, b = hex_to_rgb(colors[i])
 
-    # add nodata color to palette (set as transparent below)
-    palette.append((0, 0, 0))
+            # alpha is 0 for transparent and <= 255 for opaque parts
+            a = 175
 
-    img = Image.frombuffer("P", (data.shape[1], data.shape[0]), data, "raw", "P", 0, 1)
-    # palette must be a list of [r, g, b, r, g, b, ...]  values
-    img.putpalette(np.array(palette, dtype="uint8").flatten().tolist(), "RGB")
-    img.info["transparency"] = nodata_index
+            rgba[idx, :] = r, g, b, a
 
-    # Convert to RGBA and putalpha to set transparency
-    img = img.convert("RGBA")
-
-    # can also putalpha with a mask made from L img instead of a single value
-    # might be able to forgo setting alpha above?
-
-    # Convert to part transparent
-    arr = np.array(img)
-    a = arr[:, :, 3]
-    a[a == 255] = 175  # set alpha value to part transparent
-
-    img = Image.fromarray(arr)
-
-    return img
+    return Image.fromarray(rgba, "RGBA")

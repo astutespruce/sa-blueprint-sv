@@ -35,7 +35,7 @@ STYLE = {
 }
 
 
-def get_aoi_map_image(geometry, center, zoom, width, height):
+async def get_aoi_map_image(geometry, center, zoom, width, height):
     """Create a rendered map image of the area of interest.
 
     Parameters
@@ -68,7 +68,9 @@ def get_aoi_map_image(geometry, center, zoom, width, height):
     }
 
     try:
-        r = httpx.post(MBGL_SERVER_URL, json=params)
+        async with httpx.AsyncClient() as client:
+            r = await client.post(MBGL_SERVER_URL, json=params)
+
         if r.status_code != 200:
             log.error(f"Error generating AOI image: {r.text[:255]}")
             return None

@@ -34,7 +34,7 @@ STYLE = {
 }
 
 
-def get_summary_unit_map_image(id, center, zoom, width, height):
+async def get_summary_unit_map_image(id, center, zoom, width, height):
     """Create a rendered map image of an existing summary unit.
 
     Parameters
@@ -66,7 +66,9 @@ def get_summary_unit_map_image(id, center, zoom, width, height):
     }
 
     try:
-        r = httpx.post(MBGL_SERVER_URL, json=params)
+        async with httpx.AsyncClient() as client:
+            r = await client.post(MBGL_SERVER_URL, json=params)
+
         if r.status_code != 200:
             log.error(f"Error generating summary unit image: {r.text[:255]}")
             return None

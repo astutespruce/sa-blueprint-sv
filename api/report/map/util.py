@@ -100,5 +100,8 @@ def to_base64(img):
         return None
 
     buffer = BytesIO()
-    img.save(buffer, format="PNG")
+
+    # Compression costs time, but since this is all transported in memory
+    # we can likely handle larger files
+    img.save(buffer, format="PNG", compress_level=1)
     return b64encode(buffer.getvalue()).decode("utf-8")

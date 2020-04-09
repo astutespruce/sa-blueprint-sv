@@ -25,7 +25,7 @@ STYLE = {
 }
 
 
-def get_basemap_image(center, zoom, width, height):
+async def get_basemap_image(center, zoom, width, height):
     """Create a rendered map image of the basemap.
 
     Parameters
@@ -50,7 +50,9 @@ def get_basemap_image(center, zoom, width, height):
     }
 
     try:
-        r = httpx.post(MBGL_SERVER_URL, json=params)
+        async with httpx.AsyncClient() as client:
+            r = await client.post(MBGL_SERVER_URL, json=params)
+
         if r.status_code != 200:
             log.error(f"Error generating basemap image: {r.text[:255]}")
             return None

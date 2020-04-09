@@ -1,6 +1,7 @@
 import os
 from setuptools import setup
 
+
 setup(
     name="sa-reports",
     version="0.1.0",
