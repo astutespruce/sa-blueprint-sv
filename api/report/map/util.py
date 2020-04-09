@@ -43,11 +43,10 @@ def merge_maps(maps):
     if not maps:
         return None
 
-    img = maps[0].copy()
+    img = maps[0]
 
     for map in maps[1:]:
-        if map is not None:
-            img = Image.alpha_composite(img, map)
+        img = Image.alpha_composite(img, map)
 
     return img
 

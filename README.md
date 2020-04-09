@@ -65,3 +65,11 @@ tippecanoe -f -pg -z 8 -o ./tiles/sa_mask.mbtiles -l "mask" ./data/boundaries/ma
 ```
 tile-join -f -o ./tiles/sa_units.mbtiles ./tiles/sa_mask.mbtiles ./tiles/units.mbtiles
 ```
+
+## API
+
+To start the API in development mode:
+
+```
+uvicorn api:app --reload
+```

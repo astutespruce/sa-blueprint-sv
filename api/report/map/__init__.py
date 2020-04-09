@@ -2,6 +2,7 @@ import asyncio
 import json
 from pathlib import Path
 from time import time
+from concurrent.futures import ThreadPoolExecutor
 
 import rasterio
 
@@ -12,7 +13,6 @@ from .raster import render_raster, extract_data_for_map
 from .summary_unit import get_summary_unit_map_image
 from .mercator import get_zoom, get_map_bounds, get_map_scale
 from .util import pad_bounds, get_center, to_base64, merge_maps
-from api.report.map._render import render_rasters
 
 from constants import BLUEPRINT_COLORS, INDICATORS_INDEX, URBAN_LEGEND, SLR_LEGEND
 
@@ -20,6 +20,7 @@ from constants import BLUEPRINT_COLORS, INDICATORS_INDEX, URBAN_LEGEND, SLR_LEGE
 WIDTH = 740
 HEIGHT = 460
 PADDING = 5
+THREADS = 6
 
 
 src_dir = Path("data")
@@ -28,15 +29,56 @@ urban_filename = src_dir / "threats/urban/urb_indexed_2060.tif"
 slr_filename = src_dir / "threats/slr/slr.vrt"
 
 
-# async def render_indicator(filename):
-#     with rasterio.open(src_dir / "indicators" / indicator["filename"]) as src:
-#         data = extract_data_for_map(src, bounds, WIDTH, HEIGHT)
+async def render_mbgl_maps(*args):
+    return await asyncio.gather(*args)
 
-#         raster_img = None
-#         if data is not None:
-#             raster_img = render_raster(data, indicator["colors"], src.nodata)
 
-#         return raster_img
+def render_raster_map(bounds, basemap_image, aoi_image, id, path, colors):
+    print(f"Processing {id}")
+    raster_img = render_raster(path, bounds, WIDTH, HEIGHT, colors)
+
+    map_image = None
+    if raster_img is not None:
+        map_image = merge_maps([basemap_image, raster_img, aoi_image])
+        map_image = to_base64(map_image)
+
+    return id, map_image
+
+
+async def render_raster_maps(bounds, basemap_image, aoi_image, indicators, urban, slr):
+    executor = ThreadPoolExecutor(max_workers=THREADS)
+    loop = asyncio.get_event_loop()
+
+    base_args = (bounds, basemap_image, aoi_image)
+
+    task_args = [("blueprint", blueprint_filename, BLUEPRINT_COLORS)]
+
+    for id in indicators:
+        indicator = INDICATORS_INDEX[id]
+        task_args.append(
+            (id, src_dir / "indicators" / indicator["filename"], indicator["colors"])
+        )
+
+    if urban:
+        colors = {i: e["color"] for i, e in enumerate(URBAN_LEGEND) if e is not None}
+        task_args.append(("urban", urban_filename, colors))
+
+    if slr:
+        colors = {i: e["color"] for i, e in enumerate(SLR_LEGEND)}
+        task_args.append(("slr", slr_filename, colors))
+
+    # NOTE: have to have handle on pending or task loop gets closed too soon
+    completed, pending = await asyncio.wait(
+        [
+            loop.run_in_executor(executor, render_raster_map, *base_args, *args)
+            for args in task_args
+        ]
+    )
+
+    results = [t.result() for t in completed]
+    maps = {k: v for k, v in results if v is not None}
+
+    return maps
 
 
 def render_maps(
@@ -51,77 +93,40 @@ def render_maps(
     bounds = get_map_bounds(center, zoom, WIDTH, HEIGHT)
     scale = get_map_scale(bounds, WIDTH)
 
-    locator_image = get_locator_map_image(*center, bounds=bounds)
-    basemap_image = get_basemap_image(center, zoom, WIDTH, HEIGHT)
-
-    aoi_image = None
     if geometry:
-        # get AOI image
-        aoi_image = get_aoi_map_image(geometry, center, zoom, WIDTH, HEIGHT)
+        aoi_task = get_aoi_map_image(geometry, center, zoom, WIDTH, HEIGHT)
 
     elif summary_unit_id:
-        aoi_image = get_summary_unit_map_image(
+        aoi_task = get_summary_unit_map_image(
             summary_unit_id, center, zoom, WIDTH, HEIGHT
         )
 
-    async def render_maps_aio(locator, basemap, aoi):
-        return await asyncio.gather(locator, basemap, aoi)
+    tasks = [
+        get_locator_map_image(*center, bounds=bounds),
+        get_basemap_image(center, zoom, WIDTH, HEIGHT),
+        aoi_task,
+    ]
 
-    locator_image, basemap_image, aoi_image = asyncio.run(
-        render_maps_aio(locator_image, basemap_image, aoi_image)
-    )
+    locator_image, basemap_image, aoi_image = asyncio.run(render_mbgl_maps(*tasks))
 
     maps["locator"] = to_base64(locator_image)
 
+    # make sure that images are fully loaded before sending to other threads
+    if basemap_image is not None:
+        basemap_image.load()
+
+    if aoi_image is not None:
+        aoi_image.load()
+
     start = time()
 
-    # rendered = render_rasters(
-    #     bounds, basemap_image, aoi_image, indicators=indicators, urban=urban, slr=slr
-    # )
-
-    with rasterio.open(blueprint_filename) as src:
-        data = extract_data_for_map(src, bounds, WIDTH, HEIGHT)
-        raster_img = None
-        if data is not None:
-            raster_img = render_raster(data, BLUEPRINT_COLORS, src.nodata)
-
-        map_image = merge_maps([basemap_image, raster_img, aoi_image])
-        maps["blueprint"] = to_base64(map_image)
-
-    if indicators is not None:
-        for id in indicators:
-            print(id)
-            indicator = INDICATORS_INDEX[id]
-
-            with rasterio.open(src_dir / "indicators" / indicator["filename"]) as src:
-                data = extract_data_for_map(src, bounds, WIDTH, HEIGHT)
-                raster_img = None
-                if data is not None:
-                    raster_img = render_raster(data, indicator["colors"], src.nodata)
-                    map_image = merge_maps([basemap_image, raster_img, aoi_image])
-                    maps[id] = to_base64(map_image)
-
-    if urban:
-        with rasterio.open(urban_filename) as src:
-            data = extract_data_for_map(src, bounds, WIDTH, HEIGHT, densify=2)
-
-            raster_img = None
-            if data is not None:
-                colors = {i: e["color"] for i, e in enumerate(URBAN_LEGEND)}
-                # 0 = not urban nor predicted to be, make it transparent
-                raster_img = render_raster(data, colors, 0)
-                map_image = merge_maps([basemap_image, raster_img, aoi_image])
-                maps["urban_2060"] = to_base64(map_image)
-
-    if slr:
-        with rasterio.open(slr_filename) as src:
-            data = extract_data_for_map(src, bounds, WIDTH, HEIGHT, densify=1)
-            raster_img = None
-            if data is not None:
-                colors = {i: e["color"] for i, e in enumerate(SLR_LEGEND)}
-                raster_img = render_raster(data, colors, src.nodata)
-                map_image = merge_maps([basemap_image, raster_img, aoi_image])
-                maps["slr"] = to_base64(map_image)
+    # Use background threads for rendering rasters
+    raster_maps = asyncio.run(
+        render_raster_maps(
+            bounds, basemap_image, aoi_image, indicators or [], urban, slr
+        )
+    )
+    maps.update(raster_maps)
 
     print("Elapsed: {:.2f}s".format(time() - start))
 

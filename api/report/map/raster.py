@@ -13,11 +13,30 @@ from rasterio.warp import (
     reproject,
 )
 
-from tilecutter.rgb import hex_to_rgb
-from tilecutter.png import to_paletted_png
 
 from constants import DATA_CRS, MAP_CRS, GEO_CRS, DEBUG
 from util.io import write_raster
+
+
+def hex_to_rgb(color):
+    """Convert a hex color code to an 8 bit rgb tuple.
+
+    Parameters
+    ----------
+    color : string, must be in #112233 syntax
+
+    Returns
+    -------
+    tuple : (red, green, blue) as 8 bit numbers
+
+    """
+
+    if not len(color) == 7 and color[0] == "#":
+        raise ValueError("Color must be in #112233 format")
+
+    color = color.lstrip("#")
+
+    return tuple(int(color[i : i + 2], 16) for i in (0, 2, 4))
 
 
 def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
@@ -145,21 +164,57 @@ def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
     return clipped
 
 
-def render_raster(data, colors, nodata):
-    num_colors = max(colors.keys())
+def render_array(data, colors):
+    """Render a data array to a PIL Image.
+
+    Data values must be indexes into colors.
+
+    Parameters
+    ----------
+    data : 2D array
+        Values must be indexes into colors.  Any value not present in colors
+        is rendered as completely transparent.
+    colors : list-like of hex colors
+
+    Returns
+    -------
+    PIL Image
+    """
 
     # fully transparent image by default
+    # alpha is 0 for transparent and <= 255 for opaque parts
     rgba = np.zeros(shape=data.shape + (4,), dtype="uint8")
 
-    for i in range(0, num_colors):
-        idx = data == i
+    for i, color in colors.items():
+        r, g, b = hex_to_rgb(color)
+        a = 175
 
-        if i in colors:
-            r, g, b = hex_to_rgb(colors[i])
-
-            # alpha is 0 for transparent and <= 255 for opaque parts
-            a = 175
-
-            rgba[idx, :] = r, g, b, a
+        rgba[data == i, :] = r, g, b, a
 
     return Image.fromarray(rgba, "RGBA")
+
+
+def render_raster(path, bounds, width, height, colors):
+    """Render a raster dataset to a PIL Image.
+
+    Parameters
+    ----------
+    path : str or pathlib.Path
+    bounds : list-like of [xmin, ymin, xmax, ymax]
+        Map bounds
+    width : int
+    height : int
+    colors : list-like of hex colors
+
+    Returns
+    -------
+    PIL Image
+    """
+    with rasterio.open(path) as src:
+        data = extract_data_for_map(src, bounds, width, height)
+
+        if data is not None:
+            # does not overlap with bounds
+            return render_array(data, colors)
+
+        return None

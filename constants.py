@@ -719,7 +719,8 @@ INDICATORS_INDEX = OrderedDict({indicator["id"]: indicator for indicator in INDI
 URBAN_YEARS = [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]
 
 URBAN_LEGEND = [
-    {"label": "0", "color": "#FFFFFF"},  # spacer; not actually displayed
+    # {"label": "0", "color": "#FFFFFF"},  # spacer; not actually displayed
+    None,  # spacer; not actually displayed
     {"label": "Urban in 2009", "color": "#333333"},
     {"label": "< 0.025 probability", "color": "#FFBFBA"},
     {"label": "0.05", "color": "#FFB1A8"},
