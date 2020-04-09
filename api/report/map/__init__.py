@@ -136,9 +136,12 @@ async def render_maps(
 
     maps["locator"] = to_base64(locator_image)
 
+    if basemap_image is None:
+        # no point in generating other maps, since people won't be able to see where they are
+        return dict(), None
+
     # make sure that images are fully loaded before sending to other threads
-    if basemap_image is not None:
-        basemap_image.load()
+    basemap_image.load()
 
     if aoi_image is not None:
         aoi_image.load()

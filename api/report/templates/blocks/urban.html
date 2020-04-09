@@ -7,36 +7,37 @@
 
             {% include "elements/map_footer.html" %}
         </div>
+
+        <div class="flex map-footer">
+            <div class="map-locator-container">
+                {% if maps.locator %}
+                    <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
+                {% else %}
+                    <div class="map-locator-placeholder text-center">
+                        map could not be created
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="legend">
+                <b>Probability of urbanization by 2060</b>
+                <br/><br/>
+                {% for item in legends.urban %}
+                    <div class="legend-element flex align-center {{'no-margin' if loop.index > 2 else ''}}">
+                        <div class="legend-patch" style="background: {{item.color}}"></div>
+                        <div>{{item.label}}</div>
+                    </div>
+                {% endfor %}
+                <!-- space is required or last label doesn't render -->
+                &nbsp;
+            </div>
+        </div>
+
     {% else %}
         <div class="map-placeholder text-center">
             map could not be created
         </div>
     {% endif %}
-
-    <div class="flex map-footer">
-        <div class="map-locator-container">
-            {% if maps.locator %}
-                <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
-            {% else %}
-                <div class="map-locator-placeholder text-center">
-                    map could not be created
-                </div>
-            {% endif %}
-        </div>
-
-        <div class="legend">
-            <b>Probability of urbanization by 2060</b>
-            <br/><br/>
-            {% for item in legends.urban %}
-                <div class="legend-element flex align-center {{'no-margin' if loop.index > 2 else ''}}">
-                    <div class="legend-patch" style="background: {{item.color}}"></div>
-                    <div>{{item.label}}</div>
-                </div>
-            {% endfor %}
-            <!-- space is required or last label doesn't render -->
-            &nbsp;
-        </div>
-    </div>
 </div>
 
 <div class="no-break">

@@ -412,7 +412,7 @@ table tr.above-threshold td {
 }
 
 .indicator + .indicator {
-    margin-top: 36pt;
+    break-before: always;
 }
 
 .indicator-header {

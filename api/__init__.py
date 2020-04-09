@@ -124,7 +124,7 @@ async def custom_report_endpoint(
     try:
         pdf = await create_custom_report(filename, dataset, layer, name)
 
-    except ValueError:
+    except ValueError as ex:
         raise HTTPException(status_code=400, detail=str(ex))
 
     return Response(

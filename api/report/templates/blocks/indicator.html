@@ -1,5 +1,3 @@
-
-
 <div class="indicator">
 
 <div class="no-break">
@@ -13,34 +11,36 @@
 
             {% include "elements/map_footer.html" %}
         </div>
+
+        <div class="flex map-footer">
+            <div class="map-locator-container">
+                {% if maps.locator %}
+                    <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
+                {% else %}
+                    <div class="map-locator-placeholder text-center">
+                        map could not be created
+                    </div>
+                {% endif %}
+            </div>
+
+            <div class="legend">
+                {% for item in legends[indicator_id] %}
+                    <div class="legend-element flex align-center">
+                        <div class="legend-patch" style="background: {{item.color}}"></div>
+                        <div class="legend-label">{{item.label}}</div>
+                    </div>
+                {% endfor %}
+                <!-- space is required or last label doesn't render -->
+                &nbsp;
+            </div>
+        </div>
+
     {% else %}
         <div class="map-placeholder text-center">
             map could not be created
         </div>
     {% endif %}
 
-    <div class="flex map-footer">
-        <div class="map-locator-container">
-            {% if maps.locator %}
-                <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
-            {% else %}
-                <div class="map-locator-placeholder text-center">
-                    map could not be created
-                </div>
-            {% endif %}
-        </div>
-
-        <div class="legend">
-            {% for item in legends[indicator_id] %}
-                <div class="legend-element flex align-center">
-                    <div class="legend-patch" style="background: {{item.color}}"></div>
-                    <div class="legend-label">{{item.label}}</div>
-                </div>
-            {% endfor %}
-            <!-- space is required or last label doesn't render -->
-            &nbsp;
-        </div>
-    </div>
 </div>
 
 
