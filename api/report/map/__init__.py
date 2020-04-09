@@ -25,6 +25,7 @@ THREADS = 6
 
 src_dir = Path("data")
 blueprint_filename = src_dir / "Blueprint_2_2.tif"
+indicators_dir = src_dir / "indicators"
 urban_filename = src_dir / "threats/urban/urb_indexed_2060.tif"
 slr_filename = src_dir / "threats/slr/slr.vrt"
 
@@ -33,9 +34,8 @@ async def render_mbgl_maps(*args):
     return await asyncio.gather(*args)
 
 
-def render_raster_map(bounds, basemap_image, aoi_image, id, path, colors):
-    print(f"Processing {id}")
-    raster_img = render_raster(path, bounds, WIDTH, HEIGHT, colors)
+def render_raster_map(bounds, scale, basemap_image, aoi_image, id, path, colors):
+    raster_img = render_raster(path, bounds, scale, WIDTH, HEIGHT, colors)
 
     map_image = None
     if raster_img is not None:
@@ -45,18 +45,20 @@ def render_raster_map(bounds, basemap_image, aoi_image, id, path, colors):
     return id, map_image
 
 
-async def render_raster_maps(bounds, basemap_image, aoi_image, indicators, urban, slr):
+async def render_raster_maps(
+    bounds, scale, basemap_image, aoi_image, indicators, urban, slr
+):
     executor = ThreadPoolExecutor(max_workers=THREADS)
     loop = asyncio.get_event_loop()
 
-    base_args = (bounds, basemap_image, aoi_image)
+    base_args = (bounds, scale, basemap_image, aoi_image)
 
     task_args = [("blueprint", blueprint_filename, BLUEPRINT_COLORS)]
 
     for id in indicators:
         indicator = INDICATORS_INDEX[id]
         task_args.append(
-            (id, src_dir / "indicators" / indicator["filename"], indicator["colors"])
+            (id, indicators_dir / indicator["filename"], indicator["colors"])
         )
 
     if urban:
@@ -84,6 +86,30 @@ async def render_raster_maps(bounds, basemap_image, aoi_image, indicators, urban
 def render_maps(
     bounds, geometry=None, summary_unit_id=None, indicators=None, urban=False, slr=False
 ):
+    """Render maps for locator and each raster dataset that overlaps with area
+    of interest.
+
+    Parameters
+    ----------
+    bounds : list-like of [xmin, ymin, xmax, ymax]
+        bounds of area of interest, will be used to derive map bounds.
+    geometry : pygeos.Geometry, optional (default: None)
+        If present, will be used to render the area of interest
+    summary_unit_id : [type], optional (default: None)
+        If present, will be used to identify the selected summary unit
+    indicators : list-like, optional (default: None)
+        If present, is a list of all indicator IDs to render.
+    urban : bool, optional (default: False)
+        If True, urban will be rendered.
+    slr : bool, optional (default: False)
+        If True, sea level rise will be rendered.
+
+    Returns
+    -------
+    dict
+        Dictionary of map IDs to base64 data
+    """
+
     maps = {}
 
     bounds = pad_bounds(bounds, PADDING)
@@ -123,7 +149,7 @@ def render_maps(
     # Use background threads for rendering rasters
     raster_maps = asyncio.run(
         render_raster_maps(
-            bounds, basemap_image, aoi_image, indicators or [], urban, slr
+            bounds, scale, basemap_image, aoi_image, indicators or [], urban, slr
         )
     )
     maps.update(raster_maps)

@@ -1,4 +1,5 @@
 from affine import Affine
+import math
 import numpy as np
 
 from PIL import Image
@@ -39,7 +40,7 @@ def hex_to_rgb(color):
     return tuple(int(color[i : i + 2], 16) for i in (0, 2, 4))
 
 
-def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
+def extract_data_for_map(src, bounds, scale, map_width, map_height):
     """Extract, reproject, and clip data within bounds for map images.
 
     Returns None if there is only nodata within the bounds.
@@ -49,11 +50,10 @@ def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
     src : rasterio.RasterReader
         open rasterio reader
     bounds : list-like of (west, south, east, north)
+    scale : dict
+        contains resolution of map image pixels
     map_width : int
     map_height : int
-    densify : int, optional (default 4)
-        Amount to densify pixels during reprojection.  A higher number more closely
-        approximates original pixels but has higher memory and performance costs.
 
     Returns
     -------
@@ -61,6 +61,11 @@ def extract_data_for_map(src, bounds, map_width, map_height, densify=4):
     """
 
     src_crs = src.crs
+
+    # Densify between 1 and 4 raster pixels per screen pixel.
+    # Higher densification is needed where the bounds cover a small number of pixels
+    # in the output map
+    densify = max(1, min(4, math.ceil(src.res[0] / scale["resolution"])))
 
     # Project bounds and define window to extract data.
     # Round it to align with pixels
@@ -194,7 +199,7 @@ def render_array(data, colors):
     return Image.fromarray(rgba, "RGBA")
 
 
-def render_raster(path, bounds, width, height, colors):
+def render_raster(path, bounds, scale, width, height, colors):
     """Render a raster dataset to a PIL Image.
 
     Parameters
@@ -211,7 +216,7 @@ def render_raster(path, bounds, width, height, colors):
     PIL Image
     """
     with rasterio.open(path) as src:
-        data = extract_data_for_map(src, bounds, width, height)
+        data = extract_data_for_map(src, bounds, scale, width, height)
 
         if data is not None:
             # does not overlap with bounds

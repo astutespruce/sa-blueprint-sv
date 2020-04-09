@@ -198,6 +198,11 @@ def get_map_scale(bounds, map_width, max_width=None):
         width of map in pixels
     max_width : int
         max width of scalebar in pixels
+
+    Returns
+    -------
+    dict
+        {"width": <scalebar width>, "increments": [...offsets for 1/4 and 1/2 bins], "miles": <total miles of scalebar>, "resolution": <meters per pixel>}
     """
 
     # calculate x pixel dimensions in Mercator coordinates along bottom edge
@@ -223,4 +228,12 @@ def get_map_scale(bounds, map_width, max_width=None):
 
     width = int(max_miles // miles_per_px)
 
-    return {"width": width, "increments": [width // 4, width // 2], "miles": max_miles}
+    resolution = (xmax - xmin) / map_width
+
+    return {
+        "width": width,
+        "increments": [width // 4, width // 2],
+        "miles": max_miles,
+        "resolution": resolution,
+    }
+

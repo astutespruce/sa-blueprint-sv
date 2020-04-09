@@ -14,9 +14,9 @@ from api.report.map import render_maps
 from api.stats import SummaryUnits, CustomArea
 
 
-# aoi_names = ["Razor", "Groton_all"]
+aoi_names = ["Razor", "Groton_all"]
 # aoi_names = ["ACF_area"]
-aoi_names = []
+# aoi_names = []
 
 for aoi_name in aoi_names:
     print(f"Making maps for {aoi_name}...")
@@ -68,7 +68,7 @@ ids = {
         "030602040601",
         # "030601030510", "031501040301", "030102020505"
     ],
-    # "marine_blocks": ["NI18-07-6210"],
+    "marine_blocks": ["NI18-07-6210"],
 }
 
 
