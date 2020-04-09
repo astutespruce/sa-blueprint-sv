@@ -17,7 +17,7 @@ from util.pygeos_util import to_crs
 from constants import DATA_CRS, GEO_CRS
 
 
-def create_custom_report(zip_filename, dataset, layer, name):
+async def create_custom_report(zip_filename, dataset, layer, name):
     path = f"/vsizip/{zip_filename}/{dataset}"
 
     df = pio.read_dataframe(path, layer=layer, as_pygeos=True)
@@ -40,7 +40,7 @@ def create_custom_report(zip_filename, dataset, layer, name):
     has_urban = "urban" in results
     has_slr = "slr" in results
 
-    maps, scale = render_maps(
+    maps, scale = await render_maps(
         bounds,
         geometry=geometry[0],
         indicators=results["indicators"],

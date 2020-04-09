@@ -1,3 +1,4 @@
+import asyncio
 from base64 import b64decode, b64encode
 import json
 import os
@@ -105,13 +106,15 @@ for aoi in aois:
         has_urban = "urban" in results
         has_slr = "slr" in results
 
-        maps, scale = render_maps(
+        task = render_maps(
             bounds,
             geometry=geometry[0],
             indicators=results["indicators"],
             urban=has_urban,
             slr=has_slr,
         )
+
+        maps, scale = asyncio.run(task)
 
         if CACHE_MAPS:
             write_cache(maps, scale, cache_dir)
@@ -126,8 +129,8 @@ for aoi in aois:
 
 ### Create reports for summary units
 ids = {
-    "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
-    "marine_blocks": ["NI18-07-6210"],
+    # "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
+    # "marine_blocks": ["NI18-07-6210"],
 }
 
 
@@ -152,9 +155,10 @@ for summary_type in ids:
 
         if not maps:
             print("Rendering maps...")
-            maps, scale = render_maps(
+            task = render_maps(
                 results["bounds"], summary_unit_id=id, indicators=results["indicators"]
             )
+            maps, scale = asyncio.run(task)
 
             if CACHE_MAPS:
                 write_cache(maps, scale, cache_dir)

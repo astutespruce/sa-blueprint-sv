@@ -6,9 +6,16 @@ from operator import itemgetter
 from pathlib import Path
 
 from weasyprint import HTML
-from jinja2 import Environment, PackageLoader
+from jinja2 import Environment, FileSystemLoader
 
-from constants import BLUEPRINT, ECOSYSTEMS, INDICATORS_INDEX, URBAN_LEGEND, SLR_LEGEND
+from constants import (
+    BLUEPRINT,
+    ECOSYSTEMS,
+    INDICATORS_INDEX,
+    URBAN_LEGEND,
+    SLR_LEGEND,
+    DEBUG,
+)
 from util.format import format_number as format_number
 
 
@@ -37,16 +44,19 @@ def load_asset(path):
     return f"{prefix}{data}"
 
 
-env = Environment(loader=PackageLoader("api", "report/templates"))
+template_path = Path(__file__).parent.resolve() / "templates"
+
+env = Environment(loader=FileSystemLoader(template_path))
 env.filters["reverse"] = reverse_filter
 env.filters["format_number"] = format_number
 env.filters["load_asset"] = load_asset
 env.filters["sum"] = sum
 
+template = env.get_template("report.html")
+css_template = env.get_template("report.css")
+
 
 def create_report(maps, results):
-    template = env.get_template("report.html")
-
     title = "South Atlantic Conservation Blueprint Summary"
     subtitle = ""
     if "name" in results:
@@ -126,15 +136,13 @@ def create_report(maps, results):
     }
 
     # Render variables as needed into the CSS
-    css = env.get_template("report.css").render(**context)
+    css = css_template.render(**context)
     context["css"] = css
 
     print("Creating report...")
 
-    with open("/tmp/test.html", "w") as out:
-        out.write(template.render(**context))
+    if DEBUG:
+        with open("/tmp/test.html", "w") as out:
+            out.write(template.render(**context))
 
-    return HTML(
-        BytesIO((template.render(**context)).encode())
-        # , url_fetcher=url_fetcher
-    ).write_pdf()
+    return HTML(BytesIO((template.render(**context)).encode())).write_pdf()

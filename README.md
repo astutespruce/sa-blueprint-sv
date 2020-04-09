@@ -73,3 +73,9 @@ To start the API in development mode:
 ```
 uvicorn api:app --reload
 ```
+
+## Installation
+
+Weasyprint is used to generate PDF files. It depends on `cairocffi` which sometimes does not install correctly.
+
+Run `pip install --no-cache-dir cairocffi` to correctly install it.

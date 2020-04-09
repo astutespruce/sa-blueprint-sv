@@ -3,6 +3,7 @@ import os
 from pathlib import Path
 import json
 
+import asyncio
 import numpy as np
 import pygeos as pg
 from pyogrio import read_dataframe
@@ -32,7 +33,6 @@ for aoi_name in aoi_names:
     # dissolve
     geometry = np.asarray([pg.union_all(geometry)])
 
-    ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
     results = CustomArea(geometry, df.crs, name="Test").get_results()
 
@@ -44,13 +44,16 @@ for aoi_name in aoi_names:
     has_slr = "slr" in results
 
     print("Creating maps...")
-    maps, scale = render_maps(
+
+    task = render_maps(
         bounds,
         geometry=geometry[0],
         indicators=results["indicators"],
         urban=has_urban,
         slr=has_slr,
     )
+
+    maps, scale = asyncio.run(task)
 
     for name, data in maps.items():
         if data is not None:
@@ -64,11 +67,11 @@ for aoi_name in aoi_names:
 ### Write maps for a summary unit
 
 ids = {
-    "huc12": [
-        "030602040601",
-        # "030601030510", "031501040301", "030102020505"
-    ],
-    "marine_blocks": ["NI18-07-6210"],
+    # "huc12": [
+    #     "030602040601",
+    #     # "030601030510", "031501040301", "030102020505"
+    # ],
+    # "marine_blocks": ["NI18-07-6210"],
 }
 
 
@@ -87,13 +90,15 @@ for summary_type in ids:
         if not out_dir.exists():
             os.makedirs(out_dir)
 
-        maps, scale = render_maps(
+        task = render_maps(
             results["bounds"],
             summary_unit_id=id,
             indicators=results["indicators"],
             urban=has_urban,
             slr=has_slr,
         )
+
+        maps, scale = asyncio.run(task)
 
         for name, data in maps.items():
             if data is not None:

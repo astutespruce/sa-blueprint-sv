@@ -1,7 +1,6 @@
 import asyncio
 import json
 from pathlib import Path
-from time import time
 from concurrent.futures import ThreadPoolExecutor
 
 import rasterio
@@ -83,7 +82,7 @@ async def render_raster_maps(
     return maps
 
 
-def render_maps(
+async def render_maps(
     bounds, geometry=None, summary_unit_id=None, indicators=None, urban=False, slr=False
 ):
     """Render maps for locator and each raster dataset that overlaps with area
@@ -133,7 +132,7 @@ def render_maps(
         aoi_task,
     ]
 
-    locator_image, basemap_image, aoi_image = asyncio.run(render_mbgl_maps(*tasks))
+    locator_image, basemap_image, aoi_image = await render_mbgl_maps(*tasks)
 
     maps["locator"] = to_base64(locator_image)
 
@@ -144,16 +143,11 @@ def render_maps(
     if aoi_image is not None:
         aoi_image.load()
 
-    start = time()
-
     # Use background threads for rendering rasters
-    raster_maps = asyncio.run(
-        render_raster_maps(
-            bounds, scale, basemap_image, aoi_image, indicators or [], urban, slr
-        )
+    raster_maps = await render_raster_maps(
+        bounds, scale, basemap_image, aoi_image, indicators or [], urban, slr
     )
-    maps.update(raster_maps)
 
-    print("Elapsed: {:.2f}s".format(time() - start))
+    maps.update(raster_maps)
 
     return maps, scale

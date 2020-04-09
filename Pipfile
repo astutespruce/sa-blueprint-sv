@@ -14,7 +14,6 @@ pandas = "*"
 numpy = "*"
 fastapi = "*"
 sa-reports = {editable = true,path = "."}
-raster-tilecutter = {editable = true,path = "./../raster-tilecutter"}
 python-dotenv = "*"
 httpx = "*"
 pillow = "*"

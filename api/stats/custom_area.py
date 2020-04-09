@@ -1,18 +1,10 @@
-import csv
-import os
 from pathlib import Path
-from time import time
-import warnings
 
 import pandas as pd
 from geofeather.pygeos import from_geofeather, to_geofeather
 import numpy as np
-from progress.bar import Bar
 import pygeos as pg
-import rasterio
-from rasterio.mask import raster_geometry_mask
 
-from util.io import write_raster
 from util.pygeos_util import to_crs, to_dict, sjoin, sjoin_geometry, intersection
 from constants import (
     BLUEPRINT,
@@ -33,9 +25,18 @@ from stats import (
 
 
 data_dir = Path("data")
-ownership_filename = data_dir / "boundaries/ownership.feather"
 county_filename = data_dir / "boundaries/counties.feather"
+ownership_filename = data_dir / "boundaries/ownership.feather"
 slr_bounds_filename = data_dir / "threats/slr/slr_bounds.feather"
+
+# Load targets into memory for faster calculations below
+counties = from_geofeather(
+    county_filename, columns=["geometry", "FIPS", "state", "county"]
+)
+ownership = from_geofeather(
+    ownership_filename, columns=["geometry", "FEE_ORGTYP", "GAP_STATUS"]
+)
+slr_bounds = from_geofeather(slr_bounds_filename).geometry
 
 
 class CustomArea(object):
@@ -81,7 +82,6 @@ class CustomArea(object):
         }
 
     def get_slr(self):
-        slr_bounds = from_geofeather(slr_bounds_filename).geometry
         idx = sjoin_geometry(self.geometry, slr_bounds.values, how="inner")
         if not len(idx):
             return None
@@ -94,9 +94,6 @@ class CustomArea(object):
         }
 
     def get_counties(self):
-        counties = from_geofeather(
-            county_filename, columns=["geometry", "FIPS", "state", "county"]
-        )
         df = (
             sjoin(pd.DataFrame({"geometry": self.geometry}), counties)[
                 ["FIPS", "state", "county"]
@@ -111,10 +108,6 @@ class CustomArea(object):
         return {"counties": df.to_dict(orient="records")}
 
     def get_ownership(self):
-        ownership = from_geofeather(
-            ownership_filename, columns=["geometry", "FEE_ORGTYP", "GAP_STATUS"]
-        )
-
         df = intersection(pd.DataFrame({"geometry": self.geometry}), ownership)
 
         if not len(df):

@@ -122,7 +122,7 @@ async def custom_report_endpoint(
 
     ### create the report
     try:
-        pdf = create_custom_report(filename, dataset, layer, name)
+        pdf = await create_custom_report(filename, dataset, layer, name)
 
     except ValueError:
         raise HTTPException(status_code=400, detail=str(ex))
