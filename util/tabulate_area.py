@@ -107,8 +107,8 @@ df.to_csv(out_dir / "urban.csv", index=False)
 # find the indexes of the geometries that overlap with SLR bounds; these are the only
 # ones that need to be analyzed for SLR impacts
 slr_bounds = from_geofeather(slr_bounds_filename).geometry
-idx = sjoin_geometry(geometries, slr_bounds.values, how="inner")
-slr_geometries = geometries.iloc[idx]
+idx = sjoin_geometry(geometries, slr_bounds.values, how="inner").index.unique()
+slr_geometries = geometries.loc[idx]
 
 results = []
 index = []
