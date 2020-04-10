@@ -47,7 +47,7 @@
 <div class="no-break">
 
     <div class="caption">
-        Table {{table.counter}}: {{indicator.reportCaption}}
+        Table {{table.counter}}: {{indicator.caption}}
     </div>
     {% set table.counter=table.counter+1 %}
 
@@ -62,7 +62,8 @@
                     <th class="level"></th>
                     <th class="label">Indicator Values</th>
                     <th class="acres">Acres</th>
-                    <th class="percent">Percent of Indicator Area</th>
+                    <!-- <th class="percent">Percent of {{ecosystem.label|lower}} ecosystem</th> -->
+                    <th class="percent">Percent of indicator area</th>
                     <th class="threshold"></th>
                 </tr>
             </thead>
@@ -110,7 +111,8 @@
                     <th class="level"></th>
                     <th class="label">Indicator Values</th>
                     <th class="acres">Acres</th>
-                    <th class="percent">Percent of Indicator Area</th>
+                    <!-- <th class="percent">Percent of {{ecosystem.label|lower}} ecosystem</th> -->
+                    <th class="percent">Percent of indicator area</th>
                 </tr>
             </thead>
             <tbody>

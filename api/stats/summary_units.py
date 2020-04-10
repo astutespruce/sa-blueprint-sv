@@ -82,6 +82,7 @@ class SummaryUnits(object):
             ecosystems = np.zeros(shape=(9,))
             ecosystems[7] = results["blueprint_acres"]
             results["ecosystems"] = ecosystems.tolist()
+            results["is_marine"] = True
 
         indicators = []
         for indicator in INDICATORS_INDEX.keys():

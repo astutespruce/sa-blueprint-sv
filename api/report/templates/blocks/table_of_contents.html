@@ -26,17 +26,15 @@
         </ol>
     </li>
 
-    {% if results.slr_acres or results.urban_acres %}
+    {% if not results.is_marine %}
         <li>
             <a href="#Threats" class="toctext"></a>
             <a href="#Threats" class="tocpagenr"></a>
             <ol>
-                {% if results.slr_acres %}
-                    <li>
-                        <a href="#SLR" class="toctext"></a>
-                        <a href="#SLR" class="tocpagenr"></a>
-                    </li>
-                {% endif %}
+                <li>
+                    <a href="#SLR" class="toctext"></a>
+                    <a href="#SLR" class="tocpagenr"></a>
+                </li>
 
                 {% if results.urban_acres %}
                     <li>
@@ -48,32 +46,10 @@
         </li>
     {% endif %}
 
-    {% if results.counties %}
-        <li>
-            <a href="#Partners" class="toctext"></a>
-            <a href="#Partners" class="tocpagenr"></a>
-        </li>
-    {% endif %}
-
-    {% if results.ownership or results.protection %}
+    {% if results.ownership or results.protection or results.counties %}
         <li>
             <a href="#Ownership" class="toctext"></a>
             <a href="#Ownership" class="tocpagenr"></a>
-            <!-- <ol>
-                {% if results.ownership %}
-                    <li>
-                        <a href="#LandOwnership" class="toctext"></a>
-                        <a href="#LandOwnership" class="tocpagenr"></a>
-                    </li>
-                {% endif %}
-
-                {% if results.protection %}
-                    <li>
-                        <a href="#Protection" class="toctext"></a>
-                        <a href="#Protection" class="tocpagenr"></a>
-                    </li>
-                {% endif %}
-            </ol> -->
         </li>
     {% endif %}
 

@@ -1,7 +1,8 @@
 from collections import OrderedDict
 
-# Set to true to output intermediate rasters for validation
-DEBUG = False
+# Set to True to output intermediate rasters for validation (uncomment in map.raster module)
+# Set to True to output /tmp/test.html for reports
+DEBUG = True
 
 DATA_CRS = "EPSG:5070"
 GEO_CRS = "EPSG:4326"
@@ -165,8 +166,7 @@ INDICATORS = [
         "domain": [10, 100],
         "datasetID": "8331dd16ec304f7695bffcb1e835444e",
         "description": "Beach birds is a continuous index of habitat suitability for four shorebird species (Wilson's plover, American oystercatcher, least tern, piping plover). The relative use of beach habitat by these species for nesting, foraging, and breeding is an indicator of beach quality.",
-        "caption": "Indicator values within the beach and dune ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of beach bird indicator values as they occur within the beach and dune ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Beach bird indicator values within the beach and dune ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "beachanddune_unalteredbeach",
@@ -182,8 +182,7 @@ INDICATORS = [
         "goodThreshold": 2,
         "datasetID": "e9603ae3c1e545edaff95dc14231f428",
         "description": "Unaltered beach is an index of impacts from hardened structures like jetties, groins, and human infrastructure. Shoreline infrastructure degrades beach habitat, impedes beach migration and barrier island rollover processes, and can cause erosion.",
-        "caption": "Indicator values within the beach and dune ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
-        "reportCaption": "The area of unaltered beach indicator values as they occur within the beach ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Unaltered beach indicator values within the beach ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "estuarine_coastalcondition",
@@ -208,8 +207,7 @@ INDICATORS = [
         "goodThreshold": 4,
         "datasetID": "a2fddbed78a64e73bbb5ed99b114f5f7",
         "description": "Coastal condition is a continuous index of water quality, sediment quality, and benthic community condition that reflects the overall abiotic status of open water estuaries and estuarine marsh. Developed by the Environmental Protection Agency (EPA), these measures capture human impacts on the environment like nonpoint source pollution.",
-        "caption": "Indicator values within the estuarine ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
-        "reportCaption": "The area of coastal condition indicator values as they occur within the estuarine ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Coastal condition indicator values within the estuarine ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "estuarine_watervegetationedge",
@@ -232,8 +230,7 @@ INDICATORS = [
         "domain": [0, 4],
         "datasetID": "00ecbf6049d4481db1f1416e4e3b8cc2",
         "description": "Water-vegetation edge is an index of edge length between open water and vegetation where estuarine waters meet wetland marshes. This zone is highly productive for shrimp, crab, fish, and other nekton and provides valuable foraging habitat for marsh birds. ",
-        "caption": "Indicator values within the estuarine marsh ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of water-vegetation edge indicator values as they occur within the estuarine marsh ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Water-vegetation edge indicator values within the estuarine marsh ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "estuarine_wetlandpatchsize",
@@ -256,8 +253,7 @@ INDICATORS = [
         "domain": [0, 4],
         "datasetID": "00ecbf6049d4481db1f1416e4e3b8cc2",
         "description": "Wetland patch size is an index based on the size of wetland patches. Larger, better connected wetland patches benefit fish and marsh birds and protect inland areas from waves during storm events.",
-        "caption": "Indicator values within the estuarine marsh ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of wetland patch size indicator values as they occur within the estuarine marsh ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Wetland patch size indicator values within the estuarine marsh ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "forestedwetland_amphibians",
@@ -271,8 +267,7 @@ INDICATORS = [
         "domain": [0, 1],
         "datasetID": "7971445641934255b319b5971600eb47",
         "description": "Forested wetland amphibians draws from the Priority Amphibian and Reptile Conservation Areas (PARCAs) located in forested wetland habitat. PARCA is an expert-driven, nonregulatory designation that captures places capable of supporting viable amphibian and reptile populations. PARCAs include areas where rare or at-risk species have been observed or are likely to occur (like embedded, isolated wetlands).",
-        "caption": "Indicator values within the forested wetland ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of forested wetland amphibians indicator values as they occur within the forested wetland ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Forested wetland amphibians indicator values within the forested wetland ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "forestedwetland_birds",
@@ -289,8 +284,7 @@ INDICATORS = [
         "goodThreshold": 1,
         "datasetID": "ecf2d74a50cc47fa99ae6ef42d838866",
         "description": "Forested wetland birds is an index of habitat suitability for six bird species (Northern parula, black-throated green warbler, red-headed woodpecker, Chuck-will's widow, prothonotary warbler, Swainson's warbler) based on patch size and proximity to water. The needs of these species are increasingly restrictive at higher index values, reflecting better quality habitat.",
-        "caption": "Indicator values within the forested wetland ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
-        "reportCaption": "The area of forested wetland birds indicator values as they occur within the forested wetland ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Forested wetland birds indicator values within the forested wetland ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "forestedwetland_extent",
@@ -304,8 +298,7 @@ INDICATORS = [
         "domain": [0, 1],
         "datasetID": "72e6a105442444679fc61714feec49b4",
         "description": "Forested wetland extent represents the amount of overall acres of existing forested wetlands present in the South Atlantic geography. Overall acreage of existing forested wetlands provides an indicator of whether forested wetlands being inundated by sea level rise are being replaced or restored somewhere else.",
-        "caption": "Indicator values within the forested wetland ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of forested wetland extent indicator values as they occur within the forested wetland ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Forested wetland extent indicator values within the forested wetland ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "freshwatermarsh_birds",
@@ -323,8 +316,7 @@ INDICATORS = [
         "units": "ha",
         "datasetID": "785b6209bae6492ba080df35c40cc5ba",
         "description": "Freshwater marsh birds is a continuous index of patch size. Larger patches are likely to support the following suite of freshwater marsh birds: least bittern, Northern pintail, Northern shoveler, and king rail.",
-        "caption": "Indicator values within the freshwater marsh ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems. ",
-        "reportCaption": "The area of freshwater marsh birds indicator values as they occur within the freshwater marsh ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Freshwater marsh birds indicator values within the freshwater marsh ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "freshwatermarsh_extent",
@@ -338,8 +330,7 @@ INDICATORS = [
         "domain": [0, 1],
         "datasetID": "72e6a105442444679fc61714feec49b4",
         "description": "Forested wetland extent represents the amount of overall acres of existing forested wetlands present in the South Atlantic geography. Overall acreage of existing forested wetlands provides an indicator of whether forested wetlands being inundated by sea level rise are being replaced or restored somewhere else.",
-        "caption": "Indicator values within the forested wetland ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of forested wetland extent indicator values as they occur within the forested wetland ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Forested wetland extent indicator values within the forested wetland ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "maritimeforest_extent",
@@ -353,8 +344,7 @@ INDICATORS = [
         "domain": [0, 1],
         "datasetID": "a5969b1b865b470482071d5ff2b1bbbc",
         "description": "Maritime forest extent represents the overall acres of maritime forest currently present in the South Atlantic geography. Since maritime forest has been substantially reduced from its historic extent, protecting the remaining acreage of existing maritime forest is important.",
-        "caption": "Indicator values within the maritime forest ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of maritime forest extent indicator values as they occur within the maritime forest ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Maritime forest extent indicator values within the maritime forest ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "pineandprairie_amphibians",
@@ -368,8 +358,7 @@ INDICATORS = [
         "domain": [0, 1],
         "datasetID": "89c74fcd28b14683ae2322211104e56c",
         "description": "Pine and prairie amphibians draws from the Priority Amphibian and Reptile Conservation Areas (PARCAs) located in pine and prairie habitat. PARCA is an expert-driven, nonregulatory designation that captures places capable of supporting viable amphibian and reptile populations. PARCAs include areas where rare or at-risk species have been observed or are likely to occur (like embedded, isolated wetlands).",
-        "caption": "Indicator values within the pine and prairie ecosystem in this subwatershed.  A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of pine and prairie amphibians indicator values as they occur within the pine and prairie ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Pine and prairie amphibians indicator values within the pine and prairie ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "pineandprairie_birds",
@@ -386,8 +375,7 @@ INDICATORS = [
         "goodThreshold": 1,
         "datasetID": "68f3ce917278453a82afcd280b5ec84b",
         "description": "Pine and prairie birds is an index of habitat suitability for three bird species (Northern bobwhite, red-cockaded woodpecker, Bachman's sparrow) based on observational data and predictive models. The presence of all three species indicates high pine ecosystem quality.",
-        "caption": "Indicator values within the pine and prairie ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
-        "reportCaption": "The area of pine and prairie birds indicator values as they occur within the pine and prairie ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Pine and prairie birds indicator values within the pine and prairie ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "pineandprairie_regularlyburnedhabitat",
@@ -406,8 +394,7 @@ INDICATORS = [
         "goodThreshold": 1,
         "datasetID": "ea13b5d4f83d4e27bc8bfc8878a85b2c",
         "description": "Regularly burned habitat is an indicator of acres of fire-maintained, open canopy habitat. It attempts to capture recent fire in the pine ecosystem by using LANDFIRE data (1999-2010) as a proxy for regularly burned habitat.",
-        "caption": "Indicator values within the pine and prairie ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
-        "reportCaption": "The area of regularly burned habitat indicator values as they occur within the pine and prairie ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Regularly burned habitat indicator values within the pine and prairie ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "uplandhardwood_birds",
@@ -431,8 +418,7 @@ INDICATORS = [
         "goodThreshold": 3,
         "datasetID": "9a98b3bf45fc4d2aa0833a171b56533a",
         "description": "Upland hardwood birds is an index of habitat suitability for seven upland hardwood bird species (wood thrush, whip-poor-will, hooded warbler, American woodcock, Acadian flycatcher, Kentucky warbler, Swainson's warbler) based on patch size and other ecosystem characteristics such as proximity to water and proximity to forest and ecotone edge. The needs of these species are increasingly restrictive at higher index values, reflecting better quality habitat.",
-        "caption": "Indicator values within the upland hardwood ecosystem in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
-        "reportCaption": "The area of upland hardwood birds indicator values as they occur within the upland hardwood ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Upland hardwood birds indicator values within the upland hardwood ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "uplandhardwood_urbanopenspace",
@@ -457,8 +443,7 @@ INDICATORS = [
         "domain": [0, 5],
         "datasetID": "c0039f1c66c14115ba8b5f51ee22ef97",
         "description": "Urban open space is an index based on distance of urban areas from open space. This cultural resource indicator is intended to capture equitable access to open space for urban residents. Protected natural areas in urban environments offer refugia for some species while providing people a nearby place to connect with nature.",
-        "caption": "Indicator values within the upland hardwood ecosystem in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of urban open space indicator values as they occur within the upland hardwood ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Urban open space indicator values within the upland hardwood ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "marine_birds",
@@ -482,8 +467,7 @@ INDICATORS = [
         "domain": [0, 100],
         "datasetID": "13aa474921e243e7860c7412d2988b4e",
         "description": "Marine birds is a continuous index of highly productive areas for birds that feed exclusively or mainly at sea. It uses seasonal predictions of relative abundance for sixteen species of marine birds. Marine birds help identify key areas of ocean productivity and complement the marine mammal index by providing finer spatial resolution and stronger connections to forage fish productivity.",
-        "caption": "Indicator values within the marine ecosystem in this lease block. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of marine bird indicator values as they occur within the marine ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Marine bird indicator values within the marine ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "marine_mammals",
@@ -507,8 +491,7 @@ INDICATORS = [
         "domain": [0, 100],
         "datasetID": "be70e3438a6e48d798916e788f35ef6b",
         "description": "Marine mammals is a continuous index of dolphin and whale density based on monthly density predictions for ten species of cetaceans and yearly density predictions for three rarer cetacean species. Marine mammals help identify key areas of ocean productivity and overall ocean health because they have long life spans, feed at high trophic levels, and can accumulate anthropogenic chemicals and toxins in their large blubber stores.",
-        "caption": "Indicator values within the marine ecosystem in this lease block. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of marine mammals indicator values as they occur within the marine ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Marine mammals indicator values within the marine ecosystem in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "marine_potentialhardbottomcondition",
@@ -531,8 +514,7 @@ INDICATORS = [
         "goodThreshold": 2,
         "datasetID": "cbb923b746fc435b93d079f9261fa7c2",
         "description": "Potential hardbottom condition measures the protected status or potential stress (i.e., shipping traffic, dredge disposal) of solid substrate and rocky outcroppings. Hardbottom provides an anchor for important seafloor habitat such as deepwater corals, plants, and sponges, supporting associated invertebrate and fish species.",
-        "caption": "Indicator values within the marine ecosystem in this marine lease block. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
-        "reportCaption": "The area of potential hardbottom condition indicator values as they occur within the marine ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Potential hardbottom condition indicator values within the marine ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "freshwateraquatic_permeablesurface",
@@ -550,8 +532,7 @@ INDICATORS = [
         "goodThreshold": 4,
         "datasetID": "aff20e09ff62451685dfb8ffedceeec1",
         "description": "Permeable surface is a continuous indicator that measures the percent of non-impervious cover by catchment. High levels of impervious surface degrade water quality and alter freshwater flow.",
-        "caption": "Indicator values in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
-        "reportCaption": "The area of permeable surface indicator values as they occur in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Permeable surface indicator values in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "freshwateraquatic_riparianbuffers",
@@ -576,8 +557,7 @@ INDICATORS = [
         "goodThreshold": 5,
         "datasetID": "c822c798ba724e06b5fb25d2c18ff0cb",
         "description": "Riparian buffers measures the amount of natural habitat surrounding rivers and streams. This continuous indicator applies to the Active River Area, which spatially defines the dynamic relationship between riverine systems and the lands around them. The Active River Area includes meander belts, riparian wetlands, floodplains, terraces, and material contribution areas. Riparian buffers are strongly linked to water quality as well as water availability (i.e., instream flow).",
-        "caption": "Indicator values within the active river area in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
-        "reportCaption": "The area of riparian buffers indicator values as they occur within the active river area in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Riparian buffers indicator values within the active river area in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "freshwateraquatic_imperiledaquaticspecies",
@@ -600,8 +580,7 @@ INDICATORS = [
         "domain": [0, 4],
         "datasetID": "f6aa9bc688814468b5ae2772375c9fc2",
         "description": "Imperiled aquatic species measures the number of aquatic species within each watershed that are listed as G1 (globally critically imperiled), G2 (globally imperiled), or threatened/endangered under the U.S. Endangered Species Act. This indicator captures patterns of rare and endemic species diversity not well-represented by other freshwater aquatic indicators. It applies only to the Active River Area, which spatially defines the dynamic relationship between riverine systems and the lands around them; it includes meander belts, riparian wetlands, floodplains, terraces, and material contribution areas.",
-        "caption": "Indicator values within the active river area in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of imperiled aquatic species indicator values as they occur within the active river area in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Imperiled aquatic species indicator values within the active river area in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "landscapes_lowroaddensitypatches",
@@ -616,8 +595,7 @@ INDICATORS = [
         "goodThreshold": 1,
         "datasetID": "61856f9901d74185a34c08e857380395",
         "description": "Low road density is an index of areas with few roads, measuring the length of roads within a square kilometer area. It represents habitat fragmentation. Extensive road networks are harmful to many species, including reptiles and amphibians, birds, and large mammals.",
-        "caption": "Indicator values in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
-        "reportCaption": "The area of low road density indicator values as they occur in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
+        "caption": "Low road density indicator values in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.",
     },
     {
         "id": "landscapes_lowurbanhistoric",
@@ -632,8 +610,7 @@ INDICATORS = [
         "goodThreshold": 1,
         "datasetID": "037ecaa254ff48f88969fc1db467d917",
         "description": "Low-urban historic landscapes is an index of sites on the National Register of Historic Places surrounded by limited urban development. This cultural resource indicator identifies significant historic places that remain connected to their context in the natural world.",
-        "caption": "Indicator values within the historic landscapes in this subwatershed. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.  Note: Historic landscapes are rare across the South Atlantic. The presence of any historic landscape, even in high-urban condition, will increase the priority in the Blueprint.",
-        "reportCaption": "The area of low-urban historic landscapes indicator values as they occur within the historic landscapes in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.  Note: Historic landscapes are rare across the South Atlantic. The presence of any historic landscape, even in high-urban condition, will increase the priority in the Blueprint.",
+        "caption": "Low-urban historic landscapes indicator values within the historic landscapes in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.  Note: Historic landscapes are rare across the South Atlantic. The presence of any historic landscape, even in high-urban condition, will increase the priority in the Blueprint.",
     },
     {
         "id": "landscapes_resilientbiodiversityhotspots",
@@ -662,8 +639,7 @@ INDICATORS = [
         "domain": [0, 7],
         "datasetID": "62f821c124bb418298b0375dfcce830b",
         "description": "Resilient biodiversity hotspots is an index of mostly natural high-diversity areas potentially resilient to climate change. This indicator measures landscape diversity (geophysical features like soil and topography) and local connectedness. Areas with these characteristics will likely continue to support species richness and movement in a changing climate (i.e., are resilient).",
-        "caption": "Indicator values in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of resilient biodiversity hotspots indicator values as they occur in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Resilient biodiversity hotspots indicator values in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "waterscapes_migratoryfishconnectivity",
@@ -679,8 +655,7 @@ INDICATORS = [
         "domain": [1, 4],
         "datasetID": "955b5af8b2e24648a11b4a0134c0b285",
         "description": "Migratory fish connectivity is an index capturing how far upstream migratory fish have been observed. It also includes adjacent areas where habitat access could be restored through fish passage and hydrological barrier removal efforts. Migratory fish presence reflects uninterrupted connections between freshwater, estuarine, and marine ecosystems.",
-        "caption": "Indicator values within the active river area in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of migratory fish connectivity indicator values as they occur within the active river area in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Migratory fish connectivity indicator values within the active river area in this area. A good condition threshold is not yet defined for this indicator.",
     },
     {
         "id": "waterscapes_networkcomplexity",
@@ -707,8 +682,7 @@ INDICATORS = [
         "domain": [1, 7],
         "datasetID": "88e4e923d1e94e1d833f0cfd5bb93d5e",
         "description": "Network complexity depicts the number of different stream size classes in a river network not separated by large dams. River networks with a variety of connected stream classes help retain aquatic biodiversity in a changing climate by allowing species to access climate refugia and move between habitats.",
-        "caption": "Indicator values within the active river area in this subwatershed. A good condition threshold is not yet defined for this indicator.",
-        "reportCaption": "The area of network complexity indicator values as they occur within the active river area in this area. A good condition threshold is not yet defined for this indicator.",
+        "caption": "Network complexity indicator values within the active river area in this area. A good condition threshold is not yet defined for this indicator.",
     },
 ]
 
@@ -719,23 +693,22 @@ INDICATORS_INDEX = OrderedDict({indicator["id"]: indicator for indicator in INDI
 URBAN_YEARS = [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]
 
 URBAN_LEGEND = [
-    # {"label": "0", "color": "#FFFFFF"},  # spacer; not actually displayed
     None,  # spacer; not actually displayed
     {"label": "Urban in 2009", "color": "#333333"},
-    {"label": "< 0.025 probability", "color": "#FFBFBA"},
-    {"label": "0.05", "color": "#FFB1A8"},
-    {"label": "0.1", "color": "#FFA496"},
-    {"label": "0.2", "color": "#FF9787"},
-    {"label": "0.3", "color": "#FC8B76"},
-    {"label": "0.4", "color": "#FC806B"},
-    {"label": "0.5", "color": "#FA735A"},
-    {"label": "0.6", "color": "#F5654B"},
-    {"label": "0.7", "color": "#F25740"},
-    {"label": "0.8", "color": "#F04D35"},
-    {"label": "0.9", "color": "#EB402A"},
-    {"label": "0.95", "color": "#E5311B"},
-    {"label": "0.975", "color": "#E12114"},
-    {"label": "> 0.975 probability", "color": "#DB0000"},
+    {"label": "< 2.5% probability", "color": "#FFBFBA"},
+    {"label": "5%", "color": "#FFB1A8"},
+    {"label": "10%", "color": "#FFA496"},
+    {"label": "20%", "color": "#FF9787"},
+    {"label": "30%", "color": "#FC8B76"},
+    {"label": "40%", "color": "#FC806B"},
+    {"label": "50%", "color": "#FA735A"},
+    {"label": "60%", "color": "#F5654B"},
+    {"label": "70%", "color": "#F25740"},
+    {"label": "80%", "color": "#F04D35"},
+    {"label": "90%", "color": "#EB402A"},
+    {"label": "95%", "color": "#E5311B"},
+    {"label": "97.5%", "color": "#E12114"},
+    {"label": "> 97.5% probability", "color": "#DB0000"},
 ]
 
 

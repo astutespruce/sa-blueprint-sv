@@ -62,7 +62,7 @@ async def render_raster_maps(
 
     if urban:
         colors = {i: e["color"] for i, e in enumerate(URBAN_LEGEND) if e is not None}
-        task_args.append(("urban", urban_filename, colors))
+        task_args.append(("urban_2060", urban_filename, colors))
 
     if slr:
         colors = {i: e["color"] for i, e in enumerate(SLR_LEGEND)}

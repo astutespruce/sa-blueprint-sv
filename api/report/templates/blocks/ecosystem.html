@@ -1,13 +1,15 @@
 <div class="ecosystem">
 
-<div class="ecosystem-header flex align-center">
-    <img src="{{(ecosystem.id + '.svg')|load_asset}}" alt="Icon for {{ecosystem.label}}"/>
-    <h2>
-        <span id="{{ecosystem.id}}">{{ecosystem.label}}</span>:
-        {% if ecosystem.acres %}
-            {{(100 * ecosystem.acres / results.blueprint_acres)|round|int}}% of area
-        {% endif %}
-    </h2>
+<div class="ecosystem-header flex align-center space-between">
+    <div class="flex align-center flex-grow">
+        <img src="{{(ecosystem.id + '.svg')|load_asset}}" alt="Icon for {{ecosystem.label}}"/>
+        <h2>
+            <span id="{{ecosystem.id}}">{{ecosystem.label}}</span>{% if ecosystem.acres %}: {{(100 * ecosystem.acres / results.blueprint_acres)|format_number}}% of area{% endif %}
+        </h2>
+    </div>
+    {% if ecosystem.acres %}
+        <div class="flex-no-shrink">{{ecosystem.acres|format_number}} acres</div>
+    {% endif %}
 </div>
 
 {% for indicator_id in ecosystem.indicators %}

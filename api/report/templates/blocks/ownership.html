@@ -1,5 +1,5 @@
 <section>
-<h2 id="Ownership">Ownership</h2>
+<h2 id="Ownership">Ownership and Partners</h2>
 
 
 Values derived from:
@@ -11,7 +11,7 @@ Values derived from:
 {% if results['ownership'] %}
 <h4 id="LandOwnership">Conserved lands ownership</h4>
 
-<!-- TODO: ownership map -->
+<!-- TODO: ownership map? -->
 
 {% with number=table.counter,label="Extent of ownership class" %}
     {% include "elements/table_caption.html" %}
@@ -62,7 +62,7 @@ Values derived from:
 <div class="no-break">
     <h4 id="Protection">Land protection status</h4>
 
-<!-- TODO: protection map -->
+    <!-- TODO: protection map? -->
 
     {% with number=table.counter,label="Extent of land protection status" %}
         {% include "elements/table_caption.html" %}
@@ -105,6 +105,24 @@ Values derived from:
         </tbody>
     </table>
 </div>
+{% endif %}
+
+
+{% if results.counties %}
+<h4>
+    <span id="LandTrusts">Land Trusts</span>
+    (by county)
+</h4>
+<ul>
+    {% for county in results.counties %}
+        <li>
+            <a href="https://www.findalandtrust.org/counties/{{county.FIPS}}">
+                {{county.county}} County, {{county.state}}
+            </a>
+        </li>
+    {% endfor %}
+</ul>
+
 {% endif %}
 
 

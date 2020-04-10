@@ -18,7 +18,7 @@ from util.pygeos_util import to_crs
 
 
 # if True, cache maps if not previously created, then reuse
-CACHE_MAPS = True
+CACHE_MAPS = False
 
 
 def write_cache(maps, scale, path):
@@ -53,8 +53,10 @@ def read_cache(path):
 
 ### Create reports for an AOI
 aois = [
-    {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
-    # {"name": "Groton Plantation", "path": "Groton_all"},
+    # {"name": "South Atlantic Region", "path": "SA_boundary"},
+    # {"name": "North Carolina", "path": "NC"},
+    # {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
+    {"name": "Groton Plantation", "path": "Groton_all"},
     # {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
     # {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
     # # TODO: handle correctly
@@ -130,7 +132,7 @@ for aoi in aois:
 ### Create reports for summary units
 ids = {
     # "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
-    # "marine_blocks": ["NI18-07-6210"],
+    # "marine_blocks": ["NI18-07-6210"]
 }
 
 

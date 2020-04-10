@@ -92,8 +92,8 @@ def extract_data_for_map(src, bounds, scale, map_width, map_height):
 
     data = src.read(1, window=window, boundless=True, fill_value=nodata)
 
-    if DEBUG:
-        write_raster("/tmp/pre-warp.tif", data, window_transform, src.crs, nodata)
+    # if DEBUG:
+    #     write_raster("/tmp/pre-warp.tif", data, window_transform, src.crs, nodata)
 
     # convert data before reproject
     if nodata != src.nodata:
@@ -157,10 +157,10 @@ def extract_data_for_map(src, bounds, scale, map_width, map_height):
         resampling=Resampling.nearest,
     )
 
-    if DEBUG:
-        write_raster(
-            "/tmp/warped-clipped.tif", clipped, final_transform, MAP_CRS, nodata
-        )
+    # if DEBUG:
+    #     write_raster(
+    #         "/tmp/warped-clipped.tif", clipped, final_transform, MAP_CRS, nodata
+    #     )
 
     # TEMP: Strip nodata values back out
     if nodata != src.nodata:

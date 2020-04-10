@@ -56,6 +56,8 @@ class CustomArea(object):
             "blueprint_acres": blueprint["shape_mask"],
             "blueprint": blueprint["blueprint"],
             "ecosystems": blueprint["ecosystems"],
+            # area is marine if it is completely within the marine ecosystem
+            "is_marine": blueprint["ecosystems"][7] == blueprint["shape_mask"],
         }
 
         indicators = []
@@ -72,13 +74,17 @@ class CustomArea(object):
     def get_urban(self):
         urban_results = extract_urbanization_area(self.shapes)
 
-        if urban_results is None:
+        if urban_results is None or urban_results["shape_mask"] == 0:
+            return None
+
+        proj_urban = [urban_results[year] for year in URBAN_YEARS]
+        if not sum(proj_urban):
             return None
 
         return {
             "urban_acres": urban_results["shape_mask"],
             "urban": urban_results["urban"],
-            "proj_urban": [urban_results[year] for year in URBAN_YEARS],
+            "proj_urban": proj_urban,
         }
 
     def get_slr(self):
@@ -87,11 +93,14 @@ class CustomArea(object):
             return None
 
         slr_results = extract_slr_area(self.shapes.take(idx.index.unique()))
+        if slr_results is None or slr_results["shape_mask"] == 0:
+            return None
 
-        return {
-            "slr_acres": slr_results["shape_mask"],
-            "slr": [slr_results[i] for i in range(7)],
-        }
+        slr = [slr_results[i] for i in range(7)]
+        if not sum(slr):
+            return None
+
+        return {"slr_acres": slr_results["shape_mask"], "slr": slr}
 
     def get_counties(self):
         df = (

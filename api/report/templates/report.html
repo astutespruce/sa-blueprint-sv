@@ -13,15 +13,11 @@
         {% include "blocks/blueprint.html" %}
         {% include "blocks/indicators.html" %}
 
-        {% if results.slr_acres or results.urban_acres %}
+        {% if not results.is_marine %}
             {% include "blocks/threats.html" %}
         {% endif %}
 
-        {% if results.counties %}
-            {% include "blocks/partners.html" %}
-        {% endif %}
-
-        {% if results.ownership or results.protection %}
+        {% if results.ownership or results.protection or results.counties %}
             {% include "blocks/ownership.html" %}
         {% endif %}
 
