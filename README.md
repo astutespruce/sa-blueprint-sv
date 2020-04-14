@@ -12,6 +12,8 @@ NOTE: threats are not aligned to the same grid; urbanization is on a 60m grid an
 
 GeoTIFFs of the blueprint and all indicators were provided by SA staff for prior versions of the Blueprint Simple Viewer.
 
+GeoTIFFs of the marine and inland hubs & corridors were provided by SA staff on 3/13/2020.
+
 Urbanization grids were converted to indexed grids to simplify calculations. See `util/preprocess_grids.py`.
 
 SA staff provided SLR files on 3/10/2020. These are a series of GeoTIFF files for small areas along the coast, with
