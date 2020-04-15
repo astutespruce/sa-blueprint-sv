@@ -1,12 +1,11 @@
 import React from "react"
 
 import Layout from "components/layout"
-
-console.log("layout", Layout)
+import { DropZone } from "components/upload"
 
 const IndexPage = () => (
   <Layout title="Home">
-    <h1>Placeholder</h1>
+    <DropZone />
   </Layout>
 )
 
