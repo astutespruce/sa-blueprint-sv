@@ -151,6 +151,11 @@ table td:first-child {
     text-align: left;
 }
 
+table .remainder-row td {
+    font-style: italic;
+    color: #666;
+}
+
 table .total-row td {
     font-weight: bold;
     background: #eee;
@@ -229,6 +234,10 @@ table tr.above-threshold td {
 .caption {
     font-size: 10pt;
     font-weight: bold;
+}
+
+.hidden {
+    visibility: hidden;
 }
 
 .box {
@@ -407,6 +416,10 @@ table tr.above-threshold td {
 
 .ecosystem-header h2 {
     margin-bottom: 0;
+}
+
+.ecosystem-header h3 {
+    margin: 0 0 0 0.5rem;
 }
 
 .ecosystem-header img {

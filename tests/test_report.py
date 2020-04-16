@@ -55,9 +55,9 @@ def read_cache(path):
 aois = [
     # {"name": "South Atlantic Region", "path": "SA_boundary"},
     # {"name": "North Carolina", "path": "NC"},
-    {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
-    {"name": "Groton Plantation", "path": "Groton_all"},
-    {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
+    # {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
+    # {"name": "Groton Plantation", "path": "Groton_all"},
+    # {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
     # {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
     # # TODO: handle correctly
     # {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},

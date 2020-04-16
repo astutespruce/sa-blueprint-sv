@@ -63,13 +63,18 @@ class CustomArea(object):
         }
 
         indicators = []
-        for indicator in INDICATORS_INDEX.keys():
+        for id, indicator in INDICATORS_INDEX.items():
             # drop indicators that are not present
-            values = blueprint[indicator]
+            values = blueprint[id]
             if values.max() > 0:
-                results[indicator] = values
-                results[f"{indicator}_total"] = values.sum()
-                indicators.append(indicator)
+                indicators.append(id)
+                results[id] = values
+                results[f"{id}_total"] = values.sum()
+
+                if "goodThreshold" in indicator:
+                    results[f"{id}_good_total"] = values[
+                        indicator["goodThreshold"] :
+                    ].sum()
 
         results["indicators"] = indicators
 

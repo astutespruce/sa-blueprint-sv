@@ -90,20 +90,23 @@ class SummaryUnits(object):
             results["is_marine"] = True
 
         indicators = []
-        for indicator in INDICATORS_INDEX.keys():
-            if indicator not in groups:
+        for id, indicator in INDICATORS_INDEX.items():
+            if id not in groups:
                 continue
 
             values = [
-                getattr(blueprint, c)
-                for c in blueprint.index
-                if c.startswith(indicator)
+                getattr(blueprint, c) for c in blueprint.index if c.startswith(id)
             ]
             # drop indicators that are not present
             if max(values):
-                results[indicator] = values
-                results[f"{indicator}_total"] = sum(values)
-                indicators.append(indicator)
+                indicators.append(id)
+                results[id] = values
+                results[f"{id}_total"] = sum(values)
+
+                if "goodThreshold" in indicator:
+                    results[f"{id}_good_total"] = sum(
+                        values[indicator["goodThreshold"] :]
+                    )
 
         results["indicators"] = indicators
 

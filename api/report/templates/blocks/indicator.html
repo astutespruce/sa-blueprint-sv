@@ -1,7 +1,9 @@
 <div class="indicator">
 
 <div class="no-break">
-    <h3 class="indicator-header">{{indicator.label}}</h3>
+    {% include "elements/indicator_header.html" %}
+
+    <!-- <h3 class="indicator-header">{{indicator.label}}</h3> -->
 
     <p>{{indicator.description}}</p>
 
@@ -49,7 +51,7 @@
 
     <!-- all indicators are presented in descending order -->
     <!-- use sum of area in regionwide indicators -->
-    {% with acres=results[indicator_id][::-1],entries=indicator['values'].items()|reverse,total_acres=results[indicator_id]|sum,has_good_threshold=indicator.goodThreshold,min_value=indicator['values'].keys()|min %}
+    {% with acres=results[indicator_id][::-1],entries=indicator['values'].items()|reverse,has_good_threshold=indicator.goodThreshold,min_value=indicator['values'].keys()|min %}
 
     {% if has_good_threshold %}
         <table class="centered">
@@ -58,8 +60,7 @@
                     <th class="level"></th>
                     <th class="label">Indicator Values</th>
                     <th class="acres">Acres</th>
-                    <!-- <th class="percent">Percent of {{ecosystem.label|lower}} ecosystem</th> -->
-                    <th class="percent">Percent of indicator area</th>
+                    <th class="percent">Percent of Area</th>
                     <th class="threshold"></th>
                 </tr>
             </thead>
@@ -76,7 +77,7 @@
 
                         <td class="label">{{label}}</td>
                         <td class="acres">{{acres[loop.index-1]|format_number}}</td>
-                        <td class="percent">{{(100 * acres[loop.index-1] / total_acres)|format_number}}%</td>
+                        <td class="percent">{{(100 * acres[loop.index-1] / results.blueprint_total)|format_number}}%</td>
 
                         {% if loop.first %}
                             <td class="threshold good" rowspan="{{((entries|length) - indicator.goodThreshold) + min_value}}">
@@ -90,10 +91,21 @@
                     </tr>
                 {% endfor %}
 
+                {% with remainder=results.blueprint_total-results[indicator_id + '_total'] %}
+                {% if remainder > 0 %}
+                    <tr class="remainder-row">
+                        <td class="level no-border"></td>
+                        <td class="label">Area not evaluated for this indicator</td>
+                        <td class="acres">{{remainder|format_number}}</td>
+                        <td class="percent">{{(100 * remainder / results.blueprint_total)|format_number}}%</td>
+                    </tr>
+                {% endif %}
+                {% endwith %}
+
                 <tr class="total-row">
                     <td class="no-border no-background"></td>
-                    <td class="label align-right">Total indicator area</td>
-                    <td class="acres">{{total_acres|format_number}}</td>
+                    <td class="label align-right">Total area</td>
+                    <td class="acres">{{results.blueprint_total|format_number}}</td>
                     <td class="percent">100%</td>
                 </tr>
             </tbody>
@@ -107,8 +119,7 @@
                     <th class="level"></th>
                     <th class="label">Indicator Values</th>
                     <th class="acres">Acres</th>
-                    <!-- <th class="percent">Percent of {{ecosystem.label|lower}} ecosystem</th> -->
-                    <th class="percent">Percent of indicator area</th>
+                    <th class="percent">Percent of Area</th>
                 </tr>
             </thead>
             <tbody>
@@ -123,14 +134,25 @@
                         </td>
                         <td class="label">{{label}}</td>
                         <td class="acres">{{acres[loop.index-1]|format_number}}</td>
-                        <td class="percent">{{(100 * acres[loop.index-1] / total_acres)|format_number}}%</td>
+                        <td class="percent">{{(100 * acres[loop.index-1] / results.blueprint_total)|format_number}}%</td>
                     </tr>
                 {% endfor %}
 
+                {% with remainder=results.blueprint_total-results[indicator_id + '_total'] %}
+                {% if remainder > 0 %}
+                    <tr class="remainder-row">
+                        <td class="no-border no-background"></td>
+                        <td class="label">Area not evaluated for this indicator</td>
+                        <td class="acres">{{remainder|format_number}}</td>
+                        <td class="percent">{{(100 * remainder / results.blueprint_total)|format_number}}%</td>
+                    </tr>
+                {% endif %}
+                {% endwith %}
+
                 <tr class="total-row">
                     <td class="no-border no-background"></td>
-                    <td class="align-right">Total indicator area</td>
-                    <td class="acres">{{total_acres|format_number}}</td>
+                    <td class="align-right">Total area</td>
+                    <td class="acres">{{results.blueprint_total|format_number}}</td>
                     <td class="percent">100%</td>
                 </tr>
             </tbody>
