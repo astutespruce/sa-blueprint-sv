@@ -771,3 +771,14 @@ PROTECTION = OrderedDict(
         },
     }
 )
+
+CORRIDORS = [
+    # 0:
+    {"color": "#353535", "label": "Inland Hubs"},
+    # 1:
+    {"color": "#828282", "label": "Inland Corridors"},
+    # 2:
+    {"color": "#454F89", "label": "Marine Hubs"},
+    # 3:
+    {"color": "#9EBBD7", "label": "Marine Corridors"},
+]

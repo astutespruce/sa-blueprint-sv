@@ -1,0 +1,86 @@
+<section>
+    <h2 id="Corridors">Hubs and Corridors</h2>
+
+    <p>Description of hubs and corridors goes here</p>
+
+    {% if maps.corridors %}
+    <div class="map-container">
+        <img src="data:image/png;base64,{{maps.corridors}}" alt="Corridors map" class="map">
+
+        {% include "elements/map_footer.html" %}
+    </div>
+
+    <div class="flex map-footer">
+        <div class="map-locator-container">
+            {% if maps.locator %}
+                <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
+            {% endif %}
+        </div>
+
+        <div class="legend">
+            {% for item in legends.corridors %}
+                <div class="legend-element flex align-center">
+                    <div class="legend-patch" style="background: {{item.color}}"></div>
+                    <div class="legend-label">{{item.label}}</div>
+                </div>
+            {% endfor %}
+            <!-- space is required or last label doesn't render -->
+            &nbsp;
+        </div>
+    </div>
+
+    {% else %}
+    <div class="map-placeholder text-center">
+        map could not be created
+    </div>
+    {% endif %}
+    </section>
+
+    <section>
+
+    {% with number=table.counter,label="Extent of hubs and corridors" %}
+    {% include "elements/table_caption.html" %}
+    {% endwith %}
+    {% set table.counter=table.counter+1 %}
+
+    <table class="centered">
+    <thead>
+    <tr>
+        <th class="label">Type</th>
+        <th class="acres">Acres</th>
+        <th class="percent">Percent of Area</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% with acres=results.corridors %}
+    {% for item in results.corridors %}
+        {% if acres[loop.index-1] > 0 %}
+        <tr>
+            <td class="label">{{legends.corridors[loop.index-1].label}}</td>
+            <td class="acres">{{acres[loop.index-1]|format_number}}</td>
+            <td class="percent">{{(100 * acres[loop.index-1] / results.blueprint_total)|format_number}}%</td>
+        </tr>
+        {% endif %}
+    {% endfor %}
+    {% endwith %}
+
+    {% with acres=results.blueprint_total-results.corridors_total %}
+    {% if acres > 0 %}
+    <tr>
+        <td class="label">Not a hub or corridor</td>
+        <td class="acres">{{acres|format_number}}</td>
+        <td class="percent">{{(100 * acres / results.blueprint_total)|format_number}}%</td>
+    </tr>
+    {% endif %}
+    {% endwith %}
+
+    <tr class="total-row">
+        <td class="label align-right">Total Blueprint area</td>
+        <td class="acres">{{results.blueprint_total|format_number}}</td>
+        <td class="percent">100%</td>
+    </tr>
+    </tbody>
+    </table>
+
+
+</section>

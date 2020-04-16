@@ -12,6 +12,7 @@ from constants import (
     BLUEPRINT,
     ECOSYSTEMS,
     INDICATORS_INDEX,
+    CORRIDORS,
     URBAN_LEGEND,
     SLR_LEGEND,
     DEBUG,
@@ -93,8 +94,9 @@ def create_report(maps, results):
     protection_acres = sum([e["acres"] for e in results.get("protection", [])])
 
     legends = {
-        # sort descending, omit not a priority
-        "blueprint": BLUEPRINT[:0:-1]
+        # sort Blueprint descending order
+        "blueprint": BLUEPRINT[::-1],
+        "corridors": CORRIDORS,
     }
     for indicator_id in results["indicators"]:
         indicator = INDICATORS_INDEX[indicator_id]
@@ -126,7 +128,6 @@ def create_report(maps, results):
         "url": "https://blueprint.southatlanticlcc.org/",
         "maps": maps,
         "legends": legends,
-        "blueprint": BLUEPRINT,
         "ecosystems": ecosystems,
         "ecosystem_acres": ecosystem_acres,
         "ownership_acres": ownership_acres,

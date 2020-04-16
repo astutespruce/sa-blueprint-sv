@@ -4,7 +4,7 @@
     <div class="flex align-center flex-grow">
         <img src="{{(ecosystem.id + '.svg')|load_asset}}" alt="Icon for {{ecosystem.label}}"/>
         <h2>
-            <span id="{{ecosystem.id}}">{{ecosystem.label}}</span>{% if ecosystem.acres %}: {{(100 * ecosystem.acres / results.blueprint_acres)|format_number}}% of area{% endif %}
+            <span id="{{ecosystem.id}}">{{ecosystem.label}}</span>{% if ecosystem.acres %}: {{(100 * ecosystem.acres / results.blueprint_total)|format_number}}% of area{% endif %}
         </h2>
     </div>
     {% if ecosystem.acres %}

@@ -1,6 +1,10 @@
 from pathlib import Path
 import rasterio
+from rasterio.features import rasterize
 import numpy as np
+import pyogrio as pio
+
+from util.pygeos_util import to_dict_all
 
 src_dir = Path("data")
 
@@ -78,4 +82,45 @@ with rasterio.open(
     meta["dtype"] = "uint8"
 
     with rasterio.open(src_dir / "ecosystems_indexed.tif", "w", **meta) as out:
+        out.write(data.astype("uint8"), 1)
+
+
+### Rasterize and merge hubs and corridors
+corridors_dir = src_dir / "corridors"
+gdb = corridors_dir / "Corridors_2_2.gdb"
+inland_hubs = pio.read_dataframe(gdb, layer="InlandHubs_V_2_2", as_pygeos=True)
+marine_hubs = pio.read_dataframe(gdb, layer="MarineHubs_V_2_2", as_pygeos=True)
+
+with rasterio.open(
+    corridors_dir / "InlandCorridors_V_2_2.tif"
+) as inland, rasterio.open(corridors_dir / "MarineCorridors_V_2_2.tif") as marine:
+    # rasterize hubs
+    inland_hubs_data = rasterize(
+        to_dict_all(inland_hubs.geometry),
+        inland.shape,
+        transform=inland.transform,
+        dtype="uint8",
+    )
+    marine_hubs_data = rasterize(
+        to_dict_all(marine_hubs.geometry),
+        marine.shape,
+        transform=marine.transform,
+        dtype="uint8",
+    )
+
+    inland_data = inland.read(1)
+    marine_data = marine.read(1)
+
+    # consolidate all values into a single raster, writing hubs over corridors
+    data = np.ones(shape=inland_data.shape, dtype="uint8") * 255
+    data[inland_data == 1] = 1
+    data[marine_data == 1] = 3
+    data[inland_hubs_data == 1] = 0
+    data[marine_hubs_data == 1] = 2
+
+    meta = inland.meta.copy()
+    meta["dtype"] = "uint8"
+    meta["nodata"] = 255
+
+    with rasterio.open(src_dir / "corridors.tif", "w", **meta) as out:
         out.write(data.astype("uint8"), 1)

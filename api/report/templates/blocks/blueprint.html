@@ -12,15 +12,12 @@
             <div class="map-locator-container">
                 {% if maps.locator %}
                     <img src="data:image/png;base64,{{maps.locator}}" alt="Locator map" class="map-locator">
-                {% else %}
-                    <div class="map-locator-placeholder text-center">
-                        map could not be created
-                    </div>
                 {% endif %}
             </div>
 
             <div class="legend">
-                {% for item in blueprint[:0:-1] %}
+                <!-- omit not a priority -->
+                {% for item in legends.blueprint[:-1] %}
                     <div class="legend-element flex align-center">
                         <div class="legend-patch" style="background: {{item.color}}"></div>
                         <div class="legend-label">{{item.label}}</div>
@@ -40,7 +37,8 @@
 
 <section>
     <h2>Priority Categories</h2>
-    {% for item in legends.blueprint %}
+    <!-- omit not a priority -->
+    {% for item in legends.blueprint[:-1] %}
         <h4>
             {{item.label}}
             {% if 'priority' in item.label %}
@@ -73,19 +71,20 @@ or just a donut chart of the highest priority?
         </tr>
     </thead>
     <tbody>
+        <!-- sort blueprint from highest priority to lowest -->
         {% with acres=results.blueprint[::-1] %}
-        {% for item in blueprint[::-1] %}
+        {% for item in legends.blueprint %}
         <tr>
             <td class="label">{{item.label}}</td>
             <td class="acres">{{acres[loop.index-1]|format_number}}</td>
-            <td class="percent">{{(100 * acres[loop.index-1] / results.blueprint_acres)|format_number}}%</td>
+            <td class="percent">{{(100 * acres[loop.index-1] / results.blueprint_total)|format_number}}%</td>
         </tr>
         {% endfor %}
         {% endwith %}
 
         <tr class="total-row">
             <td class="label align-right">Total Blueprint area</td>
-            <td class="acres">{{results.blueprint_acres|format_number}}</td>
+            <td class="acres">{{results.blueprint_total|format_number}}</td>
             <td class="percent">100%</td>
         </tr>
     </tbody>

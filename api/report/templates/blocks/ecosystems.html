@@ -19,7 +19,7 @@
             <tr>
                 <td class="label">{{ecosystem.label}}</td>
                 <td class="acres">{{ecosystem.acres|format_number}}</td>
-                <td class="percent">{{(100 * ecosystem.acres / results.blueprint_acres)|format_number}}%</td>
+                <td class="percent">{{(100 * ecosystem.acres / results.blueprint_total)|format_number}}%</td>
             </tr>
             {% endif %}
         {% endfor %}
@@ -27,7 +27,7 @@
         <tr class="total-row">
             <td class="label align-right">Total ecosystem area</td>
             <td class="acres">{{ecosystem_acres|format_number}}</td>
-            <td class="percent">{{(100 * ecosystem_acres / results.blueprint_acres)|format_number}}%</td>
+            <td class="percent">{{(100 * ecosystem_acres / results.blueprint_total)|format_number}}%</td>
         </tr>
     </tbody>
 </table>

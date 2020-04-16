@@ -9,6 +9,7 @@ from constants import (
     BLUEPRINT,
     ECOSYSTEMS,
     INDICATORS,
+    CORRIDORS,
     URBAN_YEARS,
     ACRES_PRECISION,
     M2_ACRES,
@@ -17,6 +18,7 @@ from constants import (
 src_dir = Path("data")
 blueprint_filename = src_dir / "Blueprint_2_2.tif"
 ecosystems_filename = src_dir / "ecosystems_indexed.tif"
+corridors_filename = src_dir / "corridors.tif"
 urban_dir = src_dir / "threats/urban"
 slr_dir = src_dir / "threats/slr"
 
@@ -57,9 +59,10 @@ def extract_count_in_geometry(filename, geometry_mask, window, bins):
 
 
 def extract_blueprint_indicator_area(geometries, inland=True):
-    """Calculate the area of overlap between geometries and Blueprint and indicators.
+    """Calculate the area of overlap between geometries and Blueprint, indicators,
+    and corridors.
 
-    NOTE: Blueprint and indicators are on a 30m grid.
+    NOTE: Blueprint, indicators, and corridors are on the same 200m grid.
 
     Parameters
     ----------
@@ -100,6 +103,13 @@ def extract_blueprint_indicator_area(geometries, inland=True):
     )
     results["blueprint"] = (
         (blueprint_counts * cellsize).round(ACRES_PRECISION).astype("float32")
+    )
+
+    corridor_counts = extract_count_in_geometry(
+        corridors_filename, geometry_mask, window, np.arange(len(CORRIDORS))
+    )
+    results["corridors"] = (
+        (corridor_counts * cellsize).round(ACRES_PRECISION).astype("float32")
     )
 
     if inland:
@@ -167,7 +177,6 @@ def extract_urbanization_area(geometries):
 
     if results["shape_mask"] == 0:
         return None
-
 
     # values are probability of urbanization per timestep * 1000 (uint16)
     # NOTE: index 0 = not predicted to urbanize

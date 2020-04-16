@@ -23,6 +23,7 @@ from fastapi import (
     Security,
     BackgroundTasks,
 )
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security.api_key import APIKeyQuery, APIKeyCookie, APIKeyHeader, APIKey
 from fastapi.responses import Response
 
@@ -38,6 +39,18 @@ log = logging.getLogger(__name__)
 log.setLevel(LOGGING_LEVEL)
 
 app = FastAPI()
+
+# Enable CORS
+# TODO: other allowed origins
+origins = ["http://localhost:8000"]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 def get_token(token: str = Security(APIKeyQuery(name="token", auto_error=False))):

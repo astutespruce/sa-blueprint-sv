@@ -53,8 +53,10 @@ class CustomArea(object):
             return None
 
         results = {
-            "blueprint_acres": blueprint["shape_mask"],
+            "blueprint_total": blueprint["shape_mask"],
             "blueprint": blueprint["blueprint"],
+            "corridors": blueprint["corridors"],
+            "corridors_total": blueprint["corridors"].sum(),
             "ecosystems": blueprint["ecosystems"],
             # area is marine if it is completely within the marine ecosystem
             "is_marine": blueprint["ecosystems"][7] == blueprint["shape_mask"],
@@ -63,8 +65,10 @@ class CustomArea(object):
         indicators = []
         for indicator in INDICATORS_INDEX.keys():
             # drop indicators that are not present
-            if blueprint[indicator].max() > 0:
-                results[indicator] = blueprint[indicator]
+            values = blueprint[indicator]
+            if values.max() > 0:
+                results[indicator] = values
+                results[f"{indicator}_total"] = values.sum()
                 indicators.append(indicator)
 
         results["indicators"] = indicators

@@ -78,8 +78,8 @@ for col in df.columns.difference(["shape_mask"]):
     results = results.join(s)
 
 results.index.name = "HUC12"
-results.to_csv(out_dir / "blueprint_results.csv", index_label="HUC12")
-results.reset_index().to_feather(out_dir / "blueprint_results.feather")
+results.to_csv(out_dir / "blueprint.csv", index_label="HUC12")
+results.reset_index().to_feather(out_dir / "blueprint.feather")
 
 
 ### Calculate counts for urbanization

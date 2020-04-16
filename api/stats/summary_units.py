@@ -64,10 +64,15 @@ class SummaryUnits(object):
             return results
 
         # unpack blueprint, ecosystems, indicators
-        results["blueprint_acres"] = blueprint["shape_mask"]
+        results["blueprint_total"] = blueprint["shape_mask"]
         results["blueprint"] = [
             getattr(blueprint, c) for c in blueprint.index if c.startswith("blueprint_")
         ]
+
+        results["corridors"] = [
+            getattr(blueprint, c) for c in blueprint.index if c.startswith("corridors_")
+        ]
+        results["corridors_total"] = sum(results["corridors"])
 
         groups = {c.rsplit("_", 1)[0] for c in blueprint.index}
 
@@ -80,7 +85,7 @@ class SummaryUnits(object):
 
         elif self.unit_type == "marine_blocks":
             ecosystems = np.zeros(shape=(9,))
-            ecosystems[7] = results["blueprint_acres"]
+            ecosystems[7] = results["blueprint_total"]
             results["ecosystems"] = ecosystems.tolist()
             results["is_marine"] = True
 
@@ -97,6 +102,7 @@ class SummaryUnits(object):
             # drop indicators that are not present
             if max(values):
                 results[indicator] = values
+                results[f"{indicator}_total"] = sum(values)
                 indicators.append(indicator)
 
         results["indicators"] = indicators
