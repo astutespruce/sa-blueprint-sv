@@ -19,9 +19,6 @@ Urbanization grids were converted to indexed grids to simplify calculations. See
 SA staff provided SLR files on 3/10/2020. These are a series of GeoTIFF files for small areas along the coast, with
 varying footprints and resolution. To use here, we constructed a VRT using GDAL, and used the average resolution.
 
-TNC Secured Lands 2018 were downloaded from: https://www.conservationgateway.org/ConservationByGeography/NorthAmerica/UnitedStates/edc/reportsdata/terrestrial/secured/Pages/default.aspx
-on 3/23/2020.
-
 States were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=States+%28and+equivalent%29
 
 Counties were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2018&layergroup=Counties+%28and+equivalent%29
@@ -60,6 +57,17 @@ Mask was created using `util/prep_boundaries.py` then converted to vector tiles 
 
 ```
 tippecanoe -f -pg -z 8 -o ./tiles/sa_mask.mbtiles -l "mask" ./data/boundaries/mask.geojson
+```
+
+### Ownership
+
+TNC Secured Lands 2018 were downloaded from: https://www.conservationgateway.org/ConservationByGeography/NorthAmerica/UnitedStates/edc/reportsdata/terrestrial/secured/Pages/default.aspx
+on 3/23/2020.
+
+Render to vector tiles:
+
+```
+tippecanoe -f -pg -z 15 -o ./tiles/ownership.mbtiles -l "ownership" ./data/boundaries/ownership.geojson
 ```
 
 ### Merged tiles

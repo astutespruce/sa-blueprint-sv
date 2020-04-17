@@ -39,6 +39,8 @@ async def create_custom_report(zip_filename, dataset, layer, name):
 
     has_urban = "urban" in results
     has_slr = "slr" in results
+    has_ownership = "ownership" in results
+    has_protection = "protection" in results
 
     maps, scale = await render_maps(
         bounds,
@@ -46,6 +48,8 @@ async def create_custom_report(zip_filename, dataset, layer, name):
         indicators=results["indicators"],
         urban=has_urban,
         slr=has_slr,
+        ownership=has_ownership,
+        protection=has_protection,
     )
 
     results["scale"] = scale

@@ -4,6 +4,7 @@ import geopandas as gp
 import pygeos as pg
 import pyogrio as pio
 from geofeather.pygeos import from_geofeather, to_geofeather
+from geofeather import from_geofeather as from_geofeather_as_gp
 
 # from geofeather.pygeos import to_geofeather as to_geofeather_from_pygeos
 
@@ -63,8 +64,6 @@ states = (
 # coordinates are in geographic coordinates (NAD83 vs WGS84)
 df = pio.read_dataframe(working_dir / "source/tl_2018_us_county.shp", as_pygeos=True)
 crs = df.crs
-# df = pd.DataFrame(df.copy())
-# df["geometry"] = to_pygeos(df.geometry)
 
 in_bnd = sjoin(df, pd.DataFrame({"geometry": sa_bnd}), how="inner")
 
@@ -81,5 +80,11 @@ to_geofeather(df, working_dir / "counties.feather", crs=DATA_CRS)
 
 df["geometry"] = from_pygeos(df.geometry)
 
-df = gp.GeoDataFrame(df, crs=DATA_CRS)
-df.to_file("/tmp/counties.shp")
+# DEBUG:
+# df = gp.GeoDataFrame(df, crs=DATA_CRS)
+# df.to_file("/tmp/counties.shp")
+
+
+### Export protected areas to vector tiles
+df = from_geofeather_as_gp(working_dir / "ownership.feather")
+df.to_file(working_dir / "ownership.geojson", driver="GeoJSONSeq")

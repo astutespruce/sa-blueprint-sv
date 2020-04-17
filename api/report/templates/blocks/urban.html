@@ -65,7 +65,7 @@
 
             {% for acres in results['proj_urban'] %}
             <tr>
-                <td class="label">{{2020 + (10*(loop.index-1))}}</td>
+                <td class="label">{{2020 + (10*(loop.index-1))}} projected extent</td>
                 <td class="percent">{{acres|format_number}}</td>
                 <td class="percent">{{(100 * acres / results.urban_acres)|format_number}}%</td>
             </tr>

@@ -3,6 +3,7 @@ from base64 import b64decode, b64encode
 import json
 import os
 from pathlib import Path
+from time import time
 
 import pandas as pd
 import numpy as np
@@ -53,20 +54,20 @@ def read_cache(path):
 
 ### Create reports for an AOI
 aois = [
-    # {"name": "South Atlantic Region", "path": "SA_boundary"},
-    # {"name": "North Carolina", "path": "NC"},
-    # {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
-    # {"name": "Groton Plantation", "path": "Groton_all"},
-    # {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
-    # {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
-    # # TODO: handle correctly
-    # {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},
-    # # Big areas:
-    # {"name": "ACF", "path": "ACF_area"},
-    # {
-    #     "name": "80-mile sourcing radius for Enviva’s Hamlet, NC plant",
-    #     "path": "Enviva_Hamlet_80_mile_sourcing_radius",
-    # },
+    {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
+    {"name": "Groton Plantation", "path": "Groton_all"},
+    {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
+    {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
+    # TODO: handle correctly
+    {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},
+    # Big areas:
+    {"name": "ACF", "path": "ACF_area"},
+    {
+        "name": "80-mile sourcing radius for Enviva’s Hamlet, NC plant",
+        "path": "Enviva_Hamlet_80_mile_sourcing_radius",
+    },
+    {"name": "North Carolina", "path": "NC"},
+    {"name": "South Atlantic Region", "path": "SA_boundary"},
 ]
 
 
@@ -75,6 +76,7 @@ for aoi in aois:
     path = aoi["path"]
     print(f"Creating report for {name}...")
 
+    start = time()
     df = read_dataframe(f"data/aoi/{path}.shp", as_pygeos=True)
     geometry = pg.make_valid(df.geometry)
 
@@ -107,6 +109,8 @@ for aoi in aois:
 
         has_urban = "urban" in results
         has_slr = "slr" in results
+        has_ownership = "ownership" in results
+        has_protection = "protection" in results
 
         task = render_maps(
             bounds,
@@ -114,6 +118,8 @@ for aoi in aois:
             indicators=results["indicators"],
             urban=has_urban,
             slr=has_slr,
+            ownership=has_ownership,
+            protection=has_protection,
         )
 
         maps, scale = asyncio.run(task)
@@ -128,13 +134,12 @@ for aoi in aois:
     with open(out_dir / f"{path}_report.pdf", "wb") as out:
         out.write(pdf)
 
+    print("Elapsed {:.2f}s".format(time() - start))
+
 
 ### Create reports for summary units
 ids = {
-    "huc12": [
-        "030602040601",
-        # "030601030510", "031501040301", "030102020505"
-    ],
+    "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
     "marine_blocks": ["NI18-07-6210"],
 }
 
@@ -154,6 +159,11 @@ for summary_type in ids:
         # Fetch results
         results = units.get_results(id)
 
+        has_urban = "urban" in results
+        has_slr = "slr" in results
+        has_ownership = "ownership" in results
+        has_protection = "protection" in results
+
         maps = None
         if CACHE_MAPS:
             maps, scale = read_cache(cache_dir)
@@ -161,7 +171,13 @@ for summary_type in ids:
         if not maps:
             print("Rendering maps...")
             task = render_maps(
-                results["bounds"], summary_unit_id=id, indicators=results["indicators"]
+                results["bounds"],
+                summary_unit_id=id,
+                indicators=results["indicators"],
+                urban=has_urban,
+                slr=has_slr,
+                ownership=has_ownership,
+                protection=has_protection,
             )
             maps, scale = asyncio.run(task)
 

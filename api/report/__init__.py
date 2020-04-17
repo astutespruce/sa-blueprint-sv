@@ -15,6 +15,8 @@ from constants import (
     CORRIDORS,
     URBAN_LEGEND,
     SLR_LEGEND,
+    OWNERSHIP,
+    PROTECTION,
     DEBUG,
 )
 from util.format import format_number as format_number
@@ -120,6 +122,12 @@ def create_report(maps, results):
 
     if "slr" in results:
         legends["slr"] = SLR_LEGEND
+
+    if "ownership" in results:
+        legends["ownership"] = list(OWNERSHIP.values())
+
+    if "protection" in results:
+        legends["protection"] = list(PROTECTION.values())
 
     context = {
         "date": date.today().strftime("%m/%d/%y"),

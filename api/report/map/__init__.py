@@ -8,6 +8,8 @@ import rasterio
 from .aoi import get_aoi_map_image
 from .basemap import get_basemap_image
 from .locator import get_locator_map_image
+from .ownership import get_ownership_map_image
+from .protection import get_protection_map_image
 from .raster import render_raster, extract_data_for_map
 from .summary_unit import get_summary_unit_map_image
 from .mercator import get_zoom, get_map_bounds, get_map_scale
@@ -36,8 +38,9 @@ urban_filename = src_dir / "threats/urban/urb_indexed_2060.tif"
 slr_filename = src_dir / "threats/slr/slr.vrt"
 
 
-async def render_mbgl_maps(*args):
-    return await asyncio.gather(*args)
+async def render_mbgl_maps(**kwargs):
+    results = await asyncio.gather(*kwargs.values())
+    return {key: result for key, result in zip(kwargs.keys(), results)}
 
 
 def render_raster_map(bounds, scale, basemap_image, aoi_image, id, path, colors):
@@ -97,7 +100,14 @@ async def render_raster_maps(
 
 
 async def render_maps(
-    bounds, geometry=None, summary_unit_id=None, indicators=None, urban=False, slr=False
+    bounds,
+    geometry=None,
+    summary_unit_id=None,
+    indicators=None,
+    urban=False,
+    slr=False,
+    ownership=False,
+    protection=False,
 ):
     """Render maps for locator and each raster dataset that overlaps with area
     of interest.
@@ -116,6 +126,10 @@ async def render_maps(
         If True, urban will be rendered.
     slr : bool, optional (default: False)
         If True, sea level rise will be rendered.
+    ownership : bool, optional (default: False)
+        If True, ownership will be rendered.
+    protection : bool, optional (default: False)
+        If True, ownership will be rendered.
 
     Returns
     -------
@@ -132,23 +146,42 @@ async def render_maps(
     bounds = get_map_bounds(center, zoom, WIDTH, HEIGHT)
     scale = get_map_scale(bounds, WIDTH)
 
+    tasks = {
+        "locator": get_locator_map_image(*center, bounds=bounds),
+        "basemap": get_basemap_image(center, zoom, WIDTH, HEIGHT),
+    }
+
     if geometry:
-        aoi_task = get_aoi_map_image(geometry, center, zoom, WIDTH, HEIGHT)
+        tasks["aoi"] = get_aoi_map_image(geometry, center, zoom, WIDTH, HEIGHT)
 
     elif summary_unit_id:
-        aoi_task = get_summary_unit_map_image(
+        tasks["aoi"] = get_summary_unit_map_image(
             summary_unit_id, center, zoom, WIDTH, HEIGHT
         )
 
-    tasks = [
-        get_locator_map_image(*center, bounds=bounds),
-        get_basemap_image(center, zoom, WIDTH, HEIGHT),
-        aoi_task,
-    ]
+    if ownership:
+        tasks["ownership"] = get_ownership_map_image(center, zoom, WIDTH, HEIGHT)
 
-    locator_image, basemap_image, aoi_image = await render_mbgl_maps(*tasks)
+    if protection:
+        tasks["protection"] = get_protection_map_image(center, zoom, WIDTH, HEIGHT)
 
-    maps["locator"] = to_base64(locator_image)
+    mbgl_maps = await render_mbgl_maps(**tasks)
+
+    maps["locator"] = to_base64(mbgl_maps["locator"])
+    basemap_image = mbgl_maps.get("basemap", None)
+    aoi_image = mbgl_maps.get("aoi", None)
+
+    ownership_image = mbgl_maps.get("ownership", None)
+    if ownership_image is not None:
+        maps["ownership"] = to_base64(
+            merge_maps([basemap_image, mbgl_maps["ownership"], aoi_image])
+        )
+
+    protection_image = mbgl_maps.get("protection", None)
+    if protection_image is not None:
+        maps["protection"] = to_base64(
+            merge_maps([basemap_image, mbgl_maps["protection"], aoi_image])
+        )
 
     if basemap_image is None:
         # no point in generating other maps, since people won't be able to see where they are

@@ -15,9 +15,9 @@ from api.report.map import render_maps
 from api.stats import SummaryUnits, CustomArea
 
 
-# aoi_names = ["Razor", "Groton_all"]
+aoi_names = ["Razor", "Groton_all"]
 # aoi_names = ["ACF_area"]
-aoi_names = ["NC"]
+# aoi_names = ["NC"]
 
 for aoi_name in aoi_names:
     print(f"Making maps for {aoi_name}...")
@@ -42,6 +42,8 @@ for aoi_name in aoi_names:
 
     has_urban = "urban" in results
     has_slr = "slr" in results
+    has_ownership = "ownership" in results
+    has_protection = "protection" in results
 
     print("Creating maps...")
 
@@ -51,6 +53,8 @@ for aoi_name in aoi_names:
         indicators=results["indicators"],
         urban=has_urban,
         slr=has_slr,
+        ownership=has_ownership,
+        protection=has_protection,
     )
 
     maps, scale = asyncio.run(task)
@@ -85,6 +89,8 @@ for summary_type in ids:
 
         has_urban = "urban" in results
         has_slr = "slr" in results
+        has_ownership = "ownership" in results
+        has_protection = "protection" in results
 
         out_dir = Path(f"/tmp/{id}/maps")
         if not out_dir.exists():
@@ -96,6 +102,8 @@ for summary_type in ids:
             indicators=results["indicators"],
             urban=has_urban,
             slr=has_slr,
+            ownership=has_ownership,
+            protection=has_protection,
         )
 
         maps, scale = asyncio.run(task)

@@ -361,7 +361,7 @@ table tr.above-threshold td {
 .flex.flex-column {
     flex-direction: column;
 }
-.flex.flex-grow {
+.flex-grow {
     flex-grow: 1;
 }
 .flex.flex-no-shrink {
@@ -370,6 +370,11 @@ table tr.above-threshold td {
 
 .small {
     font-size: 8pt;
+    line-height: 1;
+}
+
+.tiny {
+    font-size: 6pt;
     line-height: 1;
 }
 
@@ -427,7 +432,8 @@ table tr.above-threshold td {
     height: 28pt;
 }
 
-.indicator + .indicator {
+.indicator + .indicator,
+.ownership-section + .ownership-section {
     break-before: always;
 }
 
