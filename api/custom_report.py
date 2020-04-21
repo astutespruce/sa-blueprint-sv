@@ -16,6 +16,7 @@ from api.report.map import render_maps
 from api.report import create_report
 from api.settings import LOGGING_LEVEL, TEMP_DIR
 from api.stats import CustomArea
+from api.progress import set_progress
 
 from util.pygeos_util import to_crs
 from constants import DATA_CRS, GEO_CRS
@@ -28,10 +29,14 @@ log.setLevel(LOGGING_LEVEL)
 
 
 async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
+    await set_progress(ctx["job_id"], 0)
+
     path = f"/vsizip/{zip_filename}/{dataset}"
 
     df = pio.read_dataframe(path, layer=layer, as_pygeos=True)
     geometry = pg.make_valid(df.geometry)
+
+    await set_progress(ctx["job_id"], 5)
 
     # dissolve
     geometry = np.asarray([pg.union_all(geometry)])
@@ -45,6 +50,8 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
             "Bounds must be < 10 degrees latitude or longitude on edge."
         )
 
+    await set_progress(ctx["job_id"], 10)
+
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
     results = CustomArea(geometry, df.crs, name).get_results()
@@ -57,6 +64,8 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
     has_ownership = "ownership" in results
     has_protection = "protection" in results
 
+    await set_progress(ctx["job_id"], 25)
+
     print("Rendering maps...")
     maps, scale = await render_maps(
         bounds,
@@ -68,9 +77,13 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
         protection=has_protection,
     )
 
+    await set_progress(ctx["job_id"], 50)
+
     results["scale"] = scale
 
     pdf = create_report(maps=maps, results=results)
+
+    await set_progress(ctx["job_id"], 95)
 
     fp, name = tempfile.mkstemp(suffix=".pdf", dir=TEMP_DIR)
     with open(fp, "wb") as out:

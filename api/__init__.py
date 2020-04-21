@@ -2,7 +2,6 @@
 TODO:
 * validate max size (on nginx side)
 * add CORS support (either here or nginx)
-* background task:
 """
 
 import logging
@@ -33,6 +32,7 @@ from api.errors import DataError
 from api.geo import get_dataset
 from api.custom_report import create_custom_report
 from api.settings import LOGGING_LEVEL, REDIS, API_TOKEN, TEMP_DIR
+from api.progress import get_progress
 
 
 log = logging.getLogger(__name__)
@@ -144,7 +144,8 @@ async def job_status_endpoint(job_id: str):
         raise HTTPException(status_code=404, detail="Job not found")
 
     if status != JobStatus.complete:
-        return {"status": status}
+        progress = await get_progress(job_id)
+        return {"status": status, "progress": progress}
 
     info = await job.result_info()
 

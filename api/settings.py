@@ -17,5 +17,12 @@ REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 REDIS = RedisSettings(host=REDIS_HOST, port=REDIS_PORT)
 
 
+# retain files for 4 hours
+FILE_RETENTION = 14400
+
+# time jobs out after 10 minutes
+JOB_TIMEOUT = 600
+
+
 if not TEMP_DIR.exists():
     os.makedirs(TEMP_DIR)
