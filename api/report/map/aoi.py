@@ -6,7 +6,7 @@ import httpx
 import pygeos as pg
 from PIL import Image
 
-from settings import MBGL_SERVER_URL
+from api.settings import MBGL_SERVER_URL
 from util.pygeos_util import to_dict
 
 

@@ -76,16 +76,63 @@ tippecanoe -f -pg -z 15 -o ./tiles/ownership.mbtiles -l "ownership" ./data/bound
 tile-join -f -o ./tiles/sa_units.mbtiles ./tiles/sa_mask.mbtiles ./tiles/units.mbtiles
 ```
 
-## API
-
-To start the API in development mode:
-
-```
-uvicorn api:app --reload
-```
-
-## Installation
+## Installation issues
 
 Weasyprint is used to generate PDF files. It depends on `cairocffi` which sometimes does not install correctly.
 
 Run `pip install --no-cache-dir cairocffi` to correctly install it.
+
+## API
+
+### Starting background jobs and API server
+
+Background jobs use `arq` which relies on `redis` installed on the host.
+
+On MacOS, start `redis`:
+
+```
+redis-server /usr/local/etc/redis.conf
+```
+
+To start `arq` with reload capability:
+
+```
+arq api.worker.WorkerSettings --watch ./api
+```
+
+To start the API in development mode:
+
+```
+uvicorn api:app --reload --port 5000
+```
+
+### API requests
+
+To make custom report requests using HTTPie:
+
+```
+http -f POST :5000/api/reports/custom/ name="<area name>" token=="<token from .env>" file@<filename>.zip
+```
+
+This creates a background job and returns:
+
+```
+{
+    "job": "<job_id>"
+}
+```
+
+To query job status:
+
+```
+http :5000/reports/status/<job_id>
+```
+
+To download PDF from a successful job:
+
+```
+http :5000/reports/results/<job_id>
+```
+
+This sets the `Content-Type` header to attachment and uses the passed-in name
+for the filename.

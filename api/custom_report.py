@@ -3,21 +3,31 @@
 TODO:
 * wrap in try / except
 """
+import logging
 from pathlib import Path
+import tempfile
 
 import numpy as np
 import pyogrio as pio
 import pygeos as pg
 
+from api.errors import DataError
 from api.report.map import render_maps
 from api.report import create_report
+from api.settings import LOGGING_LEVEL, TEMP_DIR
 from api.stats import CustomArea
 
 from util.pygeos_util import to_crs
 from constants import DATA_CRS, GEO_CRS
 
+MAX_DIM = 5  # degrees
 
-async def create_custom_report(zip_filename, dataset, layer, name):
+
+log = logging.getLogger(__name__)
+log.setLevel(LOGGING_LEVEL)
+
+
+async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
     path = f"/vsizip/{zip_filename}/{dataset}"
 
     df = pio.read_dataframe(path, layer=layer, as_pygeos=True)
@@ -26,25 +36,31 @@ async def create_custom_report(zip_filename, dataset, layer, name):
     # dissolve
     geometry = np.asarray([pg.union_all(geometry)])
 
+    geo_geometry = to_crs(geometry, df.crs, GEO_CRS)
+    bounds = pg.total_bounds(geo_geometry)
+
+    if (bounds[2] - bounds[0]) > MAX_DIM or (bounds[3] - bounds[1]) > MAX_DIM:
+        raise DataError(
+            "Bounds of area of interest is too large.  "
+            "Bounds must be < 10 degrees latitude or longitude on edge."
+        )
+
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
     results = CustomArea(geometry, df.crs, name).get_results()
 
     if results is None:
-        raise ValueError("Area of interest does not overlap South Atlantic Blueprint")
-
-    print("Rendering maps...")
-    geometry = to_crs(geometry, df.crs, GEO_CRS)
-    bounds = pg.total_bounds(geometry)
+        raise DataError("Area of interest does not overlap South Atlantic Blueprint")
 
     has_urban = "urban" in results
     has_slr = "slr" in results
     has_ownership = "ownership" in results
     has_protection = "protection" in results
 
+    print("Rendering maps...")
     maps, scale = await render_maps(
         bounds,
-        geometry=geometry[0],
+        geometry=geo_geometry[0],
         indicators=results["indicators"],
         urban=has_urban,
         slr=has_slr,
@@ -54,4 +70,12 @@ async def create_custom_report(zip_filename, dataset, layer, name):
 
     results["scale"] = scale
 
-    return create_report(maps=maps, results=results)
+    pdf = create_report(maps=maps, results=results)
+
+    fp, name = tempfile.mkstemp(suffix=".pdf", dir=TEMP_DIR)
+    with open(fp, "wb") as out:
+        out.write(pdf)
+
+    log.debug(f"Created PDF at: {name}")
+
+    return name

@@ -30,7 +30,6 @@ assets_dir = Path(__file__).parent / "templates/assets"
 
 
 def load_asset(path):
-    # data:image/svg+xml;
     prefix = ""
     data = ""
 
@@ -150,8 +149,8 @@ def create_report(maps, results):
 
     print("Creating report...")
 
-    if DEBUG:
-        with open("/tmp/test.html", "w") as out:
-            out.write(template.render(**context))
+    # if DEBUG:
+    #     with open("/tmp/test.html", "w") as out:
+    #         out.write(template.render(**context))
 
     return HTML(BytesIO((template.render(**context)).encode())).write_pdf()

@@ -5,7 +5,7 @@ import logging
 import httpx
 from PIL import Image
 
-from settings import MBGL_SERVER_URL
+from api.settings import MBGL_SERVER_URL
 
 
 log = logging.getLogger(__name__)

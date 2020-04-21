@@ -9,10 +9,12 @@ import logging
 from pathlib import Path
 import os
 import shutil
-from tempfile import NamedTemporaryFile
+import tempfile
 from zipfile import ZipFile
 
-from dotenv import load_dotenv
+import arq
+
+from arq.jobs import Job, JobStatus
 from fastapi import (
     FastAPI,
     File,
@@ -25,19 +27,18 @@ from fastapi import (
 )
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security.api_key import APIKeyQuery, APIKeyCookie, APIKeyHeader, APIKey
-from fastapi.responses import Response
+from fastapi.responses import Response, FileResponse
 
+from api.errors import DataError
 from api.geo import get_dataset
 from api.custom_report import create_custom_report
+from api.settings import LOGGING_LEVEL, REDIS, API_TOKEN, TEMP_DIR
 
-
-load_dotenv()
-TOKEN = os.getenv("API_TOKEN")
-LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "DEBUG")
 
 log = logging.getLogger(__name__)
 log.setLevel(LOGGING_LEVEL)
 
+### Create the main API app
 app = FastAPI()
 
 # Enable CORS
@@ -65,7 +66,7 @@ def get_token(token: str = Security(APIKeyQuery(name="token", auto_error=False))
     str
         returns token if it matches known TOKEN, otherwise raises HTTPException.
     """
-    if token == TOKEN:
+    if token == API_TOKEN:
         return token
 
     raise HTTPException(status_code=403, detail="Invalid token")
@@ -89,32 +90,24 @@ def save_file(file: UploadFile) -> Path:
     try:
         suffix = Path(file.filename).suffix
 
-        with NamedTemporaryFile(delete=False, suffix=suffix) as tmp:
-            shutil.copyfileobj(file.file, tmp)
-            tmp_path = Path(tmp.name)
+        fp, name = tempfile.mkstemp(suffix=suffix, dir=TEMP_DIR)
+        with open(fp, "wb") as out:
+            shutil.copyfileobj(file.file, out)
 
     finally:
+        # always close the file handle from the API handler
         file.file.close()
 
-    return tmp_path
+    return Path(name)
 
 
-def delete_file(path: str):
-    print(f"Deleting {path}...")
-    if path.exists():
-        path.unlink()
-
-
-@app.post("/report/custom/")
+@app.post("/api/reports/custom/")
 async def custom_report_endpoint(
-    background_tasks: BackgroundTasks,
     file: UploadFile = File(...),
     name: str = Form(...),
     token: APIKey = Depends(get_token),
 ):
     if file.content_type != "application/zip":
-        # TODO: enable support for application/x-7z-compressed?
-
         log.error(f"Invalid upload content type: {file.content_type}")
 
         raise HTTPException(
@@ -124,7 +117,6 @@ async def custom_report_endpoint(
 
     filename = save_file(file)
     log.debug(f"upload saved to: {filename}")
-    background_tasks.add_task(delete_file, filename)
 
     ### validate that upload has a shapefile or FGDB
     try:
@@ -133,16 +125,67 @@ async def custom_report_endpoint(
     except ValueError as ex:
         raise HTTPException(status_code=400, detail=str(ex))
 
-    ### create the report
-    try:
-        pdf = await create_custom_report(filename, dataset, layer, name)
-
-    except ValueError as ex:
-        raise HTTPException(status_code=400, detail=str(ex))
-
-    return Response(
-        content=pdf,
-        status_code=200,
-        media_type="application/pdf",
-        headers={"Content-Disposition": f"attachment;{name}.pdf"},
+    ### Create report task
+    redis = await arq.create_pool(REDIS)
+    job = await redis.enqueue_job(
+        "create_custom_report", filename, dataset, layer, name=name
     )
+
+    return {"job": job.job_id}
+
+
+@app.get("/api/reports/status/{job_id}")
+async def job_status_endpoint(job_id: str):
+    redis = await arq.create_pool(REDIS)
+    job = Job(job_id, redis=redis)
+    status = await job.status()
+
+    if status == JobStatus.not_found:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    if status != JobStatus.complete:
+        return {"status": status}
+
+    info = await job.result_info()
+
+    if info.success:
+        return {"status": "success", "report_url": f"/api/reports/results/{job_id}"}
+
+    status = "failed"
+
+    try:
+        # this re-raises the underlying exception raised in the worker
+        await job.result()
+
+    except DataError as ex:
+        message = str(ex)
+
+    # TODO: other specific exceptions
+
+    except Exception as ex:
+        log.error(ex)
+        message = "Server error"
+
+    return {"status": status, "message": message}
+
+
+@app.get("/api/reports/results/{job_id}")
+async def report_pdf_endpoint(job_id: str):
+    redis = await arq.create_pool(REDIS)
+    job = Job(job_id, redis=redis)
+    status = await job.status()
+
+    if status == JobStatus.not_found:
+        raise HTTPException(status_code=404, detail="Job not found")
+
+    if status != JobStatus.complete:
+        raise HTTPException(status_code=400, detail="Job not complete")
+
+    info = await job.result_info()
+    if not info.success:
+        raise HTTPException(status_code=400, detail="Job failed, cannot return results")
+
+    path = info.result
+    name = info.kwargs.get("name", "BlueprintSummary")
+
+    return FileResponse(path, filename=f"{name}.pdf", media_type="application/pdf")

@@ -7,6 +7,8 @@ verify_ssl = true
 black = "==19.3b0"
 pylint = "*"
 geofeather = {editable = true,path = "./../geofeather"}
+watchgod = "*"
+flake8 = "*"
 
 [packages]
 rasterio = "*"
@@ -25,6 +27,7 @@ weasyprint = "*"
 python-multipart = "*"
 uvicorn = "*"
 aiofiles = "*"
+arq = "*"
 
 [requires]
 python_version = "3.8"
