@@ -1,3 +1,3 @@
-import DropZone from "./DropZone"
+import UploadContainer from "./UploadContainer"
 
-export { DropZone }
+export { UploadContainer }

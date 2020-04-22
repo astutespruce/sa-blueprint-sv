@@ -1,4 +1,5 @@
 import React, { useCallback, useState } from "react"
+import PropTypes from "prop-types"
 import { useDropzone } from "react-dropzone"
 import { Alert, Box, Flex, Heading, Text } from "theme-ui"
 import { transparentize } from "@theme-ui/color"
@@ -7,15 +8,46 @@ import { Download, ExclamationTriangle } from "emotion-icons/fa-solid"
 const MAXSIZE_MB = 100
 
 const DropZone = () => {
-  const [invalidFiles, setInvalidFiles] = useState(null)
+  const [error, setError] = useState(null)
 
-  const onDrop = useCallback((acceptedFiles, rejectedFiles) => {
+  /**
+   * Validate the files provided by the user.
+   * They must be only one file, must be right MIME type and be less than the
+   * maximum size.
+   */
+  const handleDrop = useCallback((acceptedFiles, rejectedFiles) => {
     console.log("files", acceptedFiles, "rejected: ", rejectedFiles)
 
-    if (rejectedFiles) {
-      setInvalidFiles(rejectedFiles.map(d => d.name).join(", "))
+    if (rejectedFiles && rejectedFiles.length > 0) {
+      if (rejectedFiles.length > 1) {
+        setError(
+          `Multiple files not allowed: ${rejectedFiles
+            .map(d => d.name)
+            .join(", ")}`
+        )
+        return
+      }
+
+      const { name, size } = rejectedFiles[0]
+      const mb = size / 1e6
+      console.log("mb", mb)
+      if (mb >= MAXSIZE_MB) {
+        setError(
+          `File is too large: ${name} (${Math.round(mb).toLocaleString()} MB)`
+        )
+        return
+      }
+
+      setError(`File type supported: ${name}`)
+      return
+    }
+
+    if (acceptedFiles && acceptedFiles.length > 0) {
+      setError(null)
+      onDrop(acceptedFiles[0])
     }
   }, [])
+
   const {
     getRootProps,
     getInputProps,
@@ -23,9 +55,10 @@ const DropZone = () => {
     isDragAccept,
     isDragReject,
   } = useDropzone({
-    onDrop,
+    onDrop: handleDrop,
     accept: "application/zip",
     maxSize: MAXSIZE_MB * 1e6,
+    multiple: false,
   })
 
   let color = "grey.5"
@@ -49,10 +82,9 @@ const DropZone = () => {
           flexDirection: "column",
           alignItems: "center",
           justifyContent: "center",
+          width: "100%",
           p: "2rem",
-          maxWidth: "640px",
-          my: "1rem",
-          mx: "auto",
+          //   mt:
           cursor: "pointer",
           outline: "none",
           borderWidth: "2px",
@@ -71,22 +103,27 @@ const DropZone = () => {
           Zip file must contain all associated files for a shapefile (.shp,
           .prj, .dbf) or file geodatabase (.gdb).
           <br />
-          Max size: {MAXSIZE_MB} mb.
+          <br />
+          Max size: {MAXSIZE_MB} MB.
         </Text>
       </Flex>
 
-      {invalidFiles !== null && (
+      {error !== null && (
         <Alert variant="error" sx={{ maxWidth: "640px" }}>
           <ExclamationTriangle
             width="1.5rem"
             height="1.5rem"
             css={{ marginRight: "1rem", flex: "0 0 auto" }}
-          />{" "}
-          Not supported: {invalidFiles}
+          />
+          {error}
         </Alert>
       )}
     </Flex>
   )
+}
+
+DropZone.propTypes = {
+  onDrop: PropTypes.func.isRequired,
 }
 
 export default DropZone

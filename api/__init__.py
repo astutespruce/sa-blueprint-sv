@@ -31,7 +31,7 @@ from fastapi.responses import Response, FileResponse
 from api.errors import DataError
 from api.geo import get_dataset
 from api.custom_report import create_custom_report
-from api.settings import LOGGING_LEVEL, REDIS, API_TOKEN, TEMP_DIR
+from api.settings import LOGGING_LEVEL, REDIS, API_TOKEN, TEMP_DIR, ALLOWED_ORIGINS
 from api.progress import get_progress
 
 
@@ -41,13 +41,10 @@ log.setLevel(LOGGING_LEVEL)
 ### Create the main API app
 app = FastAPI()
 
-# Enable CORS
-# TODO: other allowed origins
-origins = ["http://localhost:8000"]
-
+### Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

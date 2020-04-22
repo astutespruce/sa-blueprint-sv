@@ -1,4 +1,5 @@
 export default {
+  breakpoints: ["40em", "56em", "64em"],
   colors: {
     text: "#333",
     background: "#fff",
@@ -30,6 +31,11 @@ export default {
     heading: 900,
     bold: 700,
   },
+  layout: {
+    container: {
+      maxWidth: "960px",
+    },
+  },
   text: {
     heading: {
       fontFamily: "heading",
@@ -45,6 +51,20 @@ export default {
     error: {
       color: "#FFF",
       bg: "error",
+    },
+  },
+  buttons: {
+    primary: {
+      cursor: "pointer",
+    },
+  },
+  forms: {
+    input: {
+      outline: "none",
+      borderColor: "grey.7",
+      "&:active,&:focus": {
+        borderColor: "primary",
+      },
     },
   },
   styles: {

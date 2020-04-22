@@ -8,6 +8,7 @@ module.exports = {
     description: `Provides custom reports for user-defined areas of interest`,
     author: `bcward@astutespruce.com`,
     apiToken: process.env.GATSBY_API_TOKEN,
+    apiHost: process.env.GATSBY_API_HOST,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,
@@ -19,13 +20,6 @@ module.exports = {
       },
     },
     `gatsby-plugin-theme-ui`,
-    // {
-    //   resolve: `gatsby-plugin-typography`,
-    //   options: {
-    //     pathToConfigModule: `./config/typography.js`,
-    //   },
-    // },
-    // `gatsby-plugin-emotion`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     // {
