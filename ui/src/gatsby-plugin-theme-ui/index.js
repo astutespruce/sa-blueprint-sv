@@ -1,3 +1,5 @@
+import { lighten } from "@theme-ui/color"
+
 export default {
   breakpoints: ["40em", "56em", "64em"],
   colors: {
@@ -57,6 +59,15 @@ export default {
     primary: {
       cursor: "pointer",
     },
+    secondary: {
+      cursor: "pointer",
+      color: "grey.9",
+      bg: "grey.1",
+    },
+    close: {
+      cursor: "pointer",
+      outline: "none",
+    },
   },
   forms: {
     input: {
@@ -66,6 +77,11 @@ export default {
         borderColor: "primary",
       },
     },
+  },
+  progress: {
+    color: "primary",
+    bg: "grey.2",
+    height: "1rem",
   },
   styles: {
     root: {
@@ -91,6 +107,10 @@ export default {
         variant: "text.heading",
         fontSize: [4, 5],
       },
+    },
+    hr: {
+      color: "grey.3",
+      my: "2rem",
     },
   },
 }

@@ -21,7 +21,7 @@ const Layout = ({ children, title }) => {
           {children}
         </Box>
       )}
-      {/* <Footer /> */}
+      <Footer />
     </Flex>
   )
 }

@@ -1,16 +1,29 @@
 import React, { useState, useCallback } from "react"
-import { Button, Container, Heading, Input, Progress } from "theme-ui"
+import {
+  Alert,
+  Box,
+  Close,
+  Container,
+  Heading,
+  Flex,
+  Progress,
+  Text,
+} from "theme-ui"
+import { ExclamationTriangle } from "emotion-icons/fa-solid"
 
 import uploadFile from "./upload"
-import DropZone from "./DropZone"
+import UploadForm from "./UploadForm"
 
 const UploadContainer = () => {
-  const [name, setName] = useState("")
-  const [file, setFile] = useState(null)
+  const [{ progress, hasError, inProgress }, setState] = useState({
+    progress: 0,
+    inProgress: false,
+    hasError: false,
+  })
 
-  const handleDrop = useCallback(file => {
-    setFile(file)
-
+  const handleCreateReport = useCallback((file, name) => {
+    console.log("Inputs", name, file.name)
+    setState(prevState => ({ ...prevState, inProgress: true, hasError: false }))
     // TODO: show filename to user, make them click an upload button
     // const request = uploadFile(file)
     // request
@@ -24,33 +37,42 @@ const UploadContainer = () => {
     //       // TODO: show progress and handle errors
   }, [])
 
-  const handleInputChange = useCallback(({ target: { value } }) => {
-    setName(value)
-  }, [])
+  const handleClearError = () => {
+    setState(prevState => ({ ...prevState, hasError: false }))
+  }
 
   return (
-    <Container>
-      <Heading as="h3" sx={{ mb: "0.5rem" }}>
-        Area Name:
-      </Heading>
-      <Input type="text" onChange={handleInputChange} />
+    <Container sx={{ py: "2rem" }}>
+      {inProgress ? (
+        <>
+          <Heading as="h3" sx={{ mb: "0.5rem" }}>
+            Creating report...
+          </Heading>
+          <Flex sx={{ alignItems: "center" }}>
+            <Progress variant="progress" max={100} value={progress}></Progress>
+            <Text sx={{ ml: "1rem" }}>{progress}%</Text>
+          </Flex>
+        </>
+      ) : (
+        <>
+          {hasError && (
+            <Alert variant="error" sx={{ mb: "2rem" }}>
+              <ExclamationTriangle
+                css={{
+                  width: "1rem",
+                  height: "1rem",
+                  margin: "0 0.5rem 0 0",
+                }}
+              />
+              Uh oh! There was an error! Please try again. If that doesn't work,
+              try a different file.
+              <Close ml="auto" mr={-2} onClick={handleClearError} />
+            </Alert>
+          )}
 
-      <Heading
-        as="h3"
-        sx={{
-          mt: "2rem",
-          mb: "0.5em",
-          display: "flex",
-          justifyContent: "space-between",
-        }}
-      >
-        <div>Upload Area of Interest:</div>
-        {file && <div>{file.name}</div>}
-      </Heading>
-
-      <DropZone onDrop={handleDrop} />
-
-      {/* <Button>Upload</Button> */}
+          <UploadForm onCreateReport={handleCreateReport} />
+        </>
+      )}
     </Container>
   )
 }

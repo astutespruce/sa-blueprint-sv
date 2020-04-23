@@ -1,7 +1,7 @@
 import styled from "@emotion/styled"
 
 const ImageCredits = styled.div`
-  font-size: smaller;
+  font-size: small;
   text-align: right;
   margin-right: 1rem;
   color: ${({ theme }) => theme.colors.grey[6]};

@@ -7,7 +7,7 @@ import { Download, ExclamationTriangle } from "emotion-icons/fa-solid"
 
 const MAXSIZE_MB = 100
 
-const DropZone = () => {
+const DropZone = ({ onDrop }) => {
   const [error, setError] = useState(null)
 
   /**
