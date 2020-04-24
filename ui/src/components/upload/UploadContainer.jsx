@@ -119,7 +119,7 @@ const UploadContainer = () => {
 
       {inProgress ? (
         <>
-          <Heading as="h3" sx={{ mb: "0.5rem" }}>
+          <Heading as="h2" sx={{ mb: "0.5rem" }}>
             Creating report...
           </Heading>
           <Flex sx={{ alignItems: "center" }}>

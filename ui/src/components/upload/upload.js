@@ -11,7 +11,7 @@ const uploadFile = async (file, name, onProgress) => {
   // NOTE: both file and name are required by API
   const formData = new FormData()
   formData.append("file", file)
-  formData.append("name", name || "Blueprint Summary Report")
+  formData.append("name", name)
 
   const response = await fetch(`${API}/custom?token=${apiToken}`, {
     method: "POST",

@@ -8,6 +8,7 @@ from pathlib import Path
 import os
 import shutil
 import tempfile
+from typing import Optional
 from zipfile import ZipFile
 
 import arq
@@ -127,7 +128,7 @@ def save_file(file: UploadFile) -> Path:
 @app.post("/api/reports/custom")
 async def custom_report_endpoint(
     file: UploadFile = File(...),
-    name: str = Form(...),
+    name: Optional[str] = Form(None),
     token: APIKey = Depends(get_token),
 ):
     if file.content_type != "application/zip":
@@ -233,6 +234,6 @@ async def report_pdf_endpoint(job_id: str):
         raise HTTPException(status_code=400, detail="Job failed, cannot return results")
 
     path = info.result
-    name = info.kwargs.get("name", "BlueprintSummary")
+    name = info.kwargs.get("name", None) or "Blueprint Summary Report"
 
     return FileResponse(path, filename=f"{name}.pdf", media_type="application/pdf")
