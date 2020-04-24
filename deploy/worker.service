@@ -1,0 +1,23 @@
+;NoNewPrivileges=true
+
+[Unit]
+Description=South Atlantic Blueprint API background task worker
+Documentation=https://github.com/brendan-ward/sa-reports
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Restart=on-failure
+RestartSec=60
+
+; User and group the process will run as.
+User=ubuntu
+Group=ubuntu
+
+WorkingDirectory=/home/ubuntu/app/sa-reports
+# Note: listens on port 8000
+ExecStart=/home/ubuntu/.local/bin/arq api.worker.WorkerSettings
+ExecReload=/bin/kill -USR1 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

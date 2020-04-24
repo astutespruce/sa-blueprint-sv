@@ -155,6 +155,7 @@ Enable them on restart:
 -   nginx
 -   redis
 -   api (gunicorn -> uvicorn)
+-   worker (background arq worker)
 -   renderer (mbgl-server)
 
 ---
