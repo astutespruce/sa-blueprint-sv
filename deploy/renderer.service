@@ -1,0 +1,22 @@
+;NoNewPrivileges=true
+
+[Unit]
+Description=South Atlantic Blueprint map renderer
+Documentation=https://github.com/consbio/mbgl-renderer
+After=network-online.target
+Wants=network-online.target systemd-networkd-wait-online.service
+
+[Service]
+Restart=on-failure
+RestartSec=60
+
+; User and group the process will run as.
+User=ubuntu
+Group=ubuntu
+
+WorkingDirectory=/home/ubuntu/app
+ExecStart=/home/ubuntu/app/node_modules/.bin/mbgl-server -p 8001 -t /home/ubuntu/app/sa-reports/tiles
+ExecReload=/bin/kill -USR1 $MAINPID
+
+[Install]
+WantedBy=multi-user.target

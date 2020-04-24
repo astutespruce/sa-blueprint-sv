@@ -46,7 +46,7 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
 
     if (bounds[2] - bounds[0]) > MAX_DIM or (bounds[3] - bounds[1]) > MAX_DIM:
         raise DataError(
-            "Bounds of area of interest is too large.  "
+            "bounds of area of interest are too large.  "
             "Bounds must be < 10 degrees latitude or longitude on edge."
         )
 
@@ -57,7 +57,7 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
     results = CustomArea(geometry, df.crs, name).get_results()
 
     if results is None:
-        raise DataError("Area of interest does not overlap South Atlantic Blueprint")
+        raise DataError("area of interest does not overlap South Atlantic Blueprint")
 
     if name:
         results["name"] = name

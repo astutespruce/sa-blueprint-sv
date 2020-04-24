@@ -23,6 +23,28 @@ States were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index
 
 Counties were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2018&layergroup=Counties+%28and+equivalent%29
 
+### Sea Level Rise
+
+Data were obtained from Amy Keister on 3/10/2020. She exported individual
+Geotiffs created from the source files created in her processing chain for
+mosiacking SLR data obtained from NOAA (https://coast.noaa.gov/slrdata/).
+
+Values are coded 0-6 for the amount of sea level rise that would impact a given
+area. Values are cumulative, so a value of 6 means that the area is also
+inundated by 1-5 meters.
+
+A VRT is created from the individual source TIF files using GDAL.
+
+From within `data/threats/slr` directory:
+
+```
+gdalbuildvrt -overwrite -resolution lowest slr.vrt *.tif
+```
+
+To assist with checking if a given area of interest overlaps SLR data, the
+bounds of all SLR files are extracted to a dataset using
+`util/extract_slr_bounds.py`.
+
 ## Tiles
 
 ### State boundaries
@@ -48,7 +70,7 @@ Summary units where consolidated using `util/prep_boundaries.py` then
 converted to vector tiles using tippecanoe:
 
 ```
-tippecanoe -f -pg -z 15 -o ./tiles/units.mbtiles -l "units" ./data/summary_units/units.geojson
+tippecanoe -f -pg -z 15 -o ./tiles/units.mbtiles -l "units" /tmp/units.geojson
 ```
 
 ### Region mask
@@ -56,7 +78,7 @@ tippecanoe -f -pg -z 15 -o ./tiles/units.mbtiles -l "units" ./data/summary_units
 Mask was created using `util/prep_boundaries.py` then converted to vector tiles using tippecanoe:
 
 ```
-tippecanoe -f -pg -z 8 -o ./tiles/sa_mask.mbtiles -l "mask" ./data/boundaries/mask.geojson
+tippecanoe -f -pg -z 8 -o ./tiles/sa_mask.mbtiles -l "mask" /tmp/mask.geojson
 ```
 
 ### Ownership
@@ -67,7 +89,7 @@ on 3/23/2020.
 Render to vector tiles:
 
 ```
-tippecanoe -f -pg -z 15 -o ./tiles/ownership.mbtiles -l "ownership" ./data/boundaries/ownership.geojson
+tippecanoe -f -pg -z 15 -o ./tiles/ownership.mbtiles -l "ownership" /tmp/ownership.geojson
 ```
 
 ### Merged tiles

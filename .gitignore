@@ -4,5 +4,10 @@
 
 .env
 
+/source_data/*
 /data/*
+/examples/*
 /tiles/*
+
+data.zip
+tiles.zip

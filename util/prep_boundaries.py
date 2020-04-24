@@ -12,32 +12,34 @@ from util.pygeos_util import to_pygeos, from_pygeos, sjoin, to_crs
 from constants import GEO_CRS, DATA_CRS
 
 ### Consolidate HUC12 and marine blocks and output as geojson
-working_dir = Path("data/summary_units")
+src_dir = Path("source_data/summary_units")
+out_dir = Path("data/summary_units")
 
-huc12 = from_geofeather(working_dir / "huc12_prj.feather")[
-    ["HUC12", "geometry"]
-].rename(columns={"HUC12": "id"})
-marine = from_geofeather(working_dir / "marine_blocks_prj.feather")[["id", "geometry"]]
+huc12 = from_geofeather(src_dir / "huc12_prj.feather")[["HUC12", "geometry"]].rename(
+    columns={"HUC12": "id"}
+)
+marine = from_geofeather(src_dir / "marine_blocks_prj.feather")[["id", "geometry"]]
 
 # TODO: simplify (slightly): try to get rid of overlaps between units
 
 # Create consolidated summary units file as WGS84
 df = huc12.append(marine, ignore_index=True, sort=False).reset_index(drop=True)
 df.geometry = to_crs(df.geometry, DATA_CRS, GEO_CRS)
-to_geofeather(df, working_dir / "units.feather", crs=GEO_CRS)
+to_geofeather(df, out_dir / "units.feather", crs=GEO_CRS)
 
 
 # Create GeoJSONSeq file for vector tiles
 # TODO: port to pyogrio
 df.geometry = from_pygeos(df.geometry)
 df = gp.GeoDataFrame(df, crs=GEO_CRS)
-df.to_file(working_dir / "units.geojson", driver="GeoJSONSeq")
+df.to_file("/tmp/units.geojson", driver="GeoJSONSeq")
 
 
 ### Create mask by cutting SA bounds out of arbitrarily large polygon
-working_dir = Path("data/boundaries")
+src_dir = Path("source_data/boundaries")
+out_dir = Path("data/boundaries")
 sa_bnd = pio.read_dataframe(
-    working_dir / "source/SALCCboundary.gdb", layer="SALCC_ACF", as_pygeos=True
+    src_dir / "source/SALCCboundary.gdb", layer="SALCC_ACF", as_pygeos=True
 )
 sa_bnd = to_crs(sa_bnd.geometry, sa_bnd.crs, GEO_CRS)
 
@@ -49,12 +51,12 @@ mask = from_pygeos(mask)
 
 # TODO: port to poygrio
 df = gp.GeoDataFrame({"geometry": mask}, crs=GEO_CRS)
-df.to_file(working_dir / "mask.geojson", driver="GeoJSONSeq")
+df.to_file("/tmp/mask.geojson", driver="GeoJSONSeq")
 
 
 ### Extract counties within SA bounds
 states = (
-    pio.read_dataframe(working_dir / "source/tl_2019_us_state.shp", as_pygeos=True)[
+    pio.read_dataframe(src_dir / "source/tl_2019_us_state.shp", as_pygeos=True)[
         ["STATEFP", "NAME"]
     ]
     .rename(columns={"NAME": "state"})
@@ -62,7 +64,7 @@ states = (
 )
 
 # coordinates are in geographic coordinates (NAD83 vs WGS84)
-df = pio.read_dataframe(working_dir / "source/tl_2018_us_county.shp", as_pygeos=True)
+df = pio.read_dataframe(src_dir / "source/tl_2018_us_county.shp", as_pygeos=True)
 crs = df.crs
 
 in_bnd = sjoin(df, pd.DataFrame({"geometry": sa_bnd}), how="inner")
@@ -76,7 +78,7 @@ df = df[["FIPS", "state", "county", "geometry"]].reset_index(drop=True)
 
 df["geometry"] = to_crs(df.geometry, crs, DATA_CRS)
 
-to_geofeather(df, working_dir / "counties.feather", crs=DATA_CRS)
+to_geofeather(df, out_dir / "counties.feather", crs=DATA_CRS)
 
 df["geometry"] = from_pygeos(df.geometry)
 
@@ -86,5 +88,5 @@ df["geometry"] = from_pygeos(df.geometry)
 
 
 ### Export protected areas to vector tiles
-df = from_geofeather_as_gp(working_dir / "ownership.feather")
-df.to_file(working_dir / "ownership.geojson", driver="GeoJSONSeq")
+df = from_geofeather_as_gp(out_dir / "ownership.feather")
+df.to_file("/tmp/ownership.geojson", driver="GeoJSONSeq")

@@ -1,9 +1,15 @@
+import { hasWindow } from "util/dom"
 import config from "../../../gatsby-config"
 
-const { apiHost, apiToken } = config.siteMetadata
+const { apiToken } = config.siteMetadata
+let { apiHost } = config.siteMetadata
 
 const pollInterval = 500 // milliseconds; 1 second
 const jobTimeout = 600000 // milliseconds; 10 minutes
+
+if (hasWindow && !apiHost) {
+  apiHost = window.location.host
+}
 
 const API = `//${apiHost}/api/reports`
 
