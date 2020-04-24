@@ -1,7 +1,6 @@
 """
 TODO:
 * validate max size (on nginx side)
-* add CORS support (either here or nginx)
 """
 
 import logging
@@ -26,6 +25,7 @@ from fastapi import (
 )
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security.api_key import APIKeyQuery, APIKeyCookie, APIKeyHeader, APIKey
+from fastapi.requests import Request
 from fastapi.responses import Response, FileResponse
 
 from api.errors import DataError
@@ -41,6 +41,31 @@ log.setLevel(LOGGING_LEVEL)
 ### Create the main API app
 app = FastAPI()
 
+
+async def catch_exceptions_middleware(request: Request, call_next):
+    """Middleware that wraps HTTP requests and catches exceptions.
+
+    These need to be caught here in order to ensure that the
+    CORS middleware is used for the response, otherwise the client
+    gets CORS related errors instead of the actual error.
+
+    Parameters
+    ----------
+    request : Request
+    call_next : func
+        next func in the chain to call
+    """
+    try:
+        return await call_next(request)
+
+    except Exception as ex:
+        log.error(f"Error processing request: {ex}")
+        return Response("Internal server error", status_code=500)
+
+
+app.middleware("http")(catch_exceptions_middleware)
+
+
 ### Enable CORS
 app.add_middleware(
     CORSMiddleware,
@@ -48,6 +73,7 @@ app.add_middleware(
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 
@@ -98,7 +124,7 @@ def save_file(file: UploadFile) -> Path:
     return Path(name)
 
 
-@app.post("/api/reports/custom/")
+@app.post("/api/reports/custom")
 async def custom_report_endpoint(
     file: UploadFile = File(...),
     name: str = Form(...),
@@ -123,16 +149,38 @@ async def custom_report_endpoint(
         raise HTTPException(status_code=400, detail=str(ex))
 
     ### Create report task
-    redis = await arq.create_pool(REDIS)
-    job = await redis.enqueue_job(
-        "create_custom_report", filename, dataset, layer, name=name
-    )
+    try:
+        redis = await arq.create_pool(REDIS)
+        job = await redis.enqueue_job(
+            "create_custom_report", filename, dataset, layer, name=name
+        )
+
+    except Exception as ex:
+        log.error(f"Error creating background task, is Redis offline?  {ex}")
+        raise HTTPException(status_code=500, detail="Internal server error")
 
     return {"job": job.job_id}
 
 
 @app.get("/api/reports/status/{job_id}")
 async def job_status_endpoint(job_id: str):
+    """Return the status of a job.
+
+    Job status values derived from JobStatus enum at:
+    https://github.com/samuelcolvin/arq/blob/master/arq/jobs.py
+    ['deferred', 'queued', 'in_progress', 'complete', 'not_found']
+
+    We add ['success', 'failed'] status values here.
+
+    Parameters
+    ----------
+    job_id : str
+
+    Returns
+    -------
+    JSON
+        {"status": "...", "progress": 0-100, "result": "...only if complete...", "detail": "...only if failed..."}
+    """
     redis = await arq.create_pool(REDIS)
     job = Job(job_id, redis=redis)
     status = await job.status()
@@ -147,7 +195,7 @@ async def job_status_endpoint(job_id: str):
     info = await job.result_info()
 
     if info.success:
-        return {"status": "success", "report_url": f"/api/reports/results/{job_id}"}
+        return {"status": "success", "result": f"/api/reports/results/{job_id}"}
 
     status = "failed"
 
@@ -162,9 +210,10 @@ async def job_status_endpoint(job_id: str):
 
     except Exception as ex:
         log.error(ex)
-        message = "Server error"
+        message = "Internal server error"
+        raise HTTPException(status_code=500, detail="Internal server error")
 
-    return {"status": status, "message": message}
+    return {"status": status, "detail": message}
 
 
 @app.get("/api/reports/results/{job_id}")

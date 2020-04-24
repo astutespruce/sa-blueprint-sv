@@ -7,6 +7,7 @@ module.exports = {
     title: `South Atlantic Conservation Blueprint - Report Generator`,
     description: `Provides custom reports for user-defined areas of interest`,
     author: `bcward@astutespruce.com`,
+    contactEmail: `hilary_morris@fws.gov`,
     apiToken: process.env.GATSBY_API_TOKEN,
     apiHost: process.env.GATSBY_API_HOST,
   },

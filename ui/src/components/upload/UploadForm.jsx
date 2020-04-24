@@ -4,12 +4,13 @@ import { Button, Flex, Heading, Input, Text, Divider } from "theme-ui"
 
 import DropZone from "./DropZone"
 
-const UploadForm = ({ onCreateReport }) => {
+const UploadForm = ({ onFileChange, onCreateReport }) => {
   const [name, setName] = useState("")
   const [file, setFile] = useState(null)
 
   const handleDrop = useCallback(file => {
     setFile(file)
+    onFileChange()
   }, [])
 
   const handleInputChange = useCallback(({ target: { value } }) => {
@@ -18,6 +19,7 @@ const UploadForm = ({ onCreateReport }) => {
 
   const handleResetFile = () => {
     setFile(null)
+    onFileChange()
   }
 
   const handleCreateReport = () => {
@@ -75,6 +77,7 @@ const UploadForm = ({ onCreateReport }) => {
 }
 
 UploadForm.propTypes = {
+  onFileChange: PropTypes.func.isRequired,
   onCreateReport: PropTypes.func.isRequired,
 }
 

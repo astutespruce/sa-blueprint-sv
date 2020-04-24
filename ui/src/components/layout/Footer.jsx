@@ -1,6 +1,10 @@
 import React from "react"
 import { Box, Link } from "theme-ui"
 
+import config from "../../../gatsby-config"
+
+const { contactEmail } = config.siteMetadata
+
 const Footer = () => {
   return (
     <Box
@@ -15,7 +19,7 @@ const Footer = () => {
       }}
     >
       Need help? We're happy to assist you with all your Blueprint needs. Please{" "}
-      <Link sx={{ color: "#FFF" }} href="mailto:hilary_morris@fws.gov">
+      <Link sx={{ color: "#FFF" }} href={`mailto:${contactEmail}`}>
         Contact Us
       </Link>
       .

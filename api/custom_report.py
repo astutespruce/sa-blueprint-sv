@@ -59,6 +59,9 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
     if results is None:
         raise DataError("Area of interest does not overlap South Atlantic Blueprint")
 
+    if name:
+        results["name"] = name
+
     has_urban = "urban" in results
     has_slr = "slr" in results
     has_ownership = "ownership" in results
@@ -77,7 +80,7 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
         protection=has_protection,
     )
 
-    await set_progress(ctx["job_id"], 50)
+    await set_progress(ctx["job_id"], 75)
 
     results["scale"] = scale
 
@@ -88,6 +91,8 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
     fp, name = tempfile.mkstemp(suffix=".pdf", dir=TEMP_DIR)
     with open(fp, "wb") as out:
         out.write(pdf)
+
+    await set_progress(ctx["job_id"], 100)
 
     log.debug(f"Created PDF at: {name}")
 

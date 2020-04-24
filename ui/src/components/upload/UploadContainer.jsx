@@ -4,45 +4,106 @@ import {
   Box,
   Close,
   Container,
+  Divider,
   Heading,
   Flex,
+  Link,
   Progress,
   Text,
 } from "theme-ui"
-import { ExclamationTriangle } from "emotion-icons/fa-solid"
+import { ExclamationTriangle, Download } from "emotion-icons/fa-solid"
 
-import uploadFile from "./upload"
+import { uploadFile } from "./upload"
 import UploadForm from "./UploadForm"
+import config from "../../../gatsby-config"
+
+const { contactEmail } = config.siteMetadata
 
 const UploadContainer = () => {
-  const [{ progress, hasError, inProgress }, setState] = useState({
+  const [{ reportURL, progress, error, inProgress }, setState] = useState({
+    reportURL: null,
     progress: 0,
     inProgress: false,
-    hasError: false,
+    error: null,
   })
 
-  const handleCreateReport = useCallback((file, name) => {
-    console.log("Inputs", name, file.name)
-    setState(prevState => ({ ...prevState, inProgress: true, hasError: false }))
-    // TODO: show filename to user, make them click an upload button
-    // const request = uploadFile(file)
-    // request
-    //   .then(success => {
-    //     console.log("Success uploading file", success)
-    //   })
-    //   .catch(error => {
-    //     console.error("Caught error uploading", error)
-    //   })
+  const handleCreateReport = useCallback(async (file, name) => {
+    console.log("name", name)
 
-    //       // TODO: show progress and handle errors
+    setState(prevState => ({
+      ...prevState,
+      inProgress: true,
+      progress: 0,
+      error: null,
+      reportURL: null,
+    }))
+    try {
+      const { error, result } = await uploadFile(file, name, progress => {
+        setState(prevState => ({ ...prevState, progress }))
+      })
+
+      if (error) {
+        console.error(error)
+        setState(prevState => ({
+          ...prevState,
+          inProgress: false,
+          progress: 0,
+          error,
+        }))
+        return
+      }
+
+      setState(prevState => ({
+        ...prevState,
+        progress: 100,
+        inProgress: false,
+        reportURL: result,
+      }))
+
+      window.location.href = result
+    } catch (ex) {
+      console.error("Caught unhandled error from uploadFile", ex)
+
+      setState(prevState => ({
+        ...prevState,
+        inProgress: false,
+        progress: 0,
+        error: "", // no meaningful error to show to user, but needs to be non-null
+      }))
+    }
   }, [])
 
   const handleClearError = () => {
-    setState(prevState => ({ ...prevState, hasError: false }))
+    setState(prevState => ({ ...prevState, error: null }))
   }
 
   return (
     <Container sx={{ py: "2rem" }}>
+      {reportURL != null && (
+        <Box sx={{ mb: "6rem" }}>
+          <Heading as="h3" sx={{ mb: "0.5rem" }}>
+            All done!
+          </Heading>
+          <Text>
+            Your report is now complete. It should download automatically.
+            <br />
+            <br />
+            You can also click the button below to download your report.
+          </Text>
+
+          <Link href={reportURL} target="_blank">
+            <Download
+              css={{ width: "1rem", height: "1rem", marginRight: "0.5rem" }}
+            />
+            Download report
+          </Link>
+
+          <Divider></Divider>
+
+          <Text>You can also create another report below.</Text>
+        </Box>
+      )}
+
       {inProgress ? (
         <>
           <Heading as="h3" sx={{ mb: "0.5rem" }}>
@@ -55,22 +116,44 @@ const UploadContainer = () => {
         </>
       ) : (
         <>
-          {hasError && (
-            <Alert variant="error" sx={{ mb: "2rem" }}>
+          {error != null && (
+            <Alert variant="error" sx={{ mt: "2rem", mb: "4rem", py: "1rem" }}>
               <ExclamationTriangle
                 css={{
-                  width: "1rem",
-                  height: "1rem",
-                  margin: "0 0.5rem 0 0",
+                  width: "2rem",
+                  height: "2rem",
+                  margin: "0 1rem 0 0",
                 }}
               />
-              Uh oh! There was an error! Please try again. If that doesn't work,
-              try a different file.
+              <Box>
+                Uh oh! There was an error!
+                <br />
+                {error ? (
+                  `The server says: ${error}`
+                ) : (
+                  <>
+                    <Text as="span">
+                      Please try again. If that doesn't work, try a different
+                      file or
+                    </Text>{" "}
+                    <Link
+                      sx={{ color: "#FFF" }}
+                      href={`mailto:${contactEmail}`}
+                    >
+                      Contact Us
+                    </Link>
+                    .
+                  </>
+                )}
+              </Box>
               <Close ml="auto" mr={-2} onClick={handleClearError} />
             </Alert>
           )}
 
-          <UploadForm onCreateReport={handleCreateReport} />
+          <UploadForm
+            onFileChange={handleClearError}
+            onCreateReport={handleCreateReport}
+          />
         </>
       )}
     </Container>

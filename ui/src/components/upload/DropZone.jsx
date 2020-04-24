@@ -1,26 +1,22 @@
-import React, { useCallback, useState } from "react"
+import React, { useCallback } from "react"
 import PropTypes from "prop-types"
 import { useDropzone } from "react-dropzone"
-import { Alert, Box, Flex, Heading, Text } from "theme-ui"
+import { Flex, Heading, Text } from "theme-ui"
 import { transparentize } from "@theme-ui/color"
-import { Download, ExclamationTriangle } from "emotion-icons/fa-solid"
+import { Download } from "emotion-icons/fa-solid"
 
 const MAXSIZE_MB = 100
 
 const DropZone = ({ onDrop }) => {
-  const [error, setError] = useState(null)
-
   /**
    * Validate the files provided by the user.
    * They must be only one file, must be right MIME type and be less than the
    * maximum size.
    */
   const handleDrop = useCallback((acceptedFiles, rejectedFiles) => {
-    console.log("files", acceptedFiles, "rejected: ", rejectedFiles)
-
     if (rejectedFiles && rejectedFiles.length > 0) {
       if (rejectedFiles.length > 1) {
-        setError(
+        alert(
           `Multiple files not allowed: ${rejectedFiles
             .map(d => d.name)
             .join(", ")}`
@@ -30,20 +26,18 @@ const DropZone = ({ onDrop }) => {
 
       const { name, size } = rejectedFiles[0]
       const mb = size / 1e6
-      console.log("mb", mb)
       if (mb >= MAXSIZE_MB) {
-        setError(
+        alert(
           `File is too large: ${name} (${Math.round(mb).toLocaleString()} MB)`
         )
         return
       }
 
-      setError(`File type supported: ${name}`)
+      alert(`File type not supported: ${name}`)
       return
     }
 
     if (acceptedFiles && acceptedFiles.length > 0) {
-      setError(null)
       onDrop(acceptedFiles[0])
     }
   }, [])
@@ -107,17 +101,6 @@ const DropZone = ({ onDrop }) => {
           Max size: {MAXSIZE_MB} MB.
         </Text>
       </Flex>
-
-      {error !== null && (
-        <Alert variant="error" sx={{ maxWidth: "640px" }}>
-          <ExclamationTriangle
-            width="1.5rem"
-            height="1.5rem"
-            css={{ marginRight: "1rem", flex: "0 0 auto" }}
-          />
-          {error}
-        </Alert>
-      )}
     </Flex>
   )
 }
