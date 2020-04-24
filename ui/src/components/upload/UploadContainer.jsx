@@ -11,11 +11,17 @@ import {
   Progress,
   Text,
 } from "theme-ui"
-import { ExclamationTriangle, Download } from "emotion-icons/fa-solid"
+import {
+  ExclamationTriangle,
+  Download,
+  CheckCircle,
+} from "emotion-icons/fa-solid"
 
 import { uploadFile } from "./upload"
 import UploadForm from "./UploadForm"
 import config from "../../../gatsby-config"
+import { ThemeContext } from "@emotion/core"
+import { useTheme } from "emotion-theming"
 
 const { contactEmail } = config.siteMetadata
 
@@ -24,7 +30,7 @@ const UploadContainer = () => {
     reportURL: null,
     progress: 0,
     inProgress: false,
-    error: null,
+    error: null, // if error is non-null, it indicates there was an error
   })
 
   const handleCreateReport = useCallback(async (file, name) => {
@@ -81,7 +87,14 @@ const UploadContainer = () => {
     <Container sx={{ py: "2rem" }}>
       {reportURL != null && (
         <Box sx={{ mb: "6rem" }}>
-          <Heading as="h3" sx={{ mb: "0.5rem" }}>
+          <Heading as="h2" sx={{ mb: "0.5rem" }}>
+            <CheckCircle
+              css={{
+                height: "1em",
+                width: "1em",
+                marginRight: "0.5rem",
+              }}
+            ></CheckCircle>
             All done!
           </Heading>
           <Text>
