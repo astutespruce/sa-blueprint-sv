@@ -42,7 +42,10 @@ sudo chmod 777 nodesource_setup.sh && sudo ./nodesource_setup.sh
 sudo apt-get install -y nodejs
 ```
 
-Install mbgl-renderer
+#### DOES NOT WORK: Install mbgl-renderer
+
+WARNING: this fails with a GL rendering exception. See docker approach below instead.
+
 Note: runs into permissions issues installing globally
 
 ```
@@ -53,6 +56,35 @@ Test that it starts up
 
 ```
 node_modules/.bin/mbgl-server
+```
+
+Test it with a `test.json` file:
+
+```
+node_modules/.bin/mbgl-render /tmp/test.json /tmp/test.png 100 100 -t sa-reports/tiles
+```
+
+Verify it doesn't segfault or throw rendering errors.
+
+#### Install docker for mbgl-renderer
+
+https://www.digitalocean.com/community/tutorials/how-to-install-and-use-docker-on-ubuntu-18-04
+
+```
+apt install -y apt-transport-https ca-certificates curl software-properties-common
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
+apt install -y docker-ce
+usermod -aG docker ${USER}
+```
+
+log out and log back in.
+
+Run the docker container with automatic restart:
+
+```
+docker pull consbio/mbgl-renderer:0.7.0
+docker run --restart unless-stopped -p 8001:80 -v /home/ubuntu/app/sa-reports/tiles:/app/tiles -d consbio/mbgl-renderer:0.7.0
 ```
 
 ### UI
@@ -148,7 +180,7 @@ Verify that each starts correctly:
 
 Enable them on restart:
 
--   `sudo systemctl <name>`
+-   `sudo systemctl enable <name>`
 
 ## Services that are running:
 
@@ -157,6 +189,8 @@ Enable them on restart:
 -   api (gunicorn -> uvicorn)
 -   worker (background arq worker)
 -   renderer (mbgl-server)
+
+XVFB must also be running in order to render maps.
 
 ---
 
@@ -169,8 +203,10 @@ apt install -y apt-transport-https ca-certificates curl software-properties-comm
 curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
 add-apt-repository "deb [arch=amd64] https://download.docker.com/linux/ubuntu bionic stable"
 apt install -y docker-ce
-usermod -aG docker ${USER}   # may need to manually specify user
+usermod -aG docker ${USER}
 ```
+
+log out and log back in.
 
 ### Dockerized setup
 

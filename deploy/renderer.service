@@ -3,8 +3,8 @@
 [Unit]
 Description=South Atlantic Blueprint map renderer
 Documentation=https://github.com/consbio/mbgl-renderer
-After=network-online.target
-Wants=network-online.target systemd-networkd-wait-online.service
+After=network-online.target xvfb.service
+Wants=network-online.target systemd-networkd-wait-online.service xvfb.service
 
 [Service]
 Restart=on-failure
