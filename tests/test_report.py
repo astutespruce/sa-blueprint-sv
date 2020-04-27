@@ -66,8 +66,8 @@ aois = [
         "name": "80-mile sourcing radius for Enviva’s Hamlet, NC plant",
         "path": "Enviva_Hamlet_80_mile_sourcing_radius",
     },
-    {"name": "North Carolina", "path": "NC"},
-    {"name": "South Atlantic Region", "path": "SA_boundary"},
+    # {"name": "North Carolina", "path": "NC"},
+    # {"name": "South Atlantic Region", "path": "SA_boundary"},
 ]
 
 

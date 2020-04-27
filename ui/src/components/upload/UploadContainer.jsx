@@ -17,6 +17,7 @@ import {
   CheckCircle,
 } from "emotion-icons/fa-solid"
 
+import { captureException } from "util/log"
 import { uploadFile } from "./upload"
 import UploadForm from "./UploadForm"
 import config from "../../../gatsby-config"
@@ -34,8 +35,6 @@ const UploadContainer = () => {
   })
 
   const handleCreateReport = useCallback(async (file, name) => {
-    console.log("name", name)
-
     setState(prevState => ({
       ...prevState,
       inProgress: true,
@@ -68,6 +67,7 @@ const UploadContainer = () => {
 
       window.location.href = result
     } catch (ex) {
+      captureException("File upload failed", ex)
       console.error("Caught unhandled error from uploadFile", ex)
 
       setState(prevState => ({

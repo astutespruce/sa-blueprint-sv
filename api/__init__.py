@@ -28,11 +28,20 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security.api_key import APIKeyQuery, APIKeyCookie, APIKeyHeader, APIKey
 from fastapi.requests import Request
 from fastapi.responses import Response, FileResponse
+import sentry_sdk
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 from api.errors import DataError
 from api.geo import get_dataset
 from api.custom_report import create_custom_report
-from api.settings import LOGGING_LEVEL, REDIS, API_TOKEN, TEMP_DIR, ALLOWED_ORIGINS
+from api.settings import (
+    LOGGING_LEVEL,
+    REDIS,
+    API_TOKEN,
+    TEMP_DIR,
+    ALLOWED_ORIGINS,
+    SENTRY_DSN,
+)
 from api.progress import get_progress
 
 
@@ -41,6 +50,11 @@ log.setLevel(LOGGING_LEVEL)
 
 ### Create the main API app
 app = FastAPI()
+
+if SENTRY_DSN:
+    log.info("setting up sentry")
+    sentry_sdk.init(dsn=SENTRY_DSN)
+    app.add_middleware(SentryAsgiMiddleware)
 
 
 async def catch_exceptions_middleware(request: Request, call_next):

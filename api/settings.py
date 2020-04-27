@@ -13,6 +13,7 @@ LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "DEBUG")
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "http://localhost:8000").split(",")
+SENTRY_DSN = os.getenv("SENTRY_DSN")
 
 REDIS = RedisSettings(host=REDIS_HOST, port=REDIS_PORT)
 

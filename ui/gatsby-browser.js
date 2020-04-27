@@ -1,7 +1,14 @@
-/**
- * Implement Gatsby's Browser APIs in this file.
- *
- * See: https://www.gatsbyjs.org/docs/browser-apis/
- */
+import * as Sentry from "@sentry/browser"
 
-// You can delete this file if you're not using it
+import { siteMetadata } from "./gatsby-config"
+
+const { sentryDSN } = siteMetadata
+
+export const onClientEntry = () => {
+  if (sentryDSN) {
+    Sentry.init({
+      dsn: sentryDSN,
+    })
+    window.Sentry = Sentry
+  }
+}

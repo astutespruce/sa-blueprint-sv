@@ -1,4 +1,5 @@
 import { hasWindow } from "util/dom"
+import { captureException } from "util/log"
 import config from "../../../gatsby-config"
 
 const { apiToken } = config.siteMetadata
@@ -24,15 +25,24 @@ const uploadFile = async (file, name, onProgress) => {
     body: formData,
   })
 
-  const { job, detail } = await response.json()
+  const json = await response.json()
+  const { job, detail } = json
 
   if (response.status == 400) {
     // indicates error with user request, show error to user
+
+    // just for logging
+    console.error("Bad upload request", json)
+    captureException("Bad upload request", json)
+
     return { error: detail }
   }
 
   if (response.status != 200) {
-    console.error("Bad response", response)
+    console.error("Bad response", json)
+
+    captureException("Bad upload response", json)
+
     throw new Error(response.statusText)
   }
 
@@ -48,14 +58,16 @@ const pollJob = async (jobId, onProgress) => {
       cache: "no-cache",
     })
 
+    const json = await response.json()
     const {
       status = null,
       progress = null,
       detail: error = null, // error message
       result = null,
-    } = await response.json()
+    } = json
 
     if (response.status != 200 || status === "failed") {
+      captureException("Report job failed", json)
       if (error) {
         return { error }
       }
@@ -77,6 +89,8 @@ const pollJob = async (jobId, onProgress) => {
   }
 
   // if we got here, it meant that we hit a timeout error
+  captureException("Report job timed out")
+
   return {
     error:
       "timeout while creating report.  Your area of interest may be too big.",

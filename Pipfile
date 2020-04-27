@@ -28,6 +28,7 @@ python-multipart = "*"
 uvicorn = "*"
 aiofiles = "*"
 arq = "*"
+sentry-sdk = "*"
 
 [requires]
 python_version = "3.8"
