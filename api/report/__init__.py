@@ -8,7 +8,7 @@ from pathlib import Path
 from weasyprint import HTML
 from jinja2 import Environment, FileSystemLoader
 
-from constants import (
+from analysis.constants import (
     BLUEPRINT,
     ECOSYSTEMS,
     INDICATORS_INDEX,
@@ -19,7 +19,7 @@ from constants import (
     PROTECTION,
     DEBUG,
 )
-from util.format import format_number as format_number
+from api.report.format import format_number
 
 
 def reverse_filter(iterable):

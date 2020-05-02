@@ -12,10 +12,10 @@ from pyogrio import read_dataframe
 
 from api.report import create_report
 from api.report.map import render_maps
-from constants import BLUEPRINT, INDICATORS, GEO_CRS, DATA_CRS
-from util.format import format_number
+from analysis.constants import BLUEPRINT, INDICATORS, GEO_CRS, DATA_CRS
+from api.report.format import format_number
 from api.stats import SummaryUnits, CustomArea
-from util.pygeos_util import to_crs
+from analysis.pygeos_util import to_crs
 
 
 # if True, cache maps if not previously created, then reuse

@@ -4,7 +4,7 @@ from rasterio.features import rasterize
 import numpy as np
 import pyogrio as pio
 
-from util.pygeos_util import to_dict_all
+from analysis.pygeos_util import to_dict_all
 
 src_dir = Path("data")
 

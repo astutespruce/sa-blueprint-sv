@@ -13,8 +13,8 @@ import pygeos as pg
 import rasterio
 from rasterio.mask import raster_geometry_mask
 
-from util.io import write_raster
-from util.pygeos_util import (
+from analysis.io import write_raster
+from analysis.pygeos_util import (
     to_crs,
     to_pygeos,
     sjoin,
@@ -22,8 +22,15 @@ from util.pygeos_util import (
     sjoin_geometry,
     intersection,
 )
-from constants import BLUEPRINT, INDICATORS, URBAN_YEARS, DATA_CRS, GEO_CRS, M2_ACRES
-from stats import (
+from analysis.constants import (
+    BLUEPRINT,
+    INDICATORS,
+    URBAN_YEARS,
+    DATA_CRS,
+    GEO_CRS,
+    M2_ACRES,
+)
+from analysis.stats import (
     extract_count_in_geometry,
     extract_blueprint_indicator_area,
     extract_urbanization_area,

@@ -6,10 +6,9 @@ import pyogrio as pio
 from geofeather.pygeos import from_geofeather, to_geofeather
 from geofeather import from_geofeather as from_geofeather_as_gp
 
-# from geofeather.pygeos import to_geofeather as to_geofeather_from_pygeos
+from analysis.constants import GEO_CRS, DATA_CRS
+from analysis.pygeos_util import to_pygeos, from_pygeos, sjoin, to_crs
 
-from util.pygeos_util import to_pygeos, from_pygeos, sjoin, to_crs
-from constants import GEO_CRS, DATA_CRS
 
 ### Consolidate HUC12 and marine blocks and output as geojson
 src_dir = Path("source_data/summary_units")

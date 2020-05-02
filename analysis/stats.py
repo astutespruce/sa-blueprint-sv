@@ -5,7 +5,7 @@ import pandas as pd
 import rasterio
 from rasterio.mask import raster_geometry_mask
 
-from constants import (
+from analysis.constants import (
     BLUEPRINT,
     ECOSYSTEMS,
     INDICATORS,
