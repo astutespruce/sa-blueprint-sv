@@ -1,12 +1,13 @@
 {
-  "name": "sa-reports",
+  "name": "sa-blueprint-sv",
   "private": true,
-  "description": "South Atlantic Conservation Blueprint - Report Generator",
+  "description": "South Atlantic Conservation Blueprint Simple Viewer",
   "version": "0.1.0",
   "author": "Brendan Ward <bcward@astutespruce.com>",
   "dependencies": {
     "@emotion/core": "^10.0.28",
     "@emotion/styled": "^10.0.27",
+    "@mapbox/geo-viewport": "^0.4.0",
     "@rebass/preset": "^4.0.5",
     "@sentry/browser": "^5.15.5",
     "@theme-ui/color": "^0.3.1",
@@ -24,6 +25,7 @@
     "gatsby-plugin-theme-ui": "^0.3.0",
     "gatsby-source-filesystem": "^2.2.2",
     "gatsby-transformer-sharp": "^2.4.3",
+    "mapbox-gl": "^1.10.0",
     "prop-types": "^15.7.2",
     "react": "^16.12.0",
     "react-dom": "^16.12.0",

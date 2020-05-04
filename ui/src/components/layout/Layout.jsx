@@ -6,7 +6,7 @@ import { isUnsupported } from "util/dom"
 import UnsupportedBrowser from "./UnsupportedBrowser"
 import SEO from "./SEO"
 import Header from "./Header"
-import Footer from "./Footer"
+// import Footer from "./Footer"
 import { siteMetadata } from "../../../gatsby-config"
 
 const Layout = ({ children, title }) => {
@@ -21,7 +21,7 @@ const Layout = ({ children, title }) => {
           {children}
         </Box>
       )}
-      <Footer />
+      {/* <Footer /> */}
     </Flex>
   )
 }

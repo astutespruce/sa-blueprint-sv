@@ -4,13 +4,14 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    title: `South Atlantic Conservation Blueprint - Report Generator`,
+    title: `South Atlantic Conservation Blueprint 2.x`,
     description: `Provides custom reports for user-defined areas of interest`,
-    author: `bcward@astutespruce.com`,
+    author: `South Atlantic Conservation Blueprint`,
     contactEmail: `hilary_morris@fws.gov`,
     apiToken: process.env.GATSBY_API_TOKEN,
     apiHost: process.env.GATSBY_API_HOST,
     sentryDSN: process.env.GATSBY_SENTRY_DSN,
+    mapboxToken: process.env.GATSBY_MAPBOX_API_TOKEN,
   },
   plugins: [
     `gatsby-plugin-react-helmet`,

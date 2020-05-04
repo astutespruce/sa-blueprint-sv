@@ -38,7 +38,7 @@ df.to_file("/tmp/units.geojson", driver="GeoJSONSeq")
 src_dir = Path("source_data/boundaries")
 out_dir = Path("data/boundaries")
 sa_bnd = pio.read_dataframe(
-    src_dir / "source/SALCCboundary.gdb", layer="SALCC_ACF", as_pygeos=True
+    src_dir / "SALCCboundary.gdb", layer="SALCC_ACF", as_pygeos=True
 )
 sa_bnd = to_crs(sa_bnd.geometry, sa_bnd.crs, GEO_CRS)
 
