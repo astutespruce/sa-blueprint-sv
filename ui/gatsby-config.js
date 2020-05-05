@@ -8,6 +8,7 @@ module.exports = {
     description: `Provides custom reports for user-defined areas of interest`,
     author: `South Atlantic Conservation Blueprint`,
     contactEmail: `hilary_morris@fws.gov`,
+    contactPhone: `19197070252`,
     apiToken: process.env.GATSBY_API_TOKEN,
     apiHost: process.env.GATSBY_API_HOST,
     sentryDSN: process.env.GATSBY_SENTRY_DSN,

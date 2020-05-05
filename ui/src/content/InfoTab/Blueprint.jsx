@@ -46,6 +46,7 @@ const Blueprint = () => {
                   borderRadius: "1rem",
                   bg: color,
                   mr: "0.5rem",
+                  flex: "0 0 auto",
                 }}
               />
               <Text as="div" sx={{ fontWeight: "bold" }}>
@@ -60,7 +61,7 @@ const Blueprint = () => {
             </Text>
           </Flex>
 
-          <Text as="p" sx={{ mb: "2rem", ml: "2rem" }}>
+          <Text as="p" sx={{ fontSize: [2, 1, 2], mb: "2rem", ml: "2rem" }}>
             {description}
           </Text>
         </Box>

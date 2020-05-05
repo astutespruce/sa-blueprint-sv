@@ -24,11 +24,20 @@ const MapContainer = () => {
           flexBasis: layout.sidebar.width,
           p: "1rem",
           overflowY: "auto",
+          borderRightColor: layout.sidebar.borderRightColor,
+          borderRightWidth: layout.sidebar.borderRightWidth,
+          borderRightStyle: "solid",
         }}
       >
         <InfoTab />
       </Box>
-      <Box sx={{ bg: "#AAA", flex: "1 1 auto", width: "100%" }} />
+      <Box
+        sx={{
+          background: "linear-gradient(0deg, #08AEEA 0%, #2AF598 100%)",
+          flex: "1 1 auto",
+          width: "100%",
+        }}
+      />
       {/* <Map /> */}
     </Flex>
   )

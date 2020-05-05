@@ -1,3 +1,5 @@
+import { darken } from "@theme-ui/color"
+
 export default {
   breakpoints: ["600px", "800px", "1200px"],
   colors: {
@@ -37,8 +39,8 @@ export default {
     },
     sidebar: {
       width: ["100%", "320px", "468px"],
-      borderRight: ["none", "1px solid"],
-      borderRightColor: "grey.5",
+      borderRightWidth: ["0px", "1px"],
+      borderRightColor: "grey.3",
     },
   },
   text: {
@@ -62,6 +64,9 @@ export default {
       bg: "error",
     },
   },
+  modal: {
+    background: "grey.9",
+  },
   buttons: {
     primary: {
       cursor: "pointer",
@@ -74,12 +79,25 @@ export default {
     close: {
       cursor: "pointer",
       outline: "none",
+      background: "none",
+      color: "grey.6",
+      cursor: "pointer",
+      "&:hover": { color: "grey.9" },
+    },
+    header: {
+      cursor: "pointer",
+      border: "1px solid #FFF",
+      p: "0.25em 0.5em",
+      marginLeft: "1rem",
+      "&:hover": {
+        bg: darken("primary", 0.05),
+      },
     },
   },
   forms: {
     input: {
       outline: "none",
-      borderColor: "grey.7",
+      borderColor: "grey.3",
       "&:active,&:focus": {
         borderColor: "primary",
       },
