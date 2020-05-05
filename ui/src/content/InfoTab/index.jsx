@@ -10,6 +10,7 @@ const InfoTab = () => {
   return (
     <>
       <Intro />
+      <Divider />
       <Blueprint />
       <Divider />
       <Instructions />

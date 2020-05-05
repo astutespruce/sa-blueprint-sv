@@ -2,6 +2,7 @@ import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import { Box, Flex, Heading, Text } from "theme-ui"
 
+import { PercentDonut } from "components/chart"
 import { extractNodes } from "util/graphql"
 
 const Blueprint = () => {
@@ -13,42 +14,53 @@ const Blueprint = () => {
             color
             label
             description
-            area
+            percent
           }
         }
       }
     }
   `).allBlueprintJson
 
-  // sort from highest to lowest
+  // sort from highest priority to lowest
   const priorities = extractNodes(query).reverse()
 
   return (
     <Box as="section" sx={{ mt: "2rem" }}>
-      <Heading as="h3">Blueprint Priorities</Heading>
+      <Heading as="h3" sx={{ mb: "0.5rem" }}>
+        Blueprint Priorities
+      </Heading>
 
-      {priorities.map(({ color, label, description, area }) => (
+      {priorities.map(({ color, label, description, percent }) => (
         <Box key={label}>
           <Flex
             sx={{
               justifyContent: "space-between",
               alignItems: "center",
-              color: label === "Medium priority" ? "#000" : "#FFF",
-              my: "0.5rem",
-              p: "0.5rem",
-              bg: color,
             }}
           >
-            <Text as="div" sx={{ fontWeight: "bold" }}>
-              {label}
-            </Text>
-
-            <Text as="div" sx={{ fontSize: [1, 0, 1], textAlign: "right" }}>
-              {area} of South Atlantic
+            <Flex sx={{ alignItems: "center" }}>
+              <Box
+                sx={{
+                  width: "1.5rem",
+                  height: "1.5rem",
+                  borderRadius: "1rem",
+                  bg: color,
+                  mr: "0.5rem",
+                }}
+              />
+              <Text as="div" sx={{ fontWeight: "bold" }}>
+                {label}
+              </Text>
+            </Flex>
+            <Text
+              as="div"
+              sx={{ fontSize: [1, 0, 1], color: "grey.8", textAlign: "right" }}
+            >
+              {percent}% of South Atlantic
             </Text>
           </Flex>
 
-          <Text as="p" sx={{ mb: "2rem" }}>
+          <Text as="p" sx={{ mb: "2rem", ml: "2rem" }}>
             {description}
           </Text>
         </Box>
