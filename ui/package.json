@@ -24,6 +24,7 @@
     "gatsby-plugin-sharp": "^2.5.3",
     "gatsby-plugin-theme-ui": "^0.3.0",
     "gatsby-source-filesystem": "^2.2.2",
+    "gatsby-transformer-json": "^2.4.0",
     "gatsby-transformer-sharp": "^2.4.3",
     "mapbox-gl": "^1.10.0",
     "prop-types": "^15.7.2",

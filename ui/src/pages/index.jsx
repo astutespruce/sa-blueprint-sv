@@ -5,7 +5,7 @@ import Layout from "components/layout"
 import { MapContainer } from "components/map"
 
 const IndexPage = () => (
-  <Layout>
+  <Layout overflowY="hidden">
     <MapContainer />
   </Layout>
 )

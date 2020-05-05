@@ -22,6 +22,21 @@ module.exports = {
         path: `${__dirname}/src/images`,
       },
     },
+    {
+      resolve: `gatsby-source-filesystem`,
+      options: {
+        name: `config`,
+        path: `${__dirname}/config`,
+      },
+    },
+    {
+      resolve: `gatsby-transformer-json`,
+      options: {
+        // name the top-level type after the filename
+        typeName: ({ node }) => `${node.name}Json`,
+      },
+    },
+
     `gatsby-plugin-theme-ui`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,

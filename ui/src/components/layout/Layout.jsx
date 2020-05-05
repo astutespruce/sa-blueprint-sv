@@ -9,7 +9,7 @@ import Header from "./Header"
 // import Footer from "./Footer"
 import { siteMetadata } from "../../../gatsby-config"
 
-const Layout = ({ children, title }) => {
+const Layout = ({ children, title, overflowY }) => {
   return (
     <Flex sx={{ height: "100%", flexDirection: "column" }}>
       <SEO title={title || siteMetadata.title} />
@@ -17,7 +17,7 @@ const Layout = ({ children, title }) => {
       {isUnsupported ? (
         <UnsupportedBrowser />
       ) : (
-        <Box sx={{ flex: "1 1 auto", overflowY: "auto", height: "100%" }}>
+        <Box sx={{ flex: "1 1 auto", overflowY, height: "100%" }}>
           {children}
         </Box>
       )}
@@ -29,10 +29,12 @@ const Layout = ({ children, title }) => {
 Layout.propTypes = {
   children: PropTypes.node.isRequired,
   title: PropTypes.string,
+  overflowY: PropTypes.string,
 }
 
 Layout.defaultProps = {
   title: "",
+  overflowY: "auto",
 }
 
 export default Layout

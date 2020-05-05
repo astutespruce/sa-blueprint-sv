@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import json
 
 # Set to True to output intermediate rasters for validation (uncomment in map.raster module)
 # Set to True to output /tmp/test.html for reports
@@ -15,49 +16,8 @@ M_MILES = 0.000621371
 
 
 # indexed by BP value
-BLUEPRINT = [
-    # 0:
-    {"label": "Not a priority", "area": "49%", "description": ""},
-    # 1:
-    {
-        "label": "Inland waterbodies",
-        "area": "1%",
-        "description": "These are lakes, reservoirs, and ponds not included in the Blueprint 2.2 priorities.",
-        "color": "#004DA8",
-    },
-    # 2:
-    {
-        "label": "Corridors",
-        "area": "5%",
-        "description": "These are connections between large patches of highest priority areas and secured lands, optimized for efficiency and indicator condition in a least cost path analysis.",
-        "report_description": "This category covers an additional 5% of the South Atlantic geography; in total, the Blueprint covers 50%.",
-        "color": "#686868",
-    },
-    # 3:
-    {
-        "label": "Medium priority",
-        "area": "20%",
-        "description": "Above-average areas for natural and cultural resources based on indicator condition, capturing potential restoration opportunities.",
-        "report_description": "This class covers 20% of the South Atlantic geography; together, the highest, high, and medium priority categories cover 45%.",
-        "color": "#fbb4b9",
-    },
-    # 4:
-    {
-        "label": "High priority",
-        "area": "15%",
-        "description": "Important areas for natural and cultural resources based on indicator condition.",
-        "report_description": "This class covers an additional 15% of the South Atlantic geography; together, the highest and high priority categories cover 25%.",
-        "color": "#c51b8a",
-    },
-    # 5:
-    {
-        "label": "Highest priority",
-        "area": "10%",
-        "description": "The most important areas for natural and cultural resources based on indicator condition.",
-        "report_description": "This class covers 10% of the South Atlantic geography.",
-        "color": "#49006a",
-    },
-]
+BLUEPRINT = json.loads("ui/config/blueprint.json")
+
 
 BLUEPRINT_COLORS = {
     i: entry["color"] for i, entry in enumerate(BLUEPRINT) if "color" in entry

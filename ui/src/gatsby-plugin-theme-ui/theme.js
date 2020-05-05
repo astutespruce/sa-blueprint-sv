@@ -9,16 +9,16 @@ export default {
     error: "#D04608",
     ok: "#259e06",
     grey: {
-      0: "#f8f9f9",
-      1: "#ebedee",
-      2: "#dee1e3",
-      3: "#cfd3d6",
-      4: "#bec4c8",
-      5: "#acb4b9",
-      6: "#97a1a7",
-      7: "#7f8a93",
-      8: "#5f6e78",
-      9: "#374047",
+      0: "#f9f9f9",
+      1: "#ededed",
+      2: "#e1e1e1",
+      3: "#d3d3d3",
+      4: "#c4c4c4",
+      5: "#b3b3b3",
+      6: "#a0a0a0",
+      7: "#898989",
+      8: "#6c6c6c",
+      9: "#3f3f3f",
     },
   },
   fonts: {
@@ -46,6 +46,10 @@ export default {
       fontFamily: "heading",
       fontWeight: "heading",
       lineHeight: "heading",
+    },
+    subheading: {
+      fontFamily: "body",
+      fontWeight: "normal",
     },
   },
   lineHeights: {
@@ -99,8 +103,22 @@ export default {
       fontFamily: "body",
       fontWeight: "body",
       lineHeight: "body",
+      a: {
+        color: "primary",
+        "&:visited": "primary",
+      },
       p: {
-        fontSize: [2, 3],
+        fontSize: 2,
+        color: "grey.8",
+      },
+      ul: {
+        margin: 0,
+        padding: "0 0 0 1rem",
+        color: "grey.8",
+        fontSize: 1,
+        "& li + li": {
+          mt: "0.5rem",
+        },
       },
       h1: {
         variant: "text.heading",
@@ -109,6 +127,9 @@ export default {
       h2: {
         variant: "text.heading",
         fontSize: [4, 5],
+      },
+      h4: {
+        variant: "text.subheading",
       },
     },
     hr: {
