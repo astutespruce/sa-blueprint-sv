@@ -39,7 +39,7 @@ const index = ({ children, title, onClose }) => {
 
       <Box
         sx={{
-          maxWidth: ["100%", "600px"],
+          maxWidth: ["100%", "500px"],
           p: "0.5rem",
           background: "#fff",
           zIndex: 2,

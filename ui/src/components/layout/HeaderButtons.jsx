@@ -1,12 +1,13 @@
 import React, { useState, useCallback } from "react"
-import { Button, Flex } from "theme-ui"
+import { Box, Button, Flex } from "theme-ui"
 import { CommentDots, Envelope, FileAlt } from "emotion-icons/fa-regular"
 
 import { Link } from "components/Link"
 import { Modal } from "components/Modal"
 import { Feedback, Contact } from "content/ContactTab"
 
-const iconCSS = { width: "1em", height: "1em", marginRight: "0.5em" }
+const iconCSS = { width: "1em", height: "1em" }
+const labelCSS = { marginLeft: "0.5rem", display: ["none", "none", "block"] }
 
 const buttonProps = {
   variant: "header",
@@ -56,18 +57,18 @@ const HeaderButtons = () => {
     <Flex sx={{ alignItems: "center", flex: "0 0 auto" }}>
       <Button {...buttonProps} onClick={openFeedback}>
         <CommentDots css={iconCSS} />
-        <div>Feedback</div>
+        <Box sx={{ ...labelCSS }}>Feedback</Box>
       </Button>
 
       <Button {...buttonProps} onClick={openContact}>
         <Envelope css={iconCSS} />
-        <div>Contact Staff</div>
+        <Box sx={{ ...labelCSS }}>Contact Staff</Box>
       </Button>
 
       <Link to="/custom_report">
         <Button {...buttonProps}>
           <FileAlt css={iconCSS} />
-          <div>Custom Report</div>
+          <Box sx={{ ...labelCSS }}>Custom Report</Box>
         </Button>
       </Link>
 

@@ -36,9 +36,13 @@ const Blueprint = () => {
             sx={{
               justifyContent: "space-between",
               alignItems: "center",
+              flexWrap: "wrap",
+              mb: "0.5rem",
             }}
           >
-            <Flex sx={{ alignItems: "center" }}>
+            <Flex
+              sx={{ alignItems: "center", width: ["100%", "100%", "auto"] }}
+            >
               <Box
                 sx={{
                   width: "1.5rem",
@@ -55,7 +59,12 @@ const Blueprint = () => {
             </Flex>
             <Text
               as="div"
-              sx={{ fontSize: [1, 0, 1], color: "grey.8", textAlign: "right" }}
+              sx={{
+                fontSize: [0, 0, 1],
+                color: "grey.8",
+                textAlign: ["left", "left", "right"],
+                ml: ["2rem", "2rem", 0],
+              }}
             >
               {percent}% of South Atlantic
             </Text>

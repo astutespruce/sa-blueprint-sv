@@ -4,8 +4,11 @@ import { Flex, Image, Heading } from "theme-ui"
 import { OutboundLink } from "components/Link"
 import LogoURL from "images/sa_logo.png"
 import HeaderButtons from "./HeaderButtons"
+import { useBreakpoints } from "./Breakpoints"
 
 const Header = () => {
+  const breakpoint = useBreakpoints()
+
   return (
     <Flex
       as="header"
@@ -86,8 +89,7 @@ const Header = () => {
           </Flex>
         </OutboundLink>
       </Flex>
-      {/* TODO: desktop only */}
-      <HeaderButtons />
+      {breakpoint >= 1 && <HeaderButtons />}
     </Flex>
   )
 }
