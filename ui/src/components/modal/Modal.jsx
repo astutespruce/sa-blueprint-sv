@@ -12,7 +12,7 @@ const absPostionCSS = {
   right: 0,
 }
 
-const index = ({ children, title, onClose }) => {
+const Modal = ({ children, title, width, onClose }) => {
   const handleClose = () => {
     onClose()
   }
@@ -39,12 +39,12 @@ const index = ({ children, title, onClose }) => {
 
       <Box
         sx={{
-          maxWidth: ["100%", "500px"],
+          width: ["100%", width],
           p: "0.5rem",
           background: "#fff",
           zIndex: 2,
-          borderRadius: "1rem",
-          boxShadow: "1px 1px 6px #000",
+          borderRadius: [0, "1rem"],
+          boxShadow: ["none", "1px 1px 6px #000"],
         }}
       >
         <Heading
@@ -84,10 +84,15 @@ const index = ({ children, title, onClose }) => {
   )
 }
 
-index.propTypes = {
+Modal.propTypes = {
   title: PropTypes.string.isRequired,
   children: PropTypes.node.isRequired,
   onClose: PropTypes.func.isRequired,
+  width: PropTypes.string,
 }
 
-export default index
+Modal.defaultProps = {
+  width: "500px",
+}
+
+export default Modal
