@@ -1,3 +1,5 @@
 import InfoTab from "./InfoTab"
+import ContactTab from "./ContactTab"
+import FindLocationTab from "./FindLocationTab"
 
-export { InfoTab }
+export { InfoTab, ContactTab, FindLocationTab }

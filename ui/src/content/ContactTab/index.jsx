@@ -1,5 +1,5 @@
 import React from "react"
-import { Box } from "theme-ui"
+import { Box, Heading } from "theme-ui"
 
 import Feedback from "./Feedback"
 import Contact from "./Contact"

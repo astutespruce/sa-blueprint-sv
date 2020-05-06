@@ -17,6 +17,13 @@ if (!mapboxToken) {
   )
 }
 
+// CSS props that control the responsive display of map widgets
+const mapWidgetCSS = {
+  ".mapboxgl-ctrl-zoom-in, .mapboxgl-ctrl-zoom-out, .mapboxgl-ctrl-compass": {
+    display: ["none", "inherit"],
+  },
+}
+
 const Map = ({}) => {
   // if there is no window, we cannot render this component
   if (!hasWindow) {
@@ -33,20 +40,6 @@ const Map = ({}) => {
   useEffect(() => {
     const { bounds, minZoom, maxZoom, styleIDs } = config
     const { center, zoom } = getCenterAndZoom(mapNode.current, bounds, 0.1)
-
-    // let mapCenter = center
-    // let mapZoom = zoom
-
-    // // If bounds are available, use these to establish center and zoom when map first loads
-    // if (bounds && bounds.length === 4) {
-    //   const { center: boundsCenter, zoom: boundsZoom } = getCenterAndZoom(
-    //     mapNode.current,
-    //     bounds,
-    //     padding
-    //   )
-    //   mapCenter = boundsCenter
-    //   mapZoom = boundsZoom
-    // }
 
     // Token must be set before constructing map
     mapboxgl.accessToken = mapboxToken
@@ -104,6 +97,7 @@ const Map = ({}) => {
         height: "100%",
         flex: "1 1 auto",
         position: "relative",
+        ...mapWidgetCSS,
       }}
     >
       <div ref={mapNode} style={{ width: "100%", height: "100%" }} />

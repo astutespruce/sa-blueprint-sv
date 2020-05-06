@@ -1,7 +1,7 @@
 import { darken } from "@theme-ui/color"
 
 export default {
-  breakpoints: ["600px", "800px", "1200px"],
+  breakpoints: ["600px", "800px", "1600px"],
   colors: {
     text: "#333",
     background: "#fff",
@@ -38,7 +38,7 @@ export default {
       maxWidth: "960px",
     },
     sidebar: {
-      width: ["100%", "320px", "468px"],
+      width: ["100%", "320px", "468px", "600px"],
       borderRightWidth: ["0px", "1px"],
       borderRightColor: "grey.3",
     },
@@ -107,6 +107,22 @@ export default {
     color: "primary",
     bg: "grey.2",
     height: "1rem",
+  },
+  tabs: {
+    default: {
+      color: "grey.7",
+    },
+    active: {
+      color: ["primary" || "text"],
+    },
+    mobile: {
+      color: "grey.1",
+      bg: "primary",
+    },
+    mobileActive: {
+      color: "#FFF",
+      bg: darken("primary", 0.05),
+    },
   },
   styles: {
     root: {
