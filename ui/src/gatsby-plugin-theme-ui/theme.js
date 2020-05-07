@@ -81,8 +81,13 @@ export default {
       outline: "none",
       background: "none",
       color: "grey.6",
-      cursor: "pointer",
       "&:hover": { color: "grey.9" },
+    },
+    mobileHeaderClose: {
+      cursor: "pointer",
+      outline: "none",
+      background: "none",
+      color: "grey.2",
     },
     header: {
       cursor: "pointer",

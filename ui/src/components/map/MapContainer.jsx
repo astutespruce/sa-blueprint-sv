@@ -1,11 +1,27 @@
-import React, { useState, useCallback } from "react"
-import { Box, Flex, useThemeUI } from "theme-ui"
+import React, { useState, useCallback, useEvent, useEffect } from "react"
+import { Box, Button, Text, Flex, useThemeUI } from "theme-ui"
 
 import { useBreakpoints } from "components/layout"
-import { InfoTab, ContactTab, FindLocationTab } from "content"
+import {
+  InfoTab,
+  ContactTab,
+  FindLocationTab,
+  PrioritiesTab,
+  IndicatorsTab,
+  ThreatsTab,
+  PartnersTab,
+} from "content"
 import { Tabs } from "components/tabs"
+import { MobileSelectedUnitHeader, MobileTabs } from "components/mobile"
 
 import Map from "./Map"
+
+const demoUnit = {
+  id: "030601060505",
+  name: "Middle Upper Three Runs",
+  acres: 34161,
+  blueprint: [31, 0, 0, 28, 21, 20],
+}
 
 const MapContainer = () => {
   const {
@@ -14,20 +30,53 @@ const MapContainer = () => {
 
   const breakpoint = useBreakpoints()
 
-  const [{ tab }, setState] = useState({
+  const [{ tab, selectedUnit }, setState] = useState({
     tab: breakpoint === 0 ? "map" : "info",
+    selectedUnit: null,
   })
 
+  // handle window resize from mobile to desktop, so that we show content again
+  // if map tab previously selected
+  useEffect(() => {
+    if (breakpoint > 0) {
+      const nextTab = tab === "map" ? "info" : "unit-priorities"
+      setState(prevState => ({ ...prevState, tab: nextTab }))
+    }
+  }, [breakpoint])
+
   const handleTabChange = useCallback(tab => {
-    console.log("Set tab", tab)
     setState(prevState => ({
       ...prevState,
       tab,
     }))
   })
+  const selectUnit = useCallback(unit => {
+    setState(({ tab: prevTab, ...prevState }) => {
+      let nextTab = prevTab
+      if (prevTab === "map") {
+        nextTab = "unit-map"
+      } else if (!prevTab.startsWith("unit-")) {
+        nextTab = "unit-priorities"
+      }
+      return {
+        ...prevState,
+        selectedUnit: unit,
+        tab: nextTab,
+      }
+    })
+  }, [])
+
+  const deselectUnit = useCallback(() => {
+    console.log("deselect", tab)
+    setState(({ tab: prevTab, ...prevState }) => ({
+      ...prevState,
+      selectedUnit: null,
+      tab: prevTab === "unit-map" ? "map" : "info",
+    }))
+  }, [])
 
   let content = null
-  if (breakpoint === 0) {
+  if (selectedUnit === null) {
     switch (tab) {
       case "info": {
         content = <InfoTab />
@@ -48,7 +97,29 @@ const MapContainer = () => {
       }
     }
   } else {
-    content = <InfoTab />
+    const { blueprint } = selectedUnit
+
+    switch (tab) {
+      case "priorities": {
+        content = <PrioritiesTab blueprint={blueprint} />
+        break
+      }
+      case "indicators": {
+        //   TODO: props
+        content = <IndicatorsTab />
+        break
+      }
+      case "threats": {
+        //   TODO: props
+        content = <ThreatsTab />
+        break
+      }
+      case "partners": {
+        //   TODO: props
+        content = <PartnersTab />
+        break
+      }
+    }
   }
 
   return (
@@ -58,6 +129,14 @@ const MapContainer = () => {
         flexDirection: "column",
       }}
     >
+      {/* Mobile header for selected unit */}
+      {breakpoint === 0 && selectedUnit !== null && (
+        <MobileSelectedUnitHeader
+          name={selectedUnit.name}
+          onClose={deselectUnit}
+        />
+      )}
+
       <Flex
         sx={{
           height: "100%",
@@ -86,6 +165,7 @@ const MapContainer = () => {
 
         {/* Map placeholder */}
         <Box
+          onClick={() => selectUnit(demoUnit)}
           sx={{
             background: "linear-gradient(0deg, #08AEEA 0%, #2AF598 100%)",
             flex: "1 1 auto",
@@ -103,16 +183,9 @@ const MapContainer = () => {
             borderTopColor: "grey.9",
           }}
         >
-          <Tabs
-            tabs={[
-              { id: "info", label: "Info" },
-              { id: "map", label: "Map" },
-              { id: "find", label: "Find Location" },
-              { id: "contact", label: "Contact" },
-            ]}
-            activeTab={tab}
-            activeVariant="tabs.mobileActive"
-            variant="tabs.mobile"
+          <MobileTabs
+            tab={tab}
+            hasSelectedUnit={selectedUnit !== null}
             onChange={handleTabChange}
           />
         </Box>

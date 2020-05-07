@@ -9,6 +9,10 @@ import {
   SearchLocation,
   QuestionCircle,
   Envelope,
+  SkullCrossbones,
+  ChartPie,
+  SlidersH,
+  UserFriends,
 } from "emotion-icons/fa-solid"
 
 const Icon = ({ name, ...props }) => {
@@ -16,7 +20,8 @@ const Icon = ({ name, ...props }) => {
     case "info": {
       return <InfoCircle {...props} />
     }
-    case "map": {
+    case "map":
+    case "unit-map": {
       return <Map {...props} />
     }
     case "find": {
@@ -24,6 +29,18 @@ const Icon = ({ name, ...props }) => {
     }
     case "contact": {
       return <Envelope {...props} />
+    }
+    case "unit-priorities": {
+      return <ChartPie {...props} />
+    }
+    case "unit-indicators": {
+      return <SlidersH {...props} />
+    }
+    case "unit-threats": {
+      return <SkullCrossbones {...props} />
+    }
+    case "unit-partners": {
+      return <UserFriends {...props} />
     }
     default: {
       // fallthrough to make sure we always get an icon

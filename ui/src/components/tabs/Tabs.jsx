@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback, useEffect } from "react"
 import PropTypes from "prop-types"
 
 import { Box, Flex, Grid, Text } from "theme-ui"
@@ -13,16 +13,14 @@ const defaultActiveStyle = {
   color: ["primary" || "text"],
 }
 
-const Tabs = ({
-  tabs,
-  activeTab,
-  activeStyle,
-  inactiveStyle,
-  variant,
-  activeVariant,
-  onChange,
-}) => {
+const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
   const [tab, setTab] = useState(activeTab || tabs[0].id)
+
+  useEffect(() => {
+    if (activeTab !== tab) {
+      setTab(activeTab)
+    }
+  }, [activeTab])
 
   const handleClick = useCallback(
     id => () => {
@@ -81,16 +79,12 @@ Tabs.propTypes = {
   ),
   onChange: PropTypes.func.isRequired,
   activeTab: PropTypes.string,
-  activeStyle: PropTypes.object,
-  inactiveStyle: PropTypes.object,
   variant: PropTypes.string,
   activeVariant: PropTypes.string,
 }
 
 Tabs.defaultProps = {
   activeTab: null,
-  activeStyle: null,
-  inactiveStyle: null,
   variant: PropTypes.string,
   activeVariant: PropTypes.string,
 }
