@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useEvent, useEffect } from "react"
+import React, { useState, useCallback, useRef, useEffect } from "react"
 import { Box, Button, Text, Flex, useThemeUI } from "theme-ui"
 
 import { useBreakpoints } from "components/layout"
@@ -12,7 +12,15 @@ import {
   PartnersTab,
 } from "content"
 import { Tabs } from "components/tabs"
-import { MobileSelectedUnitHeader, MobileTabs } from "components/mobile"
+import {
+  SelectedUnitHeader as MobileSelectedUnitHeader,
+  Tabs as MobileTabs,
+} from "components/layout/mobile"
+
+import {
+  SelectedUnitHeader as DesktopSelectedUnitHeader,
+  Tabs as DesktopTabs,
+} from "components/layout/desktop"
 
 import { inlandUnit as demoUnit } from "test/exampleUnits"
 
@@ -23,17 +31,25 @@ const MapContainer = () => {
     theme: { layout },
   } = useThemeUI()
 
+  // flag so we only do some things on initial loading
+  const isDuringLoad = useRef(true)
+
   const breakpoint = useBreakpoints()
+  const isMobile = breakpoint === 0
 
   const [{ tab, selectedUnit }, setState] = useState({
     tab: breakpoint === 0 ? "map" : "info",
     selectedUnit: null,
   })
 
+  useEffect(() => {
+    isDuringLoad.current = false
+  }, [])
+
   // handle window resize from mobile to desktop, so that we show content again
   // if map tab previously selected
   useEffect(() => {
-    if (breakpoint > 0) {
+    if (breakpoint > 0 && !isDuringLoad) {
       const nextTab = tab === "map" ? "info" : "unit-priorities"
       setState(prevState => ({ ...prevState, tab: nextTab }))
     }
@@ -65,7 +81,7 @@ const MapContainer = () => {
     setState(({ tab: prevTab, ...prevState }) => ({
       ...prevState,
       selectedUnit: null,
-      tab: prevTab === "unit-map" || breakpoint === 0 ? "map" : "info",
+      tab: prevTab === "unit-map" || isMobile ? "map" : "info",
     }))
   }, [])
 
@@ -133,7 +149,7 @@ const MapContainer = () => {
     }
   }
 
-  console.log("selected unit", selectedUnit)
+  console.log("selected unit", selectedUnit, "tab", tab)
 
   return (
     <Flex
@@ -143,13 +159,12 @@ const MapContainer = () => {
       }}
     >
       {/* Mobile header for selected unit */}
-      {breakpoint === 0 && selectedUnit !== null && (
+      {isMobile && selectedUnit !== null && (
         <MobileSelectedUnitHeader
           name={selectedUnit.name}
           onClose={deselectUnit}
         />
       )}
-
       <Flex
         sx={{
           height: "100%",
@@ -164,17 +179,41 @@ const MapContainer = () => {
             flexGrow: 1,
             flexShrink: 0,
             flexBasis: layout.sidebar.width,
-            py: "1.5rem",
-            pl: "1rem",
-            pr: "2rem",
-            overflowY: "auto",
             overflowX: "hidden",
+            overflowY: "hidden",
             borderRightColor: layout.sidebar.borderRightColor,
             borderRightWidth: layout.sidebar.borderRightWidth,
             borderRightStyle: "solid",
           }}
         >
-          {content}
+          {!isMobile && (
+            <>
+              {selectedUnit !== null && (
+                <DesktopSelectedUnitHeader
+                  name={selectedUnit.name}
+                  acres={selectedUnit.acres}
+                  onClose={deselectUnit}
+                />
+              )}
+              <DesktopTabs
+                tab={tab}
+                hasSelectedUnit={selectedUnit !== null}
+                onChange={handleTabChange}
+              />
+            </>
+          )}
+
+          <Box
+            sx={{
+              height: "100%",
+              overflowY: "auto",
+              py: "1.5rem",
+              pl: "1rem",
+              pr: "2rem",
+            }}
+          >
+            {content}
+          </Box>
         </Box>
 
         {/* Map placeholder */}
@@ -189,7 +228,8 @@ const MapContainer = () => {
         {/* <Map /> */}
       </Flex>
 
-      {breakpoint === 0 && (
+      {/* Mobile footer tabs */}
+      {isMobile && (
         <Box
           sx={{
             flex: "0 0 auto",

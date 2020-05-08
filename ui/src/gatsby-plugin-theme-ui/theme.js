@@ -80,7 +80,7 @@ export default {
       cursor: "pointer",
       outline: "none",
       background: "none",
-      color: "grey.6",
+      color: "grey.5",
       "&:hover": { color: "grey.9" },
     },
     mobileHeaderClose: {
@@ -115,16 +115,33 @@ export default {
   },
   tabs: {
     default: {
+      cursor: "pointer",
       color: "grey.7",
+      bg: "grey.1",
+      borderBottom: "1px solid",
+      borderBottomColor: "grey.6",
+      borderTop: "1px solid",
+      borderTopColor: "transparent",
     },
     active: {
-      color: ["primary" || "text"],
+      cursor: "pointer",
+      color: "text",
+      bg: "#FFF",
+      borderBottom: "1px solid #FFF",
+      borderLeft: "1px solid",
+      borderLeftColor: "grey.3",
+      borderRight: "1px solid",
+      borderRightColor: "grey.3",
+      borderTop: "1px solid",
+      borderTopColor: "grey.3",
     },
     mobile: {
+      cursor: "pointer",
       color: "grey.1",
       bg: "primary",
     },
     mobileActive: {
+      cursor: "pointer",
       color: "#FFF",
       bg: darken("primary", 0.05),
     },

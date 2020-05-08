@@ -24,7 +24,6 @@ const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
 
   const handleClick = useCallback(
     id => () => {
-      if (id === tab) return
       setTab(() => id)
       onChange(id)
     },
@@ -39,7 +38,7 @@ const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
       sx={{
         alignItems: "center",
         justifyContent: "space-evenly",
-        fontSize: ["10px", 2],
+        fontSize: ["10px", 0, 1],
       }}
     >
       {tabs.map(({ id, label }) => (
@@ -54,6 +53,7 @@ const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
           sx={{
             flexDirection: ["column", "row"],
             alignItems: "center",
+            justifyContent: "center",
             flex: "1 0 auto",
             p: "0.5em",
             height: "100%",

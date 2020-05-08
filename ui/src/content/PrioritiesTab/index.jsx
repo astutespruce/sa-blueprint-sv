@@ -66,11 +66,6 @@ const PrioritiesTab = ({
     })
   }
 
-  //   const corridorSum = corridorChartData.reduce((sum, v) => sum + v, 0)
-  //   if (corridorSum > 0 && corridorSum < 100) {
-
-  //   }
-
   return (
     <>
       <Box as="section">
@@ -80,7 +75,7 @@ const PrioritiesTab = ({
         <Flex sx={{ alignItems: "center", mt: "2rem" }}>
           <PieChart
             data={blueprintChartData}
-            style={{ width: chartWidth, flex: "1 1 auto" }}
+            style={{ width: chartWidth, flex: "0 1 auto" }}
           />
 
           <PieChartLegend elements={blueprintChartData} />
@@ -94,7 +89,7 @@ const PrioritiesTab = ({
           <Flex sx={{ alignItems: "center", mt: "2rem" }}>
             <PieChart
               data={corridorChartData}
-              style={{ width: chartWidth, flex: "1 1 auto" }}
+              style={{ width: chartWidth, flex: "0 1 auto" }}
             />
 
             <PieChartLegend elements={corridorChartData} />
