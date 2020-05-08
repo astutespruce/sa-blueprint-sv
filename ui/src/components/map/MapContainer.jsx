@@ -91,7 +91,12 @@ const MapContainer = () => {
       }
     }
   } else {
-    const { blueprint, blueprint_total } = selectedUnit
+    const {
+      blueprint,
+      blueprint_total,
+      corridors,
+      corridors_total,
+    } = selectedUnit
 
     switch (tab) {
       case "unit-map": {
@@ -101,7 +106,12 @@ const MapContainer = () => {
       }
       case "unit-priorities": {
         content = (
-          <PrioritiesTab blueprint={blueprint} totalAcres={blueprint_total} />
+          <PrioritiesTab
+            blueprint={blueprint}
+            corridors={corridors}
+            blueprintAcres={blueprint_total}
+            corridorAcres={corridors_total}
+          />
         )
         break
       }
