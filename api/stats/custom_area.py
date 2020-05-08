@@ -5,8 +5,8 @@ from geofeather.pygeos import from_geofeather, to_geofeather
 import numpy as np
 import pygeos as pg
 
-from util.pygeos_util import to_crs, to_dict, sjoin, sjoin_geometry, intersection
-from constants import (
+from analysis.pygeos_util import to_crs, to_dict, sjoin, sjoin_geometry, intersection
+from analysis.constants import (
     BLUEPRINT,
     INDICATORS_INDEX,
     URBAN_YEARS,
@@ -16,7 +16,7 @@ from constants import (
     PROTECTION,
     M2_ACRES,
 )
-from stats import (
+from analysis.stats import (
     extract_count_in_geometry,
     extract_blueprint_indicator_area,
     extract_urbanization_area,

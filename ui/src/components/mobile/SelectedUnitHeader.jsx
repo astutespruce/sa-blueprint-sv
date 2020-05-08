@@ -8,9 +8,11 @@ const SelectedUnitHeader = ({ name, onClose }) => {
     <Flex
       sx={{
         justifyContent: "space-between",
-        alignItems: "center",
+        alignItems: "flex-start",
         color: "#FFF",
         bg: "primary",
+        boxShadow: "0 2px 6px #333",
+        p: "0.5rem",
         position: "absolute",
         top: 0,
         left: 0,
@@ -22,7 +24,7 @@ const SelectedUnitHeader = ({ name, onClose }) => {
       <Button
         variant="mobileHeaderClose"
         onClick={onClose}
-        sx={{ flex: "0 0 auto", margin: "0" }}
+        sx={{ flex: "0 0 auto", margin: 0, padding: 0 }}
       >
         <TimesCircle
           css={{

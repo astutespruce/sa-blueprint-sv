@@ -84,7 +84,7 @@ const Header = () => {
                 flexBasis: ["100%", "unset"],
               }}
             >
-              Conservation Blueprint 2.2
+              Conservation Blueprint 2.x
             </Heading>
           </Flex>
         </OutboundLink>

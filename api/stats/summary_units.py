@@ -7,7 +7,13 @@ import pandas as pd
 import pygeos as pg
 
 
-from constants import BLUEPRINT, INDICATORS, INDICATORS_INDEX, OWNERSHIP, PROTECTION
+from analysis.constants import (
+    BLUEPRINT,
+    INDICATORS,
+    INDICATORS_INDEX,
+    OWNERSHIP,
+    PROTECTION,
+)
 
 
 class SummaryUnits(object):
@@ -50,7 +56,7 @@ class SummaryUnits(object):
 
         unit = self.units.loc[id]
         results = unit[unit.index.difference(["geometry"])].to_dict()
-        results["bounds"] = pg.bounds(unit.geometry)
+        results["bounds"] = pg.bounds(unit.geometry).tolist()
         results["type"] = (
             "subwatershed" if self.unit_type == "huc12" else "marine lease block"
         )

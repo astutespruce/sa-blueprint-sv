@@ -2,27 +2,28 @@ import React from "react"
 import { useStaticQuery, graphql } from "gatsby"
 import { Box, Flex, Heading, Text } from "theme-ui"
 
-import { PercentDonut } from "components/chart"
 import { extractNodes } from "util/graphql"
 
 const Blueprint = () => {
   const query = useStaticQuery(graphql`
     query {
-      allBlueprintJson(filter: { label: { ne: "Not a priority" } }) {
+      allBlueprintJson(
+        filter: { value: { gt: 0 } }
+        sort: { fields: value, order: DESC }
+      ) {
         edges {
           node {
             color
             label
-            description
             percent
+            description
           }
         }
       }
     }
   `).allBlueprintJson
 
-  // sort from highest priority to lowest
-  const priorities = extractNodes(query).reverse()
+  const priorities = extractNodes(query)
 
   return (
     <Box as="section" sx={{ mt: "2rem" }}>

@@ -24,6 +24,7 @@ const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
 
   const handleClick = useCallback(
     id => () => {
+      if (id === tab) return
       setTab(() => id)
       onChange(id)
     },

@@ -22,14 +22,7 @@ from analysis.pygeos_util import (
     sjoin_geometry,
     intersection,
 )
-from analysis.constants import (
-    BLUEPRINT,
-    INDICATORS,
-    URBAN_YEARS,
-    DATA_CRS,
-    GEO_CRS,
-    M2_ACRES,
-)
+from analysis.constants import BLUEPRINT, URBAN_YEARS, DATA_CRS, GEO_CRS, M2_ACRES
 from analysis.stats import (
     extract_count_in_geometry,
     extract_blueprint_indicator_area,

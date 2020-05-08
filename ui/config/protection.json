@@ -1,0 +1,38 @@
+[
+  {
+    "value": 1,
+    "color": "#637939",
+    "label": "Permanently protected for biodiversity",
+    "description": " Nature reserves, research natural areas, wilderness areas, Forever Wild easements"
+  },
+  {
+    "value": 2,
+    "color": "#b5cf6b",
+    "label": "Permanently protected to maintain a primarily natural state",
+    "description": " National Wildlife Refuges, many State Parks, high-use National Parks"
+  },
+  {
+    "value": 3,
+    "color": "#98df8a",
+    "label": "Permanently secured for multiple uses and in natural cover",
+    "description": " State forests, lands protected from development by forest easements"
+  },
+  {
+    "value": 39,
+    "color": "#e7cb94",
+    "label": "Permanently secured and in agriculture or maintained grass cover",
+    "description": " Agricultural easements"
+  },
+  {
+    "value": 4,
+    "color": "#7D3E07",
+    "label": "Unsecured (already developed temporary easements and/or municipal lands)",
+    "description": " Private lands with no easements, city parks, undesignated state lands "
+  },
+  {
+    "value": 9,
+    "color": "#9edae5",
+    "label": "Unknown - protected lands status unknown",
+    "description": "Protection status unknown"
+  }
+]

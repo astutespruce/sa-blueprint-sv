@@ -14,14 +14,9 @@ import {
 import { Tabs } from "components/tabs"
 import { MobileSelectedUnitHeader, MobileTabs } from "components/mobile"
 
-import Map from "./Map"
+import { inlandUnit as demoUnit } from "test/exampleUnits"
 
-const demoUnit = {
-  id: "030601060505",
-  name: "Middle Upper Three Runs",
-  acres: 34161,
-  blueprint: [31, 0, 0, 28, 21, 20],
-}
+import Map from "./Map"
 
 const MapContainer = () => {
   const {
@@ -67,11 +62,10 @@ const MapContainer = () => {
   }, [])
 
   const deselectUnit = useCallback(() => {
-    console.log("deselect", tab)
     setState(({ tab: prevTab, ...prevState }) => ({
       ...prevState,
       selectedUnit: null,
-      tab: prevTab === "unit-map" ? "map" : "info",
+      tab: prevTab === "unit-map" || breakpoint === 0 ? "map" : "info",
     }))
   }, [])
 
@@ -97,30 +91,39 @@ const MapContainer = () => {
       }
     }
   } else {
-    const { blueprint } = selectedUnit
+    const { blueprint, blueprint_total } = selectedUnit
 
     switch (tab) {
-      case "priorities": {
-        content = <PrioritiesTab blueprint={blueprint} />
+      case "unit-map": {
+        // don't show anything
+        content = null
         break
       }
-      case "indicators": {
+      case "unit-priorities": {
+        content = (
+          <PrioritiesTab blueprint={blueprint} totalAcres={blueprint_total} />
+        )
+        break
+      }
+      case "unit-indicators": {
         //   TODO: props
         content = <IndicatorsTab />
         break
       }
-      case "threats": {
+      case "unit-threats": {
         //   TODO: props
         content = <ThreatsTab />
         break
       }
-      case "partners": {
+      case "unit-partners": {
         //   TODO: props
         content = <PartnersTab />
         break
       }
     }
   }
+
+  console.log("selected unit", selectedUnit)
 
   return (
     <Flex
@@ -151,10 +154,11 @@ const MapContainer = () => {
             flexGrow: 1,
             flexShrink: 0,
             flexBasis: layout.sidebar.width,
-            py: "1rem",
+            py: "1.5rem",
             pl: "1rem",
             pr: "2rem",
             overflowY: "auto",
+            overflowX: "hidden",
             borderRightColor: layout.sidebar.borderRightColor,
             borderRightWidth: layout.sidebar.borderRightWidth,
             borderRightStyle: "solid",

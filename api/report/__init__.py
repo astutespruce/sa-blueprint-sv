@@ -101,12 +101,7 @@ def create_report(maps, results):
     }
     for indicator_id in results["indicators"]:
         indicator = INDICATORS_INDEX[indicator_id]
-        colors = indicator["colors"]
-        legend = []
-        for value, label in indicator["values"].items():
-            if value in colors:
-                legend.append({"value": value, "label": label, "color": colors[value]})
-
+        legend = indicator["values"].copy()
         legend.reverse()
         legends[indicator_id] = legend
 

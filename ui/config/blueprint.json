@@ -1,12 +1,20 @@
 [
-  { "label": "Not a priority", "percent": 49, "description": "" },
   {
+    "value": 0,
+    "label": "Not a priority",
+    "percent": 49,
+    "description": "",
+    "color": "#F6F6F6"
+  },
+  {
+    "value": 1,
     "label": "Inland waterbodies",
     "percent": 1,
     "description": "These are lakes, reservoirs, and ponds not included in the Blueprint 2.2 priorities.",
     "color": "#004DA8"
   },
   {
+    "value": 2,
     "label": "Corridors",
     "percent": 5,
     "description": "These are connections between large patches of highest priority areas and secured lands, optimized for efficiency and indicator condition in a least cost path analysis.",
@@ -14,6 +22,7 @@
     "color": "#686868"
   },
   {
+    "value": 3,
     "label": "Medium priority",
     "percent": 20,
     "description": "Above-average areas for natural and cultural resources based on indicator condition, capturing potential restoration opportunities.",
@@ -21,6 +30,7 @@
     "color": "#fbb4b9"
   },
   {
+    "value": 4,
     "label": "High priority",
     "percent": 15,
     "description": "Important areas for natural and cultural resources based on indicator condition.",
@@ -28,6 +38,7 @@
     "color": "#c51b8a"
   },
   {
+    "value": 5,
     "label": "Highest priority",
     "percent": 10,
     "description": "The most important areas for natural and cultural resources based on indicator condition.",
