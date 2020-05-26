@@ -6,7 +6,7 @@ import httpx
 from PIL import Image
 
 from api.settings import MBGL_SERVER_URL
-from constants import OWNERSHIP
+from analysis.constants import OWNERSHIP
 
 log = logging.getLogger(__name__)
 

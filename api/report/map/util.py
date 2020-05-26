@@ -3,7 +3,7 @@ from io import BytesIO
 import math
 
 from PIL import Image
-from constants import M_MILES
+from analysis.constants import M_MILES
 
 
 def get_center(bounds):

@@ -7,7 +7,7 @@ import pygeos as pg
 from PIL import Image
 
 from api.settings import MBGL_SERVER_URL
-from util.pygeos_util import to_dict
+from analysis.pygeos_util import to_dict
 
 
 log = logging.getLogger(__name__)

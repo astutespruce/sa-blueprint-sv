@@ -1,6 +1,6 @@
 import math
 
-from constants import M_MILES
+from analysis.constants import M_MILES
 
 
 R2D = 180 / math.pi
@@ -53,6 +53,7 @@ def from_mercator(x, y):
 
 def to_tile_px(longitude, latitude, zoom, tile_size=256):
     """Calculate Spherical Mercator tile x,y coordinate for
+    a given longitude and latitude.
 
     Ported from JS: @mapbox/sphericalmercator.
 
@@ -236,4 +237,3 @@ def get_map_scale(bounds, map_width, max_width=None):
         "miles": max_miles,
         "resolution": resolution,
     }
-

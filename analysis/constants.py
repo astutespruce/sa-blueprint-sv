@@ -24,7 +24,9 @@ BLUEPRINT = json.loads(open(json_dir / "blueprint.json").read())
 ECOSYSTEMS = json.loads(open(json_dir / "ecosystems.json").read())
 INDICATORS = json.loads(open(json_dir / "indicators.json").read())
 CORRIDORS = json.loads(open(json_dir / "corridors.json").read())
-OWNERSHIP = OrderedDict({e["value"]: e for e in json.loads(open("ui/config/"))})
+OWNERSHIP = OrderedDict(
+    {e["value"]: e for e in json.loads(open(json_dir / "ownership.json").read())}
+)
 PROTECTION = OrderedDict(
     {e["value"]: e for e in json.loads(open(json_dir / "protection.json").read())}
 )

@@ -15,6 +15,9 @@ CENTER = [-78.593, 33.221]
 WIDTH = 150
 HEIGHT = 150
 
+
+# basemap from: "https://services.arcgisonline.com/arcgis/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}"
+
 LOCATOR_STYLE = {
     "version": 8,
     "sources": {
