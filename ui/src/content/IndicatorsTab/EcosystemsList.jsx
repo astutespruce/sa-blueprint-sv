@@ -2,31 +2,49 @@ import React, { useState, useCallback, useEffect } from "react"
 import PropTypes from "prop-types"
 import { Box } from "theme-ui"
 
+import { indexBy, flatten } from "util/data"
+
 import Ecosystem, { EcosystemPropType } from "./Ecosystem"
+import IndicatorDetails from "./IndicatorDetails"
 
-const EcosystemsList = ({ analysisArea, ecosystems }) => {
-  const [{ curIndex, ecosystemID, selectedIndicator }, setState] = useState({
-    ecosystemID: null,
-    indicator: null,
-  })
+const EcosystemsList = ({ analysisAcres, ecosystems }) => {
+  const indicators = flatten(
+    Object.values(ecosystems).map(({ indicators }) => indicators)
+  )
+  const indicatorIndex = indexBy(indicators, "id")
 
-  // TODO: state management functions
+  const [selectedIndicator, setSelectedIndicator] = useState(null)
+
+  const handleSelectIndicator = useCallback(indicator => {
+    console.log("select indicator", indicator)
+    setSelectedIndicator(indicator)
+  }, [])
+
+  const handleCloseIndicator = useCallback(() => setSelectedIndicator(null), [])
 
   return (
     <>
-      {ecosystems.map(ecosystem => (
-        <Ecosystem
-          key={ecosystem.id}
-          analysisArea={analysisArea}
-          {...ecosystem}
+      {selectedIndicator ? (
+        <IndicatorDetails
+          onClose={handleCloseIndicator}
+          {...selectedIndicator}
         />
-      ))}
+      ) : (
+        ecosystems.map(ecosystem => (
+          <Ecosystem
+            key={ecosystem.id}
+            onSelectIndicator={handleSelectIndicator}
+            analysisAcres={analysisAcres}
+            {...ecosystem}
+          />
+        ))
+      )}
     </>
   )
 }
 
 EcosystemsList.propTypes = {
-  analysisArea: PropTypes.number.isRequired,
+  analysisAcres: PropTypes.number.isRequired,
   ecosystems: PropTypes.arrayOf(
     PropTypes.shape({
       ...EcosystemPropType,

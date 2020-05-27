@@ -8,7 +8,7 @@ const labelCSS = {
   flex: "0 0 auto",
 }
 
-const IndicatorChart = ({ value, domain }) => {
+const IndicatorAverageChart = ({ value, domain }) => {
   const [minValue, maxValue] = domain
   const percent = (100 * (value - minValue)) / (maxValue - minValue)
 
@@ -43,6 +43,7 @@ const IndicatorChart = ({ value, domain }) => {
             position: "absolute",
             left: `${percent}%`,
             fontSize: "10px",
+            color: "grey.8",
             top: "1em",
             ml: "-0.9em",
           }}
@@ -55,9 +56,9 @@ const IndicatorChart = ({ value, domain }) => {
   )
 }
 
-IndicatorChart.propTypes = {
+IndicatorAverageChart.propTypes = {
   value: PropTypes.number.isRequired,
   domain: PropTypes.arrayOf(PropTypes.number).isRequired,
 }
 
-export default IndicatorChart
+export default IndicatorAverageChart

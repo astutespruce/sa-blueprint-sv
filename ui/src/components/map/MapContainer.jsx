@@ -112,7 +112,7 @@ const MapContainer = () => {
     const {
       type: unitType,
       blueprint,
-      blueprint_total: analysisArea,
+      blueprint_total: blueprintAcres,
       corridors,
       corridors_total: corridorAcres,
       ecosystems: ecosystemAcres,
@@ -130,7 +130,7 @@ const MapContainer = () => {
           <PrioritiesTab
             blueprint={blueprint}
             corridors={corridors}
-            blueprintAcres={analysisArea}
+            blueprintAcres={blueprintAcres}
             corridorAcres={corridorAcres}
           />
         )
@@ -145,7 +145,7 @@ const MapContainer = () => {
         content = (
           <IndicatorsTab
             unitType={unitType}
-            analysisArea={analysisArea}
+            analysisAcres={blueprintAcres}
             ecosystemAcres={ecosystemAcres}
             indicatorAcres={indicatorArea}
           />

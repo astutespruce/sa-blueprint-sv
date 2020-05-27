@@ -13,11 +13,11 @@ const EcosystemHeader = ({ id, label, percent, isFirst }) => {
       sx={{
         alignItems: "center",
         justifyContent: "space-between",
-        bg: "blue.0",
-        height: "4rem",
+        bg: "blue.1",
+        py: "0.5rem",
         px: "1rem",
         borderBottom: "1px solid",
-        borderBottomColor: "blue.2",
+        borderBottomColor: "blue.3",
       }}
     >
       <Flex sx={{ alignItems: "center" }}>
@@ -28,7 +28,7 @@ const EcosystemHeader = ({ id, label, percent, isFirst }) => {
         <Heading as="h4">{label}</Heading>
       </Flex>
       {percent > 0 && (
-        <Box sx={{ color: "grey.7", fontSize: 0, textAlign: "right" }}>
+        <Box sx={{ color: "grey.8", fontSize: 0, textAlign: "right" }}>
           <b>{formatPercent(percent)}%</b>
           <br />
           of area

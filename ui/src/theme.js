@@ -121,11 +121,7 @@ export default {
       },
     },
   },
-  progress: {
-    color: "primary",
-    bg: "grey.2",
-    height: "1rem",
-  },
+
   tabs: {
     default: {
       cursor: "pointer",
@@ -209,6 +205,11 @@ export default {
     hr: {
       color: "grey.3",
       my: "2rem",
+    },
+    progress: {
+      color: "primary",
+      bg: "grey.2",
+      height: "0.5rem",
     },
   },
 }

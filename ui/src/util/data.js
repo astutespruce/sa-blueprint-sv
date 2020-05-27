@@ -1,4 +1,14 @@
 /**
+ * Flatten an array of arrays (2D) to an array (1D)
+ * @param {Array} records
+ */
+export const flatten = records =>
+  records.reduce((prev, record) => {
+    prev.push(...record)
+    return prev
+  }, [])
+
+/**
  * Convert an array to an object, indexing on values of field
  * @param {Array} records
  * @param {String} field

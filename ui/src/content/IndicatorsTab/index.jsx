@@ -12,7 +12,7 @@ import EcosystemsList from "./EcosystemsList"
 
 const IndicatorsTab = ({
   unitType,
-  analysisArea,
+  analysisAcres,
   ecosystemAcres,
   indicatorAcres,
 }) => {
@@ -76,40 +76,61 @@ const IndicatorsTab = ({
     acres: ecosystemAcres[i],
   }))
     .filter(({ acres }) => acres > 0)
-    .map(({ id: ecosystemId, indicators: indicatorIds, ...rest }, i) => {
-      const ecosystemIndicators = indicatorIds
-        .map(indicatorId => {
-          const id = `${ecosystemId}_${indicatorId}`
-          return {
-            ...INDICATORS[id],
-            ...indicators[id],
-          }
-        })
-        .sort(sortByFunc("label", true))
-
-      return {
-        id: ecosystemId,
-        ...rest,
-        indicators: ecosystemIndicators,
-      }
-    })
-    .sort(sortByFunc("acres", false))
-
-  if (unitType === "subwatershed") {
-    const regionalEcosystems = REGIONAL_ECOSYSTEMS.map(
-      ({ id: ecosystemId, indicators: indicatorIds, ...rest }) => {
+    .map(
+      (
+        {
+          id: ecosystemId,
+          label: ecosystemLabel,
+          indicators: indicatorIds,
+          ...rest
+        },
+        i
+      ) => {
         const ecosystemIndicators = indicatorIds
           .map(indicatorId => {
             const id = `${ecosystemId}_${indicatorId}`
             return {
               ...INDICATORS[id],
               ...indicators[id],
+              ecosystemLabel,
+              analysisAcres,
             }
           })
           .sort(sortByFunc("label", true))
 
         return {
           id: ecosystemId,
+          label: ecosystemLabel,
+          ...rest,
+          indicators: ecosystemIndicators,
+        }
+      }
+    )
+    .sort(sortByFunc("acres", false))
+
+  if (unitType === "subwatershed") {
+    const regionalEcosystems = REGIONAL_ECOSYSTEMS.map(
+      ({
+        id: ecosystemId,
+        label: ecosystemLabel,
+        indicators: indicatorIds,
+        ...rest
+      }) => {
+        const ecosystemIndicators = indicatorIds
+          .map(indicatorId => {
+            const id = `${ecosystemId}_${indicatorId}`
+            return {
+              ...INDICATORS[id],
+              ...indicators[id],
+              ecosystemLabel,
+              analysisAcres,
+            }
+          })
+          .sort(sortByFunc("label", true))
+
+        return {
+          id: ecosystemId,
+          label: ecosystemLabel,
           ...rest,
           indicators: ecosystemIndicators,
         }
@@ -124,12 +145,14 @@ const IndicatorsTab = ({
     return <Box>Swipeable ecosystems go here...</Box>
   }
 
-  return <EcosystemsList analysisArea={analysisArea} ecosystems={ecosystems} />
+  return (
+    <EcosystemsList analysisAcres={analysisAcres} ecosystems={ecosystems} />
+  )
 }
 
 IndicatorsTab.propTypes = {
   unitType: PropTypes.string.isRequired,
-  analysisArea: PropTypes.number.isRequired,
+  analysisAcres: PropTypes.number.isRequired,
   ecosystemAcres: PropTypes.arrayOf(PropTypes.number).isRequired,
   indicatorAcres: PropTypes.arrayOf(
     PropTypes.shape({
