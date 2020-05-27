@@ -8,13 +8,6 @@ import { formatPercent } from "util/format"
 const EcosystemHeader = ({ id, label, percent, isFirst }) => {
   const icon = require(`images/${id}.svg`)
 
-  //   const topBorder = isFirst
-  //     ? {}
-  //     : {
-  //         borderTop: "1px solid",
-  //         borderTopColor: "blue.2",
-  //       }
-
   return (
     <Flex
       sx={{
@@ -25,7 +18,6 @@ const EcosystemHeader = ({ id, label, percent, isFirst }) => {
         px: "1rem",
         borderBottom: "1px solid",
         borderBottomColor: "blue.2",
-        // ...topBorder,
       }}
     >
       <Flex sx={{ alignItems: "center" }}>

@@ -1,8 +1,11 @@
 import React from "react"
 import PropTypes from "prop-types"
 import { Box, Flex, Text } from "theme-ui"
+import { lighten } from "@theme-ui/color"
 
+import theme from "theme"
 import EcosystemHeader from "./EcosystemHeader"
+import IndicatorChart from "./IndicatorChart"
 
 const Ecosystem = ({ id, label, acres, indicators, analysisArea }) => {
   return (
@@ -10,7 +13,10 @@ const Ecosystem = ({ id, label, acres, indicators, analysisArea }) => {
       sx={{
         "&:not(:first-of-type)": {
           mt: "1rem",
-          "&>div": { borderTop: "1px solid", borderTopColor: "blue.2" },
+          "&>div:first-child": {
+            borderTop: "1px solid",
+            borderTopColor: "blue.2",
+          },
         },
       }}
     >
@@ -19,6 +25,22 @@ const Ecosystem = ({ id, label, acres, indicators, analysisArea }) => {
         label={label}
         percent={analysisArea && acres ? (100 * acres) / analysisArea : 0}
       />
+      {indicators.map(({ id: indicatorId, label, domain }) => (
+        <Box
+          key={indicatorId}
+          sx={{
+            cursor: "pointer",
+            p: "1rem",
+            "&:hover": {
+              bg: lighten(theme.colors.blue[0], 0.01),
+            },
+          }}
+        >
+          <Text sx={{ fontSize: 2, fontWeight: "bold" }}>{label}</Text>
+          {/* TODO: zonal mean from data */}
+          <IndicatorChart value={domain[0]} domain={domain} />
+        </Box>
+      ))}
     </Box>
   )
 }
