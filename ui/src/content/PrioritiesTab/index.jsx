@@ -67,9 +67,9 @@ const PrioritiesTab = ({
   }
 
   return (
-    <>
+    <Box sx={{ py: "1.5rem", pl: "1rem", pr: "2rem" }}>
       <Box as="section">
-        <Heading as="h3">Blueprint 2.x Priority</Heading>
+        <Heading as="h4">Blueprint 2.x Priority</Heading>
         <Text sx={{ color: "grey.7" }}>for shared conservation action</Text>
 
         <Flex sx={{ alignItems: "center", mt: "2rem" }}>
@@ -84,7 +84,7 @@ const PrioritiesTab = ({
 
       {corridorChartData.length > 0 ? (
         <Box as="section" sx={{ mt: "4rem" }}>
-          <Heading as="h3">Hubs &amp; Corridors</Heading>
+          <Heading as="h4">Hubs &amp; Corridors</Heading>
 
           <Flex sx={{ alignItems: "center", mt: "2rem" }}>
             <PieChart
@@ -100,7 +100,7 @@ const PrioritiesTab = ({
           No hubs or corridors in this area.
         </Text>
       )}
-    </>
+    </Box>
   )
 }
 

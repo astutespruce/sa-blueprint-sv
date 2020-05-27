@@ -27,7 +27,8 @@
     "percent": 20,
     "description": "Above-average areas for natural and cultural resources based on indicator condition, capturing potential restoration opportunities.",
     "report_description": "This class covers 20% of the South Atlantic geography; together, the highest, high, and medium priority categories cover 45%.",
-    "color": "#fbb4b9"
+    "color": "#fbb4b9",
+    "labelColor": "text"
   },
   {
     "value": 4,

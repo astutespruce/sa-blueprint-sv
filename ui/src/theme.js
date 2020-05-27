@@ -22,7 +22,20 @@ export default {
       8: "#6c6c6c",
       9: "#3f3f3f",
     },
+    blue: {
+      0: "#f6fafd",
+      1: "#e2eff9",
+      2: "#cce4f5",
+      3: "#b5d8f0",
+      4: "#9bcaeb",
+      5: "#7dbae5",
+      6: "#5aa7de",
+      7: "#2d8fd5",
+      8: "#006fbe",
+      9: "#004170",
+    },
   },
+
   fonts: {
     body: "Verdana, Geneva, sans-serif",
     heading: "Verdana, Geneva, sans-serif",
@@ -184,7 +197,12 @@ export default {
         variant: "text.heading",
         fontSize: [4, 5],
       },
+      h3: {
+        variant: "text.heading",
+        fontSize: [3, 4],
+      },
       h4: {
+        fontSize: [2, 3],
         variant: "text.subheading",
       },
     },

@@ -1,5 +1,5 @@
 import React from "react"
-import { Divider } from "theme-ui"
+import { Box, Divider } from "theme-ui"
 
 import Intro from "./Intro"
 import Blueprint from "./Blueprint"
@@ -8,7 +8,7 @@ import Credits from "./Credits"
 
 const InfoTab = () => {
   return (
-    <>
+    <Box sx={{ py: "1.5rem", pl: "1rem", pr: "2rem" }}>
       <Intro />
       <Divider />
       <Blueprint />
@@ -16,7 +16,7 @@ const InfoTab = () => {
       <Instructions />
       <Divider />
       <Credits />
-    </>
+    </Box>
   )
 }
 

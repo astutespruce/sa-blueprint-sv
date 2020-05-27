@@ -21,7 +21,7 @@ const Intro = () => {
     <>
       <Box as="section">
         <Heading as="h3" sx={{ mb: "0.5rem" }}>
-          Welcome to the South Atlantic Conservation Blueprint Simple Viewer
+          South Atlantic Conservation Blueprint Simple Viewer
         </Heading>
 
         <p>

@@ -11,7 +11,6 @@ import {
   ThreatsTab,
   PartnersTab,
 } from "content"
-import { Tabs } from "components/tabs"
 import {
   SelectedUnitHeader as MobileSelectedUnitHeader,
   Tabs as MobileTabs,
@@ -22,6 +21,9 @@ import {
   Tabs as DesktopTabs,
 } from "components/layout/desktop"
 
+import { sum } from "util/data"
+
+// TODO: remove
 import { inlandUnit as demoUnit } from "test/exampleUnits"
 
 import Map from "./Map"
@@ -108,10 +110,13 @@ const MapContainer = () => {
     }
   } else {
     const {
+      type: unitType,
       blueprint,
-      blueprint_total,
+      blueprint_total: analysisArea,
       corridors,
-      corridors_total,
+      corridors_total: corridorAcres,
+      ecosystems: ecosystemAcres,
+      indicators,
     } = selectedUnit
 
     switch (tab) {
@@ -125,15 +130,26 @@ const MapContainer = () => {
           <PrioritiesTab
             blueprint={blueprint}
             corridors={corridors}
-            blueprintAcres={blueprint_total}
-            corridorAcres={corridors_total}
+            blueprintAcres={analysisArea}
+            corridorAcres={corridorAcres}
           />
         )
         break
       }
       case "unit-indicators": {
-        //   TODO: props
-        content = <IndicatorsTab />
+        const indicatorArea = indicators.map(indicatorId => ({
+          id: indicatorId,
+          acres: selectedUnit[indicatorId],
+          totalAcres: sum(selectedUnit[indicatorId]),
+        }))
+        content = (
+          <IndicatorsTab
+            unitType={unitType}
+            analysisArea={analysisArea}
+            ecosystemAcres={ecosystemAcres}
+            indicatorAcres={indicatorArea}
+          />
+        )
         break
       }
       case "unit-threats": {
@@ -172,13 +188,14 @@ const MapContainer = () => {
           overflowY: "hidden",
         }}
       >
-        <Box
+        <Flex
           sx={{
             display: content === null ? "none" : "block",
             height: "100%",
             flexGrow: 1,
             flexShrink: 0,
             flexBasis: layout.sidebar.width,
+            flexDirection: "column",
             overflowX: "hidden",
             overflowY: "hidden",
             borderRightColor: layout.sidebar.borderRightColor,
@@ -187,7 +204,7 @@ const MapContainer = () => {
           }}
         >
           {!isMobile && (
-            <>
+            <Box sx={{ flex: "0 0 auto" }}>
               {selectedUnit !== null && (
                 <DesktopSelectedUnitHeader
                   name={selectedUnit.name}
@@ -200,21 +217,18 @@ const MapContainer = () => {
                 hasSelectedUnit={selectedUnit !== null}
                 onChange={handleTabChange}
               />
-            </>
+            </Box>
           )}
 
           <Box
             sx={{
               height: "100%",
               overflowY: "auto",
-              py: "1.5rem",
-              pl: "1rem",
-              pr: "2rem",
             }}
           >
             {content}
           </Box>
-        </Box>
+        </Flex>
 
         {/* Map placeholder */}
         <Box
