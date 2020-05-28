@@ -1,7 +1,7 @@
 import React from "react"
 import { Flex, Image, Heading } from "theme-ui"
 
-import { OutboundLink } from "components/Link"
+import { OutboundLink } from "components/link"
 import LogoURL from "images/sa_logo.png"
 import HeaderButtons from "./HeaderButtons"
 import { useBreakpoints } from "./Breakpoints"

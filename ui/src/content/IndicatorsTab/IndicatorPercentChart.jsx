@@ -26,7 +26,7 @@ const IndicatorPercentChart = ({ value, label, percent, isGood }) => {
       <Flex sx={{ justifyContent: "space-between", fontSize: 0 }}>
         <Text sx={{ flex: "1 1 auto" }}>{label}</Text>
         <Text sx={{ color: "grey.6", flex: "0 0 auto", ml: "1em" }}>
-          {formatPercent(percent)}%
+          {formatPercent(percent)}% of area
         </Text>
       </Flex>
       <Progress value={percent} max={100} color={color} />

@@ -205,6 +205,11 @@ export default {
     hr: {
       color: "grey.3",
       my: "2rem",
+      dashed: {
+        borderBottom: "1px dashed",
+        color: "grey.3",
+        my: "2rem",
+      },
     },
     progress: {
       color: "primary",

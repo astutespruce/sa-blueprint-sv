@@ -1,7 +1,7 @@
 import React from "react"
 import { Box, Text } from "theme-ui"
 
-import { OutboundLink } from "components/Link"
+import { OutboundLink } from "components/link"
 
 const Credits = () => {
   return (

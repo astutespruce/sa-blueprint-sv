@@ -3,7 +3,7 @@ import { Box, Button, Flex, Heading, Text } from "theme-ui"
 import { Play } from "emotion-icons/fa-solid"
 import YouTube from "react-youtube"
 
-import { OutboundLink } from "components/Link"
+import { OutboundLink } from "components/link"
 import { Modal } from "components/Modal"
 
 const Intro = () => {

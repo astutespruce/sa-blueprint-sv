@@ -2,7 +2,7 @@ import React, { useState, useCallback } from "react"
 import { Box, Button, Flex } from "theme-ui"
 import { CommentDots, Envelope, FileAlt } from "emotion-icons/fa-regular"
 
-import { Link } from "components/Link"
+import { Link } from "components/link"
 import { Modal } from "components/Modal"
 import { Feedback, Contact } from "content/ContactTab"
 
