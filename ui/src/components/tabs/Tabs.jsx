@@ -51,7 +51,7 @@ const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
               : variant || "tabs.default"
           }
           sx={{
-            flexDirection: ["column", "row"],
+            flexDirection: ["column", "column", "row"],
             alignItems: "center",
             justifyContent: "center",
             flex: "1 0 auto",

@@ -23,7 +23,13 @@ const EcosystemHeader = ({ id, label, percent, isFirst }) => {
       <Flex sx={{ alignItems: "center" }}>
         <Image
           src={icon}
-          sx={{ width: "2.5em", height: "2.5em", mr: "0.5em" }}
+          sx={{
+            width: "2.5em",
+            height: "2.5em",
+            mr: "0.5em",
+            bg: "#FFF",
+            borderRadius: "2.5em",
+          }}
         />
         <Heading as="h4">{label}</Heading>
       </Flex>

@@ -6,7 +6,8 @@ import { useBreakpoints } from "components/layout"
 import { indexBy, sortByFunc } from "util/data"
 import { extractNodes } from "util/graphql"
 
-import EcosystemsList from "./EcosystemsList"
+import DesktopEcosystemList from "./DesktopEcosystemList"
+import MobileEcosystemList from "./MobileEcosystemList"
 
 // TODO: split between mobile swiper and list view here, let each manage own state?
 
@@ -142,11 +143,19 @@ const IndicatorsTab = ({
   console.log("ecosystem data aggregated", ecosystems)
 
   if (isMobile) {
-    return <Box>Swipeable ecosystems go here...</Box>
+    return (
+      <MobileEcosystemList
+        analysisAcres={analysisAcres}
+        ecosystems={ecosystems}
+      />
+    )
   }
 
   return (
-    <EcosystemsList analysisAcres={analysisAcres} ecosystems={ecosystems} />
+    <DesktopEcosystemList
+      analysisAcres={analysisAcres}
+      ecosystems={ecosystems}
+    />
   )
 }
 

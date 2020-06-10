@@ -1,13 +1,17 @@
 import React from "react"
-import { Flex, Image, Heading } from "theme-ui"
+import { Box, Flex, Image, Heading } from "theme-ui"
 
 import { OutboundLink } from "components/link"
 import LogoURL from "images/sa_logo.png"
 import HeaderButtons from "./HeaderButtons"
 import { useBreakpoints } from "./Breakpoints"
+import { useSelectedUnit } from "./SelectedUnit"
+import SelectedUnitHeader from "./mobile/SelectedUnitHeader"
 
 const Header = () => {
   const breakpoint = useBreakpoints()
+  const isMobile = breakpoint === 0
+  const { selectedUnit, deselectUnit } = useSelectedUnit()
 
   return (
     <Flex
@@ -24,88 +28,94 @@ const Header = () => {
         boxShadow: "0 2px 6px #333",
       }}
     >
-      <Flex
-        sx={{
-          alignItems: "center",
-        }}
-      >
-        <OutboundLink
-          to="http://www.southatlanticlcc.org/blueprint/"
-          sx={{
-            textDecoration: "none",
-            lineHeight: 0,
-            flex: "0 0 auto",
-            display: "block",
-          }}
-        >
-          <Image
-            src={LogoURL}
-            sx={{
-              mr: "0.5rem",
-              width: "2rem",
-              height: "2rem",
-            }}
-          />
-        </OutboundLink>
-
-        <OutboundLink
-          to="http://www.southatlanticlcc.org/blueprint/"
-          sx={{ textDecoration: "none", display: "block", color: "#FFF" }}
-        >
+      {isMobile && selectedUnit !== null ? (
+        <SelectedUnitHeader name={selectedUnit.name} onClose={deselectUnit} />
+      ) : (
+        <>
           <Flex
             sx={{
-              flexWrap: "wrap",
-              alignItems: ["flex-start", "flex-start", "baseline"],
-              flexDirection: ["column", "column", "row"],
+              alignItems: "center",
             }}
           >
-            <Heading
-              as="h1"
+            <OutboundLink
+              to="http://www.southatlanticlcc.org/blueprint/"
               sx={{
-                fontWeight: "normal",
-                fontSize: [0, 1, 4],
-                lineHeight: 1,
-                margin: "0 0.5rem 0 0",
-                breakInside: "avoid",
-                flex: "0 1 auto",
+                textDecoration: "none",
+                lineHeight: 0,
+                flex: "0 0 auto",
+                display: "block",
               }}
             >
-              South Atlantic
-            </Heading>
-            <Heading
-              as="h1"
-              sx={{
-                margin: "0 0.5rem 0 0",
-                fontWeight: "normal",
-                lineHeight: 1,
-                fontSize: [2, 3, 4],
-                breakInside: "avoid",
-                flexGrow: 0,
-                flexShrink: 0,
-                flexBasis: ["100%", "unset"],
-              }}
+              <Image
+                src={LogoURL}
+                sx={{
+                  mr: "0.5rem",
+                  width: "2rem",
+                  height: "2rem",
+                }}
+              />
+            </OutboundLink>
+
+            <OutboundLink
+              to="http://www.southatlanticlcc.org/blueprint/"
+              sx={{ textDecoration: "none", display: "block", color: "#FFF" }}
             >
-              Conservation Blueprint 2.x
-            </Heading>
-            <Heading
-              as="h1"
-              sx={{
-                margin: 0,
-                fontWeight: "normal",
-                lineHeight: 1,
-                fontSize: [0, 0, 2],
-                breakInside: "avoid",
-                flexGrow: 0,
-                flexShrink: 0,
-                flexBasis: ["100%", "unset"],
-              }}
-            >
-              Simple Viewer
-            </Heading>
+              <Flex
+                sx={{
+                  flexWrap: "wrap",
+                  alignItems: ["flex-start", "flex-start", "baseline"],
+                  flexDirection: ["column", "column", "row"],
+                }}
+              >
+                <Heading
+                  as="h1"
+                  sx={{
+                    fontWeight: "normal",
+                    fontSize: [0, 1, 4],
+                    lineHeight: 1,
+                    margin: "0 0.5rem 0 0",
+                    breakInside: "avoid",
+                    flex: "0 1 auto",
+                  }}
+                >
+                  South Atlantic
+                </Heading>
+                <Heading
+                  as="h1"
+                  sx={{
+                    margin: "0 0.5rem 0 0",
+                    fontWeight: "normal",
+                    lineHeight: 1,
+                    fontSize: [2, 3, 4],
+                    breakInside: "avoid",
+                    flexGrow: 0,
+                    flexShrink: 0,
+                    flexBasis: ["100%", "unset"],
+                  }}
+                >
+                  Conservation Blueprint 2.x
+                </Heading>
+                <Heading
+                  as="h1"
+                  sx={{
+                    margin: 0,
+                    fontWeight: "normal",
+                    lineHeight: 1,
+                    fontSize: [0, 0, 2],
+                    breakInside: "avoid",
+                    flexGrow: 0,
+                    flexShrink: 0,
+                    flexBasis: ["100%", "unset"],
+                  }}
+                >
+                  Simple Viewer
+                </Heading>
+              </Flex>
+            </OutboundLink>
           </Flex>
-        </OutboundLink>
-      </Flex>
-      {breakpoint >= 1 && <HeaderButtons />}
+          {breakpoint >= 1 && <HeaderButtons />}
+        </>
+      )}
     </Flex>
   )
 }

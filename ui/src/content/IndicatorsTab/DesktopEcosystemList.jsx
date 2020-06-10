@@ -1,13 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react"
 import PropTypes from "prop-types"
-import { Box } from "theme-ui"
 
 import { indexBy, flatten } from "util/data"
 
 import Ecosystem, { EcosystemPropType } from "./Ecosystem"
 import IndicatorDetails from "./IndicatorDetails"
 
-const EcosystemsList = ({ analysisAcres, ecosystems }) => {
+const DesktopEcosystemList = ({ analysisAcres, ecosystems }) => {
   const indicators = flatten(
     Object.values(ecosystems).map(({ indicators }) => indicators)
   )
@@ -43,7 +42,7 @@ const EcosystemsList = ({ analysisAcres, ecosystems }) => {
   )
 }
 
-EcosystemsList.propTypes = {
+DesktopEcosystemList.propTypes = {
   analysisAcres: PropTypes.number.isRequired,
   ecosystems: PropTypes.arrayOf(
     PropTypes.shape({
@@ -52,4 +51,4 @@ EcosystemsList.propTypes = {
   ).isRequired,
 }
 
-export default EcosystemsList
+export default DesktopEcosystemList

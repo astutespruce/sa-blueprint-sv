@@ -9,15 +9,9 @@ const SelectedUnitHeader = ({ name, onClose }) => {
       sx={{
         justifyContent: "space-between",
         alignItems: "flex-start",
-        color: "#FFF",
-        bg: "primary",
-        boxShadow: "0 2px 6px #333",
-        p: "0.5rem",
-        position: "absolute",
-        top: 0,
-        left: 0,
-        right: 0,
-        zIndex: 20000,
+        flex: "1 1 auto",
+        py: "0.5rem",
+        px: "0.25rem",
       }}
     >
       <Text sx={{ px: "0.5rem", fontSize: 2 }}>{name}</Text>

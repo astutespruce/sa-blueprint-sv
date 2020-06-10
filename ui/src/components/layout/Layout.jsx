@@ -7,7 +7,6 @@ import UnsupportedBrowser from "./UnsupportedBrowser"
 import SEO from "./SEO"
 import Header from "./Header"
 import { BreakpointProvider } from "./Breakpoints"
-// import Footer from "./Footer"
 import { siteMetadata } from "../../../gatsby-config"
 
 const Layout = ({ children, title, overflowY }) => {
@@ -23,7 +22,6 @@ const Layout = ({ children, title, overflowY }) => {
             {children}
           </Box>
         )}
-        {/* <Footer /> */}
       </Flex>
     </BreakpointProvider>
   )

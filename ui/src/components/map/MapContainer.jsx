@@ -1,7 +1,13 @@
-import React, { useState, useCallback, useRef, useEffect } from "react"
+import React, {
+  useState,
+  useCallback,
+  useRef,
+  useEffect,
+  useLayoutEffect,
+} from "react"
 import { Box, Button, Text, Flex, useThemeUI } from "theme-ui"
 
-import { useBreakpoints } from "components/layout"
+import { useBreakpoints, useSelectedUnit } from "components/layout"
 import {
   InfoTab,
   ContactTab,
@@ -11,10 +17,7 @@ import {
   ThreatsTab,
   PartnersTab,
 } from "content"
-import {
-  SelectedUnitHeader as MobileSelectedUnitHeader,
-  Tabs as MobileTabs,
-} from "components/layout/mobile"
+import { Tabs as MobileTabs } from "components/layout/mobile"
 
 import {
   SelectedUnitHeader as DesktopSelectedUnitHeader,
@@ -39,14 +42,44 @@ const MapContainer = () => {
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
 
-  const [{ tab, selectedUnit }, setState] = useState({
+  const { selectedUnit, selectUnit, deselectUnit } = useSelectedUnit()
+
+  console.log("selected unit from context", selectedUnit)
+
+  //   const [{ tab, selectedUnit }, setState] = useState({
+  //     tab: breakpoint === 0 ? "map" : "info",
+  //     selectedUnit: null,
+  //   })
+
+  const [{ tab }, setState] = useState({
     tab: breakpoint === 0 ? "map" : "info",
-    selectedUnit: null,
   })
 
   useEffect(() => {
     isDuringLoad.current = false
   }, [])
+
+  useLayoutEffect(() => {
+    // If selected unit changed from null to unit, or unit to null,
+    // we need to update the tabs.
+    let nextTab = tab
+    if (selectedUnit === null) {
+      nextTab = tab === "unit-map" || isMobile ? "map" : "info"
+    } else {
+      if (tab === "map") {
+        nextTab = "unit-map"
+      } else if (!tab.startsWith("unit-")) {
+        nextTab = "unit-priorities"
+      }
+    }
+
+    if (nextTab !== tab) {
+      setState(prevState => ({
+        ...prevState,
+        tab: nextTab,
+      }))
+    }
+  }, [selectedUnit])
 
   // handle window resize from mobile to desktop, so that we show content again
   // if map tab previously selected
@@ -63,29 +96,14 @@ const MapContainer = () => {
       tab,
     }))
   })
-  const selectUnit = useCallback(unit => {
-    setState(({ tab: prevTab, ...prevState }) => {
-      let nextTab = prevTab
-      if (prevTab === "map") {
-        nextTab = "unit-map"
-      } else if (!prevTab.startsWith("unit-")) {
-        nextTab = "unit-priorities"
-      }
-      return {
-        ...prevState,
-        selectedUnit: unit,
-        tab: nextTab,
-      }
-    })
-  }, [])
 
-  const deselectUnit = useCallback(() => {
-    setState(({ tab: prevTab, ...prevState }) => ({
-      ...prevState,
-      selectedUnit: null,
-      tab: prevTab === "unit-map" || isMobile ? "map" : "info",
-    }))
-  }, [])
+  //   const selectUnit = useCallback(unit => {
+  //     setSelectedUnit(unit)
+  //   }, [])
+
+  //   const deselectUnit = useCallback(() => {
+  //     setSelectedUnit(null)
+  //   }, [])
 
   let content = null
   if (selectedUnit === null) {
@@ -174,13 +192,6 @@ const MapContainer = () => {
         flexDirection: "column",
       }}
     >
-      {/* Mobile header for selected unit */}
-      {isMobile && selectedUnit !== null && (
-        <MobileSelectedUnitHeader
-          name={selectedUnit.name}
-          onClose={deselectUnit}
-        />
-      )}
       <Flex
         sx={{
           height: "100%",
@@ -190,7 +201,7 @@ const MapContainer = () => {
       >
         <Flex
           sx={{
-            display: content === null ? "none" : "block",
+            display: content === null ? "none !important" : "flex",
             height: "100%",
             flexGrow: 1,
             flexShrink: 0,
@@ -231,14 +242,18 @@ const MapContainer = () => {
         </Flex>
 
         {/* Map placeholder */}
-        <Box
+        <Flex
           onClick={() => selectUnit(demoUnit)}
           sx={{
             background: "linear-gradient(0deg, #08AEEA 0%, #2AF598 100%)",
             flex: "1 1 auto",
             width: "100%",
+            alignItems: "center",
+            justifyContent: "center",
           }}
-        />
+        >
+          {isMobile && tab === "map" ? <Box>Map goes here</Box> : null}
+        </Flex>
         {/* <Map /> */}
       </Flex>
 
