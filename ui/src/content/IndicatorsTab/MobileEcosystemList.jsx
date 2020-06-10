@@ -3,7 +3,8 @@ import PropTypes from "prop-types"
 
 import { Box, Flex } from "theme-ui"
 
-import { indexBy, flatten } from "util/data"
+import { SwipeContainer } from "components/layout"
+import { indexBy } from "util/data"
 
 import Ecosystem, { EcosystemPropType } from "./Ecosystem"
 import EcosystemNav from "./EcosystemNav"
@@ -21,14 +22,18 @@ const MobileEcosystemList = ({ analysisAcres, ecosystems }) => {
   const handleCloseIndicator = useCallback(() => setSelectedIndicator(null), [])
 
   const ecosystemIndex = indexBy(ecosystems, "id")
-  const indicators = flatten(
-    Object.values(ecosystems).map(({ indicators }) => indicators)
-  )
-  const indicatorIndex = indexBy(indicators, "id")
 
   const handleClick = useCallback(id => {
     setEcosystemId(id)
   }, [])
+
+  const handleSwipeMove = args => {
+    console.log("onSwipeMove", args)
+  }
+
+  const handleSwipeEnd = args => {
+    console.log("onSwipeEnd", args)
+  }
 
   return (
     <Flex
@@ -46,11 +51,24 @@ const MobileEcosystemList = ({ analysisAcres, ecosystems }) => {
             {...selectedIndicator}
           />
         ) : (
-          <Ecosystem
-            onSelectIndicator={handleSelectIndicator}
-            analysisAcres={analysisAcres}
-            {...ecosystemIndex[ecosystemId]}
-          />
+          <SwipeContainer
+            onSwipeMove={handleSwipeMove}
+            onSwipeEnd={handleSwipeEnd}
+          >
+            {/* <Ecosystem
+              onSelectIndicator={handleSelectIndicator}
+              analysisAcres={analysisAcres}
+              {...ecosystemIndex[ecosystemId]}
+            /> */}
+            {ecosystems.map(ecosystem => (
+              <Ecosystem
+                key={ecosystem.id}
+                onSelectIndicator={handleSelectIndicator}
+                analysisAcres={analysisAcres}
+                {...ecosystem}
+              />
+            ))}
+          </SwipeContainer>
         )}
       </Box>
       <Box

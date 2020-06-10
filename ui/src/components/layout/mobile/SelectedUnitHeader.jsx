@@ -10,11 +10,12 @@ const SelectedUnitHeader = ({ name, onClose }) => {
         justifyContent: "space-between",
         alignItems: "flex-start",
         flex: "1 1 auto",
-        py: "0.5rem",
-        px: "0.25rem",
+        alignItems: "center",
+        p: "0.25rem",
+        lineHeight: 1.2,
       }}
     >
-      <Text sx={{ px: "0.5rem", fontSize: 2 }}>{name}</Text>
+      <Text sx={{ pr: "0.5rem", fontSize: 2 }}>{name}</Text>
       <Button
         variant="mobileHeaderClose"
         onClick={onClose}

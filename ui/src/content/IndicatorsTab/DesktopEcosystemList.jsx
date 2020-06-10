@@ -10,7 +10,6 @@ const DesktopEcosystemList = ({ analysisAcres, ecosystems }) => {
   const indicators = flatten(
     Object.values(ecosystems).map(({ indicators }) => indicators)
   )
-  const indicatorIndex = indexBy(indicators, "id")
 
   const [selectedIndicator, setSelectedIndicator] = useState(null)
 

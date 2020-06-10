@@ -17,6 +17,7 @@ const Header = () => {
     <Flex
       as="header"
       sx={{
+        flex: "0 0 auto",
         justifyContent: "space-between",
         alignItems: "center",
         py: "0.3rem",

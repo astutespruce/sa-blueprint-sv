@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from "react"
-import { Box, Button, Text, Flex, useThemeUI } from "theme-ui"
+import { Box, Flex, useThemeUI } from "theme-ui"
 
 import { useBreakpoints, useSelectedUnit } from "components/layout"
 import {
@@ -36,6 +36,8 @@ const MapContainer = () => {
     theme: { layout },
   } = useThemeUI()
 
+  const contentNode = useRef(null)
+
   // flag so we only do some things on initial loading
   const isDuringLoad = useRef(true)
 
@@ -43,13 +45,6 @@ const MapContainer = () => {
   const isMobile = breakpoint === 0
 
   const { selectedUnit, selectUnit, deselectUnit } = useSelectedUnit()
-
-  console.log("selected unit from context", selectedUnit)
-
-  //   const [{ tab, selectedUnit }, setState] = useState({
-  //     tab: breakpoint === 0 ? "map" : "info",
-  //     selectedUnit: null,
-  //   })
 
   const [{ tab }, setState] = useState({
     tab: breakpoint === 0 ? "map" : "info",
@@ -95,15 +90,9 @@ const MapContainer = () => {
       ...prevState,
       tab,
     }))
+    // scroll content to top
+    contentNode.current.scrollTop = 0
   })
-
-  //   const selectUnit = useCallback(unit => {
-  //     setSelectedUnit(unit)
-  //   }, [])
-
-  //   const deselectUnit = useCallback(() => {
-  //     setSelectedUnit(null)
-  //   }, [])
 
   let content = null
   if (selectedUnit === null) {
@@ -189,6 +178,7 @@ const MapContainer = () => {
     <Flex
       sx={{
         height: "100%",
+        flex: "1 1 auto",
         flexDirection: "column",
       }}
     >
@@ -232,6 +222,7 @@ const MapContainer = () => {
           )}
 
           <Box
+            ref={contentNode}
             sx={{
               height: "100%",
               overflowY: "auto",

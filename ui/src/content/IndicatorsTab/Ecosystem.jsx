@@ -24,6 +24,8 @@ const Ecosystem = ({
   return (
     <Box
       sx={{
+        width: "100%",
+        flex: "1 0 auto",
         "&:not(:first-of-type)": {
           mt: "2rem",
           "&>div:first-child": {

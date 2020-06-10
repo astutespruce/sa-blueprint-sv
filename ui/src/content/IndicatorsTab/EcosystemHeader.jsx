@@ -13,8 +13,8 @@ const EcosystemHeader = ({ id, label, percent, isFirst }) => {
       sx={{
         alignItems: "center",
         justifyContent: "space-between",
-        bg: "blue.1",
-        py: "0.5rem",
+        bg: "blue.0",
+        py: ["1rem", "0.5rem"],
         px: "1rem",
         borderBottom: "1px solid",
         borderBottomColor: "blue.3",

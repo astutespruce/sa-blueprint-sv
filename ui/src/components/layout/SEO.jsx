@@ -24,6 +24,7 @@ function SEO({ description, meta, title }) {
     <Helmet
       htmlAttributes={{
         lang: "en",
+        viewport: "width=device-width, initial-scale=1, shrink-to-fit=no",
       }}
       title={title}
       titleTemplate={title ? `%s | ${site.siteMetadata.title}` : `%s`}
@@ -61,7 +62,10 @@ function SEO({ description, meta, title }) {
           content: metaDescription,
         },
       ].concat(meta)}
-    />
+    >
+      {/* Have to set HTML height manually for mobile browsers */}
+      <style>{`html {height: 100%; width: 100%; margin: 0;}`}</style>
+    </Helmet>
   )
 }
 

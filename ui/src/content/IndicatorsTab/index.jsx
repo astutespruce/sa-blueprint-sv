@@ -142,14 +142,14 @@ const IndicatorsTab = ({
 
   console.log("ecosystem data aggregated", ecosystems)
 
-  if (isMobile) {
-    return (
-      <MobileEcosystemList
-        analysisAcres={analysisAcres}
-        ecosystems={ecosystems}
-      />
-    )
-  }
+  //   if (isMobile) {
+  //     return (
+  //       <MobileEcosystemList
+  //         analysisAcres={analysisAcres}
+  //         ecosystems={ecosystems}
+  //       />
+  //     )
+  //   }
 
   return (
     <DesktopEcosystemList

@@ -11,7 +11,7 @@ export default {
     error: "#D04608",
     ok: "#259e06",
     grey: {
-      0: "#f9f9f9",
+      0: "#f5f5f5",
       1: "#ededed",
       2: "#e1e1e1",
       3: "#d3d3d3",
@@ -23,7 +23,7 @@ export default {
       9: "#3f3f3f",
     },
     blue: {
-      0: "#f6fafd",
+      0: "#eef7fc",
       1: "#e2eff9",
       2: "#cce4f5",
       3: "#b5d8f0",
@@ -157,7 +157,8 @@ export default {
   },
   styles: {
     root: {
-      height: "100vh",
+      height: "100%",
+      width: "100%",
       overflowY: "hidden",
       "#___gatsby": {
         height: "100%",

@@ -4,5 +4,12 @@ import {
   Provider as SelectedUnitProvider,
   useSelectedUnit,
 } from "./SelectedUnit"
+import SwipeContainer from "./SwipeContainer"
 
-export { Layout, SelectedUnitProvider, useBreakpoints, useSelectedUnit }
+export {
+  Layout,
+  SelectedUnitProvider,
+  SwipeContainer,
+  useBreakpoints,
+  useSelectedUnit,
+}
