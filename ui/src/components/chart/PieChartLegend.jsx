@@ -22,6 +22,7 @@ const PieChartLegend = ({ elements }) => {
               height: "1.5em",
               mr: "0.5rem",
               flex: "0 0 auto",
+              border: "1px solid #CCC",
             }}
             style={{ backgroundColor: color }}
           />

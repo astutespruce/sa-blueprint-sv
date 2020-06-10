@@ -15,7 +15,7 @@ from .summary_unit import get_summary_unit_map_image
 from .mercator import get_zoom, get_map_bounds, get_map_scale
 from .util import pad_bounds, get_center, to_base64, merge_maps
 
-from constants import (
+from analysis.constants import (
     BLUEPRINT_COLORS,
     INDICATORS_INDEX,
     URBAN_LEGEND,

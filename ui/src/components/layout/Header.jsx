@@ -55,18 +55,19 @@ const Header = () => {
           <Flex
             sx={{
               flexWrap: "wrap",
-              alignItems: "center",
+              alignItems: ["flex-start", "flex-start", "baseline"],
+              flexDirection: ["column", "column", "row"],
             }}
           >
             <Heading
               as="h1"
               sx={{
                 fontWeight: "normal",
-                fontSize: [0, 3, 4],
+                fontSize: [0, 1, 4],
                 lineHeight: 1,
                 margin: "0 0.5rem 0 0",
                 breakInside: "avoid",
-                flex: "1 1 auto",
+                flex: "0 1 auto",
               }}
             >
               South Atlantic
@@ -74,17 +75,32 @@ const Header = () => {
             <Heading
               as="h1"
               sx={{
-                margin: 0,
+                margin: "0 0.5rem 0 0",
                 fontWeight: "normal",
                 lineHeight: 1,
                 fontSize: [2, 3, 4],
                 breakInside: "avoid",
-                flexGrow: 1,
+                flexGrow: 0,
                 flexShrink: 0,
                 flexBasis: ["100%", "unset"],
               }}
             >
               Conservation Blueprint 2.x
+            </Heading>
+            <Heading
+              as="h1"
+              sx={{
+                margin: 0,
+                fontWeight: "normal",
+                lineHeight: 1,
+                fontSize: [0, 0, 2],
+                breakInside: "avoid",
+                flexGrow: 0,
+                flexShrink: 0,
+                flexBasis: ["100%", "unset"],
+              }}
+            >
+              Simple Viewer
             </Heading>
           </Flex>
         </OutboundLink>

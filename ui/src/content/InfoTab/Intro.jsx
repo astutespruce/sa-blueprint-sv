@@ -20,9 +20,9 @@ const Intro = () => {
   return (
     <>
       <Box as="section">
-        <Heading as="h3" sx={{ mb: "0.5rem" }}>
+        {/* <Heading as="h3" sx={{ mb: "0.5rem" }}>
           South Atlantic Conservation Blueprint Simple Viewer
-        </Heading>
+        </Heading> */}
 
         <p>
           The{" "}

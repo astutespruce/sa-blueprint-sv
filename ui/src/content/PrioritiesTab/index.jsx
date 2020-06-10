@@ -61,10 +61,13 @@ const PrioritiesTab = ({
   if (corridorAcres < blueprintAcres) {
     corridorChartData.push({
       value: (100 * (blueprintAcres - corridorAcres)) / blueprintAcres,
-      color: "#F6F6F6",
+      color: "#ffffe5",
       label: "Not a hub or corridor",
     })
   }
+
+  const index = 0
+  const selected = 0
 
   return (
     <Box sx={{ py: "1.5rem", pl: "1rem", pr: "2rem" }}>
@@ -75,7 +78,14 @@ const PrioritiesTab = ({
         <Flex sx={{ alignItems: "center", mt: "2rem" }}>
           <PieChart
             data={blueprintChartData}
-            style={{ width: chartWidth, flex: "0 1 auto" }}
+            segmentsShift={0.5}
+            radius={chartWidth / 4 - 1}
+            style={{
+              width: chartWidth,
+              flex: "0 1 auto",
+              background: "#333",
+              borderRadius: "100em",
+            }}
           />
 
           <PieChartLegend elements={blueprintChartData} />
@@ -89,7 +99,14 @@ const PrioritiesTab = ({
           <Flex sx={{ alignItems: "center", mt: "2rem" }}>
             <PieChart
               data={corridorChartData}
-              style={{ width: chartWidth, flex: "0 1 auto" }}
+              segmentsShift={0.5}
+              radius={chartWidth / 4 - 1}
+              style={{
+                width: chartWidth,
+                flex: "0 1 auto",
+                background: "#333",
+                borderRadius: "100em",
+              }}
             />
 
             <PieChartLegend elements={corridorChartData} />
