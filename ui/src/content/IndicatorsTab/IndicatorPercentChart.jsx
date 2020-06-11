@@ -14,16 +14,15 @@ const IndicatorPercentChart = ({ value, label, percent, isGood }) => {
     color = "rgb(231, 119, 120)"
   }
 
-  console.log("set color", value, color)
-
-  // let variant = 'default'
-  // if (isGood) {
-  //     variant = 'green'
-  // }
-
   return (
     <Box sx={{ flex: "1 1 auto" }}>
-      <Flex sx={{ justifyContent: "space-between", fontSize: 0 }}>
+      <Flex
+        sx={{
+          justifyContent: "space-between",
+          alignItems: "flex-end",
+          fontSize: 0,
+        }}
+      >
         <Text sx={{ flex: "1 1 auto" }}>{label}</Text>
         <Text sx={{ color: "grey.6", flex: "0 0 auto", ml: "1em" }}>
           {formatPercent(percent)}% of area

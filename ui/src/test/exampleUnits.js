@@ -175,22 +175,17 @@ export const inlandUnit = {
     "waterscapes_migratoryfishconnectivity",
     "waterscapes_networkcomplexity",
   ],
-  ownership: [
-    { label: "Federal", acres: 5050.9873 },
-    { label: "State/province", acres: 8679.126 },
-    { label: "Local", acres: 199.16725 },
-  ],
-  protection: [
-    { label: "Permanently protected for biodiversity", acres: 8677.3134765625 },
-    {
-      label: "Permanently protected to maintain a primarily natural state",
-      acres: 5050.9873046875,
-    },
-    {
-      label: "Permanently secured for multiple uses and in natural cover",
-      acres: 200.97935485839844,
-    },
-  ],
+  // in integer acres, key:value
+  ownership: {
+    FED: 5050,
+    STP: 8679,
+    LOC: 199,
+  },
+  protection: {
+    1: 8677,
+    2: 5050,
+    3: 201,
+  },
   counties: [{ FIPS: "13051", state: "Georgia", county: "Chatham" }],
   slr_acres: 60896.69921875,
 

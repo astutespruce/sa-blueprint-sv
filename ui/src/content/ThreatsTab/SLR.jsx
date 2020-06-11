@@ -1,7 +1,7 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-import { Box, Text, Heading } from "theme-ui"
+import { Box, Text } from "theme-ui"
 
 import { OutboundLink } from "components/link"
 import { LineChart } from "components/chart"
@@ -11,7 +11,10 @@ import { LineChart } from "components/chart"
 const SLR = ({ percents }) => {
   return (
     <>
-      <Heading as="h4">Sea Level Rise</Heading>
+      <Text sx={{ color: "grey.7" }}>
+        Extent of inundation by projected sea level rise within this
+        subwatershed:
+      </Text>
       <Box
         sx={{
           position: "relative",
@@ -64,9 +67,8 @@ const SLR = ({ percents }) => {
         </Text>
       </Box>
 
-      <Text sx={{ mt: "2rem" }}>
-        Extent of inundation by projected sea level rise within this
-        subwatershed. Values from the{" "}
+      <Text sx={{ mt: "2rem", color: "grey.7", fontSize: 1 }}>
+        Sea level rise estimates derived from the{" "}
         <OutboundLink to="https://coast.noaa.gov/digitalcoast/data/slr.html">
           NOAA sea-level rise inundation data
         </OutboundLink>

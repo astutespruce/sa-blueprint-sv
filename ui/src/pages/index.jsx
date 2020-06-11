@@ -1,14 +1,12 @@
 import React from "react"
 
-import { Layout, SelectedUnitProvider } from "components/layout"
+import { Layout } from "components/layout"
 import { MapContainer } from "components/map"
 
 const IndexPage = () => (
-  <SelectedUnitProvider>
-    <Layout overflowY="hidden">
-      <MapContainer />
-    </Layout>
-  </SelectedUnitProvider>
+  <Layout overflowY="hidden">
+    <MapContainer />
+  </Layout>
 )
 
 export default IndexPage

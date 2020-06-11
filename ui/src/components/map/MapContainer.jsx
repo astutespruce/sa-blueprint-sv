@@ -120,6 +120,7 @@ const MapContainer = () => {
   } else {
     const {
       type: unitType,
+      acres: unitAcres,
       blueprint,
       blueprint_total: blueprintAcres,
       corridors,
@@ -130,6 +131,9 @@ const MapContainer = () => {
       slr_acres: slrAcres,
       urban,
       urban_acres: urbanAcres,
+      ownership: ownershipAcres,
+      protection: protectionAcres,
+      counties,
     } = selectedUnit
 
     switch (tab) {
@@ -180,7 +184,15 @@ const MapContainer = () => {
       }
       case "unit-partners": {
         //   TODO: props
-        content = <PartnersTab />
+        content = (
+          <PartnersTab
+            unitType={unitType}
+            analysisAcres={unitAcres}
+            ownershipAcres={ownershipAcres}
+            protectionAcres={protectionAcres}
+            counties={counties}
+          />
+        )
         break
       }
     }

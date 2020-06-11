@@ -7,12 +7,12 @@ const LineChart = props => {
   const node = useRef(null)
   const [loaded, setLoaded] = useState(false)
 
+  // layout effect is used to know when we have loaded, so we
+  // can set the SVG based on the container height
   useLayoutEffect(() => {
     const { clientWidth, clientHeight } = node.current
     setLoaded(true)
   }, [])
-
-  console.log("render", node.current && node.current.clientHeight)
 
   return (
     <Box ref={node} sx={{ height: "100%", width: "100%" }}>

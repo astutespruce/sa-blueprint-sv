@@ -28,10 +28,6 @@ const Credits = () => {
           Conservation Biology Institute
         </OutboundLink>
         .
-        <br />
-        <br />
-        Land ownership and conservation status is derived from the Secured Lands
-        Database from TNC Eastern Division - 2018 Edition.
       </Text>
     </Box>
   )

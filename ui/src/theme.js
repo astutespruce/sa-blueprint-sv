@@ -171,7 +171,11 @@ export default {
       lineHeight: "body",
       a: {
         color: "primary",
+        textDecoration: "none",
         "&:visited": "primary",
+        "&:hover": {
+          textDecoration: "underline",
+        },
       },
       p: {
         fontSize: 2,
@@ -220,6 +224,11 @@ export default {
       color: "primary",
       bg: "grey.2",
       height: "0.5rem",
+      percent: {
+        color: "primary",
+        bg: "grey.2",
+        height: "0.75rem",
+      },
     },
   },
 }
