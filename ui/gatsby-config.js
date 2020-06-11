@@ -12,6 +12,7 @@ module.exports = {
     apiToken: process.env.GATSBY_API_TOKEN,
     apiHost: process.env.GATSBY_API_HOST,
     sentryDSN: process.env.GATSBY_SENTRY_DSN,
+    googleAnalyticsId: process.env.GATSBY_GOOGLE_ANALYTICS_ID,
     mapboxToken: process.env.GATSBY_MAPBOX_API_TOKEN,
   },
   plugins: [
@@ -41,6 +42,15 @@ module.exports = {
     `gatsby-plugin-theme-ui`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
+    {
+      resolve: `gatsby-plugin-google-analytics`,
+      options: {
+        trackingId: process.env.GATSBY_GOOGLE_ANALYTICS_ID,
+        anonymize: true,
+      },
+    },
+
+    // TODO:
     // {
     //   resolve: `gatsby-plugin-manifest`,
     //   options: {

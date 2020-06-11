@@ -68,7 +68,7 @@ Summary units where consolidated using `util/prep_boundaries.py` then
 converted to vector tiles using tippecanoe:
 
 ```
-tippecanoe -f -pg -z 15 -o ./tiles/units.mbtiles -l "units" /tmp/units.geojson
+tippecanoe -f -pg -z 14 -o ./tiles/units.mbtiles -l "units" /tmp/units.geojson
 ```
 
 ### Region mask
@@ -93,5 +93,15 @@ tippecanoe -f -pg -z 15 -o ./tiles/ownership.mbtiles -l "ownership" /tmp/ownersh
 ### Merged tiles
 
 ```
-tile-join -f -o ./tiles/sa_units.mbtiles ./tiles/sa_mask.mbtiles ./tiles/units.mbtiles
+tile-join -f -pg -o ./tiles/sa_units.mbtiles ./tiles/sa_mask.mbtiles ./tiles/units.mbtiles
+```
+
+################ In progress
+
+Create tile attributes for each summary unit in `package_unit_data.py`.
+
+Attach to units:
+
+```
+tile-join -f -pg -o ./tiles/units_atts.mbtiles ./tiles/units.mbtiles -c ./data/derived/huc12/tile_attributes.csv
 ```
