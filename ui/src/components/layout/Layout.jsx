@@ -9,23 +9,26 @@ import Header from "./Header"
 import { BreakpointProvider } from "./Breakpoints"
 import { siteMetadata } from "../../../gatsby-config"
 
-const Layout = ({ children, title, overflowY }) => {
-  return (
-    <BreakpointProvider>
-      <Flex sx={{ height: "100%", flexDirection: "column" }}>
-        <SEO title={title || siteMetadata.title} />
-        <Header />
-        {isUnsupported ? (
-          <UnsupportedBrowser />
-        ) : (
-          <Box sx={{ flex: "1 1 auto", overflowY, height: "100%" }}>
-            {children}
-          </Box>
-        )}
-      </Flex>
-    </BreakpointProvider>
-  )
-}
+const Layout = ({ children, title, overflowY }) => (
+  <BreakpointProvider>
+    <Flex
+      sx={{
+        height: "100%",
+        flexDirection: "column",
+      }}
+    >
+      <SEO title={title || siteMetadata.title} />
+      <Header />
+      {isUnsupported ? (
+        <UnsupportedBrowser />
+      ) : (
+        <Box sx={{ flex: "1 1 auto", overflowY, height: "100%" }}>
+          {children}
+        </Box>
+      )}
+    </Flex>
+  </BreakpointProvider>
+)
 
 Layout.propTypes = {
   children: PropTypes.node.isRequired,

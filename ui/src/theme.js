@@ -211,6 +211,10 @@ export default {
         color: "grey.3",
         my: "2rem",
       },
+      light: {
+        color: "grey.2",
+        my: "2rem",
+      },
     },
     progress: {
       color: "primary",

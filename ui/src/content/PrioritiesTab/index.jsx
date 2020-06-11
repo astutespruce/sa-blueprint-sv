@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import { graphql, useStaticQuery } from "gatsby"
 import { PieChart } from "react-minimal-pie-chart"
-import { Box, Flex, Heading, Text } from "theme-ui"
+import { Box, Flex, Divider, Heading, Text } from "theme-ui"
 
 import { PieChartLegend } from "components/chart"
 
@@ -61,7 +61,7 @@ const PrioritiesTab = ({
   if (corridorAcres < blueprintAcres) {
     corridorChartData.push({
       value: (100 * (blueprintAcres - corridorAcres)) / blueprintAcres,
-      color: "#ffffe5",
+      color: "#ffebc2",
       label: "Not a hub or corridor",
     })
   }
@@ -78,13 +78,14 @@ const PrioritiesTab = ({
         <Flex sx={{ alignItems: "center", mt: "2rem" }}>
           <PieChart
             data={blueprintChartData}
-            segmentsShift={0.5}
-            radius={chartWidth / 4 - 1}
+            segmentsShift={1}
+            lineWidth={80}
+            radius={chartWidth / 4 - 2}
             style={{
               width: chartWidth,
               flex: "0 1 auto",
-              background: "#333",
-              borderRadius: "100em",
+              //   background: "#333",
+              //   borderRadius: "100em",
             }}
           />
 
@@ -93,25 +94,29 @@ const PrioritiesTab = ({
       </Box>
 
       {corridorChartData.length > 0 ? (
-        <Box as="section" sx={{ mt: "4rem" }}>
-          <Heading as="h4">Hubs &amp; Corridors</Heading>
+        <>
+          <Divider variant="styles.hr.light" sx={{ my: "3rem" }} />
+          <Box as="section">
+            <Heading as="h4">Hubs &amp; Corridors</Heading>
 
-          <Flex sx={{ alignItems: "center", mt: "2rem" }}>
-            <PieChart
-              data={corridorChartData}
-              segmentsShift={0.5}
-              radius={chartWidth / 4 - 1}
-              style={{
-                width: chartWidth,
-                flex: "0 1 auto",
-                background: "#333",
-                borderRadius: "100em",
-              }}
-            />
+            <Flex sx={{ alignItems: "center", mt: "2rem" }}>
+              <PieChart
+                data={corridorChartData}
+                segmentsShift={1}
+                lineWidth={80}
+                radius={chartWidth / 4 - 2}
+                style={{
+                  width: chartWidth,
+                  flex: "0 1 auto",
+                  // background: "#333",
+                  // borderRadius: "100em",
+                }}
+              />
 
-            <PieChartLegend elements={corridorChartData} />
-          </Flex>
-        </Box>
+              <PieChartLegend elements={corridorChartData} />
+            </Flex>
+          </Box>
+        </>
       ) : (
         <Text sx={{ textAlign: "center", color: "grey.6" }}>
           No hubs or corridors in this area.

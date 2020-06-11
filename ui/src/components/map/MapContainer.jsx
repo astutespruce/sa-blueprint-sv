@@ -73,6 +73,8 @@ const MapContainer = () => {
         ...prevState,
         tab: nextTab,
       }))
+      // scroll content to top
+      contentNode.current.scrollTop = 0
     }
   }, [selectedUnit])
 
@@ -124,6 +126,10 @@ const MapContainer = () => {
       corridors_total: corridorAcres,
       ecosystems: ecosystemAcres,
       indicators,
+      slr,
+      slr_acres: slrAcres,
+      urban,
+      urban_acres: urbanAcres,
     } = selectedUnit
 
     switch (tab) {
@@ -161,7 +167,15 @@ const MapContainer = () => {
       }
       case "unit-threats": {
         //   TODO: props
-        content = <ThreatsTab />
+        content = (
+          <ThreatsTab
+            unitType={unitType}
+            slr={slr}
+            slrAcres={slrAcres}
+            urban={urban}
+            urbanAcres={urbanAcres}
+          />
+        )
         break
       }
       case "unit-partners": {

@@ -1,3 +1,4 @@
 import PieChartLegend from "./PieChartLegend"
+import LineChart from "./LineChart"
 
-export { PieChartLegend }
+export { PieChartLegend, LineChart }
