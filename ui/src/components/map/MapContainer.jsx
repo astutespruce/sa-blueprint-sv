@@ -259,7 +259,7 @@ const MapContainer = () => {
         </Flex>
 
         {/* Map placeholder */}
-        <Flex
+        {/* <Flex
           onClick={() => selectUnit(demoUnit)}
           sx={{
             background: "linear-gradient(0deg, #08AEEA 0%, #2AF598 100%)",
@@ -270,8 +270,8 @@ const MapContainer = () => {
           }}
         >
           {isMobile && tab === "map" ? <Box>Map goes here</Box> : null}
-        </Flex>
-        {/* <Map /> */}
+        </Flex> */}
+        <Map />
       </Flex>
 
       {/* Mobile footer tabs */}

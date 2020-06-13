@@ -6,8 +6,7 @@ export default {
     text: "#333",
     background: "#fff",
     primary: "#0892d0",
-    secondary: "#D04608",
-    tertiary: "#F98E5F",
+    accent: "#FF8800",
     error: "#D04608",
     ok: "#259e06",
     grey: {

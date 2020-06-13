@@ -1,6 +1,21 @@
 """
 Extract summary unit data created using tabulate_area.py and postprocess to join
 into vector tiles.
+
+The following code compacts values in a few ways.  These were tested against
+versions of the vector tiles that retained individual integer columns, and the
+compacted version here ended up being smaller.
+
+Time-series values (SLR, urban) were delta encoded, and combined with the analysis area into a string:
+<shape_mask>/<acres at 0 ft>|<delta acres at 1ft>|<delta acres between 1ft and 2ft>|...
+
+Values that could have multiple key:value entries (ownership, protection) are dictionary-encoded:
+FED:<fed_acres>,LOC: <loc_acres>,...
+
+Counties are encoded as:
+<FIPS>|state|county,<FIPS>|...
+
+
 """
 
 from pathlib import Path
@@ -22,6 +37,8 @@ units = pd.read_feather(
 units.acres = units.acres.round().astype("uint")
 
 blueprint = pd.read_feather(working_dir / "blueprint.feather").set_index(id_field)
+
+
 
 # TODO: convert indicators actually present in a HUC12 into i1v1|i1v2|...,i2v1|i2v2|...
 
@@ -62,7 +79,7 @@ urban = pd.Series(
 
 
 ### Dictionary encode ownership and protection for each HUC12:
-# FED: <fed_acres>,LOC: <loc_acres>, ...
+# FED:<fed_acres>,LOC: <loc_acres>, ...
 ownership = pd.read_feather(working_dir / "ownership.feather").set_index(id_field)
 ownership = pd.Series(
     (ownership.FEE_ORGTYP + ":" + ownership.acres.round().astype("uint").astype("str"))
@@ -107,4 +124,3 @@ out = (
 out.to_csv(
     working_dir / "tile_attributes.csv", index_label="id", quoting=csv.QUOTE_NONNUMERIC
 )
-

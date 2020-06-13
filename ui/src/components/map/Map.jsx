@@ -4,10 +4,15 @@ import mapboxgl from "mapbox-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
 import { Box } from "theme-ui"
 
+import { useSelectedUnit } from "components/layout"
+
 import { hasWindow } from "util/dom"
 import { getCenterAndZoom } from "./util"
 import { config, sources, layers } from "./config"
 import { siteMetadata } from "../../../gatsby-config"
+
+// TODO: remove
+import { inlandUnit as demoUnit } from "test/exampleUnits"
 
 const { mapboxToken } = siteMetadata
 
@@ -30,15 +35,15 @@ const Map = ({}) => {
     return null
   }
 
-  // this ref holds the map DOM node so that we can pass it into Mapbox GL
   const mapNode = useRef(null)
-
-  // this ref holds the map object once we have instantiated it, so that we
-  // can use it in other hooks
   const mapRef = useRef(null)
+  const mapLoadedRef = useRef(false)
+  const highlightIDRef = useRef(null)
+
+  const { selectedUnit, selectUnit } = useSelectedUnit()
 
   useEffect(() => {
-    const { bounds, minZoom, maxZoom, styleIDs } = config
+    const { bounds, maxBounds, minZoom, maxZoom, styleIDs } = config
     const { center, zoom } = getCenterAndZoom(mapNode.current, bounds, 0.1)
 
     // Token must be set before constructing map
@@ -51,6 +56,7 @@ const Map = ({}) => {
       zoom,
       minZoom,
       maxZoom,
+      maxBounds,
     })
     mapRef.current = map
     window.map = map // for easier debugging and querying via console
@@ -77,18 +83,78 @@ const Map = ({}) => {
 
       // add layers
       layers.forEach(layer => {
-        map.addLayer(layer)
+        map.addLayer(layer, layer.before || null)
       })
+
+      mapLoadedRef.current = true
     })
 
     // hook up map events here, such as click, mouseenter, mouseleave
     // e.g., map.on('click', (e) => {})
+
+    map.on("click", "unit-fill", ({ features }) => {
+      if (!(features && features.length > 0)) return
+
+      const { id: selectedId, properties } = features[0]
+      console.log("selectedID", selectedId, properties.id, properties)
+
+      map.setFilter("unit-outline-highlight", ["==", "id", properties.id])
+
+      // TODO: enable
+      //   selectUnit(features[0].properties)
+
+      selectUnit(demoUnit)
+    })
+
+    // Highlight features under mouse and remove previously highlighted ones
+    // TODO: can we do this with just the first feature highlighted and avoid set comparison?
+    map.on("mousemove", "unit-fill", ({ features }) => {
+      map.getCanvas().style.cursor = "pointer"
+
+      if (!(features && features.length > 0)) return
+
+      const { id } = features[0]
+
+      const { current: prevId } = highlightIDRef
+      if (prevId !== null && prevId !== id) {
+        map.setFeatureState(
+          { source: "sa", sourceLayer: "units", id: prevId },
+          { highlight: false }
+        )
+      }
+      map.setFeatureState(
+        { source: "sa", sourceLayer: "units", id },
+        { highlight: true }
+      )
+      highlightIDRef.current = id
+    })
+
+    // Unhighlight all hover features on mouseout
+    map.on("mouseout", () => {
+      const { current: prevId } = highlightIDRef
+      if (prevId !== null) {
+        map.setFeatureState(
+          { source: "sa", sourceLayer: "units", id: prevId },
+          { highlight: false }
+        )
+      }
+    })
 
     // when this component is destroyed, remove the map
     return () => {
       map.remove()
     }
   }, [])
+
+  useEffect(() => {
+    console.log("Map effect, selected unit changed", selectedUnit)
+
+    if (!mapLoadedRef.current) return
+
+    if (selectedUnit === null) {
+      map.setFilter("unit-outline-highlight", ["==", "id", Infinity])
+    }
+  }, [selectedUnit])
 
   return (
     <Box
@@ -105,6 +171,8 @@ const Map = ({}) => {
   )
 }
 
-Map.propTypes = {}
+Map.propTypes = {
+  onSelectUnit: PropTypes.func.isRequired,
+}
 
 export default Map

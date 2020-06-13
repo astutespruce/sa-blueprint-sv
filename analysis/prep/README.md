@@ -68,7 +68,7 @@ Summary units where consolidated using `util/prep_boundaries.py` then
 converted to vector tiles using tippecanoe:
 
 ```
-tippecanoe -f -pg -z 14 -o ./tiles/units.mbtiles -l "units" /tmp/units.geojson
+tippecanoe -f -pg -Z 8 -z 14 -ai -o ./tiles/units.mbtiles -l "units" /tmp/units.geojson
 ```
 
 ### Region mask
@@ -99,6 +99,8 @@ tile-join -f -pg -o ./tiles/sa_units.mbtiles ./tiles/sa_mask.mbtiles ./tiles/uni
 ################ In progress
 
 Create tile attributes for each summary unit in `package_unit_data.py`.
+
+NOTE: unit are not shown in the map below Z10 (`-Z 8 -z 14`)
 
 Attach to units:
 

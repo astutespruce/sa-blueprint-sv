@@ -1,6 +1,7 @@
 import React, { useCallback } from "react"
 import PropTypes from "prop-types"
 import { Box, Flex, Text } from "theme-ui"
+import { lighten } from "@theme-ui/color"
 
 import theme from "theme"
 import EcosystemHeader from "./EcosystemHeader"
@@ -50,7 +51,7 @@ const Ecosystem = ({
             pt: "1rem",
             pb: "1.5rem",
             "&:hover": {
-              bg: "blue.0",
+              bg: lighten("blue.0", 0.02),
             },
           }}
         >

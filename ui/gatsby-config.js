@@ -11,6 +11,7 @@ module.exports = {
     contactPhone: `19197070252`,
     apiToken: process.env.GATSBY_API_TOKEN,
     apiHost: process.env.GATSBY_API_HOST,
+    tileHost: process.env.GATSBY_TILE_HOST,
     sentryDSN: process.env.GATSBY_SENTRY_DSN,
     googleAnalyticsId: process.env.GATSBY_GOOGLE_ANALYTICS_ID,
     mapboxToken: process.env.GATSBY_MAPBOX_API_TOKEN,

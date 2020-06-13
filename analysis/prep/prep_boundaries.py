@@ -3,6 +3,7 @@ import pandas as pd
 import geopandas as gp
 import pygeos as pg
 import pyogrio as pio
+from pyogrio.geopandas import write_dataframe
 from geofeather.pygeos import from_geofeather, to_geofeather
 from geofeather import from_geofeather as from_geofeather_as_gp
 
@@ -14,10 +15,10 @@ from analysis.pygeos_util import to_pygeos, from_pygeos, sjoin, to_crs
 src_dir = Path("source_data/summary_units")
 out_dir = Path("data/summary_units")
 
-huc12 = from_geofeather(src_dir / "huc12_prj.feather")[["HUC12", "geometry"]].rename(
+huc12 = from_geofeather(out_dir / "huc12_prj.feather")[["HUC12", "geometry"]].rename(
     columns={"HUC12": "id"}
 )
-marine = from_geofeather(src_dir / "marine_blocks_prj.feather")[["id", "geometry"]]
+marine = from_geofeather(out_dir / "marine_blocks_prj.feather")[["id", "geometry"]]
 
 # TODO: simplify (slightly): try to get rid of overlaps between units
 
@@ -28,10 +29,13 @@ to_geofeather(df, out_dir / "units.feather", crs=GEO_CRS)
 
 
 # Create GeoJSONSeq file for vector tiles
-# TODO: port to pyogrio
+
 df.geometry = from_pygeos(df.geometry)
 df = gp.GeoDataFrame(df, crs=GEO_CRS)
 df.to_file("/tmp/units.geojson", driver="GeoJSONSeq")
+# TODO: use pyogrio
+# df = gp.GeoDataFrame({"geometry": df.geometry, 'id': df.id},index=df.index, crs=GEO_CRS)
+# write_dataframe(df, '/tmp/units.geojson', driver="GeoJSONSeq")
 
 
 ### Create mask by cutting SA bounds out of arbitrarily large polygon
