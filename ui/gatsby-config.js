@@ -4,7 +4,7 @@ require("dotenv").config({
 
 module.exports = {
   siteMetadata: {
-    title: `South Atlantic Conservation Blueprint 2.x`,
+    title: `South Atlantic Conservation Blueprint 2020`,
     description: `Provides custom reports for user-defined areas of interest`,
     author: `South Atlantic Conservation Blueprint`,
     contactEmail: `hilary_morris@fws.gov`,

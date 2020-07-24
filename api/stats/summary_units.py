@@ -60,6 +60,7 @@ class SummaryUnits(object):
         results["type"] = (
             "subwatershed" if self.unit_type == "huc12" else "marine lease block"
         )
+        results["is_marine"] = self.unit_type == "marine_blocks"
 
         blueprint = None
         try:

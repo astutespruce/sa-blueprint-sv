@@ -24,10 +24,7 @@ import {
   Tabs as DesktopTabs,
 } from "components/layout/desktop"
 
-import { sum } from "util/data"
-
-// TODO: remove
-import { inlandUnit as demoUnit } from "test/exampleUnits"
+import { sum, indexBy } from "util/data"
 
 import Map from "./Map"
 
@@ -125,7 +122,6 @@ const MapContainer = () => {
       blueprint_total: blueprintAcres,
       corridors,
       corridors_total: corridorAcres,
-      ecosystems: ecosystemAcres,
       indicators,
       slr,
       slr_acres: slrAcres,
@@ -159,18 +155,17 @@ const MapContainer = () => {
           acres: selectedUnit[indicatorId],
           totalAcres: sum(selectedUnit[indicatorId]),
         }))
+
         content = (
           <IndicatorsTab
             unitType={unitType}
             analysisAcres={blueprintAcres}
-            ecosystemAcres={ecosystemAcres}
-            indicatorAcres={indicatorArea}
+            indicatorAcres={indexBy(indicatorArea, "id")}
           />
         )
         break
       }
       case "unit-threats": {
-        //   TODO: props
         content = (
           <ThreatsTab
             unitType={unitType}
@@ -183,7 +178,6 @@ const MapContainer = () => {
         break
       }
       case "unit-partners": {
-        //   TODO: props
         content = (
           <PartnersTab
             unitType={unitType}
@@ -258,19 +252,6 @@ const MapContainer = () => {
           </Box>
         </Flex>
 
-        {/* Map placeholder */}
-        {/* <Flex
-          onClick={() => selectUnit(demoUnit)}
-          sx={{
-            background: "linear-gradient(0deg, #08AEEA 0%, #2AF598 100%)",
-            flex: "1 1 auto",
-            width: "100%",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          {isMobile && tab === "map" ? <Box>Map goes here</Box> : null}
-        </Flex> */}
         <Map />
       </Flex>
 

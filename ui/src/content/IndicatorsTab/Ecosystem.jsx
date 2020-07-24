@@ -1,22 +1,13 @@
 import React, { useCallback } from "react"
 import PropTypes from "prop-types"
-import { Box, Flex, Text } from "theme-ui"
-import { lighten } from "@theme-ui/color"
+import { Box, Text } from "theme-ui"
 
-import theme from "theme"
 import EcosystemHeader from "./EcosystemHeader"
 import IndicatorAverageChart from "./IndicatorAverageChart"
 
 import { IndicatorPropType } from "./IndicatorDetails"
 
-const Ecosystem = ({
-  id,
-  label,
-  acres,
-  indicators,
-  analysisAcres,
-  onSelectIndicator,
-}) => {
+const Ecosystem = ({ id, label, group, indicators, onSelectIndicator }) => {
   const handleIndicatorClick = useCallback(
     indicator => () => onSelectIndicator(indicator),
     []
@@ -29,18 +20,14 @@ const Ecosystem = ({
         flex: "1 0 auto",
         "&:not(:first-of-type)": {
           mt: "2rem",
-          "&>div:first-child": {
+          "&>div:first-of-type": {
             borderTop: "1px solid",
-            borderTopColor: "blue.3",
+            borderTopColor: group.borderColor,
           },
         },
       }}
     >
-      <EcosystemHeader
-        id={id}
-        label={label}
-        percent={analysisAcres && acres ? (100 * acres) / analysisAcres : 0}
-      />
+      <EcosystemHeader id={id} label={label} group={group} />
       {indicators.map(indicator => (
         <Box
           key={indicator.id}
@@ -51,7 +38,7 @@ const Ecosystem = ({
             pt: "1rem",
             pb: "1.5rem",
             "&:hover": {
-              bg: lighten("blue.0", 0.02),
+              bg: "grey.0",
             },
           }}
         >
@@ -76,7 +63,11 @@ const Ecosystem = ({
 export const EcosystemPropType = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  acres: PropTypes.number, // missing for regional ecosystems
+  group: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
+  }),
   indicators: PropTypes.arrayOf(
     PropTypes.shape({
       ...IndicatorPropType,
@@ -85,9 +76,8 @@ export const EcosystemPropType = {
 }
 
 Ecosystem.propTypes = {
-  analysisAcres: PropTypes.number.isRequired,
-  onSelectIndicator: PropTypes.func.isRequired,
   ...EcosystemPropType,
+  onSelectIndicator: PropTypes.func.isRequired,
 }
 
 export default Ecosystem

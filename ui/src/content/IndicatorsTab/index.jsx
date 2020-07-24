@@ -11,30 +11,24 @@ import MobileEcosystemList from "./MobileEcosystemList"
 
 // TODO: split between mobile swiper and list view here, let each manage own state?
 
-const IndicatorsTab = ({
-  unitType,
-  analysisAcres,
-  ecosystemAcres,
-  indicatorAcres,
-}) => {
+const IndicatorsTab = ({ unitType, analysisAcres, indicatorAcres }) => {
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
 
   const query = useStaticQuery(graphql`
     query {
-      ecosystems: allEcosystemsJson(
-        sort: { fields: value, order: ASC }
-        filter: { value: { ne: null } }
-      ) {
+      ecosystemGroups: allEcosystemGroupsJson {
         edges {
           node {
             id
             label
-            indicators
+            color
+            borderColor
+            ecosystems
           }
         }
       }
-      regionalEcosystems: allEcosystemsJson(filter: { value: { eq: null } }) {
+      ecosystems: allEcosystemsJson {
         edges {
           node {
             id
@@ -64,83 +58,72 @@ const IndicatorsTab = ({
     }
   `)
 
-  const ECOSYSTEMS = extractNodes(query.ecosystems)
-  const REGIONAL_ECOSYSTEMS = extractNodes(query.regionalEcosystems)
+  console.log("indicatorArea", indicatorAcres)
+
+  const ECOSYSTEM_GROUPS = extractNodes(query.ecosystemGroups)
+  const ECOSYSTEMS = indexBy(extractNodes(query.ecosystems), "id")
   const INDICATORS = indexBy(extractNodes(query.indicators), "id")
 
-  const indicators = indexBy(indicatorAcres, "id")
+  console.log("ecosystems list", extractNodes(query.ecosystems))
+
+  const ecosystemsPresent = new Set(
+    Object.keys(indicatorAcres).map(id => id.split("_")[0])
+  )
+  console.log("ecosystems present", ecosystemsPresent, ECOSYSTEMS)
 
   // Aggregate ecosystems and indicators into a nested data structure
-  // ONLY for ecosystems that are present (acres > 0)
-  const ecosystems = ECOSYSTEMS.map((values, i) => ({
-    ...values,
-    acres: ecosystemAcres[i],
-  }))
-    .filter(({ acres }) => acres > 0)
-    .map(
-      (
-        {
-          id: ecosystemId,
-          label: ecosystemLabel,
-          indicators: indicatorIds,
-          ...rest
-        },
-        i
-      ) => {
-        const ecosystemIndicators = indicatorIds
-          .map(indicatorId => {
-            const id = `${ecosystemId}_${indicatorId}`
+  // ONLY for ecosystems that have indicators present
+  // Output this as a flattened list of ecosystems in order of groups
+  const ecosystems = []
+
+  ECOSYSTEM_GROUPS.forEach(
+    ({
+      id: groupId,
+      label,
+      color,
+      borderColor,
+      ecosystems: groupEcosystemIds,
+    }) => {
+      const ids = groupEcosystemIds.filter(e => ecosystemsPresent.has(e))
+
+      console.log("ids present", ids)
+
+      if (ids.length > 0) {
+        const groupEcosystems = ids
+          .map(ecosystemId => {
+            const indicatorsPresent = ECOSYSTEMS[ecosystemId].indicators
+              .map(indicatorId => `${ecosystemId}_${indicatorId}`)
+              .filter(indicatorId => indicatorAcres[indicatorId])
+
+            const group = {
+              id: groupId,
+              label,
+              color,
+              borderColor,
+            }
+
             return {
-              ...INDICATORS[id],
-              ...indicators[id],
-              ecosystemLabel,
-              analysisAcres,
+              group,
+              ...ECOSYSTEMS[ecosystemId],
+              indicators: indicatorsPresent.map(indicatorId => ({
+                ...INDICATORS[indicatorId],
+                ...indicatorAcres[indicatorId],
+                ecosystem: {
+                  id: ecosystemId,
+                  label: ECOSYSTEMS[ecosystemId].label,
+                  group,
+                },
+              })),
             }
           })
-          .sort(sortByFunc("label", true))
+          .filter(({ indicators }) => indicators.length > 0)
 
-        return {
-          id: ecosystemId,
-          label: ecosystemLabel,
-          ...rest,
-          indicators: ecosystemIndicators,
+        if (groupEcosystems.length > 0) {
+          ecosystems.push(...groupEcosystems)
         }
       }
-    )
-    .sort(sortByFunc("acres", false))
-
-  if (unitType === "subwatershed") {
-    const regionalEcosystems = REGIONAL_ECOSYSTEMS.map(
-      ({
-        id: ecosystemId,
-        label: ecosystemLabel,
-        indicators: indicatorIds,
-        ...rest
-      }) => {
-        const ecosystemIndicators = indicatorIds
-          .map(indicatorId => {
-            const id = `${ecosystemId}_${indicatorId}`
-            return {
-              ...INDICATORS[id],
-              ...indicators[id],
-              ecosystemLabel,
-              analysisAcres,
-            }
-          })
-          .sort(sortByFunc("label", true))
-
-        return {
-          id: ecosystemId,
-          label: ecosystemLabel,
-          ...rest,
-          indicators: ecosystemIndicators,
-        }
-      }
-    )
-    ecosystems.push(...regionalEcosystems)
-  }
-
-  console.log("ecosystem data aggregated", ecosystems)
+    }
+  )
 
   //   if (isMobile) {
   //     return (
@@ -153,8 +136,8 @@ const IndicatorsTab = ({
 
   return (
     <DesktopEcosystemList
-      analysisAcres={analysisAcres}
       ecosystems={ecosystems}
+      analysisAcres={analysisAcres}
     />
   )
 }
@@ -162,8 +145,7 @@ const IndicatorsTab = ({
 IndicatorsTab.propTypes = {
   unitType: PropTypes.string.isRequired,
   analysisAcres: PropTypes.number.isRequired,
-  ecosystemAcres: PropTypes.arrayOf(PropTypes.number).isRequired,
-  indicatorAcres: PropTypes.arrayOf(
+  indicatorAcres: PropTypes.objectOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       acres: PropTypes.arrayOf(PropTypes.number).isRequired,

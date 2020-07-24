@@ -1,12 +1,12 @@
 import React, { useState, useCallback, useEffect } from "react"
 import PropTypes from "prop-types"
 
-import { indexBy, flatten } from "util/data"
+import { flatten } from "util/data"
 
 import Ecosystem, { EcosystemPropType } from "./Ecosystem"
 import IndicatorDetails from "./IndicatorDetails"
 
-const DesktopEcosystemList = ({ analysisAcres, ecosystems }) => {
+const DesktopEcosystemList = ({ ecosystems, analysisAcres }) => {
   const indicators = flatten(
     Object.values(ecosystems).map(({ indicators }) => indicators)
   )
@@ -24,6 +24,7 @@ const DesktopEcosystemList = ({ analysisAcres, ecosystems }) => {
     <>
       {selectedIndicator ? (
         <IndicatorDetails
+          analysisAcres={analysisAcres}
           onClose={handleCloseIndicator}
           {...selectedIndicator}
         />
@@ -32,7 +33,6 @@ const DesktopEcosystemList = ({ analysisAcres, ecosystems }) => {
           <Ecosystem
             key={ecosystem.id}
             onSelectIndicator={handleSelectIndicator}
-            analysisAcres={analysisAcres}
             {...ecosystem}
           />
         ))
@@ -42,12 +42,8 @@ const DesktopEcosystemList = ({ analysisAcres, ecosystems }) => {
 }
 
 DesktopEcosystemList.propTypes = {
+  ecosystems: PropTypes.arrayOf(PropTypes.shape(EcosystemPropType)).isRequired,
   analysisAcres: PropTypes.number.isRequired,
-  ecosystems: PropTypes.arrayOf(
-    PropTypes.shape({
-      ...EcosystemPropType,
-    })
-  ).isRequired,
 }
 
 export default DesktopEcosystemList

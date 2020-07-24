@@ -1,11 +1,14 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-import { Box, Flex, Heading, Text, Image } from "theme-ui"
+import { Box, Flex, Heading, Image, Text } from "theme-ui"
+import { darken } from "@theme-ui/color"
 
-import { formatPercent } from "util/format"
-
-const EcosystemHeader = ({ id, label, percent, isFirst }) => {
+const EcosystemHeader = ({
+  id,
+  label,
+  group: { id: groupId, label: groupLabel, color, borderColor },
+}) => {
   const icon = require(`images/${id}.svg`)
 
   return (
@@ -13,11 +16,11 @@ const EcosystemHeader = ({ id, label, percent, isFirst }) => {
       sx={{
         alignItems: "center",
         justifyContent: "space-between",
-        bg: "blue.0",
+        bg: color,
         py: ["1rem", "0.5rem"],
         px: "1rem",
         borderBottom: "1px solid",
-        borderBottomColor: "blue.3",
+        borderBottomColor: borderColor,
       }}
     >
       <Flex sx={{ alignItems: "center" }}>
@@ -31,15 +34,13 @@ const EcosystemHeader = ({ id, label, percent, isFirst }) => {
             borderRadius: "2.5em",
           }}
         />
-        <Heading as="h4">{label}</Heading>
-      </Flex>
-      {percent > 0 && (
-        <Box sx={{ color: "grey.8", fontSize: 0, textAlign: "right" }}>
-          <b>{formatPercent(percent)}%</b>
-          <br />
-          of area
+        <Box>
+          {groupId === "marine" ? null : (
+            <Text sx={{ fontSize: 0, color: "grey.8" }}>{groupLabel}</Text>
+          )}
+          <Heading as="h4">{label}</Heading>
         </Box>
-      )}
+      </Flex>
     </Flex>
   )
 }
@@ -47,11 +48,11 @@ const EcosystemHeader = ({ id, label, percent, isFirst }) => {
 EcosystemHeader.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  percent: PropTypes.number,
-}
-
-EcosystemHeader.defaultProps = {
-  percent: null, // some ecosystems don't have a percent
+  group: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    color: PropTypes.string.isRequired,
+  }),
 }
 
 export default EcosystemHeader

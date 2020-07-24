@@ -55,10 +55,7 @@ class CustomArea(object):
             "blueprint": blueprint["blueprint"],
             "corridors": blueprint["corridors"],
             "corridors_total": blueprint["corridors"].sum(),
-            # "ecosystems": blueprint["ecosystems"],
-            # area is marine if it is completely within the marine ecosystem
-            # TODO: find correct way to indicate marine
-            # "is_marine": blueprint["ecosystems"][7] == blueprint["shape_mask"],
+            # TODO: find correct way to set is_marine
         }
 
         indicators = []

@@ -74,8 +74,7 @@
       "permeablesurface",
       "riparianbuffers"
     ],
-    "description": "This ecosystem includes the lakes, rivers, and streams throughout the region that drain to the Atlantic Ocean and Gulf of Mexico. Water quality, quantity, and timing define a healthy freshwater environment, which provides clean drinking water and fishable and swimmable streams for human use while also supporting mussel and fish populations.",
-    "extent": "region"
+    "description": "This ecosystem includes the lakes, rivers, and streams throughout the region that drain to the Atlantic Ocean and Gulf of Mexico. Water quality, quantity, and timing define a healthy freshwater environment, which provides clean drinking water and fishable and swimmable streams for human use while also supporting mussel and fish populations."
   },
   {
     "id": "landscapes",
@@ -85,14 +84,12 @@
       "lowurbanhistoric",
       "resilientbiodiversityhotspots"
     ],
-    "description": "This system focuses on connections across all terrestrial habitats, from uplands to the shoreline. A functional landscape knits together biodiversity hotspots, large habitat patches, and cultural features. This ecologically connected network creates a healthy environment for wildlife and people alike that is resilient to threats like climate change and urbanization.",
-    "extent": "region"
+    "description": "This system focuses on connections across all terrestrial habitats, from uplands to the shoreline. A functional landscape knits together biodiversity hotspots, large habitat patches, and cultural features. This ecologically connected network creates a healthy environment for wildlife and people alike that is resilient to threats like climate change and urbanization."
   },
   {
     "id": "waterscapes",
     "label": "Waterscapes",
     "indicators": ["migratoryfishconnectivity", "networkcomplexity"],
-    "description": "This system focuses on connections between freshwater and saltwater—the flow of water from lakes and rivers, through marshes and estuaries, eventually to the ocean. Energy, agriculture, cities, shipping, and fisheries all depend on water. These competing uses limit water availability and interfere with natural processes like fish passage and natural seasonal flooding.",
-    "extent": "region"
+    "description": "This system focuses on connections between freshwater and saltwater—the flow of water from lakes and rivers, through marshes and estuaries, eventually to the ocean. Energy, agriculture, cities, shipping, and fisheries all depend on water. These competing uses limit water availability and interfere with natural processes like fish passage and natural seasonal flooding."
   }
 ]

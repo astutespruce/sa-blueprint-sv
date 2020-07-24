@@ -12,7 +12,10 @@ import IndicatorPercentTable from "./IndicatorPercentTable"
 const IndicatorDetails = ({
   id,
   label,
-  ecosystemLabel,
+  ecosystem: {
+    label: ecosystemLabel,
+    group: { color, borderColor },
+  },
   acres,
   totalAcres,
   description,
@@ -63,12 +66,12 @@ const IndicatorDetails = ({
           justifyContent: "space-between",
           alignItems: "center",
           cursor: "pointer",
-          bg: "blue.0",
+          bg: color,
           py: ["1rem", "0.5rem"],
           pl: "0.25rem",
           pr: "1rem",
           borderBottom: "1px solid",
-          borderBottomColor: "blue.3",
+          borderBottomColor: borderColor,
         }}
       >
         <Flex sx={{}}>
@@ -85,10 +88,18 @@ const IndicatorDetails = ({
           <Flex sx={{ alignItems: "center" }}>
             <Image
               src={icon}
-              sx={{ width: "2.5em", height: "2.5em", mr: "0.5em" }}
+              sx={{
+                width: "2.5em",
+                height: "2.5em",
+                mr: "0.5em",
+                bg: "#FFF",
+                borderRadius: "2.5em",
+              }}
             />
             <Box>
-              <Text sx={{ fontSize: 0 }}>{ecosystemLabel}</Text>
+              <Text sx={{ fontSize: 0, color: "grey.8" }}>
+                {ecosystemLabel}
+              </Text>
               <Heading as="h4">{label}</Heading>
             </Box>
           </Flex>
@@ -128,7 +139,14 @@ const IndicatorDetails = ({
 export const IndicatorPropType = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  ecosystemLabel: PropTypes.string.isRequired,
+  ecosystem: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    label: PropTypes.string.isRequired,
+    group: PropTypes.shape({
+      color: PropTypes.string.isRequired,
+      borderColor: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
   acres: PropTypes.arrayOf(PropTypes.number).isRequired,
   totalAcres: PropTypes.number.isRequired,
   analysisAcres: PropTypes.number.isRequired,

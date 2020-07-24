@@ -1,24 +1,5 @@
 <div class="ecosystem">
-
-<!--
-<div class="ecosystem-header flex align-center flex-grow">
-    <img src="{{(ecosystem.id + '.svg')|load_asset}}" class="ecosystem-icon" alt="Icon for {{ecosystem.label}}"/>
-    <h2>
-        <span id="{{ecosystem.id}}">{{ecosystem.label}}</span>
-    </h2>
-</div>
-
-<p>
-    {{ecosystem.description}}
-    <br />
-    <br />
-    <br />
-    <br />
-</p>
--->
-
-{% for indicator in ecosystem.indicators %}
-    {% include "blocks/indicator.html" %}
-{% endfor %}
-
+    {% for indicator in ecosystem.indicators %}
+        {% include "blocks/indicator.html" %}
+    {% endfor %}
 </div>

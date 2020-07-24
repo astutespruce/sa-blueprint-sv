@@ -2,29 +2,34 @@
   {
     "id": "land",
     "label": "Terrestrial",
+    "color": "#f2f8ec",
+    "borderColor": "#d8eac7",
     "ecosystems": [
       "beachanddune",
+      "landscapes",
       "maritimeforest",
       "pineandprairie",
-      "uplandhardwood",
-      "landscapes"
+      "uplandhardwood"
     ]
   },
   {
     "id": "freshwater",
     "label": "Freshwater",
+    "color": "#eef7fc",
+    "borderColor": "#c3e3f4",
     "ecosystems": [
       "estuarine",
       "forestedwetland",
-      "freshwatermarsh",
-      "waterbodies",
       "freshwateraquatic",
+      "freshwatermarsh",
       "waterscapes"
     ]
   },
   {
     "id": "marine",
     "label": "Marine",
+    "color": "#f5f5ff",
+    "borderColor": "#c2c2ff",
     "ecosystems": ["marine"]
   }
 ]

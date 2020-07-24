@@ -46,7 +46,11 @@ const Protection = ({ analysisAcres, protectionAcres }) => {
   return (
     <>
       {bars.map(bar => (
-        <PercentBarChart {...bar} sx={{ mt: "0.5rem", mb: "1rem" }} />
+        <PercentBarChart
+          key={bar.id}
+          {...bar}
+          sx={{ mt: "0.5rem", mb: "1rem" }}
+        />
       ))}
 
       <Text sx={{ color: "grey.7", fontSize: 1 }}>

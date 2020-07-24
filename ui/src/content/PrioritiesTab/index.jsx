@@ -72,7 +72,7 @@ const PrioritiesTab = ({
   return (
     <Box sx={{ py: "2rem", pl: "1rem", pr: "2rem" }}>
       <Box as="section">
-        <Heading as="h3">Blueprint 2.x Priority</Heading>
+        <Heading as="h3">Blueprint 2020 Priority</Heading>
         <Text sx={{ color: "grey.7" }}>for shared conservation action</Text>
 
         <Flex sx={{ alignItems: "center", mt: "2rem" }}>

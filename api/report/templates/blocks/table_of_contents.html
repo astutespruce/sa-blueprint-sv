@@ -7,57 +7,68 @@
         <a href="#About" class="toctext"></a>
         <a href="#About" class="tocpagenr"></a>
     </li>
+    <div class="divider"></div>
     <li>
         <a href="#Blueprint" class="toctext"></a>
         <a href="#Blueprint" class="tocpagenr"></a>
     </li>
+    <div class="divider"></div>
     <li>
         <a href="#Corridors" class="toctext"></a>
         <a href="#Corridors" class="tocpagenr"></a>
     </li>
 
+
     {% for ecosystem_group in ecosystem_groups %}
-    <li class="no-border">
-        <a href="#{{ecosystem_group.id}}" class="toctext"></a>
-        <a href="#{{ecosystem_group.id}}" class="tocpagenr"></a>
-        <ol>
-            {% for ecosystem in ecosystem_group.ecosystems %}
-                <li>
-                    <a href="#{{ecosystem.id}}" class="toctext"></a>
-                    <a href="#{{ecosystem.id}}" class="tocpagenr"></a>
-                </li>
-            {% endfor %}
-            </ol>
+        <div class="divider"></div>
+        <li class="no-border">
+            <a href="#{{ecosystem_group.id}}" class="toctext"></a>
+            <a href="#{{ecosystem_group.id}}" class="tocpagenr"></a>
+
+            {% if ecosystem_group.id != 'marine'%}
+                <ol>
+                    {% for ecosystem in ecosystem_group.ecosystems %}
+                        <div class="divider"></div>
+                        <li>
+                            <a href="#ecosystem-{{ecosystem.id}}" class="toctext"></a>
+                            <a href="#ecosystem-{{ecosystem.id}}" class="tocpagenr"></a>
+                        </li>
+                    {% endfor %}
+                </ol>
+            {% endif %}
         </li>
     {% endfor %}
 
     {% if not results.is_marine %}
+        <div class="divider"></div>
         <li>
             <a href="#Threats" class="toctext"></a>
             <a href="#Threats" class="tocpagenr"></a>
             <ol>
+                <div class="divider"></div>
                 <li>
                     <a href="#SLR" class="toctext"></a>
                     <a href="#SLR" class="tocpagenr"></a>
                 </li>
 
-                {% if results.urban_acres %}
-                    <li>
-                        <a href="#Urban" class="toctext"></a>
-                        <a href="#Urban" class="tocpagenr"></a>
-                    </li>
-                {% endif %}
+                <div class="divider"></div>
+                <li>
+                    <a href="#Urban" class="toctext"></a>
+                    <a href="#Urban" class="tocpagenr"></a>
+                </li>
             </ol>
         </li>
     {% endif %}
 
     {% if results.ownership or results.protection or results.counties %}
+        <div class="divider"></div>
         <li>
             <a href="#Ownership" class="toctext"></a>
             <a href="#Ownership" class="tocpagenr"></a>
         </li>
     {% endif %}
 
+    <div class="divider"></div>
     <li>
         <a href="#Credits" class="toctext"></a>
         <a href="#Credits" class="tocpagenr"></a>

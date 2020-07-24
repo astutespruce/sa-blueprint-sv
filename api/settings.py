@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TEMP_DIR = Path(os.getenv("TEMP_DIR", "/tmp"))
-MBGL_SERVER_URL = os.getenv("MBGL_SERVER_URL", "http://localhost:8001/render")
+MBGL_SERVER_URL = os.getenv("MBGL_SERVER_URL", "http://localhost:8002/render")
 API_TOKEN = os.getenv("API_TOKEN")
 LOGGING_LEVEL = os.getenv("LOGGING_LEVEL", "DEBUG")
 REDIS_HOST = os.getenv("REDIS_HOST", "localhost")

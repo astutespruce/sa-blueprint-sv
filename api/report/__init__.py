@@ -81,7 +81,7 @@ def create_report(maps, results):
             continue
 
         ecosystems = []
-        for id in sorted(ecosystems_present):
+        for id in ecosystems_present:
             # update ecosystem with only indicators that are present
             ecosystem = deepcopy(ECOSYSTEM_INDEX[id])
             ecosystem["indicators"] = [
@@ -95,33 +95,14 @@ def create_report(maps, results):
             ecosystems.append(ecosystem)
 
         ecosystem_groups.append(
-            {"id": group["id"], "label": group["label"], "ecosystems": ecosystems}
+            {
+                "id": group["id"],
+                "label": group["label"],
+                "color": group["color"],
+                "borderColor": group["borderColor"],
+                "ecosystems": ecosystems,
+            }
         )
-
-    # TODO: extract ecosystems, group by type
-    # TODO: drop area
-    # Extract ecosystems with results
-    # ecosystems = []
-    # for ecosystem in ECOSYSTEMS:
-    #     ecosystem = deepcopy(ecosystem)
-
-    #     if ecosystem.get("extent", None) == "region":
-    #         if results["type"] != "marine lease block":
-    #             ecosystem["acres"] = 0  # just to force sort at end
-    #             ecosystems.append(ecosystem)
-
-    #         continue
-
-    #     ecosystem["acres"] = results["ecosystems"][ecosystem["value"]]
-    #     if ecosystem["acres"]:
-    #         ecosystems.append(ecosystem)
-
-    # # sort on acres, inner sort alphabetic on label
-    # ecosystems = sorted(
-    #     sorted(ecosystems, key=itemgetter("label")),
-    #     key=itemgetter("acres"),
-    #     reverse=True,
-    # )
 
     ownership_acres = sum([e["acres"] for e in results.get("ownership", [])])
     protection_acres = sum([e["acres"] for e in results.get("protection", [])])

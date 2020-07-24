@@ -31,7 +31,7 @@ const Intro = () => {
           </OutboundLink>{" "}
           is a living spatial plan to conserve natural and cultural resources
           for future generations. It identifies priority areas for shared
-          conservation action. Blueprint 2.x is completely data-driven,
+          conservation action. Blueprint 2020 is completely data-driven,
           prioritizing the lands and waters of the South Atlantic region based
           on ecosystem indicator models and a connectivity analysis. Better
           indicator condition suggests higher ecosystem integrity and higher

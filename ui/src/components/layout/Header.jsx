@@ -94,7 +94,7 @@ const Header = () => {
                     flexBasis: ["100%", "unset"],
                   }}
                 >
-                  Conservation Blueprint 2.x
+                  Conservation Blueprint 2020
                 </Heading>
                 <Heading
                   as="h1"
