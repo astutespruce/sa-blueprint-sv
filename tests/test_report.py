@@ -8,7 +8,7 @@ from time import time
 import pandas as pd
 import numpy as np
 import pygeos as pg
-from pyogrio import read_dataframe
+from pyogrio.geopandas import read_dataframe
 
 from api.report import create_report
 from api.report.map import render_maps
@@ -54,18 +54,18 @@ def read_cache(path):
 
 ### Create reports for an AOI
 aois = [
-    {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
-    {"name": "Groton Plantation", "path": "Groton_all"},
-    {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
-    {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
-    # TODO: handle correctly
-    {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},
-    # Big areas:
-    {"name": "ACF", "path": "ACF_area"},
-    {
-        "name": "80-mile sourcing radius for Enviva’s Hamlet, NC plant",
-        "path": "Enviva_Hamlet_80_mile_sourcing_radius",
-    },
+    # {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
+    # {"name": "Groton Plantation", "path": "Groton_all"},
+    # {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
+    # {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
+    # # TODO: handle correctly
+    # {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},
+    # # Big areas:
+    # {"name": "ACF", "path": "ACF_area"},
+    # {
+    #     "name": "80-mile sourcing radius for Enviva’s Hamlet, NC plant",
+    #     "path": "Enviva_Hamlet_80_mile_sourcing_radius",
+    # },
     # {"name": "North Carolina", "path": "NC"},
     # {"name": "South Atlantic Region", "path": "SA_boundary"},
 ]
@@ -77,8 +77,8 @@ for aoi in aois:
     print(f"Creating report for {name}...")
 
     start = time()
-    df = read_dataframe(f"data/aoi/{path}.shp", as_pygeos=True)
-    geometry = pg.make_valid(df.geometry)
+    df = read_dataframe(f"examples/{path}.shp")
+    geometry = pg.make_valid(df.geometry.values.data)
 
     # dissolve
     geometry = np.asarray([pg.union_all(geometry)])
@@ -139,8 +139,11 @@ for aoi in aois:
 
 ### Create reports for summary units
 ids = {
-    "huc12": ["030602040601", "030601030510", "031501040301", "030102020505"],
-    "marine_blocks": ["NI18-07-6210"],
+    "huc12": [
+        "030602040601",
+        # "030601030510", "031501040301", "030102020505"
+    ],
+    # "marine_blocks": ["NI18-07-6210"],
 }
 
 

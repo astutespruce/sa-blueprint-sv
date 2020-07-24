@@ -17,7 +17,7 @@ from .util import pad_bounds, get_center, to_base64, merge_maps
 
 from analysis.constants import (
     BLUEPRINT_COLORS,
-    INDICATORS_INDEX,
+    INDICATOR_INDEX,
     URBAN_LEGEND,
     SLR_LEGEND,
     CORRIDORS,
@@ -72,10 +72,13 @@ async def render_raster_maps(
     ]
 
     for id in indicators:
-        indicator = INDICATORS_INDEX[id]
-        task_args.append(
-            (id, indicators_dir / indicator["filename"], indicator["colors"])
-        )
+        indicator = INDICATOR_INDEX[id]
+        colors = {
+            e["value"]: e["color"]
+            for e in indicator["values"]
+            if e["color"] is not None
+        }
+        task_args.append((id, indicators_dir / indicator["filename"], colors))
 
     if urban:
         colors = {i: e["color"] for i, e in enumerate(URBAN_LEGEND) if e is not None}

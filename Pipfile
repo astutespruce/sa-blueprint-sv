@@ -29,6 +29,11 @@ uvicorn = "*"
 aiofiles = "*"
 arq = "*"
 sentry-sdk = "*"
+pygeos = "*"
+pyogrio = {editable = true,path = "./../pyogrio"}
 
 [requires]
 python_version = "3.8"
+
+[pipenv]
+allow_prereleases = true

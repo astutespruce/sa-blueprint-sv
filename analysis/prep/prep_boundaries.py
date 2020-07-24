@@ -2,8 +2,7 @@ from pathlib import Path
 import pandas as pd
 import geopandas as gp
 import pygeos as pg
-import pyogrio as pio
-from pyogrio.geopandas import write_dataframe
+from pyogrio.geopandas import read_dataframe, write_dataframe
 from geofeather.pygeos import from_geofeather, to_geofeather
 from geofeather import from_geofeather as from_geofeather_as_gp
 
@@ -41,10 +40,8 @@ df.to_file("/tmp/units.geojson", driver="GeoJSONSeq")
 ### Create mask by cutting SA bounds out of arbitrarily large polygon
 src_dir = Path("source_data/boundaries")
 out_dir = Path("data/boundaries")
-sa_bnd = pio.read_dataframe(
-    src_dir / "SALCCboundary.gdb", layer="SALCC_ACF", as_pygeos=True
-)
-sa_bnd = to_crs(sa_bnd.geometry, sa_bnd.crs, GEO_CRS)
+sa_bnd = read_dataframe(src_dir / "SALCCboundary.gdb", layer="SALCC_ACF")
+sa_bnd = to_crs(sa_bnd.geometry.values.data, sa_bnd.crs, GEO_CRS)
 
 # Clip boundary from outer box
 outer = pg.box(-180, -85, 180, 85)
@@ -59,15 +56,13 @@ df.to_file("/tmp/mask.geojson", driver="GeoJSONSeq")
 
 ### Extract counties within SA bounds
 states = (
-    pio.read_dataframe(src_dir / "source/tl_2019_us_state.shp", as_pygeos=True)[
-        ["STATEFP", "NAME"]
-    ]
+    read_dataframe(src_dir / "source/tl_2019_us_state.shp")[["STATEFP", "NAME"]]
     .rename(columns={"NAME": "state"})
     .set_index("STATEFP")
 )
 
 # coordinates are in geographic coordinates (NAD83 vs WGS84)
-df = pio.read_dataframe(src_dir / "source/tl_2018_us_county.shp", as_pygeos=True)
+df = read_dataframe(src_dir / "source/tl_2018_us_county.shp")
 crs = df.crs
 
 in_bnd = sjoin(df, pd.DataFrame({"geometry": sa_bnd}), how="inner")
@@ -79,7 +74,7 @@ df = (
 )
 df = df[["FIPS", "state", "county", "geometry"]].reset_index(drop=True)
 
-df["geometry"] = to_crs(df.geometry, crs, DATA_CRS)
+df["geometry"] = to_crs(df.geometry.values.data, crs, DATA_CRS)
 
 to_geofeather(df, out_dir / "counties.feather", crs=DATA_CRS)
 

@@ -7,7 +7,6 @@ from rasterio.mask import raster_geometry_mask
 
 from analysis.constants import (
     BLUEPRINT,
-    ECOSYSTEMS,
     INDICATORS,
     CORRIDORS,
     URBAN_YEARS,
@@ -17,7 +16,6 @@ from analysis.constants import (
 
 src_dir = Path("data")
 blueprint_filename = src_dir / "Blueprint_2_2.tif"
-ecosystems_filename = src_dir / "ecosystems_indexed.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_dir = src_dir / "threats/urban"
 slr_dir = src_dir / "threats/slr"
@@ -116,12 +114,6 @@ def extract_blueprint_indicator_area(geometries, inland=True):
         # since some HUCs overlap marine areas, we should include all indicators
         indicators = INDICATORS
 
-        ecosystem_counts = extract_count_in_geometry(
-            ecosystems_filename, geometry_mask, window, np.arange(9)
-        )
-        results["ecosystems"] = (
-            (ecosystem_counts * cellsize).round(ACRES_PRECISION).astype("float32")
-        )
     else:
         # marine areas only have marine indicators
         indicators = [i for i in INDICATORS if i["id"].startswith("marine_")]
@@ -129,7 +121,7 @@ def extract_blueprint_indicator_area(geometries, inland=True):
     for indicator in indicators:
         id = indicator["id"]
         filename = src_dir / "indicators" / indicator["filename"]
-        values = indicator["values"].keys()
+        values = [e["value"] for e in indicator["values"]]
 
         bins = np.arange(0, max(values) + 1)
         counts = extract_count_in_geometry(filename, geometry_mask, window, bins)

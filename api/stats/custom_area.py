@@ -8,7 +8,7 @@ import pygeos as pg
 from analysis.pygeos_util import to_crs, to_dict, sjoin, sjoin_geometry, intersection
 from analysis.constants import (
     BLUEPRINT,
-    INDICATORS_INDEX,
+    INDICATOR_INDEX,
     URBAN_YEARS,
     DATA_CRS,
     GEO_CRS,
@@ -30,12 +30,10 @@ ownership_filename = data_dir / "boundaries/ownership.feather"
 slr_bounds_filename = data_dir / "threats/slr/slr_bounds.feather"
 
 # Load targets into memory for faster calculations below
-counties = from_geofeather(
-    county_filename, columns=["geometry", "FIPS", "state", "county"]
-)
-ownership = from_geofeather(
-    ownership_filename, columns=["geometry", "FEE_ORGTYP", "GAP_STATUS"]
-)
+counties = from_geofeather(county_filename)[["geometry", "FIPS", "state", "county"]]
+ownership = from_geofeather(ownership_filename)[
+    ["geometry", "FEE_ORGTYP", "GAP_STATUS"]
+]
 slr_bounds = from_geofeather(slr_bounds_filename).geometry
 
 
@@ -57,13 +55,14 @@ class CustomArea(object):
             "blueprint": blueprint["blueprint"],
             "corridors": blueprint["corridors"],
             "corridors_total": blueprint["corridors"].sum(),
-            "ecosystems": blueprint["ecosystems"],
+            # "ecosystems": blueprint["ecosystems"],
             # area is marine if it is completely within the marine ecosystem
-            "is_marine": blueprint["ecosystems"][7] == blueprint["shape_mask"],
+            # TODO: find correct way to indicate marine
+            # "is_marine": blueprint["ecosystems"][7] == blueprint["shape_mask"],
         }
 
         indicators = []
-        for id, indicator in INDICATORS_INDEX.items():
+        for id, indicator in INDICATOR_INDEX.items():
             # drop indicators that are not present
             values = blueprint[id]
             if values.max() > 0:

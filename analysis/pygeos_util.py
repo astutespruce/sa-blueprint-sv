@@ -68,24 +68,28 @@ def from_pygeos(geometries):
 def sjoin(left, right, predicate="intersects", how="left"):
     """Join data frames on geometry, comparable to geopandas.
 
+    NOTE: pygeos-backed version currently in progress in geopandas
+
     NOTE: left vs right must be determined in advance for best performance, unlike geopandas.
 
     Parameters
     ----------
-    left : DataFrame containing pygeos geometry in "geometry" column
-    right : DataFrame containing pygeos geometry in "geometry" column
+    left : GeoDataFrame containing pygeos geometry in "geometry" column
+    right : GeoDataFrame containing pygeos geometry in "geometry" column
     predicate : str, optional (default "intersects")
     how : str, optional (default "left")
 
     Returns
     -------
-    pandas DataFrame
+    pandas GeoDataFrame
         Includes all columns from left and all columns from right except geometry, suffixed by _right where
         column names overlap.
     """
 
     # spatial join is inner to avoid recasting indices to float
-    joined = sjoin_geometry(left.geometry, right.geometry, predicate, how="inner")
+    joined = sjoin_geometry(
+        left.geometry.values.data, right.geometry.values.data, predicate, how="inner"
+    )
     joined = left.join(joined, how=how).join(
         right.drop(columns=["geometry"]), on="index_right", rsuffix="_right"
     )

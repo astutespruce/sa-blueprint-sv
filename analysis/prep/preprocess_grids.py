@@ -2,7 +2,7 @@ from pathlib import Path
 import rasterio
 from rasterio.features import rasterize
 import numpy as np
-import pyogrio as pio
+from pyogrio.geopandas import read_dataframe
 
 from analysis.pygeos_util import to_dict_all
 
@@ -53,56 +53,24 @@ for year in [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]:
             out.write(data.astype("uint8"), 1)
 
 
-### Convert ecosystems to indexed
-# original raster values
-# values = {
-#     6: "Upland hardwood",
-#     8: "Pine and prairie",
-#     10: "Freshwater marsh",
-#     12: "Forested wetland",
-#     14: "Waterbodies",
-#     16: "Estuaries - estuarine marsh",
-#     17: "Estuaries - open water",
-#     18: "Beach and dune",
-#     20: "Maritime forest",
-#     22: "Marine",
-# }
-
-# mapped to value of ECOSYSTEMS (others not present are across region)
-values_to_index = {6: 6, 8: 5, 10: 3, 12: 2, 14: 8, 16: 1, 17: 1, 18: 0, 20: 4, 22: 7}
-
-with rasterio.open(
-    src_dir / "EcosystemMask_20160229_Blueprint_2_1_AnalysisArea.tif"
-) as src:
-    data = src.read(1)
-    for src_value, target_value in values_to_index.items():
-        data[data == src_value] = target_value
-
-    meta = src.meta.copy()
-    meta["dtype"] = "uint8"
-
-    with rasterio.open(src_dir / "ecosystems_indexed.tif", "w", **meta) as out:
-        out.write(data.astype("uint8"), 1)
-
-
 ### Rasterize and merge hubs and corridors
 corridors_dir = src_dir / "corridors"
 gdb = corridors_dir / "Corridors_2_2.gdb"
-inland_hubs = pio.read_dataframe(gdb, layer="InlandHubs_V_2_2", as_pygeos=True)
-marine_hubs = pio.read_dataframe(gdb, layer="MarineHubs_V_2_2", as_pygeos=True)
+inland_hubs = read_dataframe(gdb, layer="InlandHubs_V_2_2")
+marine_hubs = read_dataframe(gdb, layer="MarineHubs_V_2_2")
 
 with rasterio.open(
     corridors_dir / "InlandCorridors_V_2_2.tif"
 ) as inland, rasterio.open(corridors_dir / "MarineCorridors_V_2_2.tif") as marine:
     # rasterize hubs
     inland_hubs_data = rasterize(
-        to_dict_all(inland_hubs.geometry),
+        to_dict_all(inland_hubs.geometry.values.data),
         inland.shape,
         transform=inland.transform,
         dtype="uint8",
     )
     marine_hubs_data = rasterize(
-        to_dict_all(marine_hubs.geometry),
+        to_dict_all(marine_hubs.geometry.values.data),
         marine.shape,
         transform=marine.transform,
         dtype="uint8",

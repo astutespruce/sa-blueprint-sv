@@ -4,7 +4,8 @@ import json
 
 # Set to True to output intermediate rasters for validation (uncomment in map.raster module)
 # Set to True to output /tmp/test.html for reports
-DEBUG = False
+# FIXME:
+DEBUG = True
 
 DATA_CRS = "EPSG:5070"
 GEO_CRS = "EPSG:4326"
@@ -21,6 +22,7 @@ json_dir = Path("ui/config")
 
 # indexed by BP value
 BLUEPRINT = json.loads(open(json_dir / "blueprint.json").read())
+ECOSYSTEM_GROUPS = json.loads(open(json_dir / "ecosystem_groups.json").read())
 ECOSYSTEMS = json.loads(open(json_dir / "ecosystems.json").read())
 INDICATORS = json.loads(open(json_dir / "indicators.json").read())
 CORRIDORS = json.loads(open(json_dir / "corridors.json").read())
@@ -33,10 +35,13 @@ PROTECTION = OrderedDict(
 
 
 BLUEPRINT_COLORS = {
-    i: entry["color"] for i, entry in enumerate(BLUEPRINT) if "color" in entry
+    i: entry["color"]
+    for i, entry in enumerate(BLUEPRINT)
+    if "color" in entry and entry["value"] > 0
 }
 
-INDICATORS_INDEX = OrderedDict({indicator["id"]: indicator for indicator in INDICATORS})
+INDICATOR_INDEX = OrderedDict({indicator["id"]: indicator for indicator in INDICATORS})
+ECOSYSTEM_INDEX = {ecosystem["id"]: ecosystem for ecosystem in ECOSYSTEMS}
 
 
 URBAN_YEARS = [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]

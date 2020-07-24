@@ -1,0 +1,26 @@
+
+<div class="caption">
+    Table {{table.counter}}: {{ecosystem.label}} indicators in this area.
+</div>
+{% set table.counter=table.counter+1 %}
+
+<table class="centered">
+    <thead>
+        <tr>
+            <th class="label">Indicator</th>
+            <th class="acres">Acres</th>
+            <th class="percent">Percent of Area</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for indicator in ecosystem.indicators %}
+            {% with acres=results[indicator.id]|sum %}
+                <tr>
+                    <td class="label"><a href="#{{indicator.id}}">{{indicator.label}}</a></td>
+                    <td class="acres">{{acres|format_number}}</td>
+                    <td class="percent">{{(100 * acres / results.blueprint_total)|format_number}}%</td>
+                </tr>
+            {% endwith %}
+        {% endfor %}
+    </tbody>
+</table>

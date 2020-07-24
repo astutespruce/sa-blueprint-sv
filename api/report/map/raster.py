@@ -179,7 +179,8 @@ def render_array(data, colors):
     data : 2D array
         Values must be indexes into colors.  Any value not present in colors
         is rendered as completely transparent.
-    colors : list-like of hex colors
+    colors : dict of hex colors
+        lookup table of pixel values to colors
 
     Returns
     -------
@@ -209,7 +210,8 @@ def render_raster(path, bounds, scale, width, height, colors):
         Map bounds
     width : int
     height : int
-    colors : list-like of hex colors
+    colors : dict of hex colors
+        lookup table of pixel values to colors
 
     Returns
     -------

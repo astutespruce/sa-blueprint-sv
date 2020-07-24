@@ -1,4 +1,5 @@
 from base64 import b64encode
+from collections import OrderedDict
 from copy import deepcopy
 from datetime import date
 from io import BytesIO
@@ -10,8 +11,9 @@ from jinja2 import Environment, FileSystemLoader
 
 from analysis.constants import (
     BLUEPRINT,
-    ECOSYSTEMS,
-    INDICATORS_INDEX,
+    ECOSYSTEM_INDEX,
+    ECOSYSTEM_GROUPS,
+    INDICATOR_INDEX,
     CORRIDORS,
     URBAN_LEGEND,
     SLR_LEGEND,
@@ -66,30 +68,60 @@ def create_report(maps, results):
         if "type" in results:
             subtitle += " " + results["type"]
 
-    # Extract ecosystems with results
-    ecosystems = []
-    for ecosystem in ECOSYSTEMS:
-        ecosystem = deepcopy(ecosystem)
+    # determine ecosystems present from indicators
+    ecosystem_ids = {id.split("_")[0] for id in results["indicators"]}
+    # ecosystems = {id: ECOSYSTEM_INDEX[id] for id in ecosystem_ids}
 
-        if ecosystem.get("extent", None) == "region":
-            if results["type"] != "marine lease block":
-                ecosystem["acres"] = 0  # just to force sort at end
-                ecosystems.append(ecosystem)
-
+    # determine ecosystem groups present from ecosystems
+    # ecosystem_groups = OrderedDict()
+    ecosystem_groups = []
+    for group in ECOSYSTEM_GROUPS:
+        ecosystems_present = set(group["ecosystems"]).intersection(ecosystem_ids)
+        if not ecosystems_present:
             continue
 
-        ecosystem["acres"] = results["ecosystems"][ecosystem["value"]]
-        if ecosystem["acres"]:
+        ecosystems = []
+        for id in sorted(ecosystems_present):
+            # update ecosystem with only indicators that are present
+            ecosystem = deepcopy(ECOSYSTEM_INDEX[id])
+            ecosystem["indicators"] = [
+                INDICATOR_INDEX[i]
+                for i in sorted(
+                    {f"{id}_{i}" for i in ecosystem["indicators"]}.intersection(
+                        results["indicators"]
+                    )
+                )
+            ]
             ecosystems.append(ecosystem)
 
-    # sort on acres, inner sort alphabetic on label
-    ecosystems = sorted(
-        sorted(ecosystems, key=itemgetter("label")),
-        key=itemgetter("acres"),
-        reverse=True,
-    )
+        ecosystem_groups.append(
+            {"id": group["id"], "label": group["label"], "ecosystems": ecosystems}
+        )
 
-    ecosystem_acres = sum([e["acres"] for e in ecosystems])
+    # TODO: extract ecosystems, group by type
+    # TODO: drop area
+    # Extract ecosystems with results
+    # ecosystems = []
+    # for ecosystem in ECOSYSTEMS:
+    #     ecosystem = deepcopy(ecosystem)
+
+    #     if ecosystem.get("extent", None) == "region":
+    #         if results["type"] != "marine lease block":
+    #             ecosystem["acres"] = 0  # just to force sort at end
+    #             ecosystems.append(ecosystem)
+
+    #         continue
+
+    #     ecosystem["acres"] = results["ecosystems"][ecosystem["value"]]
+    #     if ecosystem["acres"]:
+    #         ecosystems.append(ecosystem)
+
+    # # sort on acres, inner sort alphabetic on label
+    # ecosystems = sorted(
+    #     sorted(ecosystems, key=itemgetter("label")),
+    #     key=itemgetter("acres"),
+    #     reverse=True,
+    # )
 
     ownership_acres = sum([e["acres"] for e in results.get("ownership", [])])
     protection_acres = sum([e["acres"] for e in results.get("protection", [])])
@@ -100,7 +132,7 @@ def create_report(maps, results):
         "corridors": CORRIDORS,
     }
     for indicator_id in results["indicators"]:
-        indicator = INDICATORS_INDEX[indicator_id]
+        indicator = INDICATOR_INDEX[indicator_id]
         legend = indicator["values"].copy()
         legend.reverse()
         legends[indicator_id] = legend
@@ -130,11 +162,11 @@ def create_report(maps, results):
         "url": "https://blueprint.southatlanticlcc.org/",
         "maps": maps,
         "legends": legends,
-        "ecosystems": ecosystems,
-        "ecosystem_acres": ecosystem_acres,
+        # "ecosystems": ecosystems,
+        "ecosystem_groups": ecosystem_groups,
         "ownership_acres": ownership_acres,
         "protection_acres": protection_acres,
-        "indicators": INDICATORS_INDEX,
+        "indicators": INDICATOR_INDEX,
         "results": results,
     }
 
@@ -144,8 +176,9 @@ def create_report(maps, results):
 
     print("Creating report...")
 
-    # if DEBUG:
-    #     with open("/tmp/test.html", "w") as out:
-    #         out.write(template.render(**context))
+    # FIXME:
+    if DEBUG:
+        with open("/tmp/test.html", "w") as out:
+            out.write(template.render(**context))
 
     return HTML(BytesIO((template.render(**context)).encode())).write_pdf()

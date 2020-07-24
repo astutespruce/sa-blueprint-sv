@@ -8,7 +8,7 @@ from pathlib import Path
 import tempfile
 
 import numpy as np
-import pyogrio as pio
+from pyogrio.geopandas import read_dataframe
 import pygeos as pg
 
 from api.errors import DataError
@@ -33,7 +33,7 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
 
     path = f"/vsizip/{zip_filename}/{dataset}"
 
-    df = pio.read_dataframe(path, layer=layer, as_pygeos=True)
+    df = read_dataframe(path, layer=layer)
 
     geometry = df.geometry
     # Not yet available on ubuntu 18.04

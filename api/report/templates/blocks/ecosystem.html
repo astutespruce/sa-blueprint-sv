@@ -1,15 +1,11 @@
 <div class="ecosystem">
 
-<div class="ecosystem-header flex align-center space-between">
-    <div class="flex align-center flex-grow">
-        <img src="{{(ecosystem.id + '.svg')|load_asset}}" alt="Icon for {{ecosystem.label}}"/>
-        <h2>
-            <span id="{{ecosystem.id}}">{{ecosystem.label}}</span>{% if ecosystem.acres %}: {{(100 * ecosystem.acres / results.blueprint_total)|format_number}}% of area{% endif %}
-        </h2>
-    </div>
-    {% if ecosystem.acres %}
-        <div class="flex-no-shrink">{{ecosystem.acres|format_number}} acres</div>
-    {% endif %}
+<!--
+<div class="ecosystem-header flex align-center flex-grow">
+    <img src="{{(ecosystem.id + '.svg')|load_asset}}" class="ecosystem-icon" alt="Icon for {{ecosystem.label}}"/>
+    <h2>
+        <span id="{{ecosystem.id}}">{{ecosystem.label}}</span>
+    </h2>
 </div>
 
 <p>
@@ -19,16 +15,10 @@
     <br />
     <br />
 </p>
+-->
 
-
-{% for indicator_id in ecosystem.indicators %}
-    {% with indicator_id=ecosystem.id + "_" + indicator_id %}
-        {% if indicator_id in results.indicators %}
-            {% with indicator=indicators[indicator_id] %}
-                {% include "blocks/indicator.html" %}
-            {% endwith %}
-        {% endif %}
-    {% endwith %}
+{% for indicator in ecosystem.indicators %}
+    {% include "blocks/indicator.html" %}
 {% endfor %}
 
 </div>

@@ -1,42 +1,14 @@
 <div class="spacer"></div>
 
-{% with number=table.counter,label="Extent of each ecosystem" %}
-    {% include "elements/table_caption.html" %}
-{% endwith %}
-{% set table.counter=table.counter+1 %}
 
-<table class="centered">
-    <thead>
-        <tr>
-            <th class="label">Ecosystem</th>
-            <th class="acres">Acres</th>
-            <th class="percent">Percent of Area</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for ecosystem in ecosystems %}
-            {% if ecosystem.acres %}
-            <tr>
-                <td class="label">{{ecosystem.label}}</td>
-                <td class="acres">{{ecosystem.acres|format_number}}</td>
-                <td class="percent">{{(100 * ecosystem.acres / results.blueprint_total)|format_number}}%</td>
-            </tr>
+{% for group_id, ecosystem_group in ecosystem_groups.items() %}
+    {% for ecosystem_id in ecosystem_group.ecosystems %}
+        {% with ecosystem=ecosystems[ecosystem_id]%}
+            {% if ecosystem.indicators %}
+                {% with index=loop.index-1 %}
+                    {% include "blocks/ecosystem.html" %}
+                {% endwith %}
             {% endif %}
-        {% endfor %}
-
-        <tr class="total-row">
-            <td class="label align-right">Total ecosystem area</td>
-            <td class="acres">{{ecosystem_acres|format_number}}</td>
-            <td class="percent">{{(100 * ecosystem_acres / results.blueprint_total)|format_number}}%</td>
-        </tr>
-    </tbody>
-</table>
-
-
-{% for ecosystem in ecosystems %}
-    {% if ecosystem.indicators %}
-        {% with index=loop.index-1 %}
-            {% include "blocks/ecosystem.html" %}
         {% endwith %}
-    {% endif %}
+    {% endfor %}
 {% endfor %}

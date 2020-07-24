@@ -10,7 +10,7 @@ import pygeos as pg
 from analysis.constants import (
     BLUEPRINT,
     INDICATORS,
-    INDICATORS_INDEX,
+    INDICATOR_INDEX,
     OWNERSHIP,
     PROTECTION,
 )
@@ -69,7 +69,7 @@ class SummaryUnits(object):
             # no Blueprint results, there won't be other results
             return results
 
-        # unpack blueprint, ecosystems, indicators
+        # unpack blueprint, corridors, and indicators
         results["blueprint_total"] = blueprint["shape_mask"]
         results["blueprint"] = [
             getattr(blueprint, c) for c in blueprint.index if c.startswith("blueprint_")
@@ -82,21 +82,8 @@ class SummaryUnits(object):
 
         groups = {c.rsplit("_", 1)[0] for c in blueprint.index}
 
-        if "ecosystems" in groups:
-            results["ecosystems"] = [
-                getattr(blueprint, c)
-                for c in blueprint.index
-                if c.startswith("ecosystems_")
-            ]
-
-        elif self.unit_type == "marine_blocks":
-            ecosystems = np.zeros(shape=(9,))
-            ecosystems[7] = results["blueprint_total"]
-            results["ecosystems"] = ecosystems.tolist()
-            results["is_marine"] = True
-
         indicators = []
-        for indicator_id, indicator in INDICATORS_INDEX.items():
+        for indicator_id, indicator in INDICATOR_INDEX.items():
             if indicator_id not in groups:
                 continue
 

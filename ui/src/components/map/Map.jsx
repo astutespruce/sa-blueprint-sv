@@ -171,8 +171,6 @@ const Map = ({}) => {
   )
 }
 
-Map.propTypes = {
-  onSelectUnit: PropTypes.func.isRequired,
-}
+Map.propTypes = {}
 
 export default Map

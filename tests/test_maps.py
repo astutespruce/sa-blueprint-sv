@@ -6,7 +6,7 @@ import json
 import asyncio
 import numpy as np
 import pygeos as pg
-from pyogrio import read_dataframe
+from pyogrio.geopandas import read_dataframe
 
 from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, DATA_CRS, INDICATORS
 
@@ -27,8 +27,8 @@ for aoi_name in aoi_names:
     if not out_dir.exists():
         os.makedirs(out_dir)
 
-    df = read_dataframe(f"data/aoi/{aoi_name}.shp", as_pygeos=True)
-    geometry = pg.make_valid(df.geometry)
+    df = read_dataframe(f"data/aoi/{aoi_name}.shp")
+    geometry = pg.make_valid(df.geometry.values.data)
 
     # dissolve
     geometry = np.asarray([pg.union_all(geometry)])

@@ -1,0 +1,30 @@
+[
+  {
+    "id": "land",
+    "label": "Terrestrial",
+    "ecosystems": [
+      "beachanddune",
+      "maritimeforest",
+      "pineandprairie",
+      "uplandhardwood",
+      "landscapes"
+    ]
+  },
+  {
+    "id": "freshwater",
+    "label": "Freshwater",
+    "ecosystems": [
+      "estuarine",
+      "forestedwetland",
+      "freshwatermarsh",
+      "waterbodies",
+      "freshwateraquatic",
+      "waterscapes"
+    ]
+  },
+  {
+    "id": "marine",
+    "label": "Marine",
+    "ecosystems": ["marine"]
+  }
+]
