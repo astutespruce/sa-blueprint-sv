@@ -1,37 +1,71 @@
 # South Atlantic Blueprint Simple Viewer - Data Prep
 
-## Indicator and Threats within area of interest
-
-Indicators and blueprint are aligned to the same grid
-
-NOTE: threats are not aligned to the same grid; urbanization is on a 60m grid and SLR is 2-15m depending on area.
-
 ## Data
 
+### SA Blueprint analysis extent
+
+TODO: updated data
 GeoTIFFs of the blueprint and all indicators were provided by SA staff for prior versions of the Blueprint Simple Viewer.
 
 GeoTIFFs of the marine and inland hubs & corridors were provided by SA staff on 3/13/2020.
 
-Urbanization grids were converted to indexed grids to simplify calculations. See `util/preprocess_grids.py`.
+### Summary units
 
-SA staff provided SLR files on 3/10/2020. These are a series of GeoTIFF files for small areas along the coast, with
-varying footprints and resolution. To use here, we constructed a VRT using GDAL, and used the average resolution.
+Blueprint data were summarized to HUC12 subwatersheds and marine lease blocks.
+
+HUC12 subwatershed boundaries were downloaded for WBD_02, WBD_03, WBD_05, WBD_06 from: http://prd-tnm.s3-website-us-west-2.amazonaws.com/?prefix=StagedProducts/Hydrography/WBD/HU2/GDB/
+on 7/24/2020.
+
+HUC12 units that fell within the SA Blueprint boundary were selected from these datasets.
+
+Marine lease blocks were carried over from Blueprint 2.2.
+
+Summary units were prepared using `analysis/prepare_summary_units.py`. This script extracted the summary units and created two sets outputs for each, plus an aggregated
+dataset for tile creation:
+
+-   `/summary_units/<huc12|marine_blocks>.feather` are the projected datasets for use in spatial analysis
+-   `/results/<huc12|marine_blocks>/<huc12|marine_blocks>_wgs84.feather` are the WGS84 versions for use in mapping
+-   `/summary_units/units_wgs84.gpkg` is the combined WGS 84 units for tile creation.
+
+### States and counties
+
+State and county information is used to determine which land trusts may be active
+in a given subwatershed. State boundaries are used in the locator map in the report.
 
 States were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=States+%28and+equivalent%29
 
 Counties were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2018&layergroup=Counties+%28and+equivalent%29
 
+Processed using `util/prepare_boundaries.py`.
+
+### Land ownership
+
+TNC Secured Lands 2018 were downloaded from: https://www.conservationgateway.org/ConservationByGeography/NorthAmerica/UnitedStates/edc/reportsdata/terrestrial/secured/Pages/default.aspx
+on 3/23/2020.
+
+Processed using `util/prepare_boundaries.py`.
+
+### Projected urbanization
+
+NOTE: this is not aligned to the blueprint grid.
+
+Urbanization grids were converted to indexed grids to simplify calculations. See `util/preprocess_grids.py`.
+
 ### Sea Level Rise
+
+NOTE: this is not aligned to the blueprint grid.
 
 Data were obtained from Amy Keister on 3/10/2020. She exported individual
 Geotiffs created from the source files created in her processing chain for
 mosiacking SLR data obtained from NOAA (https://coast.noaa.gov/slrdata/).
 
+These are a series of GeoTIFF files
+for small areas along the coast, with varying footprints and resolution. To use
+here, we constructed a VRT using GDAL, and used the average resolution.
+
 Values are coded 0-6 for the amount of sea level rise that would impact a given
 area. Values are cumulative, so a value of 6 means that the area is also
 inundated by 1-5 meters.
-
-A VRT is created from the individual source TIF files using GDAL.
 
 From within `data/threats/slr` directory:
 
@@ -42,53 +76,6 @@ gdalbuildvrt -overwrite -resolution lowest slr.vrt *.tif
 To assist with checking if a given area of interest overlaps SLR data, the
 bounds of all SLR files are extracted to a dataset using
 `util/extract_slr_bounds.py`.
-
-## Tiles
-
-### State boundaries
-
-Used for overview map in report.
-
-Rendered to vector tiles:
-
-```bash
-ogr2ogr -t_srs EPSG:4326 -f GeoJSONSeq -select STATEFP /tmp/states.json tl_2019_us_state.shp
-tippecanoe -f -pg -z0 -z5 -o ../../../tiles/states.mbtiles -l states /tmp/states.json
-```
-
-### County boundaries
-
-Used for finding local LTAs working in area on LTA Alliance website.
-
-Extracted within South Atlantic region using `util/prep_boundaries.py`.
-
-### Summary units
-
-Summary units where consolidated using `util/prep_boundaries.py` then
-converted to vector tiles using tippecanoe:
-
-```
-tippecanoe -f -pg -Z 8 -z 14 -ai -o ./tiles/units.mbtiles -l "units" /tmp/units.geojson
-```
-
-### Region mask
-
-Mask was created using `util/prep_boundaries.py` then converted to vector tiles using tippecanoe:
-
-```
-tippecanoe -f -pg -z 8 -o ./tiles/sa_mask.mbtiles -l "mask" /tmp/mask.geojson
-```
-
-### Ownership
-
-TNC Secured Lands 2018 were downloaded from: https://www.conservationgateway.org/ConservationByGeography/NorthAmerica/UnitedStates/edc/reportsdata/terrestrial/secured/Pages/default.aspx
-on 3/23/2020.
-
-Render to vector tiles:
-
-```
-tippecanoe -f -pg -z 15 -o ./tiles/ownership.mbtiles -l "ownership" /tmp/ownership.geojson
-```
 
 ### Merged tiles
 

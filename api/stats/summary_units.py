@@ -25,9 +25,9 @@ class SummaryUnits(object):
 
         id_field = "HUC12" if unit_type == "huc12" else "id"
 
-        self.units = from_geofeather(working_dir / f"{unit_type}.feather").set_index(
-            id_field
-        )
+        self.units = from_geofeather(
+            working_dir / f"{unit_type}_wgs84.feather"
+        ).set_index(id_field)
 
         self.blueprint = pd.read_feather(working_dir / "blueprint.feather").set_index(
             id_field

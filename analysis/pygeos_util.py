@@ -297,18 +297,33 @@ def explode(df):
     """Explodes multipart geometries to single parts.  Attributes are copied
     to each individual geometry.
 
-    NOTE: Not yet supported in pygeos, in https://github.com/pygeos/pygeos/pull/130
+    NOTE: Faster method not yet supported in pygeos, in https://github.com/pygeos/pygeos/pull/130
+    This branch must be checked out and built for this functionality.
 
     Parameters
     ----------
-    df : DataFrame
+    df : GeoDataFrame
 
     Returns
     -------
-    DataFrame
+    GeoDataFrame
     """
 
-    ix, parts = pg.get_parts(df.geometry)
-    series = pd.Series(parts, index=df.index[ix], name="geometry")
+    # Fast method:
+    # ix, parts = pg.get_parts(df.geometry.values.data)
+    # series = pd.Series(parts, index=df.index[ix], name="geometry")
+    # return df.drop(columns=["geometry"]).join(series)
 
-    return df.drop(columns=["geometry"]).join(series)
+    # Slower method
+    geometries = df.geometry.values.data
+    ix = []
+    parts = []
+    for i in range(len(df)):
+        num_parts = pg.get_num_geometries(geometries[i])
+        ix.extend(np.repeat(df.index[i], num_parts))
+        parts.extend(pg.get_geometry(geometries[i], range(num_parts)))
+
+    return gp.GeoDataFrame({"geometry": parts}, index=ix, crs=df.crs).join(
+        df.drop(columns=["geometry"])
+    )
+

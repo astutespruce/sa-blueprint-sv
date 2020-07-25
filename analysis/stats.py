@@ -15,7 +15,7 @@ from analysis.constants import (
 )
 
 src_dir = Path("data")
-blueprint_filename = src_dir / "Blueprint_2_2.tif"
+blueprint_filename = src_dir / "Blueprint_2020.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_dir = src_dir / "threats/urban"
 slr_dir = src_dir / "threats/slr"
