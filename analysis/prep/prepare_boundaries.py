@@ -6,7 +6,7 @@ from pyogrio.geopandas import read_dataframe, write_dataframe
 from geofeather import from_geofeather as from_geofeather_as_gp
 
 from analysis.constants import GEO_CRS, DATA_CRS
-from analysis.pygeos_util import to_pygeos, from_pygeos, sjoin, to_crs, explode
+from analysis.pygeos_util import explode
 
 
 src_dir = Path("source_data")
@@ -14,18 +14,23 @@ data_dir = Path("data")
 out_dir = data_dir / "inputs/boundaries"  # used as inputs for other steps
 bnd_dir = data_dir / "boundaries"  # used as inputs for tiles
 
-### Create mask by cutting SA bounds out of arbitrarily large polygon
 
-# TODO: use new SA boundary
-sa_df = read_dataframe(
-    src_dir / "boundaries/SALCCboundary.gdb", layer="SALCC_ACF"
-).to_crs(GEO_CRS)
+sa_df = read_dataframe(src_dir / "boundaries/SABlueprint2020_ExtentP.shp")
 
-# Clip boundary from outer box
+### Create mask by cutting SA bounds out of world bounds
+print("Creating mask...")
 world = pg.box(-180, -85, 180, 85)
-mask = pg.difference(world, sa_df.geometry.values.data)
+bnd = sa_df.to_crs(GEO_CRS).geometry.values.data
+mask = pg.normalize(pg.difference(world, bnd))
 
-write_dataframe(sa_df[["geometry"]], bnd_dir / "sa_boundary.gpkg", driver="GPKG")
+# DEBUG
+# write_dataframe(
+#     gp.GeoDataFrame({"geometry": bnd}, index=[0], crs=GEO_CRS),
+#     bnd_dir / "sa_bnd.gpkg",
+#     driver="GPKG",
+# )
+
+
 write_dataframe(
     gp.GeoDataFrame({"geometry": mask}, index=[0], crs=GEO_CRS),
     bnd_dir / "sa_mask.gpkg",
@@ -33,7 +38,7 @@ write_dataframe(
 )
 
 ### Extract counties within SA bounds
-
+print("Extracting states and counties...")
 states = (
     read_dataframe(
         src_dir / "boundaries/tl_2019_us_state.shp",
@@ -64,7 +69,6 @@ counties.to_feather(out_dir / "counties.feather")
 
 
 ### Protected areas (TNC secured lands)
-
 print("Processing TNC secured lands...")
 
 # already in EPSG:5070

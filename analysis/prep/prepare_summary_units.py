@@ -4,6 +4,7 @@ import geopandas as gp
 import pandas as pd
 from pyogrio.geopandas import read_dataframe, write_dataframe
 import pygeos as pg
+import numpy as np
 
 from analysis.constants import DATA_CRS, GEO_CRS, M2_ACRES
 
@@ -15,11 +16,7 @@ results_dir = data_dir / "results"
 
 ### Extract the boundary
 
-# TODO: use new SA boundary
-sa_df = read_dataframe(src_dir / "boundaries/SALCCboundary.gdb", layer="SALCC_ACF")[
-    ["geometry"]
-]
-
+sa_df = read_dataframe(src_dir / "boundaries/SABlueprint2020_ExtentP.shp")[["geometry"]]
 
 ### Extract HUC12 within boundary
 
@@ -47,9 +44,25 @@ huc12["geometry"] = pg.make_valid(huc12.geometry.values.data)
 # select out those within the SA boundary
 tree = pg.STRtree(huc12.geometry.values.data)
 ix = tree.query(sa_df.geometry.values.data[0], predicate="intersects")
-huc12 = huc12.iloc[ix].copy()
+huc12 = huc12.iloc[ix].copy().reset_index(drop=True)
 
 huc12["acres"] = (pg.area(huc12.geometry.values.data) * M2_ACRES).round().astype("uint")
+
+# for those at the edge, only keep the ones with > 50% in the extent
+tree = pg.STRtree(huc12.geometry.values.data)
+contains_ix = tree.query(sa_df.geometry.values.data[0], predicate="contains")
+edge_ix = np.setdiff1d(huc12.index, contains_ix)
+
+overlap = pg.area(
+    pg.intersection(
+        huc12.iloc[edge_ix].geometry.values.data, sa_df.geometry.values.data[0]
+    )
+) / pg.area(huc12.iloc[edge_ix].geometry.values.data)
+keep_ix = np.append(contains_ix, edge_ix[overlap >= 0.5])
+keep_ix.sort()
+
+huc12 = huc12.iloc[keep_ix].copy()
+
 
 # Save in EPSG:5070 for analysis
 write_dataframe(huc12, analysis_dir / "huc12.gpkg", driver="GPKG")

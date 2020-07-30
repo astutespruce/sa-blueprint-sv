@@ -1,569 +1,7 @@
 [
   {
-    "id": "beachanddune_beachbirds",
-    "filename": "BeachAndDune_BeachBirds_V_2_2_BinnedClip.tif",
-    "label": "Beach birds",
-    "values": [
-      {
-        "value": 1,
-        "label": "Below the 20th percentile of importance for bird index species",
-        "color": "#F3FD7E"
-      },
-      {
-        "value": 2,
-        "label": "20th - 40th percentile of importance",
-        "color": "#EFCA4F"
-      },
-      {
-        "value": 3,
-        "label": "40th - 60th percentile of importance",
-        "color": "#EAA72F"
-      },
-      {
-        "value": 4,
-        "label": "60th - 80th percentile of importance",
-        "color": "#B86512"
-      },
-      {
-        "value": 5,
-        "label": "Above the 80th percentile of importance for bird index species (American oystercatcher, Wilson's plover, least tern, and piping plover)",
-        "color": "#6B0002"
-      }
-    ],
-    "domain": [10, 100],
-    "datasetID": "8331dd16ec304f7695bffcb1e835444e",
-    "description": "Beach birds is a continuous index of habitat suitability for four shorebird species (Wilson's plover, American oystercatcher, least tern, piping plover). The relative use of beach habitat by these species for nesting, foraging, and breeding is an indicator of beach quality.",
-    "caption": "Beach bird indicator values within the beach and dune ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "beachanddune_unalteredbeach",
-    "filename": "BeachAndDune_UnalteredBeach_V_2_2Clip.tif",
-    "label": "Unaltered beach",
-    "values": [
-      {
-        "value": 0,
-        "label": "Vulnerable to alteration, with/without nearby jetties/groins",
-        "color": "#FDBDFF"
-      },
-      {
-        "value": 1,
-        "label": "Less vulnerable with nearby jetties/groins",
-        "color": "#DC57DD"
-      },
-      {
-        "value": 2,
-        "label": "Less vulnerable without nearby jetties/groins",
-        "color": "#B800BB"
-      }
-    ],
-    "domain": [0, 2],
-    "goodThreshold": 2,
-    "datasetID": "e9603ae3c1e545edaff95dc14231f428",
-    "description": "Unaltered beach is an index of impacts from hardened structures like jetties, groins, and human infrastructure. Shoreline infrastructure degrades beach habitat, impedes beach migration and barrier island rollover processes, and can cause erosion.",
-    "caption": "Unaltered beach indicator values within the beach ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "estuarine_coastalcondition",
-    "filename": "Estuarine_CoastalCondition_V_2_1_BinnedClip.tif",
-    "label": "Coastal condition",
-    "values": [
-      { "value": 1, "label": "Poor", "color": "#ACE3EF" },
-      { "value": 2, "label": "Fair to poor", "color": "#6BA5E6" },
-      { "value": 3, "label": "Fair", "color": "#3B81DE" },
-      { "value": 4, "label": "Good to fair", "color": "#3344BC" },
-      {
-        "value": 5,
-        "label": "Good condition for index (water quality, sediment quality, and benthic community condition)",
-        "color": "#230091"
-      }
-    ],
-    "domain": [1, 5],
-    "goodThreshold": 4,
-    "datasetID": "a2fddbed78a64e73bbb5ed99b114f5f7",
-    "description": "Coastal condition is a continuous index of water quality, sediment quality, and benthic community condition that reflects the overall abiotic status of open water estuaries and estuarine marsh. Developed by the Environmental Protection Agency (EPA), these measures capture human impacts on the environment like nonpoint source pollution.",
-    "caption": "Coastal condition indicator values within the estuarine ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "estuarine_watervegetationedge",
-    "filename": "EstuarineMarsh_Water_VegetationEdge_V_2_0Clip.tif",
-    "label": "Water - vegetation edge",
-    "values": [
-      { "value": 0, "label": "0 - 0.61 km/sq km", "color": "#F8CBF4" },
-      { "value": 1, "label": "0.61 - 1.68 km/sq km", "color": "#DB8DAF" },
-      { "value": 2, "label": "1.68 - 2.82 km/sq km", "color": "#B95977" },
-      { "value": 3, "label": "2.82 - 4.27 km/sq km", "color": "#9B2E4D" },
-      { "value": 4, "label": "4.27 - 19.42 km/sq km", "color": "#7B022B" }
-    ],
-    "domain": [0, 4],
-    "datasetID": "00ecbf6049d4481db1f1416e4e3b8cc2",
-    "description": "Water-vegetation edge is an index of edge length between open water and vegetation where estuarine waters meet wetland marshes. This zone is highly productive for shrimp, crab, fish, and other nekton and provides valuable foraging habitat for marsh birds. ",
-    "caption": "Water-vegetation edge indicator values within the estuarine marsh ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "estuarine_wetlandpatchsize",
-    "filename": "EstuarineMarsh_WetlandPatchSize_V_2_0Clip.tif",
-    "label": "Wetland patch size",
-    "values": [
-      { "value": 0, "label": "1 - 328 ha", "color": "#C1F4E5" },
-      { "value": 1, "label": "329 - 1,228 ha", "color": "#98EBC9" },
-      { "value": 2, "label": "1,229 - 3,087 ha", "color": "#73DFAE" },
-      { "value": 3, "label": "3,088 - 6,088 ha", "color": "#4FD396" },
-      { "value": 4, "label": "6,088 - 15,154 ha", "color": "#2CC87F" }
-    ],
-    "domain": [0, 4],
-    "datasetID": "00ecbf6049d4481db1f1416e4e3b8cc2",
-    "description": "Wetland patch size is an index based on the size of wetland patches. Larger, better connected wetland patches benefit fish and marsh birds and protect inland areas from waves during storm events.",
-    "caption": "Wetland patch size indicator values within the estuarine marsh ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "forestedwetland_amphibians",
-    "filename": "ForestedWetland_Amphibians_V_2_1Clip.tif",
-    "label": "Forested wetland amphibians",
-    "values": [
-      {
-        "value": 0,
-        "label": "Not a Priority Amphibian and Reptile Conservation Area (PARCA) within forested wetlands",
-        "color": "#A3FF73"
-      },
-      {
-        "value": 1,
-        "label": "Priority Amphibian and Reptile Conservation Area (PARCA) within forested wetlands",
-        "color": "#568C00"
-      }
-    ],
-    "domain": [0, 1],
-    "datasetID": "7971445641934255b319b5971600eb47",
-    "description": "Forested wetland amphibians draws from the Priority Amphibian and Reptile Conservation Areas (PARCAs) located in forested wetland habitat. PARCA is an expert-driven, nonregulatory designation that captures places capable of supporting viable amphibian and reptile populations. PARCAs include areas where rare or at-risk species have been observed or are likely to occur (like embedded, isolated wetlands).",
-    "caption": "Forested wetland amphibians indicator values within the forested wetland ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "forestedwetland_birds",
-    "filename": "ForestedWetland_Birds_V_2_1Clip.tif",
-    "label": "Forested wetland birds",
-    "values": [
-      {
-        "value": 0,
-        "label": "Less potential for presence of bird index species",
-        "color": "#FFFFB1"
-      },
-      {
-        "value": 1,
-        "label": "Potential for presence of Northern parula,black-throated green warbler,red-headed woodpecker, or Chuck-will's widow",
-        "color": "#FDB309"
-      },
-      {
-        "value": 2,
-        "label": "Potential for additional presence of prothonotary warbler",
-        "color": "#FC5908"
-      },
-      {
-        "value": 3,
-        "label": "Potential for additional presence of Swainson's warbler",
-        "color": "#B93304"
-      }
-    ],
-    "domain": [0, 3],
-    "goodThreshold": 1,
-    "datasetID": "ecf2d74a50cc47fa99ae6ef42d838866",
-    "description": "Forested wetland birds is an index of habitat suitability for six bird species (Northern parula, black-throated green warbler, red-headed woodpecker, Chuck-will's widow, prothonotary warbler, Swainson's warbler) based on patch size and proximity to water. The needs of these species are increasingly restrictive at higher index values, reflecting better quality habitat.",
-    "caption": "Forested wetland birds indicator values within the forested wetland ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "forestedwetland_extent",
-    "filename": "ForestedWetland_Extent_V_2_2_NoDataTo0_ClipToEcosystemMaskClip.tif",
-    "label": "Forested wetland extent",
-    "values": [
-      {
-        "value": 0,
-        "label": "Not currently forested wetland (within forested wetland ecosystem)",
-        "color": null
-      },
-      {
-        "value": 1,
-        "label": "Currently forested wetland (within forested wetland ecosystem)",
-        "color": "#083F28"
-      }
-    ],
-    "domain": [0, 1],
-    "datasetID": "72e6a105442444679fc61714feec49b4",
-    "description": "Forested wetland extent represents the amount of overall acres of existing forested wetlands present in the South Atlantic geography. Overall acreage of existing forested wetlands provides an indicator of whether forested wetlands being inundated by sea level rise are being replaced or restored somewhere else.",
-    "caption": "Forested wetland extent indicator values within the forested wetland ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "freshwatermarsh_birds",
-    "filename": "FreshwaterMarsh_Birds_V_2_1_BinnedClip.tif",
-    "label": "Freshwater marsh birds",
-    "values": [
-      {
-        "value": 1,
-        "label": "Less potential for presence of bird index species",
-        "color": "#FDAC09"
-      },
-      {
-        "value": 2,
-        "label": "Potential for presence of least bittern, Northern pintail, and Northern shoveler",
-        "color": "#FB0041"
-      },
-      {
-        "value": 3,
-        "label": "Potential for additional presence of king rail",
-        "color": "#8900E6"
-      }
-    ],
-    "domain": [0, 11907],
-    "goodThreshold": 2,
-    "units": "ha",
-    "datasetID": "785b6209bae6492ba080df35c40cc5ba",
-    "description": "Freshwater marsh birds is a continuous index of patch size. Larger patches are likely to support the following suite of freshwater marsh birds: least bittern, Northern pintail, Northern shoveler, and king rail.",
-    "caption": "Freshwater marsh birds indicator values within the freshwater marsh ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "freshwatermarsh_extent",
-    "filename": "FreshwaterMarsh_Extent_V_2_2_NoDataTo0_ClipToEcosystemMaskClip.tif",
-    "label": "Freshwater wetland extent",
-    "values": [
-      {
-        "value": 0,
-        "label": "Not currently freshwater marsh (within extent of freshwater marsh ecosystem)",
-        "color": null
-      },
-      {
-        "value": 1,
-        "label": "Currently freshwater marsh (within extent of freshwater marsh ecosystem)",
-        "color": "#607835"
-      }
-    ],
-    "domain": [0, 1],
-    "datasetID": "72e6a105442444679fc61714feec49b4",
-    "description": "Forested wetland extent represents the amount of overall acres of existing forested wetlands present in the South Atlantic geography. Overall acreage of existing forested wetlands provides an indicator of whether forested wetlands being inundated by sea level rise are being replaced or restored somewhere else.",
-    "caption": "Forested wetland extent indicator values within the forested wetland ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "maritimeforest_extent",
-    "filename": "MaritimeForest_Extent_V_2_0_NoDataTo0_ClipToEcosystemMaskClip.tif",
-    "label": "Maritime forest extent",
-    "values": [
-      {
-        "value": 0,
-        "label": "Not currently maritime forest (within extent of maritime forest ecosystem)",
-        "color": null
-      },
-      {
-        "value": 1,
-        "label": "Currently maritime forest (within extent of maritime forest ecosystem)",
-        "color": "#00734B"
-      }
-    ],
-    "domain": [0, 1],
-    "datasetID": "a5969b1b865b470482071d5ff2b1bbbc",
-    "description": "Maritime forest extent represents the overall acres of maritime forest currently present in the South Atlantic geography. Since maritime forest has been substantially reduced from its historic extent, protecting the remaining acreage of existing maritime forest is important.",
-    "caption": "Maritime forest extent indicator values within the maritime forest ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "pineandprairie_amphibians",
-    "filename": "PineAndPrairie_Amphibians_V_2_1Clip.tif",
-    "label": "Pine and prairie amphibians",
-    "values": [
-      {
-        "value": 0,
-        "label": "Not a Priority Amphibian and Reptile Conservation Area (PARCA) within pine and prairie",
-        "color": "#D1FF73"
-      },
-      {
-        "value": 1,
-        "label": "Priority Amphibian and Reptile Conservation Area (PARCA) within pine and prairie",
-        "color": "#5D9100"
-      }
-    ],
-    "domain": [0, 1],
-    "datasetID": "89c74fcd28b14683ae2322211104e56c",
-    "description": "Pine and prairie amphibians draws from the Priority Amphibian and Reptile Conservation Areas (PARCAs) located in pine and prairie habitat. PARCA is an expert-driven, nonregulatory designation that captures places capable of supporting viable amphibian and reptile populations. PARCAs include areas where rare or at-risk species have been observed or are likely to occur (like embedded, isolated wetlands).",
-    "caption": "Pine and prairie amphibians indicator values within the pine and prairie ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "pineandprairie_birds",
-    "filename": "PineAndPrairie_Birds_V_2_1Clip.tif",
-    "label": "Pine and prairie birds",
-    "values": [
-      {
-        "value": 0,
-        "label": "Less potential for presence of bird index species",
-        "color": "#E5D5F2"
-      },
-      {
-        "value": 1,
-        "label": "Potential for presence of 1 bird index species",
-        "color": "#C184C7"
-      },
-      {
-        "value": 2,
-        "label": "Potential for presence of 2 bird index species",
-        "color": "#A82A84"
-      },
-      {
-        "value": 3,
-        "label": "Potential for presence of all 3 bird index species (Bachman's sparrow, bobwhite quail, and red-cockaded woodpecker)",
-        "color": "#730038"
-      }
-    ],
-    "domain": [0, 3],
-    "goodThreshold": 1,
-    "datasetID": "68f3ce917278453a82afcd280b5ec84b",
-    "description": "Pine and prairie birds is an index of habitat suitability for three bird species (Northern bobwhite, red-cockaded woodpecker, Bachman's sparrow) based on observational data and predictive models. The presence of all three species indicates high pine ecosystem quality.",
-    "caption": "Pine and prairie birds indicator values within the pine and prairie ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "pineandprairie_regularlyburnedhabitat",
-    "filename": "PineAndPrairie_RegularlyBurnedHabitat_V_2_0Clip.tif",
-    "label": "Regularly burned habitat",
-    "values": [
-      {
-        "value": 0,
-        "label": "Not recently burned or not open canopy",
-        "color": "#ccece6"
-      },
-      {
-        "value": 1,
-        "label": "Recently burned and open canopy",
-        "color": "#FF0000"
-      }
-    ],
-    "domain": [0, 1],
-    "goodThreshold": 1,
-    "datasetID": "ea13b5d4f83d4e27bc8bfc8878a85b2c",
-    "description": "Regularly burned habitat is an indicator of acres of fire-maintained, open canopy habitat. It attempts to capture recent fire in the pine ecosystem by using LANDFIRE data (1999-2010) as a proxy for regularly burned habitat.",
-    "caption": "Regularly burned habitat indicator values within the pine and prairie ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "uplandhardwood_birds",
-    "filename": "UplandHardwood_Birds_V_2_0Clip.tif",
-    "label": "Upland hardwood birds",
-    "values": [
-      {
-        "value": 0,
-        "label": "Less potential for presence of bird index species",
-        "color": "#FFBAE0"
-      },
-      {
-        "value": 1,
-        "label": "Potential for presence of wood thrush or whip-poor-will",
-        "color": "#FF8FDF"
-      },
-      {
-        "value": 2,
-        "label": "Potential for additional presence of hooded warbler or American woodcock",
-        "color": "#FA4784"
-      },
-      {
-        "value": 3,
-        "label": "Potential for additional presence of Acadian flycatcher or Kentucky warbler",
-        "color": "#A80084"
-      },
-      {
-        "value": 4,
-        "label": "Potential for additional presence of Swainson's warbler",
-        "color": "#690042"
-      }
-    ],
-    "domain": [0, 4],
-    "goodThreshold": 3,
-    "datasetID": "9a98b3bf45fc4d2aa0833a171b56533a",
-    "description": "Upland hardwood birds is an index of habitat suitability for seven upland hardwood bird species (wood thrush, whip-poor-will, hooded warbler, American woodcock, Acadian flycatcher, Kentucky warbler, Swainson's warbler) based on patch size and other ecosystem characteristics such as proximity to water and proximity to forest and ecotone edge. The needs of these species are increasingly restrictive at higher index values, reflecting better quality habitat.",
-    "caption": "Upland hardwood birds indicator values within the upland hardwood ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "uplandhardwood_urbanopenspace",
-    "filename": "UplandHardwood_UrbanOpenSpace_V_2_1Clip.tif",
-    "label": "Urban open space",
-    "values": [
-      { "value": 0, "label": "Existing development", "color": "#B2B2B2" },
-      {
-        "value": 1,
-        "label": "Undeveloped area less than 400 m from protected land",
-        "color": "#CCECA3"
-      },
-      {
-        "value": 2,
-        "label": "Undeveloped area 400 - 800 m from protected land",
-        "color": "#A1D99B"
-      },
-      {
-        "value": 3,
-        "label": "Undeveloped area 800 - 1600 m from protected land",
-        "color": "#42AB5D"
-      },
-      {
-        "value": 4,
-        "label": "Undeveloped area greater than 1600 m from protected land",
-        "color": "#006D2E"
-      },
-      { "value": 5, "label": "Protected land", "color": "#003521" }
-    ],
-    "domain": [0, 5],
-    "datasetID": "c0039f1c66c14115ba8b5f51ee22ef97",
-    "description": "Urban open space is an index based on distance of urban areas from open space. This cultural resource indicator is intended to capture equitable access to open space for urban residents. Protected natural areas in urban environments offer refugia for some species while providing people a nearby place to connect with nature.",
-    "caption": "Urban open space indicator values within the upland hardwood ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "marine_birds",
-    "filename": "Marine_Birds_V_2_2_BinnedClip.tif",
-    "label": "Marine birds",
-    "values": [
-      {
-        "value": 1,
-        "label": "Below the 20th percentile of importance for seasonal density of marine bird index species",
-        "color": "#C5FDED"
-      },
-      {
-        "value": 2,
-        "label": "20th-40th percentile of importance",
-        "color": "#4BB191"
-      },
-      {
-        "value": 3,
-        "label": "40th-60th percentile of importance",
-        "color": "#0D9571"
-      },
-      {
-        "value": 4,
-        "label": "60th-80th percentile of importance",
-        "color": "#005C3F"
-      },
-      {
-        "value": 5,
-        "label": "Above the 80th percentile of importance for seasonal density of marine bird index species",
-        "color": "#00160B"
-      }
-    ],
-    "domain": [0, 100],
-    "datasetID": "13aa474921e243e7860c7412d2988b4e",
-    "description": "Marine birds is a continuous index of highly productive areas for birds that feed exclusively or mainly at sea. It uses seasonal predictions of relative abundance for sixteen species of marine birds. Marine birds help identify key areas of ocean productivity and complement the marine mammal index by providing finer spatial resolution and stronger connections to forage fish productivity.",
-    "caption": "Marine bird indicator values within the marine ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "marine_mammals",
-    "filename": "Marine_Mammals_V_2_1_BinnedClip.tif",
-    "label": "Marine mammals",
-    "values": [
-      {
-        "value": 1,
-        "label": "Below the 20th percentile of importance for seasonal density of marine mammal index species",
-        "color": "#E9C4EA"
-      },
-      {
-        "value": 2,
-        "label": "20th - 40th percentile of importance",
-        "color": "#D594EE"
-      },
-      {
-        "value": 3,
-        "label": "40th - 60th percentile of importance",
-        "color": "#C87AEF"
-      },
-      {
-        "value": 4,
-        "label": "60th - 80th percentile of importance",
-        "color": "#B95AF1"
-      },
-      {
-        "value": 5,
-        "label": "Above the 80th percentile of importance for seasonal density of marine mammal index species",
-        "color": "#9B03F2"
-      }
-    ],
-    "domain": [0, 100],
-    "datasetID": "be70e3438a6e48d798916e788f35ef6b",
-    "description": "Marine mammals is a continuous index of dolphin and whale density based on monthly density predictions for ten species of cetaceans and yearly density predictions for three rarer cetacean species. Marine mammals help identify key areas of ocean productivity and overall ocean health because they have long life spans, feed at high trophic levels, and can accumulate anthropogenic chemicals and toxins in their large blubber stores.",
-    "caption": "Marine mammals indicator values within the marine ecosystem in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "marine_potentialhardbottomcondition",
-    "filename": "Marine_PotentialHardbottomCondition_V_2_0Clip.tif",
-    "label": "Potential hardbottom condition",
-    "values": [
-      { "value": 0, "label": "Hardbottom not predicted", "color": "#fff7bc" },
-      {
-        "value": 1,
-        "label": "Hardbottom likely to be stressed by human activities",
-        "color": "#73FFDF"
-      },
-      {
-        "value": 2,
-        "label": "Hardbottom less likely to be stressed by human activities",
-        "color": "#00A9E6"
-      },
-      {
-        "value": 3,
-        "label": "Hardbottom likely to be in best condition due to additional protections",
-        "color": "#002673"
-      }
-    ],
-    "domain": [0, 3],
-    "goodThreshold": 2,
-    "datasetID": "cbb923b746fc435b93d079f9261fa7c2",
-    "description": "Potential hardbottom condition measures the protected status or potential stress (i.e., shipping traffic, dredge disposal) of solid substrate and rocky outcroppings. Hardbottom provides an anchor for important seafloor habitat such as deepwater corals, plants, and sponges, supporting associated invertebrate and fish species.",
-    "caption": "Potential hardbottom condition indicator values within the marine ecosystem in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "freshwateraquatic_permeablesurface",
-    "filename": "FreshwaterAquatic_PermeableSurface_V_2_1_BinnedClip.tif",
-    "label": "Permeable surface",
-    "values": [
-      {
-        "value": 1,
-        "label": "Less than 70% of catchment permeable, likely degraded instream flow, water quality, and aquatic species communities",
-        "color": "#DAD5FC"
-      },
-      {
-        "value": 2,
-        "label": "70 - 90% of catchment permeable, likely degraded water quality and not supporting many aquatic species",
-        "color": "#C7B3FB"
-      },
-      {
-        "value": 3,
-        "label": "90 - 95% of catchment permeable, likely declining water quality and supporting most aquatic species",
-        "color": "#8953EE"
-      },
-      {
-        "value": 4,
-        "label": "Greater than 95% of catchment permeable, likely high water quality and supporting most sensitive aquatic species",
-        "color": "#5000E4"
-      }
-    ],
-    "domain": [9, 100],
-    "goodThreshold": 4,
-    "datasetID": "aff20e09ff62451685dfb8ffedceeec1",
-    "description": "Permeable surface is a continuous indicator that measures the percent of non-impervious cover by catchment. High levels of impervious surface degrade water quality and alter freshwater flow.",
-    "caption": "Permeable surface indicator values in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "freshwateraquatic_riparianbuffers",
-    "filename": "FreshwaterAquatic_RiparianBuffers_V_2_1_BinnedClip.tif",
-    "label": "Riparian buffers",
-    "values": [
-      {
-        "value": 1,
-        "label": "Less than 80% natural habitat surrounding rivers and streams",
-        "color": "#F2FE92"
-      },
-      { "value": 2, "label": "80 - 85% natural cover", "color": "#00E51B" },
-      { "value": 3, "label": "85 - 90% natural cover", "color": "#1EC378" },
-      { "value": 4, "label": "90 - 95% natural cover", "color": "#219EB6" },
-      {
-        "value": 5,
-        "label": "Greater than 95% natural habitat surrounding rivers and streams",
-        "color": "#260389"
-      }
-    ],
-    "domain": [0, 100],
-    "goodThreshold": 5,
-    "datasetID": "c822c798ba724e06b5fb25d2c18ff0cb",
-    "description": "Riparian buffers measures the amount of natural habitat surrounding rivers and streams. This continuous indicator applies to the Active River Area, which spatially defines the dynamic relationship between riverine systems and the lands around them. The Active River Area includes meander belts, riparian wetlands, floodplains, terraces, and material contribution areas. Riparian buffers are strongly linked to water quality as well as water availability (i.e., instream flow).",
-    "caption": "Riparian buffers indicator values within the active river area in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "freshwateraquatic_imperiledaquaticspecies",
-    "filename": "FreshwaterAquatic_ImperiledAquaticSpecies_V_2_1Clip.tif",
+    "id": "freshwater_imperiledaquaticspecies",
+    "filename": "ImperiledAquaticSpecies.tif",
     "label": "Imperiled aquatic species",
     "values": [
       {
@@ -593,104 +31,12 @@
       }
     ],
     "domain": [0, 4],
-    "datasetID": "f6aa9bc688814468b5ae2772375c9fc2",
-    "description": "Imperiled aquatic species measures the number of aquatic species within each watershed that are listed as G1 (globally critically imperiled), G2 (globally imperiled), or threatened/endangered under the U.S. Endangered Species Act. This indicator captures patterns of rare and endemic species diversity not well-represented by other freshwater aquatic indicators. It applies only to the Active River Area, which spatially defines the dynamic relationship between riverine systems and the lands around them; it includes meander belts, riparian wetlands, floodplains, terraces, and material contribution areas.",
-    "caption": "Imperiled aquatic species indicator values within the active river area in this area. A good condition threshold is not yet defined for this indicator."
+    "datasetID": "",
+    "description": "Imperiled aquatic species measures the number of aquatic species within each watershed that are listed as G1 (globally critically imperiled), G2 (globally imperiled), or threatened/endangered under the U.S. Endangered Species Act. This indicator captures patterns of rare and endemic species diversity not well-represented by other freshwater aquatic indicators. It applies only to the estimated floodplain, which spatially defines areas estimated to be inundated by a 100-year flood, also known as the 1% annual chance flood."
   },
   {
-    "id": "landscapes_lowroaddensitypatches",
-    "filename": "Landscapes_LowRoadDensityPatches_V_2_1Clip.tif",
-    "label": "Low road density",
-    "values": [
-      {
-        "value": 0,
-        "label": "High road density (≥1.5 km/sq km)",
-        "color": "#CFCEDE"
-      },
-      {
-        "value": 1,
-        "label": "Low road density (<1.5 km/sq km) ",
-        "color": "#D68589"
-      }
-    ],
-    "domain": [0, 1],
-    "goodThreshold": 1,
-    "datasetID": "61856f9901d74185a34c08e857380395",
-    "description": "Low road density is an index of areas with few roads, measuring the length of roads within a square kilometer area. It represents habitat fragmentation. Extensive road networks are harmful to many species, including reptiles and amphibians, birds, and large mammals.",
-    "caption": "Low road density indicator values in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems."
-  },
-  {
-    "id": "landscapes_lowurbanhistoric",
-    "filename": "Landscapes_LowUrbanHistoric_V_2_1_SOTClip.tif",
-    "label": "Low-urban historic landscapes",
-    "values": [
-      {
-        "value": 0,
-        "label": "Historic place with nearby high-urban buffer",
-        "color": "#FF8CC4"
-      },
-      {
-        "value": 1,
-        "label": "Historic place with nearby low-urban buffer",
-        "color": "#730000"
-      }
-    ],
-    "domain": [0, 1],
-    "goodThreshold": 1,
-    "datasetID": "037ecaa254ff48f88969fc1db467d917",
-    "description": "Low-urban historic landscapes is an index of sites on the National Register of Historic Places surrounded by limited urban development. This cultural resource indicator identifies significant historic places that remain connected to their context in the natural world.",
-    "caption": "Low-urban historic landscapes indicator values within the historic landscapes in this area. Good condition thresholds reflect the range of indicator values that occur in healthy, functioning ecosystems.  Note: Historic landscapes are rare across the South Atlantic. The presence of any historic landscape, even in high-urban condition, will increase the priority in the Blueprint."
-  },
-  {
-    "id": "landscapes_resilientbiodiversityhotspots",
-    "filename": "Landscapes_ResilientBiodiversityHotspots_V_2_2Clip.tif",
-    "label": "Resilient biodiversity hotspots",
-    "values": [
-      { "value": 0, "label": "Urban", "color": "#9C9C9C" },
-      {
-        "value": 1,
-        "label": "Final resilience score: Far below average (<-2 SD)",
-        "color": "#9C5521"
-      },
-      {
-        "value": 2,
-        "label": "Final resilience score: Below average (-1 to -2 SD)",
-        "color": "#BF874B"
-      },
-      {
-        "value": 3,
-        "label": "Final resilience score: Slightly below average (-0.5 to -1 SD)",
-        "color": "#E0C09E"
-      },
-      {
-        "value": 4,
-        "label": "Final resilience score: Average (0.5 to -0.5 SD)",
-        "color": "#FFFFBF"
-      },
-      {
-        "value": 5,
-        "label": "Final resilience score: Slightly above average (0.5 to 1 SD)",
-        "color": "#A9C276"
-      },
-      {
-        "value": 6,
-        "label": "Final resilience score: Above average (1 to 2 SD)",
-        "color": "#5D8A3A"
-      },
-      {
-        "value": 7,
-        "label": "Final resilience score: Far above average (>2 SD)",
-        "color": "#21580B"
-      }
-    ],
-    "domain": [0, 7],
-    "datasetID": "62f821c124bb418298b0375dfcce830b",
-    "description": "Resilient biodiversity hotspots is an index of mostly natural high-diversity areas potentially resilient to climate change. This indicator measures landscape diversity (geophysical features like soil and topography) and local connectedness. Areas with these characteristics will likely continue to support species richness and movement in a changing climate (i.e., are resilient).",
-    "caption": "Resilient biodiversity hotspots indicator values in this area. A good condition threshold is not yet defined for this indicator."
-  },
-  {
-    "id": "waterscapes_migratoryfishconnectivity",
-    "filename": "Waterscapes_MigratoryFishConnectivity_V_2_1Clip.tif",
+    "id": "freshwater_migratoryfishconnectivity",
+    "filename": "MigratoryFishConnectivity.tif",
     "label": "Migratory fish connectivity",
     "values": [
       {
@@ -715,13 +61,12 @@
       }
     ],
     "domain": [1, 4],
-    "datasetID": "955b5af8b2e24648a11b4a0134c0b285",
-    "description": "Migratory fish connectivity is an index capturing how far upstream migratory fish have been observed. It also includes adjacent areas where habitat access could be restored through fish passage and hydrological barrier removal efforts. Migratory fish presence reflects uninterrupted connections between freshwater, estuarine, and marine ecosystems.",
-    "caption": "Migratory fish connectivity indicator values within the active river area in this area. A good condition threshold is not yet defined for this indicator."
+    "datasetID": "",
+    "description": "Migratory fish connectivity is an index capturing how far upstream migratory fish have been observed. It also includes adjacent areas where habitat access could be restored through fish passage and hydrological barrier removal efforts. Migratory fish presence reflects uninterrupted connections between freshwater, estuarine, and marine ecosystems. This indicator applies only to the estimated floodplain, which spatially defines areas estimated to be inundated by a 100-year flood, also known as the 1% annual chance flood."
   },
   {
-    "id": "waterscapes_networkcomplexity",
-    "filename": "Waterscapes_NetworkComplexity_V_2_1Clip.tif",
+    "id": "freshwater_networkcomplexity",
+    "filename": "NetworkComplexity.tif",
     "label": "Network complexity",
     "values": [
       {
@@ -761,8 +106,669 @@
       }
     ],
     "domain": [1, 7],
-    "datasetID": "88e4e923d1e94e1d833f0cfd5bb93d5e",
-    "description": "Network complexity depicts the number of different stream size classes in a river network not separated by large dams. River networks with a variety of connected stream classes help retain aquatic biodiversity in a changing climate by allowing species to access climate refugia and move between habitats.",
-    "caption": "Network complexity indicator values within the active river area in this area. A good condition threshold is not yet defined for this indicator."
+    "datasetID": "",
+    "description": "Network complexity depicts the number of different stream size classes in a river network not separated by large dams. River networks with a variety of connected stream classes help retain aquatic biodiversity in a changing climate by allowing species to access climate refugia and move between habitats. This indicator applies only to the estimated floodplain, which spatially defines areas estimated to be inundated by a 100-year flood, also known as the 1% annual chance flood."
+  },
+  {
+    "id": "freshwater_permeablesurface",
+    "filename": "PermeableSurface_Binned.tif",
+    "label": "Permeable surface",
+    "continuous": true,
+    "values": [
+      {
+        "value": 1,
+        "label": "Less than 70% of catchment permeable, likely degraded instream flow, water quality, and aquatic species communities",
+        "color": "#DAD5FC"
+      },
+      {
+        "value": 2,
+        "label": "70 - 90% of catchment permeable, likely degraded water quality and not supporting many aquatic species",
+        "color": "#C7B3FB"
+      },
+      {
+        "value": 3,
+        "label": "90 - 95% of catchment permeable, likely declining water quality and supporting most aquatic species",
+        "color": "#8953EE"
+      },
+      {
+        "value": 4,
+        "label": "Greater than 95% of catchment permeable, likely high water quality and supporting most sensitive aquatic species",
+        "color": "#5000E4"
+      }
+    ],
+    "domain": [9, 100],
+    "goodThreshold": 4,
+    "datasetID": "",
+    "description": "Permeable surface is a continuous indicator that measures the percent of non-impervious cover by catchment. High levels of impervious surface degrade water quality and alter freshwater flow."
+  },
+  {
+    "id": "freshwater_riparianbuffers",
+    "filename": "RiparianBuffers_Binned.tif",
+    "label": "Riparian buffers",
+    "continuous": true,
+    "values": [
+      {
+        "value": 1,
+        "label": "Less than 80% natural habitat surrounding rivers and streams",
+        "color": "#F2FE92"
+      },
+      { "value": 2, "label": "80 - 85% natural cover", "color": "#00E51B" },
+      { "value": 3, "label": "85 - 90% natural cover", "color": "#1EC378" },
+      { "value": 4, "label": "90 - 95% natural cover", "color": "#219EB6" },
+      {
+        "value": 5,
+        "label": "Greater than 95% natural habitat surrounding rivers and streams",
+        "color": "#260389"
+      }
+    ],
+    "domain": [0, 100],
+    "goodThreshold": 5,
+    "datasetID": "",
+    "description": "Riparian buffers is a continuous indicator that measures the amount of natural landcover in the estimated floodplain, by catchment. The estimated floodplain spatially defines areas estimated to be inundated by a 100-year flood, also known as the 1% annual chance flood. Riparian buffers are strongly linked to water quality as well as water availability (i.e., instream flow)."
+  },
+  {
+    "id": "land_amphibianreptiles",
+    "filename": "AmphibianAndReptileAreas.tif",
+    "label": "Amphibian & reptile areas",
+    "values": [
+      {
+        "value": 0,
+        "label": "Not a Priority Amphibian and Reptile Conservation Area",
+        "color": "#FFFFFF"
+      },
+      {
+        "value": 1,
+        "label": "Priority Amphibian and Reptile Conservation Area",
+        "color": "#000000"
+      }
+    ],
+    "domain": [0, 1],
+    "datasetID": "",
+    "description": "Amphibian & reptile areas draws from the Priority Amphibian and Reptile Conservation Areas (PARCAs). PARCA is an expert-driven, nonregulatory designation that captures places capable of supporting viable amphibian and reptile populations. PARCAs include areas where rare or at-risk species have been observed or are likely to occur (like embedded, isolated wetlands)."
+  },
+  {
+    "id": "land_beachbirds",
+    "filename": "BeachBirds_Binned.tif",
+    "label": "Beach birds",
+    "continuous": true,
+    "values": [
+      {
+        "value": 1,
+        "label": "Below the 20th percentile of importance for bird index species",
+        "color": "#F3FD7E"
+      },
+      {
+        "value": 2,
+        "label": "20th - 40th percentile of importance",
+        "color": "#EFCA4F"
+      },
+      {
+        "value": 3,
+        "label": "40th - 60th percentile of importance",
+        "color": "#EAA72F"
+      },
+      {
+        "value": 4,
+        "label": "60th - 80th percentile of importance",
+        "color": "#B86512"
+      },
+      {
+        "value": 5,
+        "label": "Above the 80th percentile of importance for bird index species (American oystercatcher, Wilson's plover, least tern, and piping plover)",
+        "color": "#6B0002"
+      }
+    ],
+    "domain": [0, 100],
+    "datasetID": "",
+    "description": "Beach birds is a continuous index of habitat suitability for four shorebird species (Wilson's plover, American oystercatcher, least tern, piping plover), based on observed abundance. The relative use of beach habitat by these species for nesting, foraging, and breeding is an indicator of beach quality."
+  },
+  {
+    "id": "land_forestbirds",
+    "filename": "ForestBirds.tif",
+    "label": "Forest birds",
+    "values": [
+      {
+        "value": 0,
+        "label": "Less potential for presence of bird index species",
+        "color": "#FFBAE0"
+      },
+      {
+        "value": 1,
+        "label": "Potential for presence of wood thrush, whip-poor-will, red-headed woodpecker, Chuck-will’s widow, or  American woodcock",
+        "color": "#FF8FDF"
+      },
+      {
+        "value": 2,
+        "label": "Potential for additional presence of hooded warbler or Kentucky warbler",
+        "color": "#FA4784"
+      },
+      {
+        "value": 3,
+        "label": "Potential for additional presence of Acadian flycatcher",
+        "color": "#A80084"
+      },
+      {
+        "value": 4,
+        "label": "Potential for additional presence of Northern parula, black-throated green warbler, or Prothonotary warbler",
+        "color": "#690042"
+      },
+      {
+        "value": 5,
+        "label": "Potential for additional presence of Swainson’s warbler",
+        "color": "#000000"
+      }
+    ],
+    "domain": [0, 5],
+    "goodThreshold": 3,
+    "datasetID": "",
+    "description": "Forest birds is an index of habitat suitability for twelve upland hardwood and forested wetand bird species (wood thrush, whip-poor-will, American woodcock, red-headed woodpecker, Chuck-will's widow, hooded warbler, Kentucky warbler, Acadian flycatcher, Northern parula, black-throated green warbler, prothonotary warbler, Swainson's warbler) based on patch size and other ecosystem characteristics such as proximity to water and proximity to forest and ecotone edge. The needs of these species are increasingly restrictive at higher index values, reflecting better quality habitat."
+  },
+  {
+    "id": "land_forestedwetlandextent",
+    "filename": "ForestedWetlandExtent.tif",
+    "label": "Forested wetland extent",
+    "values": [
+      {
+        "value": 0,
+        "label": "Not currently forested wetland (within forested wetland ecosystem)",
+        "color": null
+      },
+      {
+        "value": 1,
+        "label": "Currently forested wetland (within forested wetland ecosystem)",
+        "color": "#083F28"
+      }
+    ],
+    "domain": [0, 1],
+    "datasetID": "",
+    "description": "Forested wetland extent represents the amount of overall acres of forested wetlands currently present in the South Atlantic geography. Overall acreage of existing forested wetlands provides an indicator of whether forested wetlands being inundated by sea-level rise are being replaced or restored somewhere else."
+  },
+  {
+    "id": "land_greenways",
+    "filename": "GreenwaysAndTrail.tif",
+    "label": "Greenways & trails",
+    "values": [
+      {
+        "value": 0,
+        "label": "Not a greenway, trail, sidewalk, or other path",
+        "color": "#FFFFFF"
+      },
+      {
+        "value": 1,
+        "label": "Sidewalk or other path",
+        "color": "#EEEEEE"
+      },
+      {
+        "value": 2,
+        "label": "Developed and connected for <1.9 km",
+        "color": "#CCCCCC"
+      },
+      {
+        "value": 3,
+        "label": "Partly natural and connected for <1.9 km or developed and connected for 1.9-5 km",
+        "color": "#AAAAAA"
+      },
+      {
+        "value": 4,
+        "label": "Mostly natural and connected for <1.9 km, partly natural and connected for 1.9-5 km, or developed and connected for 5-40 km",
+        "color": "#999999"
+      },
+      {
+        "value": 5,
+        "label": "Mostly natural and connected for 5-1.9 km, partly natural and connected for 5-40 km, or developed and >40 km",
+        "color": "#777777"
+      },
+      {
+        "value": 6,
+        "label": "Mostly natural and connected for 5-40 km or partly natural and connected for >40 km",
+        "color": "#555555"
+      },
+      {
+        "value": 7,
+        "label": "Mostly natural and connected for >40 km",
+        "color": "#000000"
+      }
+    ],
+    "domain": [0, 7],
+    "datasetID": "",
+    "description": "This cultural resource indicator measures both the natural condition and connected length of greenways and trails to characterize the quality of the recreational experience. Natural condition is based on the amount of impervious surface surrounding the path. Connected length captures how far a person can go without leaving a dedicated path, based on common distances for walking, running, and biking."
+  },
+  {
+    "id": "land_intacthabitatcores",
+    "filename": "IntactHabitatCores_Binned.tif",
+    "label": "Intact habitat cores",
+    "continuous": true,
+    "values": [
+      {
+        "value": 0,
+        "label": "Not a core",
+        "color": "#FFFFFF"
+      },
+      {
+        "value": 1,
+        "label": "Small core (<=1,000 acres)",
+        "color": "#AAAAAA"
+      },
+      {
+        "value": 2,
+        "label": "Medium core (>1,000 - 10,000 acres)",
+        "color": "#666666"
+      },
+      {
+        "value": 3,
+        "label": "Large core (>10,000 acres)",
+        "color": "#000000"
+      }
+    ],
+    "domain": [0, 445312],
+    "goodThreshold": 2,
+    "datasetID": "",
+    "description": "This indicator represents the size of large, unfragmented patches of natural habitat. It identifies minimally disturbed natural areas at least 100 acres in size and greater than 200 meters wide. "
+  },
+  {
+    "id": "land_lowurbanhistoric",
+    "filename": "LowUrbanHistoric.tif",
+    "label": "Low-urban historic landscapes",
+    "values": [
+      {
+        "value": 0,
+        "label": "Historic place with nearby high-urban buffer",
+        "color": "#FF8CC4"
+      },
+      {
+        "value": 1,
+        "label": "Historic place with nearby low-urban buffer",
+        "color": "#730000"
+      }
+    ],
+    "domain": [0, 1],
+    "goodThreshold": 1,
+    "datasetID": "",
+    "description": "Low-urban historic landscapes is an index of sites on the National Register of Historic Places surrounded by limited urban development. This cultural resource indicator identifies significant historic places that remain connected to their context in the natural world.  Note: Historic landscapes are rare across the South Atlantic. The presence of any historic landscape, even in high-urban condition, will increase the priority in the Blueprint."
+  },
+  {
+    "id": "land_maritimeforestextent",
+    "filename": "MaritimeForestExtent.tif",
+    "label": "Maritime forest extent",
+    "values": [
+      {
+        "value": 0,
+        "label": "Not currently maritime forest (within extent of maritime forest ecosystem)",
+        "color": null
+      },
+      {
+        "value": 1,
+        "label": "Currently maritime forest (within extent of maritime forest ecosystem)",
+        "color": "#00734B"
+      }
+    ],
+    "domain": [0, 1],
+    "datasetID": "",
+    "description": "Maritime forest extent represents the overall acres of maritime forest currently present in the South Atlantic geography. Since maritime forest has been substantially reduced from its historic extent, protecting the remaining acreage of existing maritime forest is important."
+  },
+  {
+    "id": "land_marshextent",
+    "filename": "MarshExtent.tif",
+    "label": "Marsh extent",
+    "values": [
+      {
+        "value": 0,
+        "label": "Not currently freshwater marsh (within extent of freshwater marsh ecosystem)",
+        "color": null
+      },
+      {
+        "value": 1,
+        "label": "Currently freshwater marsh (within extent of freshwater marsh ecosystem)",
+        "color": "#607835"
+      }
+    ],
+    "domain": [0, 1],
+    "datasetID": "",
+    "description": "Marsh extent captures the overall acres of freshwater and saltwater marsh currently present in the South Atlantic geography. Overall acreage provides an indicator of whether marsh being inundated by sea level rise is being replaced or restored somewhere else."
+  },
+  {
+    "id": "land_marshpatchsize",
+    "filename": "MarshPatchSize_Binned.tif",
+    "label": "Marsh patch size",
+    "continuous": true,
+    "values": [
+      {
+        "value": 1,
+        "label": "<=5 ha, Less potential for presence of bird index species",
+        "color": "#FDAC09"
+      },
+      {
+        "value": 2,
+        "label": ">5 - 20 ha, Potential for presence of least bittern, Northern pintail, and Northern shoveler",
+        "color": "#FB0041"
+      },
+      {
+        "value": 3,
+        "label": ">20 ha, Potential for additional presence of king rail",
+        "color": "#8900E6"
+      }
+    ],
+    "domain": [0, 11907],
+    "goodThreshold": 2,
+    "units": "ha",
+    "datasetID": "",
+    "description": "Marsh patch size is a continuous index of based on the size of freshwater and saltwater marsh patches. Larger, better connected wetland patches protect inland areas from waves during storm events. They also benefit fish, shrimp, and marsh birds, including saltmarsh sparrow and marsh wren, as well as least bittern, Northern pintail, Northern shoveler, and king rail."
+  },
+  {
+    "id": "land_pinebirds",
+    "filename": "PineBirds.tif",
+    "label": "Pine birds",
+    "values": [
+      {
+        "value": 0,
+        "label": "Less potential for presence of bird index species",
+        "color": "#E5D5F2"
+      },
+      {
+        "value": 1,
+        "label": "Potential for presence of 1 bird index species",
+        "color": "#C184C7"
+      },
+      {
+        "value": 2,
+        "label": "Potential for presence of 2 bird index species",
+        "color": "#A82A84"
+      },
+      {
+        "value": 3,
+        "label": "Potential for presence of all 3 bird index species (Bachman's sparrow, bobwhite quail, and red-cockaded woodpecker)",
+        "color": "#730038"
+      }
+    ],
+    "domain": [0, 3],
+    "goodThreshold": 1,
+    "datasetID": "",
+    "description": "Pine and prairie birds is an index of habitat suitability for three bird species (Northern bobwhite, red-cockaded woodpecker, Bachman's sparrow) based on observational data and predictive models. The presence of all three species indicates high pine ecosystem quality."
+  },
+  {
+    "id": "land_previouslyburnedhabitat",
+    "filename": "PreviouslyBurnedPineHabitat.tif",
+    "label": "Previously burned pine habitat",
+    "values": [
+      {
+        "value": 0,
+        "label": "Not recently burned or not open canopy",
+        "color": "#ccece6"
+      },
+      {
+        "value": 1,
+        "label": "Recently burned and open canopy",
+        "color": "#FF0000"
+      }
+    ],
+    "domain": [0, 1],
+    "goodThreshold": 1,
+    "datasetID": "",
+    "description": "Previously burned pine habitat is an index of fire-maintained, open canopy habitat. It attempts to capture recent fire in the pine ecosystem by using LANDFIRE data (1999-2010) as a proxy for regularly burned habitat."
+  },
+  {
+    "id": "land_resilientcoastalsites",
+    "filename": "ResilientCoastalSites.tif",
+    "label": "Resilient coastal sites",
+    "values": [
+      {
+        "value": 1,
+        "label": "Far below average",
+        "color": "#FFFFFF"
+      },
+      {
+        "value": 2,
+        "label": "Below average",
+        "color": "#EEEEEE"
+      },
+      {
+        "value": 3,
+        "label": "Slightly below average",
+        "color": "#DDDDDD"
+      },
+      {
+        "value": 4,
+        "label": "Average",
+        "color": "#AAAAAA"
+      },
+      {
+        "value": 5,
+        "label": "Slightly above average",
+        "color": "#666666"
+      },
+      {
+        "value": 6,
+        "label": "Above average",
+        "color": "#000000"
+      }
+    ],
+    "domain": [1, 6],
+    "datasetID": "",
+    "description": "Resilient coastal sites depicts the ability of coastal habitats to migrate to adjacent lowlands in order to sustain biodiversity and natural services under increasing inundation from sea-level rise. It is based on the physical and condition characteristics of current tidal complexes, their predicted migration space, and surrounding buffer areas. These characteristics include marsh complex size, shared edge with migration space, sediment balance, water quality, natural landcover, landform diversity, and many others."
+  },
+  {
+    "id": "land_resilientterrestrialsites",
+    "filename": "ResilientTerrestrialSites.tif",
+    "label": "Resilient terrestrial sites",
+    "values": [
+      { "value": 0, "label": "Urban", "color": "#9C9C9C" },
+      {
+        "value": 1,
+        "label": "Final resilience score: Far below average (<-2 SD)",
+        "color": "#9C5521"
+      },
+      {
+        "value": 2,
+        "label": "Final resilience score: Below average (-1 to -2 SD)",
+        "color": "#BF874B"
+      },
+      {
+        "value": 3,
+        "label": "Final resilience score: Slightly below average (-0.5 to -1 SD)",
+        "color": "#E0C09E"
+      },
+      {
+        "value": 4,
+        "label": "Final resilience score: Average (0.5 to -0.5 SD)",
+        "color": "#FFFFBF"
+      },
+      {
+        "value": 5,
+        "label": "Final resilience score: Slightly above average (0.5 to 1 SD)",
+        "color": "#A9C276"
+      },
+      {
+        "value": 6,
+        "label": "Final resilience score: Above average (1 to 2 SD)",
+        "color": "#5D8A3A"
+      },
+      {
+        "value": 7,
+        "label": "Final resilience score: Far above average (>2 SD)",
+        "color": "#21580B"
+      }
+    ],
+    "domain": [0, 7],
+    "datasetID": "",
+    "description": "Resilient terrestrial sites depicts an area's ability to continue supporting species diversity and ecosystem function in the face of climate change. This indicator measures landscape diversity (topographic complexity) and local connectedness (connected natural landcover). Complex and connected sites are considered resilient because they contain many different microclimates and allow species to move to adjust to changing conditions."
+  },
+
+  {
+    "id": "land_unalteredbeach",
+    "filename": "UnalteredBeach.tif",
+    "label": "Unaltered beach",
+    "values": [
+      {
+        "value": 0,
+        "label": "Vulnerable to alteration, with/without nearby jetties/groins",
+        "color": "#FDBDFF"
+      },
+      {
+        "value": 1,
+        "label": "Less vulnerable with nearby jetties/groins",
+        "color": "#DC57DD"
+      },
+      {
+        "value": 2,
+        "label": "Less vulnerable without nearby jetties/groins",
+        "color": "#B800BB"
+      }
+    ],
+    "domain": [0, 2],
+    "goodThreshold": 2,
+    "datasetID": "",
+    "description": "Unaltered beach is an index of impacts from hardened structures like jetties, groins, and human infrastructure. Shoreline infrastructure degrades beach habitat, impedes beach migration and barrier island rollover processes, and can cause erosion."
+  },
+  {
+    "id": "land_urbanopenspace",
+    "filename": "UrbanOpenSpace.tif",
+    "label": "Urban open space",
+    "values": [
+      { "value": 0, "label": "Existing development", "color": "#B2B2B2" },
+      {
+        "value": 1,
+        "label": "Undeveloped area less than 400 m from protected land",
+        "color": "#CCECA3"
+      },
+      {
+        "value": 2,
+        "label": "Undeveloped area 400 - 800 m from protected land",
+        "color": "#A1D99B"
+      },
+      {
+        "value": 3,
+        "label": "Undeveloped area 800 - 1600 m from protected land",
+        "color": "#42AB5D"
+      },
+      {
+        "value": 4,
+        "label": "Undeveloped area greater than 1600 m from protected land",
+        "color": "#006D2E"
+      },
+      { "value": 5, "label": "Protected land", "color": "#003521" }
+    ],
+    "domain": [0, 5],
+    "datasetID": "",
+    "description": "Urban open space is an index specific to urban areas that identifies both current and potential future open space based on the distance of undeveloped areas to existing protected lands. This cultural resource indicator is intended to capture equitable access to open space for urban residents. Protected natural areas in urban environments offer refugia for some species while providing people a nearby place to connect with nature."
+  },
+  {
+    "id": "marine_estuarinecoastalcondition",
+    "filename": "EstuarineCoastalCondition_30m_Binned.tif",
+    "label": "Coastal condition",
+    "continuous": true,
+    "values": [
+      { "value": 1, "label": "<=2, Poor", "color": "#ACE3EF" },
+      { "value": 2, "label": ">2.0 - 2.4, Fair to poor", "color": "#6BA5E6" },
+      { "value": 3, "label": ">2.4 - 3.7, Fair", "color": "#3B81DE" },
+      { "value": 4, "label": ">3.7 - 4.0, Good to fair", "color": "#3344BC" },
+      {
+        "value": 5,
+        "label": ">4, Good condition for index (water quality, sediment quality, and benthic community condition)",
+        "color": "#230091"
+      }
+    ],
+    "domain": [1, 5],
+    "goodThreshold": 4,
+    "datasetID": "",
+    "description": "Coastal condition is a continuous index of water quality, sediment quality, and benthic community condition that reflects the overall abiotic status of open water estuaries. Developed by the Environmental Protection Agency (EPA), these measures capture human impacts on the environment like nonpoint source pollution."
+  },
+  {
+    "id": "marine_birds",
+    "filename": "MarineBirds_30m_Binned.tif",
+    "label": "Marine birds",
+    "continuous": true,
+    "values": [
+      {
+        "value": 1,
+        "label": "Below the 20th percentile of importance for seasonal density of marine bird index species",
+        "color": "#C5FDED"
+      },
+      {
+        "value": 2,
+        "label": "20th-40th percentile of importance",
+        "color": "#4BB191"
+      },
+      {
+        "value": 3,
+        "label": "40th-60th percentile of importance",
+        "color": "#0D9571"
+      },
+      {
+        "value": 4,
+        "label": "60th-80th percentile of importance",
+        "color": "#005C3F"
+      },
+      {
+        "value": 5,
+        "label": "Above the 80th percentile of importance for seasonal density of marine bird index species",
+        "color": "#00160B"
+      }
+    ],
+    "domain": [0, 100],
+    "datasetID": "",
+    "description": "Marine birds is a continuous index of highly productive areas for birds that feed exclusively or mainly at sea. It uses seasonal predictions of relative abundance for sixteen species of marine birds. Marine birds help identify key areas of ocean productivity and complement the marine mammal index by providing finer spatial resolution and stronger connections to forage fish productivity."
+  },
+  {
+    "id": "marine_mammals",
+    "filename": "MarineMammals_30m_Binned.tif",
+    "label": "Marine mammals",
+    "continuous": true,
+    "values": [
+      {
+        "value": 1,
+        "label": "Below the 20th percentile of importance for seasonal density of marine mammal index species",
+        "color": "#E9C4EA"
+      },
+      {
+        "value": 2,
+        "label": "20th - 40th percentile of importance",
+        "color": "#D594EE"
+      },
+      {
+        "value": 3,
+        "label": "40th - 60th percentile of importance",
+        "color": "#C87AEF"
+      },
+      {
+        "value": 4,
+        "label": "60th - 80th percentile of importance",
+        "color": "#B95AF1"
+      },
+      {
+        "value": 5,
+        "label": "Above the 80th percentile of importance for seasonal density of marine mammal index species",
+        "color": "#9B03F2"
+      }
+    ],
+    "domain": [0, 100],
+    "datasetID": "",
+    "description": "Marine mammals is a continuous index of dolphin and whale density based on monthly density predictions for ten species of cetaceans and yearly density predictions for three rarer cetacean species. Marine mammals help identify key areas of ocean productivity and overall ocean health because they have long life spans, feed at high trophic levels, and can accumulate anthropogenic chemicals and toxins in their large blubber stores."
+  },
+  {
+    "id": "marine_potentialhardbottomcondition",
+    "filename": "PotentialHardbottomCondition_30m.img",
+    "label": "Potential hardbottom condition",
+    "values": [
+      { "value": 0, "label": "Hardbottom not predicted", "color": "#fff7bc" },
+      {
+        "value": 1,
+        "label": "Hardbottom likely to be stressed by human activities",
+        "color": "#73FFDF"
+      },
+      {
+        "value": 2,
+        "label": "Hardbottom less likely to be stressed by human activities",
+        "color": "#00A9E6"
+      },
+      {
+        "value": 3,
+        "label": "Hardbottom likely to be in best condition due to additional protections",
+        "color": "#002673"
+      }
+    ],
+    "domain": [0, 3],
+    "goodThreshold": 2,
+    "datasetID": "",
+    "description": "Potential hardbottom condition measures the protected status or potential stress (i.e., shipping traffic, dredge disposal) of solid substrate and rocky outcroppings. Hardbottom provides an anchor for important seafloor habitat such as deepwater corals, plants, and sponges, supporting associated invertebrate and fish species."
   }
 ]

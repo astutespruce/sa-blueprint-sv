@@ -2,12 +2,19 @@
 
 ## Data
 
+GeoTIFFs of the blueprint and all indicators were provided by SA staff on 7/27/2020.
+GeoTIFFs of the marine and inland hubs & corridors were provided by SA staff on 3/13/2020.
+
+Other data were downloaded as described below.
+
 ### SA Blueprint analysis extent
 
-TODO: updated data
-GeoTIFFs of the blueprint and all indicators were provided by SA staff for prior versions of the Blueprint Simple Viewer.
+### Blueprint & indicators
 
-GeoTIFFs of the marine and inland hubs & corridors were provided by SA staff on 3/13/2020.
+Most indicators and the Blueprint are mapped at a resolution of 30m.
+
+The 3 marine and 1 estuarine indicators were originally mapped at 200m. These were
+resampled to 30m for consistency with the other indicators.
 
 ### Summary units
 
