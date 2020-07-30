@@ -3,18 +3,19 @@ from pathlib import Path
 
 import rasterio
 import geopandas as gp
-from shapely.geometry import box
-from geofeather import to_geofeather
+import pygeos as pg
+
+from analysis.constants import DATA_CRS
 
 
-data_dir = Path("data")
-src_dir = data_dir / "threats/slr/source"
+data_dir = Path("data/inputs")
+src_dir = data_dir / "threats/slr"
 
 boxes = []
-for filename in (src_dir / "NOAA_Inundation_allft_tif").glob("*.tif"):
+for filename in (src_dir).glob("*.tif"):
     with rasterio.open(filename) as src:
-        boxes.append(box(*src.bounds))
+        boxes.append(pg.box(*src.bounds))
 
-df = gp.GeoDataFrame({"geometry": boxes}, crs=src.crs)
-to_geofeather(df, src_dir / "slr_bounds.feather")
+df = gp.GeoDataFrame({"geometry": boxes}, crs=DATA_CRS)
+df.to_feather(src_dir / "slr_bounds.feather")
 

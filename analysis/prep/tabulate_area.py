@@ -10,8 +10,7 @@ from time import time
 import warnings
 
 import pandas as pd
-
-from geofeather.pygeos import from_geofeather, to_geofeather
+import geopandas as gp
 import numpy as np
 from progress.bar import Bar
 import pygeos as pg
@@ -19,15 +18,15 @@ import rasterio
 from rasterio.mask import raster_geometry_mask
 
 from analysis.io import write_raster
-from analysis.pygeos_util import (
-    to_crs,
-    to_pygeos,
-    sjoin,
-    to_dict,
-    sjoin_geometry,
-    intersection,
+from analysis.pygeos_util import to_crs, to_pygeos, sjoin, to_dict, intersection
+from analysis.constants import (
+    DEBUG,
+    BLUEPRINT,
+    URBAN_YEARS,
+    DATA_CRS,
+    GEO_CRS,
+    M2_ACRES,
 )
-from analysis.constants import BLUEPRINT, URBAN_YEARS, DATA_CRS, GEO_CRS, M2_ACRES
 from analysis.stats import (
     extract_count_in_geometry,
     extract_blueprint_indicator_area,
@@ -36,12 +35,22 @@ from analysis.stats import (
 )
 
 
-data_dir = Path("data")
-huc12_filename = data_dir / "summary_units/HUC12.feather"
+data_dir = Path("data/inputs")
+huc12_filename = data_dir / "summary_units/huc12.feather"
 marine_filename = data_dir / "summary_units/marine_blocks.feather"
 ownership_filename = data_dir / "boundaries/ownership.feather"
 county_filename = data_dir / "boundaries/counties.feather"
 slr_bounds_filename = data_dir / "threats/slr/slr_bounds.feather"
+
+if DEBUG:
+    debug_dir = Path("/tmp")
+    huc12_debug_dir = debug_dir / "huc12"
+    if not huc12_debug_dir.exists():
+        os.makedirs(huc12_debug_dir)
+
+    marine_debug_dir = debug_dir / "marine_blocks"
+    if not marine_debug_dir.exists():
+        os.makedirs(marine_debug_dir)
 
 start = time()
 
@@ -51,17 +60,17 @@ out_dir = data_dir / "derived/huc12"
 if not out_dir.exists():
     os.makedirs(out_dir)
 
-# TODO: pygeos version and map to __geo_interface__
+
 print("Reading HUC12 boundaries")
-geometries = (
-    from_geofeather(huc12_filename, columns=["HUC12", "geometry"])
-    .set_index("HUC12")
-    .geometry
-)
+units = gp.read_feather(huc12_filename, columns=["id", "geometry"]).set_index("id")
+
+# transform to pandas Series instead of GeoSeries to get pygeos geometries for iterators below
+geometries = pd.Series(units.geometry.values.data, index=units.index)
 
 ### Calculate counts of each category in blueprint and indicators and put into a DataFrame
 results = []
 index = []
+
 for huc12, geometry in Bar(
     "Calculating Blueprint and Indicator counts for HUC12", max=len(geometries)
 ).iter(geometries.iteritems()):
@@ -82,9 +91,12 @@ for col in df.columns.difference(["shape_mask"]):
     s.columns = [f"{col}_{c}" for c in s.columns]
     results = results.join(s)
 
-results.index.name = "HUC12"
-results.to_csv(out_dir / "blueprint.csv", index_label="HUC12")
+results.index.name = "id"
+
 results.reset_index().to_feather(out_dir / "blueprint.feather")
+
+if DEBUG:
+    results.to_csv(huc12_debug_dir / "blueprint.csv", index_label="id")
 
 
 ### Calculate counts for urbanization
@@ -102,18 +114,23 @@ for huc12, geometry in Bar(
 
 cols = ["shape_mask", "urban"] + URBAN_YEARS
 df = pd.DataFrame(results, index=index)[cols]
-df = df.reset_index().rename(columns={"index": "HUC12"})
+df = df.reset_index().rename(columns={"index": "id"})
 df.columns = [str(c) for c in df.columns]
+
 df.to_feather(out_dir / "urban.feather")
-df.to_csv(out_dir / "urban.csv", index=False)
+
+if DEBUG:
+    df.to_csv(huc12_debug_dir / "urban.csv", index=False)
 
 
 ### Calculate counts for SLR
 # find the indexes of the geometries that overlap with SLR bounds; these are the only
 # ones that need to be analyzed for SLR impacts
-slr_bounds = from_geofeather(slr_bounds_filename).geometry
-idx = sjoin_geometry(geometries, slr_bounds.values, how="inner").index.unique()
-slr_geometries = geometries.loc[idx]
+slr_bounds = gp.read_feather(slr_bounds_filename).geometry
+tree = pg.STRtree(slr_bounds.geometry.values.data)
+left, right = tree.query_bulk(geometries)
+idx = np.unique(left)
+slr_geometries = geometries.iloc[idx]
 
 results = []
 index = []
@@ -134,19 +151,21 @@ df = df[["shape_mask"] + list(df.columns.difference(["shape_mask"]))]
 # extract only areas that actually had SLR pixels
 df = df[df[df.columns[1:]].sum(axis=1) > 0]
 df.columns = [str(c) for c in df.columns]
-df = df.reset_index().rename(columns={"index": "HUC12"})
+df = df.reset_index().rename(columns={"index": "id"})
 df.to_feather(out_dir / "slr.feather")
-df.to_csv(out_dir / "slr.csv", index=False)
+
+if DEBUG:
+    df.to_csv(huc12_debug_dir / "slr.csv", index=False)
 
 
 ### Calculate overlap with ownership and protection
 print("Calculating overlap with land ownership and protection")
-ownership = from_geofeather(
+ownership = gp.read_feather(
     ownership_filename, columns=["geometry", "FEE_ORGTYP", "GAP_STATUS"]
 )
 
-df = intersection(pd.DataFrame({"geometry": geometries}), ownership)
-df["acres"] = pg.area(df.geometry_right) * M2_ACRES
+df = intersection(units, ownership)
+df["acres"] = pg.area(df.geometry_right.values.data) * M2_ACRES
 
 # drop areas that touch but have no overlap
 df = df.loc[df.acres > 0].copy()
@@ -157,10 +176,8 @@ by_owner = (
     .acres.sum()
     .astype("float32")
     .reset_index()
-    .rename(columns={"level_0": "HUC12"})
+    .rename(columns={"level_0": "id"})
 )
-by_owner.to_feather(out_dir / "ownership.feather")
-by_owner.to_csv(out_dir / "ownership.csv", index=False)
 
 by_protection = (
     df[["GAP_STATUS", "acres"]]
@@ -168,19 +185,25 @@ by_protection = (
     .acres.sum()
     .astype("float32")
     .reset_index()
-    .rename(columns={"level_0": "HUC12"})
+    .rename(columns={"level_0": "id"})
 )
+
+by_owner.to_feather(out_dir / "ownership.feather")
 by_protection.to_feather(out_dir / "protection.feather")
-by_protection.to_csv(out_dir / "protection.csv", index=False)
+
+if DEBUG:
+    by_owner.to_csv(huc12_debug_dir / "ownership.csv", index=False)
+    by_protection.to_csv(huc12_debug_dir / "protection.csv", index=False)
+
 
 ### Calculate spatial join with counties
 print("Calculating spatial join with counties")
-df = from_geofeather(county_filename)
-df = sjoin(
-    pd.DataFrame({"geometry": geometries}, index=geometries.index), df, how="inner"
-)[["FIPS", "state", "county"]].reset_index()
+counties = gp.read_feather(county_filename)
+df = sjoin(units, counties, how="inner")[["FIPS", "state", "county"]].reset_index()
 df.to_feather(out_dir / "counties.feather")
-df.to_csv(out_dir / "counties.csv", index=False)
+
+if DEBUG:
+    df.to_csv(huc12_debug_dir / "counties.csv", index=False)
 
 
 # ##########################################################################
@@ -192,8 +215,9 @@ if not out_dir.exists():
     os.makedirs(out_dir)
 
 print("Reading marine blocks boundaries")
-df = from_geofeather(marine_filename, columns=["id", "geometry"]).set_index("id")
-geometries = df.geometry
+units = gp.read_feather(marine_filename, columns=["id", "geometry"]).set_index("id")
+
+geometries = pd.Series(units.geometry.values.data, index=units.index)
 
 ### Calculate counts of each category in blueprint and indicators and put into a DataFrame
 results = []
@@ -219,8 +243,11 @@ for col in df.columns.difference(["shape_mask"]):
     results = results.join(s)
 
 results.index.name = "id"
-results.to_csv(out_dir / "blueprint.csv", index_label="id")
 results.reset_index().to_feather(out_dir / "blueprint.feather")
+
+if DEBUG:
+    results.to_csv(marine_debug_dir / "blueprint.csv", index_label="id")
+
 
 print(
     "Processed {:,} zones in {:.2f}m".format(len(geometries), (time() - start) / 60.0)

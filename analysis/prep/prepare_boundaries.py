@@ -12,7 +12,7 @@ from analysis.pygeos_util import explode
 src_dir = Path("source_data")
 data_dir = Path("data")
 out_dir = data_dir / "inputs/boundaries"  # used as inputs for other steps
-bnd_dir = data_dir / "boundaries"  # used as inputs for tiles
+tile_dir = data_dir / "for_tiles"
 
 
 sa_df = read_dataframe(src_dir / "boundaries/SABlueprint2020_ExtentP.shp")
@@ -24,17 +24,16 @@ bnd = sa_df.to_crs(GEO_CRS).geometry.values.data
 mask = pg.normalize(pg.difference(world, bnd))
 
 # DEBUG
-# write_dataframe(
-#     gp.GeoDataFrame({"geometry": bnd}, index=[0], crs=GEO_CRS),
-#     bnd_dir / "sa_bnd.gpkg",
-#     driver="GPKG",
-# )
-
+write_dataframe(
+    gp.GeoDataFrame({"geometry": bnd}, index=[0], crs=GEO_CRS),
+    tile_dir / "sa_boundary.geojson",
+    driver="GeoJSONSeq",
+)
 
 write_dataframe(
     gp.GeoDataFrame({"geometry": mask}, index=[0], crs=GEO_CRS),
-    bnd_dir / "sa_mask.gpkg",
-    driver="GPKG",
+    tile_dir / "sa_mask.geojson",
+    driver="GeoJSONSeq",
 )
 
 ### Extract counties within SA bounds
@@ -87,5 +86,5 @@ df["geometry"] = pg.make_valid(df.geometry.values.data)
 # Explode the polygons for better spatial index results in downstream functions
 df = explode(df)
 
-write_dataframe(df, bnd_dir / "ownership.gpkg", driver="GPKG")
+write_dataframe(df.to_crs(GEO_CRS), tile_dir / "ownership.geojson", driver="GeoJSONSeq")
 df.to_feather(out_dir / "ownership.feather")

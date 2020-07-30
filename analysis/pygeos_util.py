@@ -74,21 +74,26 @@ def sjoin(left, right, predicate="intersects", how="left"):
 
     Parameters
     ----------
-    left : GeoDataFrame containing pygeos geometry in "geometry" column
-    right : GeoDataFrame containing pygeos geometry in "geometry" column
+    left : GeoDataFrame
+    right : GeoDataFrame
     predicate : str, optional (default "intersects")
     how : str, optional (default "left")
 
     Returns
     -------
-    pandas GeoDataFrame
+    GeoDataFrame
         Includes all columns from left and all columns from right except geometry, suffixed by _right where
         column names overlap.
     """
 
-    # spatial join is inner to avoid recasting indices to float
+    # NOTE: spatial join is inner to avoid recasting indices to float.
+    # Have to put inside Series to keep original indices intact because
+    # we use .values.data (returns ndarray) to get pygeos geometries.
     joined = sjoin_geometry(
-        left.geometry.values.data, right.geometry.values.data, predicate, how="inner"
+        pd.Series(left.geometry.values.data, index=left.index),
+        pd.Series(right.geometry.values.data, index=right.index),
+        predicate,
+        how="inner",
     )
     joined = left.join(joined, how=how).join(
         right.drop(columns=["geometry"]), on="index_right", rsuffix="_right"
@@ -97,7 +102,7 @@ def sjoin(left, right, predicate="intersects", how="left"):
 
 
 def sjoin_geometry(left, right, predicate="intersects", how="inner"):
-    """Use pygeos to do a spatial join between 2 series or ndarrays of geometries.
+    """Use pygeos to do a spatial join between 2 series or ndarrays of pygeos geometries.
 
     Parameters
     ----------
@@ -162,17 +167,19 @@ def intersection(left, right):
 
     Parameters
     ----------
-    left : DataFrame
-        pygeos geometry in "geometry" column
-    right : DataFrame
-        pygeos geometry in "geometry" column
+    left : GeoDataFrame
+    right : GeoDataFrame
 
     Returns
     -------
     DataFrame
         output geometries are in "geometry_right"
     """
-    intersects = sjoin_geometry(left.geometry, right.geometry)
+
+    left_series = pd.Series(left.geometry.values.data, index=left.index)
+    right_series = pd.Series(right.geometry.values.data, index=right.index)
+
+    intersects = sjoin_geometry(left_series, right_series, predicate="intersects")
 
     if not len(intersects):
         # empty dataframe with correct columns
@@ -180,8 +187,11 @@ def intersection(left, right):
             right, on="index_right", rsuffix="_right"
         )
 
+    # find the subset that are wholly contained
     contains = sjoin_geometry(
-        left.geometry, right.geometry.iloc[intersects], predicate="contains"
+        left_series.loc[intersects.index.unique()],
+        right_series.loc[intersects.unique()],
+        predicate="contains",
     )
 
     # any geometries that are completely contained can be copied intact
@@ -191,9 +201,11 @@ def intersection(left, right):
 
     # the remainder need to be intersected
     rest = intersects.loc[~intersects.isin(contains)]
-
     rest = left.join(rest, how="inner").join(right, on="index_right", rsuffix="_right")
-    rest["geometry_right"] = pg.intersection(rest.geometry, rest.geometry_right)
+    # have to add .values to prevent conversion to None
+    rest["geometry_right"] = gp.GeoSeries(
+        pg.intersection(rest.geometry.values.data, rest.geometry_right.values.data)
+    ).values
 
     return out.append(rest, ignore_index=False)
 

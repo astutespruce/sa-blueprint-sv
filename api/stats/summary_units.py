@@ -15,13 +15,16 @@ from analysis.constants import (
     PROTECTION,
 )
 
+input_dir = Path("data/inputs")
+results_dir = Path("data/results")
+
 
 class SummaryUnits(object):
     def __init__(self, unit_type="huc12"):
         print(f"Loading {unit_type} summary data...")
         self.unit_type = unit_type
 
-        working_dir = Path("data/derived") / unit_type
+        working_dir = input_dir / unit_type
 
         id_field = "HUC12" if unit_type == "huc12" else "id"
 

@@ -11,15 +11,16 @@ from analysis.constants import DATA_CRS, GEO_CRS, M2_ACRES
 
 src_dir = Path("source_data")
 data_dir = Path("data")
-analysis_dir = data_dir / "summary_units"
+analysis_dir = data_dir / "inputs/summary_units"
 results_dir = data_dir / "results"
+bnd_dir = data_dir / "boundaries"  # GPKGs output for reference
+tile_dir = data_dir / "for_tiles"
 
 ### Extract the boundary
 
 sa_df = read_dataframe(src_dir / "boundaries/SABlueprint2020_ExtentP.shp")[["geometry"]]
 
 ### Extract HUC12 within boundary
-
 print("Reading source HUC12s...")
 merged = None
 for huc2 in [2, 3, 5, 6]:
@@ -42,6 +43,7 @@ huc12["geometry"] = pg.make_valid(huc12.geometry.values.data)
 
 
 # select out those within the SA boundary
+print("Selecting HUC12s in region...")
 tree = pg.STRtree(huc12.geometry.values.data)
 ix = tree.query(sa_df.geometry.values.data[0], predicate="intersects")
 huc12 = huc12.iloc[ix].copy().reset_index(drop=True)
@@ -65,10 +67,11 @@ huc12 = huc12.iloc[keep_ix].copy()
 
 
 # Save in EPSG:5070 for analysis
-write_dataframe(huc12, analysis_dir / "huc12.gpkg", driver="GPKG")
 huc12.to_feather(analysis_dir / "huc12.feather")
+write_dataframe(huc12, bnd_dir / "huc12.gpkg", driver="GPKG")
 
-# project to WGS84 for report maps and vector tiles
+
+# project to WGS84 for report maps
 huc12_wgs84 = huc12.to_crs(GEO_CRS)
 out_dir = results_dir / "huc12"
 if not out_dir.exists():
@@ -96,10 +99,10 @@ marine["acres"] = (
 )
 
 # Save in EPSG:5070 for analysis
-write_dataframe(marine, analysis_dir / "marine.gpkg", driver="GPKG")
-marine.to_feather(analysis_dir / "marine.feather")
+marine.to_feather(analysis_dir / "marine_blocks.feather")
+write_dataframe(marine, bnd_dir / "marine_blocks.gpkg", driver="GPKG")
 
-# project to WGS84 for report maps and vector tiles
+# project to WGS84 for report maps
 marine_wgs84 = marine.to_crs(GEO_CRS)
 out_dir = results_dir / "marine_blocks"
 if not out_dir.exists():
@@ -110,4 +113,4 @@ marine_wgs84.to_feather(out_dir / "marine_blocks_wgs84.feather")
 
 ### Merge HUC12 and marine into single units file and export for creating tiles
 df = huc12_wgs84.append(marine_wgs84, ignore_index=True, sort=False)
-write_dataframe(df, analysis_dir / "units_wgs84.gpkg", driver="GPKG")
+write_dataframe(df, tile_dir / "units.geojson", driver="GeoJSONSeq")

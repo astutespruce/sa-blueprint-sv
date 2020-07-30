@@ -2,20 +2,16 @@
 
 TMPDIR="/tmp"
 TILEDIR="tiles"
-DATADIR="data"
+TILEINPUTS="data/for_tiles"
 
 # Create tiles from summary units
 echo "Processing summary units..."
-# ogr2ogr -f GeoJSONSeq $TMPDIR/units.geojson $DATADIR/summary_units/units.gpkg units -progress
-# tippecanoe -f -pg -P -Z 8 -z 14 -ai -o $TMPDIR/units.mbtiles -l "units" $TMPDIR/units.geojson
+tippecanoe -f -pg -P -Z 8 -z 14 -ai -o $TMPDIR/units.mbtiles -l "units" $TILEINPUTS/units.geojson
 
 # Create tiles from boundary and mask
 echo "Processing boundary..."
-# ogr2ogr -f GeoJSONSeq $TMPDIR/sa_mask.geojson $DATADIR/boundaries/sa_mask.gpkg sa_mask -progress
-# tippecanoe -f -pg -P -Z 0 -z 8 -ai -o $TMPDIR/sa_mask.mbtiles -l "mask" $TMPDIR/sa_mask.geojson
-
-# ogr2ogr -f GeoJSONSeq $TMPDIR/sa_boundary.geojson $DATADIR/boundaries/sa_boundary.gpkg sa_boundary -progress
-# tippecanoe -f -pg -P -Z 0 -z 8 -ai -o $TMPDIR/sa_boundary.mbtiles -l "boundary" $TMPDIR/sa_boundary.geojson
+tippecanoe -f -pg -P -Z 0 -z 8 -ai -o $TMPDIR/sa_mask.mbtiles -l "mask" $TILEINPUTS/sa_mask.geojson
+tippecanoe -f -pg -P -Z 0 -z 8 -ai -o $TMPDIR/sa_boundary.mbtiles -l "boundary" $TMPDIR/sa_boundary.geojson
 
 
 # TODO: merge tiles
@@ -31,5 +27,4 @@ echo "Processing states..."
 
 # Create tiles from protected areas
 echo "Processing protected areas..."
-ogr2ogr -t_srs EPSG:4326 -f GeoJSONSeq $TMPDIR/ownership.geojson $DATADIR/boundaries/ownership.gpkg -progress
-tippecanoe -f -pg -z 15 -o $TILEDIR/ownership.mbtiles -l "ownership" $TMPDIR/ownership.geojson
+tippecanoe -f -pg -P -z 15 -o $TILEDIR/ownership.mbtiles -l "ownership" $TILEINPUTS/ownership.geojson
