@@ -14,7 +14,7 @@ from analysis.constants import (
     M2_ACRES,
 )
 
-src_dir = Path("data")
+src_dir = Path("data/inputs")
 blueprint_filename = src_dir / "Blueprint_2020.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_dir = src_dir / "threats/urban"
@@ -56,6 +56,41 @@ def extract_count_in_geometry(filename, geometry_mask, window, bins):
     return np.bincount(values, minlength=len(bins)).astype("uint32")
 
 
+def extract_zonal_mean(filename, geometry_mask, window):
+    """Apply the geometry mask to values read from filename and calculate
+    the mean within that area.
+
+    Parameters
+    ----------
+    filename : str
+        input GeoTIFF filename
+    geometry_mask : 2D boolean ndarray
+        True for all pixels outside geometry, False inside.
+    window : rasterio.windows.Window
+        Window that defines the footprint of the geometry_mask within the raster.
+
+    Returns
+    -------
+    float
+        will be nan where there is no data within mask
+    """
+
+    with rasterio.open(filename) as src:
+        data = src.read(1, window=window)
+        nodata = src.nodatavals[0]
+
+    mask = (data == nodata) | geometry_mask
+
+    # since mask is True everywhere it is masked OUT, if the min is
+    # True, then there is no data
+    if mask.min():
+        return np.nan
+
+    # slice out flattened array of values that are not masked
+    # and calculate the mean
+    return data[~mask].mean()
+
+
 def extract_blueprint_indicator_area(geometries, inland=True):
     """Calculate the area of overlap between geometries and Blueprint, indicators,
     and corridors.
@@ -71,10 +106,13 @@ def extract_blueprint_indicator_area(geometries, inland=True):
     Returns
     -------
     dict or None (if does not overlap Blueprint data)
-        keys are mask, blueprint, <indicator_id>, ...
-        values are total areas for each value in each theme
+        {"counts": {"<indicator_id>": [...], ...}, "means": {"<indicator_id>": <mean>, }}
+        Keys of counts are mask, blueprint, <indicator_id>, ...
+        values are total areas for each value in each theme.
+        Keys of means are <indicator_id> for continuous indicators only, values are
+        means.
     """
-    results = {}
+    results = {"counts": {}, "means": {}}
     # create mask and window
     with rasterio.open(blueprint_filename) as src:
         try:
@@ -88,27 +126,31 @@ def extract_blueprint_indicator_area(geometries, inland=True):
         # square meters to acres
         cellsize = src.res[0] * src.res[1] * M2_ACRES
 
-    results["shape_mask"] = (
+    results["counts"]["shape_mask"] = (
         ((~geometry_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
     )
 
     # Does not overlap Blueprint extent, return
-    if results["shape_mask"] == 0:
+    if results["counts"]["shape_mask"] == 0:
         return None
 
     blueprint_counts = extract_count_in_geometry(
         blueprint_filename, geometry_mask, window, np.arange(len(BLUEPRINT))
     )
-    results["blueprint"] = (
+    results["counts"]["blueprint"] = (
         (blueprint_counts * cellsize).round(ACRES_PRECISION).astype("float32")
     )
 
-    corridor_counts = extract_count_in_geometry(
-        corridors_filename, geometry_mask, window, np.arange(len(CORRIDORS))
-    )
-    results["corridors"] = (
-        (corridor_counts * cellsize).round(ACRES_PRECISION).astype("float32")
-    )
+    # FIXME:
+    results["counts"]["corridors"] = [0, 0]
+
+    # TODO: re-enable once we get the latest
+    # corridor_counts = extract_count_in_geometry(
+    #     corridors_filename, geometry_mask, window, np.arange(len(CORRIDORS))
+    # )
+    # results["counts"]["corridors"] = (
+    #     (corridor_counts * cellsize).round(ACRES_PRECISION).astype("float32")
+    # )
 
     if inland:
         # since some HUCs overlap marine areas, we should include all indicators
@@ -125,7 +167,18 @@ def extract_blueprint_indicator_area(geometries, inland=True):
 
         bins = np.arange(0, max(values) + 1)
         counts = extract_count_in_geometry(filename, geometry_mask, window, bins)
-        results[id] = (counts * cellsize).round(ACRES_PRECISION).astype("float32")
+        results["counts"][id] = (
+            (counts * cellsize).round(ACRES_PRECISION).astype("float32")
+        )
+
+        # TODO: only if has indicator counts
+        if indicator.get("continuous"):
+            continuous_filename = (
+                src_dir / "indicators" / indicator["filename"].replace("_Binned", "")
+            )
+            mean = extract_zonal_mean(continuous_filename, geometry_mask, window)
+            if mean is not None:
+                results["means"][id] = mean
 
     return results
 

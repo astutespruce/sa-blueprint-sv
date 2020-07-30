@@ -56,7 +56,7 @@ start = time()
 
 
 ### Inland
-out_dir = data_dir / "derived/huc12"
+out_dir = data_dir / "outputs/huc12"
 if not out_dir.exists():
     os.makedirs(out_dir)
 
@@ -68,7 +68,8 @@ units = gp.read_feather(huc12_filename, columns=["id", "geometry"]).set_index("i
 geometries = pd.Series(units.geometry.values.data, index=units.index)
 
 ### Calculate counts of each category in blueprint and indicators and put into a DataFrame
-results = []
+counts = []
+means = []
 index = []
 
 for huc12, geometry in Bar(
@@ -79,19 +80,24 @@ for huc12, geometry in Bar(
         continue
 
     index.append(huc12)
-    results.append(zone_results)
+    counts.append(zone_results["counts"])
+    means.append(zone_results["means"])
 
-df = pd.DataFrame(results, index=index)
-results = df[["shape_mask"]].copy()
+count_df = pd.DataFrame(counts, index=index)
+mean_df = pd.DataFrame(means, index=index)
+mean_df.columns = [f"{c}_avg" for c in mean_df.columns]
+
+results = count_df[["shape_mask"]].copy()
+results.index.name = "id"
 
 ### Export the Blueprint and each indicator to a separate file
 # each column is an array of counts for each
-for col in df.columns.difference(["shape_mask"]):
-    s = df[col].apply(pd.Series)
+for col in count_df.columns.difference(["shape_mask"]):
+    s = count_df[col].apply(pd.Series)
     s.columns = [f"{col}_{c}" for c in s.columns]
     results = results.join(s)
 
-results.index.name = "id"
+results = results.join(mean_df).round()
 
 results.reset_index().to_feather(out_dir / "blueprint.feather")
 
@@ -114,7 +120,7 @@ for huc12, geometry in Bar(
 
 cols = ["shape_mask", "urban"] + URBAN_YEARS
 df = pd.DataFrame(results, index=index)[cols]
-df = df.reset_index().rename(columns={"index": "id"})
+df = df.reset_index().rename(columns={"index": "id"}).round()
 df.columns = [str(c) for c in df.columns]
 
 df.to_feather(out_dir / "urban.feather")
@@ -151,7 +157,7 @@ df = df[["shape_mask"] + list(df.columns.difference(["shape_mask"]))]
 # extract only areas that actually had SLR pixels
 df = df[df[df.columns[1:]].sum(axis=1) > 0]
 df.columns = [str(c) for c in df.columns]
-df = df.reset_index().rename(columns={"index": "id"})
+df = df.reset_index().rename(columns={"index": "id"}).round()
 df.to_feather(out_dir / "slr.feather")
 
 if DEBUG:
@@ -177,7 +183,7 @@ by_owner = (
     .astype("float32")
     .reset_index()
     .rename(columns={"level_0": "id"})
-)
+).round()
 
 by_protection = (
     df[["GAP_STATUS", "acres"]]
@@ -186,7 +192,7 @@ by_protection = (
     .astype("float32")
     .reset_index()
     .rename(columns={"level_0": "id"})
-)
+).round()
 
 by_owner.to_feather(out_dir / "ownership.feather")
 by_protection.to_feather(out_dir / "protection.feather")
@@ -199,7 +205,11 @@ if DEBUG:
 ### Calculate spatial join with counties
 print("Calculating spatial join with counties")
 counties = gp.read_feather(county_filename)
-df = sjoin(units, counties, how="inner")[["FIPS", "state", "county"]].reset_index()
+df = (
+    sjoin(units, counties, how="inner")[["FIPS", "state", "county"]]
+    .reset_index()
+    .round()
+)
 df.to_feather(out_dir / "counties.feather")
 
 if DEBUG:
@@ -210,7 +220,7 @@ if DEBUG:
 
 
 ### Marine blocks
-out_dir = data_dir / "derived/marine_blocks"
+out_dir = data_dir / "outputs/marine_blocks"
 if not out_dir.exists():
     os.makedirs(out_dir)
 
@@ -220,7 +230,8 @@ units = gp.read_feather(marine_filename, columns=["id", "geometry"]).set_index("
 geometries = pd.Series(units.geometry.values.data, index=units.index)
 
 ### Calculate counts of each category in blueprint and indicators and put into a DataFrame
-results = []
+counts = []
+means = []
 index = []
 for id, geometry in Bar(
     "Calculating Blueprint and Indicator counts for marine blocks", max=len(geometries)
@@ -230,19 +241,24 @@ for id, geometry in Bar(
         continue
 
     index.append(id)
-    results.append(zone_results)
+    counts.append(zone_results["counts"])
+    means.append(zone_results["means"])
 
-df = pd.DataFrame(results, index=index)
-results = df[["shape_mask"]].copy()
+count_df = pd.DataFrame(counts, index=index)
+mean_df = pd.DataFrame(means, index=index)
+mean_df.columns = [f"{c}_avg" for c in mean_df.columns]
+
+results = count_df[["shape_mask"]].copy()
+results.index.name = "id"
 
 ### Export the Blueprint and each indicator to a separate file
 # each column is an array of counts for each
-for col in df.columns.difference(["shape_mask"]):
-    s = df[col].apply(pd.Series)
+for col in count_df.columns.difference(["shape_mask"]):
+    s = count_df[col].apply(pd.Series)
     s.columns = [f"{col}_{c}" for c in s.columns]
     results = results.join(s)
 
-results.index.name = "id"
+results = results.join(mean_df).round()
 results.reset_index().to_feather(out_dir / "blueprint.feather")
 
 if DEBUG:
