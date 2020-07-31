@@ -15,6 +15,8 @@ from analysis.constants import (
 )
 
 src_dir = Path("data/inputs")
+indicators_dir = src_dir / "indicators"
+indicators_mask_dir = indicators_dir / "masks"
 blueprint_filename = src_dir / "Blueprint_2020.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_dir = src_dir / "threats/urban"
@@ -91,6 +93,43 @@ def extract_zonal_mean(filename, geometry_mask, window):
     return data[~mask].mean()
 
 
+def detect_indicators(geometries, indicators):
+    """Check area of interest against coarse resolution indicator mask for
+    each indicator to see if indicator is present in this area.
+
+    Parameters
+    ----------
+    geometries : list-like of geometry objects that provide __geo_interface__
+    indicators : list-like of indicator IDs
+
+    Returns
+    -------
+    list of indicator IDs present in area
+    """
+
+    if not indicators:
+        return []
+
+    with rasterio.open(indicators_mask_dir / indicators[0]["filename"]) as src:
+        geometry_mask, transform, window = raster_geometry_mask(
+            src, geometries, crop=True, all_touched=True
+        )
+
+    indicators_with_data = []
+    for indicator in indicators:
+        with rasterio.open(indicators_mask_dir / indicator["filename"]) as src:
+            data = src.read(1, window=window)
+            nodata = src.nodatavals[0]
+
+            mask = (data == nodata) | geometry_mask
+
+        # if there are unmasked areas, keep this indicator
+        if mask.min() == False:
+            indicators_with_data.append(indicator)
+
+    return indicators_with_data
+
+
 def extract_blueprint_indicator_area(geometries, inland=True):
     """Calculate the area of overlap between geometries and Blueprint, indicators,
     and corridors.
@@ -112,7 +151,9 @@ def extract_blueprint_indicator_area(geometries, inland=True):
         Keys of means are <indicator_id> for continuous indicators only, values are
         means.
     """
+
     results = {"counts": {}, "means": {}}
+
     # create mask and window
     with rasterio.open(blueprint_filename) as src:
         try:
@@ -160,9 +201,12 @@ def extract_blueprint_indicator_area(geometries, inland=True):
         # marine areas only have marine indicators
         indicators = [i for i in INDICATORS if i["id"].startswith("marine_")]
 
+    indicators = detect_indicators(geometries, indicators)
+
     for indicator in indicators:
         id = indicator["id"]
-        filename = src_dir / "indicators" / indicator["filename"]
+        filename = indicators_dir / indicator["filename"]
+
         values = [e["value"] for e in indicator["values"]]
 
         bins = np.arange(0, max(values) + 1)
@@ -171,10 +215,9 @@ def extract_blueprint_indicator_area(geometries, inland=True):
             (counts * cellsize).round(ACRES_PRECISION).astype("float32")
         )
 
-        # TODO: only if has indicator counts
         if indicator.get("continuous"):
-            continuous_filename = (
-                src_dir / "indicators" / indicator["filename"].replace("_Binned", "")
+            continuous_filename = indicators_dir / indicator["filename"].replace(
+                "_Binned", ""
             )
             mean = extract_zonal_mean(continuous_filename, geometry_mask, window)
             if mean is not None:
