@@ -35,12 +35,12 @@ from analysis.stats import (
 )
 
 
-data_dir = Path("data/inputs")
-huc12_filename = data_dir / "summary_units/huc12.feather"
-marine_filename = data_dir / "summary_units/marine_blocks.feather"
-ownership_filename = data_dir / "boundaries/ownership.feather"
-county_filename = data_dir / "boundaries/counties.feather"
-slr_bounds_filename = data_dir / "threats/slr/slr_bounds.feather"
+data_dir = Path("data")
+huc12_filename = data_dir / "inputs/summary_units/huc12.feather"
+marine_filename = data_dir / "inputs/summary_units/marine_blocks.feather"
+ownership_filename = data_dir / "inputs/boundaries/ownership.feather"
+county_filename = data_dir / "inputs/boundaries/counties.feather"
+slr_bounds_filename = data_dir / "inputs/threats/slr/slr_bounds.feather"
 
 if DEBUG:
     debug_dir = Path("/tmp")
@@ -56,7 +56,7 @@ start = time()
 
 
 ### Inland
-out_dir = data_dir / "outputs/huc12"
+out_dir = data_dir / "results/huc12"
 if not out_dir.exists():
     os.makedirs(out_dir)
 
@@ -220,7 +220,7 @@ if DEBUG:
 
 
 ### Marine blocks
-out_dir = data_dir / "outputs/marine_blocks"
+out_dir = data_dir / "results/marine_blocks"
 if not out_dir.exists():
     os.makedirs(out_dir)
 

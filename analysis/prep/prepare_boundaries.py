@@ -3,7 +3,6 @@ import pandas as pd
 import geopandas as gp
 import pygeos as pg
 from pyogrio.geopandas import read_dataframe, write_dataframe
-from geofeather import from_geofeather as from_geofeather_as_gp
 
 from analysis.constants import GEO_CRS, DATA_CRS
 from analysis.pygeos_util import explode

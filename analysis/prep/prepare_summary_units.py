@@ -12,7 +12,6 @@ from analysis.constants import DATA_CRS, GEO_CRS, M2_ACRES
 src_dir = Path("source_data")
 data_dir = Path("data")
 analysis_dir = data_dir / "inputs/summary_units"
-results_dir = data_dir / "results"
 bnd_dir = data_dir / "boundaries"  # GPKGs output for reference
 tile_dir = data_dir / "for_tiles"
 
@@ -73,7 +72,7 @@ write_dataframe(huc12, bnd_dir / "huc12.gpkg", driver="GPKG")
 
 # project to WGS84 for report maps
 huc12_wgs84 = huc12.to_crs(GEO_CRS)
-out_dir = results_dir / "huc12"
+out_dir = analysis_dir / "huc12"
 if not out_dir.exists():
     os.makedirs(out_dir)
 
@@ -104,7 +103,7 @@ write_dataframe(marine, bnd_dir / "marine_blocks.gpkg", driver="GPKG")
 
 # project to WGS84 for report maps
 marine_wgs84 = marine.to_crs(GEO_CRS)
-out_dir = results_dir / "marine_blocks"
+out_dir = analysis_dir / "marine_blocks"
 if not out_dir.exists():
     os.makedirs(out_dir)
 

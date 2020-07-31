@@ -183,7 +183,7 @@ def extract_blueprint_indicator_area(geometries, inland=True):
     )
 
     # FIXME:
-    results["counts"]["corridors"] = [0, 0]
+    results["counts"]["corridors"] = np.array([0, 0])
 
     # TODO: re-enable once we get the latest
     # corridor_counts = extract_count_in_geometry(
@@ -194,14 +194,15 @@ def extract_blueprint_indicator_area(geometries, inland=True):
     # )
 
     if inland:
-        # since some HUCs overlap marine areas, we should include all indicators
-        indicators = INDICATORS
+        # since some HUCs overlap marine areas, we include all indicators
+        # that are present in area
+        indicators = detect_indicators(geometries, INDICATORS)
 
     else:
         # marine areas only have marine indicators
+        # Note: no need to run detect_indicators(), all are present everywhere
+        # in marine area.
         indicators = [i for i in INDICATORS if i["id"].startswith("marine_")]
-
-    indicators = detect_indicators(geometries, indicators)
 
     for indicator in indicators:
         id = indicator["id"]

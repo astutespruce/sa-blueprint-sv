@@ -1,13 +1,14 @@
 from pathlib import Path
 
 import pandas as pd
-from geofeather.pygeos import from_geofeather, to_geofeather
 import numpy as np
 import pygeos as pg
+import geopandas as gp
 
 from analysis.pygeos_util import to_crs, to_dict, sjoin, sjoin_geometry, intersection
 from analysis.constants import (
     BLUEPRINT,
+    INDICATORS,
     INDICATOR_INDEX,
     URBAN_YEARS,
     DATA_CRS,
@@ -24,21 +25,31 @@ from analysis.stats import (
 )
 
 
-data_dir = Path("data")
+data_dir = Path("data/inputs")
 county_filename = data_dir / "boundaries/counties.feather"
 ownership_filename = data_dir / "boundaries/ownership.feather"
 slr_bounds_filename = data_dir / "threats/slr/slr_bounds.feather"
 
 # Load targets into memory for faster calculations below
-counties = from_geofeather(county_filename)[["geometry", "FIPS", "state", "county"]]
-ownership = from_geofeather(ownership_filename)[
+counties = gp.read_feather(county_filename)[["geometry", "FIPS", "state", "county"]]
+ownership = gp.read_feather(ownership_filename)[
     ["geometry", "FEE_ORGTYP", "GAP_STATUS"]
 ]
-slr_bounds = from_geofeather(slr_bounds_filename).geometry
+slr_bounds = gp.read_feather(slr_bounds_filename).geometry
 
 
 class CustomArea(object):
     def __init__(self, geometry, crs, name):
+        """Initialize a custom area from a pygeos geometry.
+
+        Parameters
+        ----------
+        geometry : pygeos Geometry
+        crs : pyproj CRS object
+        name : string
+            name of custom area
+        """
+
         self.geometry = to_crs(geometry, crs, DATA_CRS)
         # wrap geometry as a dict for rasterio
         self.shapes = np.asarray([to_dict(self.geometry[0])])
@@ -50,18 +61,25 @@ class CustomArea(object):
         if blueprint is None:
             return None
 
+        counts = blueprint["counts"]
+        means = blueprint["means"]
+
         results = {
-            "blueprint_total": blueprint["shape_mask"],
-            "blueprint": blueprint["blueprint"],
-            "corridors": blueprint["corridors"],
-            "corridors_total": blueprint["corridors"].sum(),
+            "blueprint_total": counts["shape_mask"],
+            "blueprint": counts["blueprint"],
+            "corridors": counts["corridors"],
+            "corridors_total": counts["corridors"].sum(),
             # TODO: find correct way to set is_marine
         }
 
         indicators = []
-        for id, indicator in INDICATOR_INDEX.items():
+        for indicator in INDICATORS:
             # drop indicators that are not present
-            values = blueprint[id]
+            id = indicator["id"]
+            if id not in counts:
+                continue
+
+            values = counts[id]
             if values.max() > 0:
                 indicators.append(id)
                 results[id] = values
@@ -71,6 +89,9 @@ class CustomArea(object):
                     results[f"{id}_good_total"] = values[
                         indicator["goodThreshold"] :
                     ].sum()
+
+                if id in means:
+                    results[f"{id}_avg"] = means[id]
 
         results["indicators"] = indicators
 
@@ -93,7 +114,9 @@ class CustomArea(object):
         }
 
     def get_slr(self):
-        idx = sjoin_geometry(self.geometry, slr_bounds.values, how="inner")
+        idx = sjoin_geometry(
+            self.geometry.values.data, slr_bounds.values.data, how="inner"
+        )
         if not len(idx):
             return None
 
@@ -166,7 +189,10 @@ class CustomArea(object):
         return results
 
     def get_results(self):
-        results = {"type": "", "acres": pg.area(self.geometry).sum() * M2_ACRES}
+        results = {
+            "type": "",
+            "acres": pg.area(self.geometry.values.data).sum() * M2_ACRES,
+        }
 
         try:
             blueprint_results = self.get_blueprint()

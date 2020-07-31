@@ -1,9 +1,9 @@
 from collections import defaultdict
 from pathlib import Path
 
-from geofeather.pygeos import from_geofeather
 import numpy as np
 import pandas as pd
+import geopandas as gp
 import pygeos as pg
 
 
@@ -24,33 +24,29 @@ class SummaryUnits(object):
         print(f"Loading {unit_type} summary data...")
         self.unit_type = unit_type
 
-        working_dir = input_dir / unit_type
+        working_dir = results_dir / unit_type
 
-        id_field = "HUC12" if unit_type == "huc12" else "id"
-
-        self.units = from_geofeather(
-            working_dir / f"{unit_type}_wgs84.feather"
-        ).set_index(id_field)
+        self.units = gp.read_feather(
+            input_dir / "summary_units" / f"{unit_type}_wgs84.feather"
+        ).set_index("id")
 
         self.blueprint = pd.read_feather(working_dir / "blueprint.feather").set_index(
-            id_field
+            "id"
         )
 
         if unit_type == "huc12":
-            self.slr = pd.read_feather(working_dir / "slr.feather").set_index(id_field)
-            self.urban = pd.read_feather(working_dir / "urban.feather").set_index(
-                id_field
-            )
+            self.slr = pd.read_feather(working_dir / "slr.feather").set_index("id")
+            self.urban = pd.read_feather(working_dir / "urban.feather").set_index("id")
             self.ownership = pd.read_feather(
                 working_dir / "ownership.feather"
-            ).set_index(id_field)
+            ).set_index("id")
 
             self.protection = pd.read_feather(
                 working_dir / "protection.feather"
-            ).set_index(id_field)
+            ).set_index("id")
 
             self.counties = pd.read_feather(working_dir / "counties.feather").set_index(
-                id_field
+                "id"
             )
 
     def get_results(self, id):
@@ -59,7 +55,7 @@ class SummaryUnits(object):
 
         unit = self.units.loc[id]
         results = unit[unit.index.difference(["geometry"])].to_dict()
-        results["bounds"] = pg.bounds(unit.geometry).tolist()
+        results["bounds"] = pg.bounds(pg.from_shapely(unit.geometry)).tolist()
         results["type"] = (
             "subwatershed" if self.unit_type == "huc12" else "marine lease block"
         )
