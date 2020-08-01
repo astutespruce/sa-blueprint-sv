@@ -62,10 +62,10 @@ def extract_data_for_map(src, bounds, scale, map_width, map_height):
 
     src_crs = src.crs
 
-    # Densify between 1 and 4 raster pixels per screen pixel.
+    # Densify between 2 and 4 raster pixels per screen pixel.
     # Higher densification is needed where the bounds cover a small number of pixels
     # in the output map
-    densify = max(1, min(4, math.ceil(src.res[0] / scale["resolution"])))
+    densify = max(2, min(4, math.ceil(src.res[0] / scale["resolution"])))
 
     # Project bounds and define window to extract data.
     # Round it to align with pixels
@@ -127,6 +127,7 @@ def extract_data_for_map(src, bounds, scale, map_width, map_height):
         dst_crs=MAP_CRS,
         dst_nodata=nodata,
         resampling=Resampling.nearest,
+        num_threads=2,
     )
 
     # Clip to bounds after reprojection
@@ -155,6 +156,7 @@ def extract_data_for_map(src, bounds, scale, map_width, map_height):
         dst_transform=final_transform,
         dst_crs=MAP_CRS,
         resampling=Resampling.nearest,
+        num_threads=2,
     )
 
     # if DEBUG:

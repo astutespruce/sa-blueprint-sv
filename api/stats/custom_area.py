@@ -65,11 +65,10 @@ class CustomArea(object):
         means = blueprint["means"]
 
         results = {
-            "blueprint_total": counts["shape_mask"],
-            "blueprint": counts["blueprint"],
-            "corridors": counts["corridors"],
-            "corridors_total": counts["corridors"].sum(),
-            # TODO: find correct way to set is_marine
+            "blueprint": counts["blueprint"].tolist(),
+            "blueprint_total": counts["blueprint"].sum().item(),
+            "corridors": counts["corridors"].tolist(),
+            "corridors_total": counts["corridors"].sum().item(),
         }
 
         indicators = []
@@ -114,9 +113,7 @@ class CustomArea(object):
         }
 
     def get_slr(self):
-        idx = sjoin_geometry(
-            self.geometry.values.data, slr_bounds.values.data, how="inner"
-        )
+        idx = sjoin_geometry(self.geometry, slr_bounds.values.data, how="inner")
         if not len(idx):
             return None
 
@@ -150,7 +147,7 @@ class CustomArea(object):
         if not len(df):
             return None
 
-        df["acres"] = pg.area(df.geometry_right) * M2_ACRES
+        df["acres"] = pg.area(df.geometry_right.values.data) * M2_ACRES
         df = df.loc[df.acres > 0].copy()
 
         if not len(df):
@@ -189,10 +186,7 @@ class CustomArea(object):
         return results
 
     def get_results(self):
-        results = {
-            "type": "",
-            "acres": pg.area(self.geometry.values.data).sum() * M2_ACRES,
-        }
+        results = {"type": "", "acres": pg.area(self.geometry).sum() * M2_ACRES}
 
         try:
             blueprint_results = self.get_blueprint()

@@ -1,9 +1,9 @@
-<div id="{{indicator.id}}" class="indicator-header flex align-center space-between" style="background-color: {{ecosystem_group.color}};border-color: {{ecosystem_group.borderColor}};">
+<div id="{{indicator.id}}" class="indicator-header flex align-center space-between" style="background-color: {{ecosystem.color}};border-color: {{ecosystem.borderColor}};">
     <div class="flex flex-grow align-center">
         <img src="{{(ecosystem.id + '.svg')|load_asset}}" class="ecosystem-icon" alt="Icon for {{ecosystem.label}}"/>
         <div>
             <div class="indicator-header-ecosystem">
-                {{ecosystem_group.label}} Ecosytems: {{ecosystem.label}}
+                {{ecosystem.label}}
             </div>
 
             <h2>{{indicator.label}}</h2>

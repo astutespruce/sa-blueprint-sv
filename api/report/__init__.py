@@ -11,8 +11,8 @@ from jinja2 import Environment, FileSystemLoader
 
 from analysis.constants import (
     BLUEPRINT,
+    ECOSYSTEMS,
     ECOSYSTEM_INDEX,
-    ECOSYSTEM_GROUPS,
     INDICATOR_INDEX,
     CORRIDORS,
     URBAN_LEGEND,
@@ -21,7 +21,7 @@ from analysis.constants import (
     PROTECTION,
     DEBUG,
 )
-from api.report.format import format_number
+from api.report.format import format_number, format_percent
 
 
 def reverse_filter(iterable):
@@ -53,6 +53,7 @@ template_path = Path(__file__).parent.resolve() / "templates"
 env = Environment(loader=FileSystemLoader(template_path))
 env.filters["reverse"] = reverse_filter
 env.filters["format_number"] = format_number
+env.filters["format_percent"] = format_percent
 env.filters["load_asset"] = load_asset
 env.filters["sum"] = sum
 
@@ -70,39 +71,25 @@ def create_report(maps, results):
 
     # determine ecosystems present from indicators
     ecosystem_ids = {id.split("_")[0] for id in results["indicators"]}
-    # ecosystems = {id: ECOSYSTEM_INDEX[id] for id in ecosystem_ids}
 
-    # determine ecosystem groups present from ecosystems
-    # ecosystem_groups = OrderedDict()
-    ecosystem_groups = []
-    for group in ECOSYSTEM_GROUPS:
-        ecosystems_present = set(group["ecosystems"]).intersection(ecosystem_ids)
-        if not ecosystems_present:
+    ecosystems = []
+    for ecosystem in ECOSYSTEMS:
+        id = ecosystem["id"]
+        if not id in ecosystem_ids:
             continue
 
-        ecosystems = []
-        for id in ecosystems_present:
-            # update ecosystem with only indicators that are present
-            ecosystem = deepcopy(ECOSYSTEM_INDEX[id])
-            ecosystem["indicators"] = [
-                INDICATOR_INDEX[i]
-                for i in sorted(
-                    {f"{id}_{i}" for i in ecosystem["indicators"]}.intersection(
-                        results["indicators"]
-                    )
-                )
-            ]
-            ecosystems.append(ecosystem)
+        # update ecosystem with only indicators that are present
+        ecosystem = deepcopy(ECOSYSTEM_INDEX[ecosystem["id"]])
 
-        ecosystem_groups.append(
-            {
-                "id": group["id"],
-                "label": group["label"],
-                "color": group["color"],
-                "borderColor": group["borderColor"],
-                "ecosystems": ecosystems,
-            }
-        )
+        ecosystem["indicators"] = [
+            INDICATOR_INDEX[i]
+            for i in sorted(
+                {f"{id}_{i}" for i in ecosystem["indicators"]}.intersection(
+                    results["indicators"]
+                )
+            )
+        ]
+        ecosystems.append(ecosystem)
 
     ownership_acres = sum([e["acres"] for e in results.get("ownership", [])])
     protection_acres = sum([e["acres"] for e in results.get("protection", [])])
@@ -143,8 +130,7 @@ def create_report(maps, results):
         "url": "https://blueprint.southatlanticlcc.org/",
         "maps": maps,
         "legends": legends,
-        # "ecosystems": ecosystems,
-        "ecosystem_groups": ecosystem_groups,
+        "ecosystems": ecosystems,
         "ownership_acres": ownership_acres,
         "protection_acres": protection_acres,
         "indicators": INDICATOR_INDEX,

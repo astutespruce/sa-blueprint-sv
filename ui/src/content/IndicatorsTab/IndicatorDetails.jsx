@@ -19,7 +19,6 @@ const IndicatorDetails = ({
   acres,
   totalAcres,
   description,
-  caption,
   datasetID,
   goodThreshold,
   units,
@@ -49,6 +48,8 @@ const IndicatorDetails = ({
       percent: (100 * (analysisAcres - totalAcres)) / analysisAcres,
     })
   }
+
+  const caption = "TODO: caption derived from this indicator"
 
   console.log("percent values", percentTableValues)
 

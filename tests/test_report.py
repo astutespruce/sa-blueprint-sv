@@ -77,7 +77,7 @@ for aoi in aois:
     print(f"Creating report for {name}...")
 
     start = time()
-    df = read_dataframe(f"examples/{path}.shp")
+    df = read_dataframe(f"examples/{path}.shp", columns=[])
     geometry = pg.make_valid(df.geometry.values.data)
 
     # dissolve
@@ -141,9 +141,14 @@ for aoi in aois:
 ids = {
     "huc12": [
         "030602040601",
-        # "030601030510", "031501040301", "030102020505"
+        # "030601030510",
+        # "031501040301",
+        # "030102020505",
+        # "030203020403",
+        # "030203020404",
+        # "030203020405"
     ],
-    # "marine_blocks": ["NI18-07-6210"]
+    # "marine_blocks": ["NI18-07-6210"],
 }
 
 

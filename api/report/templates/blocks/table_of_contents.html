@@ -18,24 +18,11 @@
         <a href="#Corridors" class="tocpagenr"></a>
     </li>
 
-
-    {% for ecosystem_group in ecosystem_groups %}
+    {% for ecosystem in ecosystems %}
         <div class="divider"></div>
         <li class="no-border">
-            <a href="#{{ecosystem_group.id}}" class="toctext"></a>
-            <a href="#{{ecosystem_group.id}}" class="tocpagenr"></a>
-
-            {% if ecosystem_group.id != 'marine'%}
-                <ol>
-                    {% for ecosystem in ecosystem_group.ecosystems %}
-                        <div class="divider"></div>
-                        <li>
-                            <a href="#ecosystem-{{ecosystem.id}}" class="toctext"></a>
-                            <a href="#ecosystem-{{ecosystem.id}}" class="tocpagenr"></a>
-                        </li>
-                    {% endfor %}
-                </ol>
-            {% endif %}
+            <a href="#{{ecosystem.id}}" class="toctext"></a>
+            <a href="#{{ecosystem.id}}" class="tocpagenr"></a>
         </li>
     {% endfor %}
 

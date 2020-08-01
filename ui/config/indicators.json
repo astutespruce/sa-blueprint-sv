@@ -285,7 +285,7 @@
   },
   {
     "id": "land_greenways",
-    "filename": "GreenwaysAndTrail.tif",
+    "filename": "GreenwaysAndTrails.tif",
     "label": "Greenways & trails",
     "values": [
       {
@@ -334,7 +334,7 @@
     "description": "This cultural resource indicator measures both the natural condition and connected length of greenways and trails to characterize the quality of the recreational experience. Natural condition is based on the amount of impervious surface surrounding the path. Connected length captures how far a person can go without leaving a dedicated path, based on common distances for walking, running, and biking."
   },
   {
-    "id": "land_intacthabitatcores",
+    "id": "land_intactcores",
     "filename": "IntactHabitatCores_Binned.tif",
     "label": "Intact habitat cores",
     "continuous": true,
@@ -652,7 +652,7 @@
     "description": "Urban open space is an index specific to urban areas that identifies both current and potential future open space based on the distance of undeveloped areas to existing protected lands. This cultural resource indicator is intended to capture equitable access to open space for urban residents. Protected natural areas in urban environments offer refugia for some species while providing people a nearby place to connect with nature."
   },
   {
-    "id": "marine_estuarinecoastalcondition",
+    "id": "marine_estuarinecondition",
     "filename": "EstuarineCoastalCondition_30m_Binned.tif",
     "label": "Coastal condition",
     "continuous": true,

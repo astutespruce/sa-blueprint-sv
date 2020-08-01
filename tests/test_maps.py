@@ -8,14 +8,22 @@ import numpy as np
 import pygeos as pg
 from pyogrio.geopandas import read_dataframe
 
-from constants import BLUEPRINT_COLORS, DATA_CRS, MAP_CRS, GEO_CRS, DATA_CRS, INDICATORS
+from analysis.constants import (
+    BLUEPRINT_COLORS,
+    DATA_CRS,
+    MAP_CRS,
+    GEO_CRS,
+    DATA_CRS,
+    INDICATORS,
+)
 
-from util.pygeos_util import to_crs, to_dict
+from analysis.pygeos_util import to_crs, to_dict
 from api.report.map import render_maps
 from api.stats import SummaryUnits, CustomArea
 
 
-aoi_names = ["Razor", "Groton_all"]
+# aoi_names = []
+aoi_names = ["Razor", "Groton_all", "ACF_area"]
 # aoi_names = ["ACF_area"]
 # aoi_names = ["NC"]
 
@@ -27,7 +35,7 @@ for aoi_name in aoi_names:
     if not out_dir.exists():
         os.makedirs(out_dir)
 
-    df = read_dataframe(f"data/aoi/{aoi_name}.shp")
+    df = read_dataframe(f"examples/{aoi_name}.shp")
     geometry = pg.make_valid(df.geometry.values.data)
 
     # dissolve
@@ -72,10 +80,13 @@ for aoi_name in aoi_names:
 
 ids = {
     # "huc12": [
+    #     "031101010504",
     #     "030602040601",
-    #     # "030601030510", "031501040301", "030102020505"
+    #     "030601030510",
+    #     "031501040301",
+    #     "030102020505",
     # ],
-    # "marine_blocks": ["NI18-07-6210"],
+    # "marine_blocks": ["NI18-07-6210"]
 }
 
 

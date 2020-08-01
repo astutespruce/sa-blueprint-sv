@@ -26,8 +26,8 @@ LOCATOR_STYLE = {
             "url": "mbtiles://basemap_esri_ocean",
             "tileSize": 256,
         },
-        "states": {"type": "vector", "url": "mbtiles://states", "tileSize": 256},
-        "sa_units": {"type": "vector", "url": "mbtiles://sa_units", "tileSize": 256},
+        "states": {"type": "vector", "url": "mbtiles://states"},
+        "map_units": {"type": "vector", "url": "mbtiles://map_units"},
     },
     "layers": [
         {"id": "basemap", "type": "raster", "source": "basemap"},
@@ -40,7 +40,7 @@ LOCATOR_STYLE = {
         },
         {
             "id": "mask",
-            "source": "sa_units",
+            "source": "map_units",
             "source-layer": "mask",
             "type": "fill",
             "paint": {"fill-color": "#333333", "fill-opacity": 0.5},

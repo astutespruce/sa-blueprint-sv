@@ -118,12 +118,12 @@ const Map = ({}) => {
       const { current: prevId } = highlightIDRef
       if (prevId !== null && prevId !== id) {
         map.setFeatureState(
-          { source: "sa", sourceLayer: "units", id: prevId },
+          { source: "mapUnits", sourceLayer: "units", id: prevId },
           { highlight: false }
         )
       }
       map.setFeatureState(
-        { source: "sa", sourceLayer: "units", id },
+        { source: "mapUnits", sourceLayer: "units", id },
         { highlight: true }
       )
       highlightIDRef.current = id
@@ -134,7 +134,7 @@ const Map = ({}) => {
       const { current: prevId } = highlightIDRef
       if (prevId !== null) {
         map.setFeatureState(
-          { source: "sa", sourceLayer: "units", id: prevId },
+          { source: "mapUnits", sourceLayer: "units", id: prevId },
           { highlight: false }
         )
       }

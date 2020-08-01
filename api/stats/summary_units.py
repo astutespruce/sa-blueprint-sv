@@ -13,6 +13,7 @@ from analysis.constants import (
     INDICATOR_INDEX,
     OWNERSHIP,
     PROTECTION,
+    ACRES_PRECISION,
 )
 
 input_dir = Path("data/inputs")
@@ -70,10 +71,16 @@ class SummaryUnits(object):
             return results
 
         # unpack blueprint, corridors, and indicators
-        results["blueprint_total"] = blueprint["shape_mask"]
-        results["blueprint"] = [
-            getattr(blueprint, c) for c in blueprint.index if c.startswith("blueprint_")
-        ]
+
+        blueprint_values = np.array(
+            [
+                getattr(blueprint, c)
+                for c in blueprint.index
+                if c.startswith("blueprint_")
+            ]
+        )
+        results["blueprint"] = blueprint_values.tolist()
+        results["blueprint_total"] = blueprint_values.sum().item()
 
         results["corridors"] = [
             getattr(blueprint, c) for c in blueprint.index if c.startswith("corridors_")
@@ -87,20 +94,22 @@ class SummaryUnits(object):
             if indicator_id not in groups:
                 continue
 
-            values = [
-                getattr(blueprint, c)
-                for c in blueprint.index
-                if c.startswith(indicator_id)
-            ]
-            # drop indicators that are not present
-            if max(values):
+            values = np.array(
+                [
+                    getattr(blueprint, c)
+                    for c in blueprint.index
+                    if c.startswith(indicator_id) and not c.endswith("avg")
+                ]
+            ).round(0)
+            # drop indicators that are not present in this area
+            if values.max():
                 indicators.append(indicator_id)
-                results[indicator_id] = values
-                results[f"{indicator_id}_total"] = sum(values)
+                results[indicator_id] = values.tolist()
+                results[f"{indicator_id}_total"] = values.sum().round(0).item()
 
                 if "goodThreshold" in indicator:
-                    results[f"{indicator_id}_good_total"] = sum(
-                        values[indicator["goodThreshold"] :]
+                    results[f"{indicator_id}_good_total"] = (
+                        values[indicator["goodThreshold"] :].sum().item()
                     )
 
         results["indicators"] = indicators

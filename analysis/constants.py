@@ -22,7 +22,6 @@ json_dir = Path("ui/config")
 
 # indexed by BP value
 BLUEPRINT = json.loads(open(json_dir / "blueprint.json").read())
-ECOSYSTEM_GROUPS = json.loads(open(json_dir / "ecosystem_groups.json").read())
 ECOSYSTEMS = json.loads(open(json_dir / "ecosystems.json").read())
 INDICATORS = json.loads(open(json_dir / "indicators.json").read())
 CORRIDORS = json.loads(open(json_dir / "corridors.json").read())

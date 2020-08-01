@@ -17,22 +17,13 @@ const IndicatorsTab = ({ unitType, analysisAcres, indicatorAcres }) => {
 
   const query = useStaticQuery(graphql`
     query {
-      ecosystemGroups: allEcosystemGroupsJson {
+      ecosystems: allEcosystemsJson {
         edges {
           node {
             id
             label
             color
             borderColor
-            ecosystems
-          }
-        }
-      }
-      ecosystems: allEcosystemsJson {
-        edges {
-          node {
-            id
-            label
             indicators
           }
         }
@@ -44,7 +35,6 @@ const IndicatorsTab = ({ unitType, analysisAcres, indicatorAcres }) => {
             label
             datasetID
             description
-            caption
             units
             domain
             goodThreshold
@@ -58,69 +48,37 @@ const IndicatorsTab = ({ unitType, analysisAcres, indicatorAcres }) => {
     }
   `)
 
-  console.log("indicatorArea", indicatorAcres)
-
-  const ECOSYSTEM_GROUPS = extractNodes(query.ecosystemGroups)
-  const ECOSYSTEMS = indexBy(extractNodes(query.ecosystems), "id")
-  const INDICATORS = indexBy(extractNodes(query.indicators), "id")
-
-  console.log("ecosystems list", extractNodes(query.ecosystems))
-
   const ecosystemsPresent = new Set(
     Object.keys(indicatorAcres).map(id => id.split("_")[0])
   )
   console.log("ecosystems present", ecosystemsPresent, ECOSYSTEMS)
 
+  const indicatorsIndex = indexBy(extractNodes(query.indicators), "id")
+
   // Aggregate ecosystems and indicators into a nested data structure
   // ONLY for ecosystems that have indicators present
-  // Output this as a flattened list of ecosystems in order of groups
-  const ecosystems = []
 
-  ECOSYSTEM_GROUPS.forEach(
-    ({
-      id: groupId,
-      label,
-      color,
-      borderColor,
-      ecosystems: groupEcosystemIds,
-    }) => {
-      const ids = groupEcosystemIds.filter(e => ecosystemsPresent.has(e))
+  const ecosystems = extractNodes(
+    query.ecosystems.filter(({ id }) => ecosystemsPresent.has(id))
+  ).map(
+    ({ id: ecosystemId, label, color, borderColor, indicators, ...rest }) => {
+      const indicatorsPresent = indicators
+        .map(indicatorId => `${ecosystemId}_${indicatorId}`)
+        .filter(indicatorId => indicatorAcres[indicatorId])
 
-      console.log("ids present", ids)
-
-      if (ids.length > 0) {
-        const groupEcosystems = ids
-          .map(ecosystemId => {
-            const indicatorsPresent = ECOSYSTEMS[ecosystemId].indicators
-              .map(indicatorId => `${ecosystemId}_${indicatorId}`)
-              .filter(indicatorId => indicatorAcres[indicatorId])
-
-            const group = {
-              id: groupId,
-              label,
-              color,
-              borderColor,
-            }
-
-            return {
-              group,
-              ...ECOSYSTEMS[ecosystemId],
-              indicators: indicatorsPresent.map(indicatorId => ({
-                ...INDICATORS[indicatorId],
-                ...indicatorAcres[indicatorId],
-                ecosystem: {
-                  id: ecosystemId,
-                  label: ECOSYSTEMS[ecosystemId].label,
-                  group,
-                },
-              })),
-            }
-          })
-          .filter(({ indicators }) => indicators.length > 0)
-
-        if (groupEcosystems.length > 0) {
-          ecosystems.push(...groupEcosystems)
-        }
+      return {
+        ...rest,
+        id: ecosystemId,
+        indicators: indicatorsPresent.map(indicatorId => ({
+          ...indicatorsIndex[indicatorId],
+          ...indicatorAcres[indicatorId],
+          ecosystem: {
+            id: ecosystemId,
+            label,
+            color,
+            borderColor,
+          },
+        })),
       }
     }
   )

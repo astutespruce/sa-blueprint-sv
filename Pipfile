@@ -31,6 +31,7 @@ arq = "*"
 sentry-sdk = "*"
 pygeos = "*"
 pyogrio = {editable = true,path = "./../pyogrio"}
+raster-tilecutter = {editable = true,path = "./../raster-tilecutter"}
 
 [requires]
 python_version = "3.8"

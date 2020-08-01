@@ -1,4 +1,3 @@
-
 def format_number(number):
     """Format numbers for display.
 
@@ -23,19 +22,30 @@ def format_number(number):
         return "< 0.01"
 
     if number < 1:
-        round1 = int(number*10) / 10
+        round1 = int(number * 10) / 10
         if round1 == number:
             return f"{round1:.1f}"
         else:
-            number = int(number*100) / 100
+            number = int(number * 100) / 100
             return f"{number:.2f}"
 
     if number < 10:
         if int(number) == number:
             return f"{number:.0f}"
 
-        number = int(number*10) / 10
+        number = int(number * 10) / 10
         return f"{number:.1f}"
 
     return f"{number:,.0f}"
 
+
+def format_percent(number):
+    """Format percents for display.
+    uses format_number precision, clipped to [0, 100] range.
+    """
+    if number > 100:
+        number = 100
+    elif number < 0:
+        number = 0
+
+    return format_number(number)

@@ -410,7 +410,7 @@ table tr.above-threshold td {
 }
 
 .ecosystem,
-.ecosystem-group {
+.indicator {
     break-before: always;
 }
 
@@ -444,19 +444,11 @@ table tr.above-threshold td {
     color: #666;
 }
 
-.ecosystem-summary-header {
-    margin-bottom: 0.25rem;
-}
-
 .ecosystem-icon {
     margin-right: 6pt;
     height: 32pt;
     background: #fff;
     border-radius: 32pt;
-}
-
-.ecosystem_summary + .ecosystem_summary {
-    margin-top: 4rem;
 }
 
 .indicator + .indicator,

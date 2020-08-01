@@ -6,6 +6,8 @@ This appears to work properly on locally-built rasterio / GDAL.
 
 Low resolution version of Blueprint created using gdal_translate:
 gdal_translate -tr 240 240 blueprint_2020.tif blueprint_2020_240.tif
+
+Creating blueprint tiles takes about 3 hours.
 """
 
 
@@ -46,6 +48,8 @@ render_tif_to_mbtiles(
 )
 
 # Render original 30m data
+# TODO: split this into multiple batches and multiprocess?
+
 print("Rendering high resolution tiles...")
 render_tif_to_mbtiles(
     src_dir / "blueprint_2020.tif",

@@ -84,11 +84,27 @@ To assist with checking if a given area of interest overlaps SLR data, the
 bounds of all SLR files are extracted to a dataset using
 `util/extract_slr_bounds.py`.
 
-### Merged tiles
+### Map tiles
 
-```
-tile-join -f -pg -o ./tiles/sa_units.mbtiles ./tiles/sa_mask.mbtiles ./tiles/units.mbtiles
-```
+Vector tiles were created using `create_tiles.sh`:
+
+-   state boundaries (used for report maps)
+-   mask and boundary
+-   HUC12 and marine lease blocks with IDs
+
+Raster tiles for the Blueprint were created using `render_blueprint_tiles.py`.
+
+### Summary unit statistics
+
+The count in each bin, and zonal mean (where applicable) were calculated for the
+Blueprint, all indicators present in each summary unit, urbanization, SLR, counties,
+land ownership, and land protection status were extracted using `tabulate_area.py`.
+
+This takes roughly 2.5 hours for HUC12s and marine blocks with the 30m input data.
+
+This depends on ~480m resolution indicator masks that are used as a quick check
+for indicator presence in an area of interest. These are created using
+`create_indicator_masks.py`.
 
 ################ In progress
 

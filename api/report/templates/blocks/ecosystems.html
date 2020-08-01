@@ -1,14 +1,5 @@
-<div class="spacer"></div>
-
-
-{% for group_id, ecosystem_group in ecosystem_groups.items() %}
-    {% for ecosystem_id in ecosystem_group.ecosystems %}
-        {% with ecosystem=ecosystems[ecosystem_id]%}
-            {% if ecosystem.indicators %}
-                {% with index=loop.index-1 %}
-                    {% include "blocks/ecosystem.html" %}
-                {% endwith %}
-            {% endif %}
-        {% endwith %}
-    {% endfor %}
+{% for ecosystem in ecosystems %}
+    {% with index=loop.index-1 %}
+        {% include "blocks/ecosystem.html" %}
+    {% endwith %}
 {% endfor %}

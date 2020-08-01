@@ -12,20 +12,18 @@ log = logging.getLogger(__name__)
 
 STYLE = {
     "version": 8,
-    "sources": {
-        "sa_units": {"type": "vector", "url": "mbtiles://sa_units", "tileSize": 256}
-    },
+    "sources": {"map_units": {"type": "vector", "url": "mbtiles://map_units"}},
     "layers": [
         {
             "id": "mask",
-            "source": "sa_units",
+            "source": "map_units",
             "source-layer": "mask",
             "type": "fill",
             "paint": {"fill-color": "#333333", "fill-opacity": 0.5},
         },
         {
             "id": "units-outline",
-            "source": "sa_units",
+            "source": "map_units",
             "source-layer": "units",
             "type": "line",
             "paint": {"line-width": 3, "line-color": "#000000", "line-opacity": 1},
