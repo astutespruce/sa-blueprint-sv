@@ -1,8 +1,8 @@
-from affine import Affine
 import math
-import numpy as np
 
+import numpy as np
 from PIL import Image
+from affine import Affine
 import rasterio
 from rasterio.enums import Resampling
 from rasterio.mask import raster_geometry_mask
@@ -62,10 +62,20 @@ def extract_data_for_map(src, bounds, scale, map_width, map_height):
 
     src_crs = src.crs
 
-    # Densify between 2 and 4 raster pixels per screen pixel.
-    # Higher densification is needed where the bounds cover a small number of pixels
-    # in the output map
-    densify = max(2, min(4, math.ceil(src.res[0] / scale["resolution"])))
+    # For smoother rendering, we want between 2 and 4 data pixels per
+    # screen pixel.
+    # ratio is number of data pixels per screen pixels
+    pixel_ratio = scale["resolution"] / src.res[0]
+    densify = max(2, min(4, math.ceil(1.0 / pixel_ratio)))
+
+    scale_factor = 1
+
+    # NOTE: we calculate the ratios based on overviews of [2,4,8,16,32,64]
+    # in order to get 2 screen pixels per data pixel
+    for factor in [32, 16, 8, 4, 2]:
+        if pixel_ratio // factor >= 2:
+            scale_factor = factor
+            break
 
     # Project bounds and define window to extract data.
     # Round it to align with pixels
@@ -90,7 +100,18 @@ def extract_data_for_map(src, bounds, scale, map_width, map_height):
     if src.dtypes[0] == "int8" and src.nodata == -128:
         nodata = 127
 
-    data = src.read(1, window=window, boundless=True, fill_value=nodata)
+    # Use out_shape to use overviews if available, for reading otherwise very
+    # large areas in the data.
+    data = src.read(
+        1,
+        window=window,
+        boundless=True,
+        fill_value=nodata,
+        out_shape=(int(window.height / scale_factor), int(window.width / scale_factor)),
+    )
+    # scale window transform
+    scaling = Affine.scale(scale_factor, scale_factor)
+    window_transform *= scaling
 
     # if DEBUG:
     #     write_raster("/tmp/pre-warp.tif", data, window_transform, src.crs, nodata)

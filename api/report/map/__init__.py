@@ -32,7 +32,7 @@ THREADS = 6
 
 src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
-blueprint_filename = src_dir / "Blueprint_2020.tif"
+blueprint_filename = src_dir / "blueprint_2020.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_filename = src_dir / "threats/urban/urb_indexed_2060.tif"
 slr_filename = src_dir / "threats/slr/slr.vrt"

@@ -8,9 +8,9 @@
   },
   {
     "value": 1,
-    "label": "Inland waterbodies",
+    "label": "Reservoirs",
     "percent": 1,
-    "description": "These are lakes, reservoirs, and ponds not included in the Blueprint 2020 priorities.",
+    "description": "These reservoirs not included in the Blueprint 2020 priorities.",
     "color": "#004DA8"
   },
   {

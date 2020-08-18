@@ -22,10 +22,12 @@ from api.report.map import render_maps
 from api.stats import SummaryUnits, CustomArea
 
 
-# aoi_names = []
-aoi_names = ["Razor", "Groton_all", "ACF_area"]
+# aoi_names = ["Fort_Mill_townlimits"]
+aoi_names = ["Enviva_Hamlet_80_mile_sourcing_radius"]
+# aoi_names = ["Razor", "Groton_all"]
 # aoi_names = ["ACF_area"]
 # aoi_names = ["NC"]
+# aoi_names = ["SA_boundary"]
 
 for aoi_name in aoi_names:
     print(f"Making maps for {aoi_name}...")
@@ -43,6 +45,8 @@ for aoi_name in aoi_names:
 
     print("Calculating results...")
     results = CustomArea(geometry, df.crs, name="Test").get_results()
+    # FIXME:
+    # results = {"indicators": []}
 
     ### Convert to WGS84 for mapping
     geometry = to_crs(geometry, df.crs, GEO_CRS)
@@ -79,13 +83,13 @@ for aoi_name in aoi_names:
 ### Write maps for a summary unit
 
 ids = {
-    # "huc12": [
-    #     "031101010504",
-    #     "030602040601",
-    #     "030601030510",
-    #     "031501040301",
-    #     "030102020505",
-    # ],
+    "huc12": [
+        # "030602040601",
+        # "030601030510",
+        # "031501040301",
+        # "030102020505",
+        # "031101010504",
+    ],
     # "marine_blocks": ["NI18-07-6210"]
 }
 

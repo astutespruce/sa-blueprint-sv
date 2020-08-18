@@ -80,7 +80,7 @@ class SummaryUnits(object):
             ]
         )
         results["blueprint"] = blueprint_values.tolist()
-        results["blueprint_total"] = blueprint_values.sum().item()
+        results["blueprint_total"] = blueprint_values.sum()
 
         results["corridors"] = [
             getattr(blueprint, c) for c in blueprint.index if c.startswith("corridors_")
@@ -100,17 +100,20 @@ class SummaryUnits(object):
                     for c in blueprint.index
                     if c.startswith(indicator_id) and not c.endswith("avg")
                 ]
-            ).round(0)
+            )
             # drop indicators that are not present in this area
             if values.max():
                 indicators.append(indicator_id)
                 results[indicator_id] = values.tolist()
-                results[f"{indicator_id}_total"] = values.sum().round(0).item()
+
+                # TODO: this must be for only valid indicator values
+                min_value = indicator["values"][0]["value"]
+                results[f"{indicator_id}_total"] = values[min_value:].sum()
 
                 if "goodThreshold" in indicator:
-                    results[f"{indicator_id}_good_total"] = (
-                        values[indicator["goodThreshold"] :].sum().item()
-                    )
+                    results[f"{indicator_id}_good_total"] = values[
+                        indicator["goodThreshold"] :
+                    ].sum()
 
         results["indicators"] = indicators
 

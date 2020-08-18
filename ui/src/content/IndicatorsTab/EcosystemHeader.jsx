@@ -2,7 +2,6 @@ import React from "react"
 import PropTypes from "prop-types"
 
 import { Box, Flex, Heading, Image, Text } from "theme-ui"
-import { darken } from "@theme-ui/color"
 
 const EcosystemHeader = ({
   id,

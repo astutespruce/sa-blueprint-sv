@@ -56,17 +56,17 @@ def read_cache(path):
 aois = [
     # {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
     # {"name": "Groton Plantation", "path": "Groton_all"},
-    # {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
+    {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
     # {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
     # # TODO: handle correctly
     # {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},
     # # Big areas:
-    # {"name": "ACF", "path": "ACF_area"},
+    # {"name": "ACF", "path": "ACF_area"}, # 400s
     # {
     #     "name": "80-mile sourcing radius for Enviva’s Hamlet, NC plant",
     #     "path": "Enviva_Hamlet_80_mile_sourcing_radius",
-    # },
-    # {"name": "North Carolina", "path": "NC"},
+    # }, # 112s
+    # {"name": "North Carolina", "path": "NC"}, # 600s
     # {"name": "South Atlantic Region", "path": "SA_boundary"},
 ]
 
@@ -85,7 +85,7 @@ for aoi in aois:
 
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
-    results = CustomArea(geometry, df.crs, name="Test").get_results()
+    results = CustomArea(geometry, df.crs, name=name).get_results()
 
     if results is None:
         print(f"AOI: {path} does not overlap Blueprint")

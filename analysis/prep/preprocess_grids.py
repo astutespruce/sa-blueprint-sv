@@ -5,6 +5,7 @@ import numpy as np
 from pyogrio.geopandas import read_dataframe
 
 from analysis.pygeos_util import to_dict_all
+from analysis.constants import URBAN_YEARS
 
 src_dir = Path("data")
 
@@ -27,7 +28,7 @@ with rasterio.open(src_dir / "threats" / "slr_binned.tif", "w", **src.meta) as o
 values = np.array(
     [0, 1, 25, 50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950, 975, 1000]
 )
-for year in [2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]:
+for year in URBAN_YEARS:
     print(f"Processing {year}...")
 
     filename = src_dir / "threats" / f"serap_urb{year}_IsNull0.tif"

@@ -371,18 +371,18 @@
     "label": "Low-urban historic landscapes",
     "values": [
       {
-        "value": 0,
+        "value": 1,
         "label": "Historic place with nearby high-urban buffer",
-        "color": "#FF8CC4"
+        "color": "#730000"
       },
       {
-        "value": 1,
+        "value": 2,
         "label": "Historic place with nearby low-urban buffer",
-        "color": "#730000"
+        "color": "#FF8CC4"
       }
     ],
-    "domain": [0, 1],
-    "goodThreshold": 1,
+    "domain": [1, 2],
+    "goodThreshold": 2,
     "datasetID": "",
     "description": "Low-urban historic landscapes is an index of sites on the National Register of Historic Places surrounded by limited urban development. This cultural resource indicator identifies significant historic places that remain connected to their context in the natural world.  Note: Historic landscapes are rare across the South Atlantic. The presence of any historic landscape, even in high-urban condition, will increase the priority in the Blueprint."
   },

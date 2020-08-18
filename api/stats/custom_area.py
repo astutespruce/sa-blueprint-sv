@@ -66,9 +66,9 @@ class CustomArea(object):
 
         results = {
             "blueprint": counts["blueprint"].tolist(),
-            "blueprint_total": counts["blueprint"].sum().item(),
+            "blueprint_total": counts["blueprint"].sum(),
             "corridors": counts["corridors"].tolist(),
-            "corridors_total": counts["corridors"].sum().item(),
+            "corridors_total": counts["corridors"].sum(),
         }
 
         indicators = []
@@ -82,7 +82,9 @@ class CustomArea(object):
             if values.max() > 0:
                 indicators.append(id)
                 results[id] = values
-                results[f"{id}_total"] = values.sum()
+
+                min_value = indicator["values"][0]["value"]
+                results[f"{id}_total"] = values[min_value:].sum()
 
                 if "goodThreshold" in indicator:
                     results[f"{id}_good_total"] = values[
@@ -186,7 +188,11 @@ class CustomArea(object):
         return results
 
     def get_results(self):
-        results = {"type": "", "acres": pg.area(self.geometry).sum() * M2_ACRES}
+        results = {
+            "type": "",
+            "acres": pg.area(self.geometry).sum() * M2_ACRES,
+            "name": self.name,
+        }
 
         try:
             blueprint_results = self.get_blueprint()
