@@ -14,7 +14,10 @@ Other data were downloaded as described below.
 Most indicators and the Blueprint are mapped at a resolution of 30m.
 
 The 3 marine and 1 estuarine indicators were originally mapped at 200m. These were
-resampled to 30m for consistency with the other indicators.
+resampled to 30m by USFWS staff for consistency with the other indicators and provided separately.
+
+The final Blueprint 2020 data were posted by USFWS to https://www.sciencebase.gov/catalog/file/get/5f13148d82ce21d4c40a4ac8?name=Blueprint_2020_Data_Download.zip
+on 8/14/2020.
 
 ### Summary units
 

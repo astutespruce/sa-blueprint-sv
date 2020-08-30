@@ -3,7 +3,7 @@ Construct a coarse resolution mask (roughly 480m) for each indicator to determin
 has pixel values that should be read from the 30m data.
 """
 
-
+import os
 from pathlib import Path
 from math import ceil
 
@@ -21,10 +21,16 @@ factor = 16
 src_dir = Path("data/inputs/indicators")
 out_dir = src_dir / "masks"
 
+if not out_dir.exists():
+    os.makedirs(out_dir)
+
 for indicator in INDICATORS:
     print(f"Processing {indicator['id']}...")
 
     filename = src_dir / indicator["filename"]
+
+    if (out_dir / filename.name).exists():
+        continue
 
     with rasterio.open(filename) as src:
         nodata = src.nodatavals[0]
@@ -50,6 +56,9 @@ for indicator in INDICATORS:
 
             meta = src.profile.copy()
             meta.update({"width": width, "height": height, "transform": dst_transform})
+
+            # add compression
+            meta["compress"] = "lzw"
 
             with rasterio.open(out_dir / filename.name, "w", **meta) as out:
                 out.write(data)

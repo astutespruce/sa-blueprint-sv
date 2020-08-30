@@ -1,66 +1,50 @@
 <div id="TableOfContents">
+  <h2>Table of Contents</h2>
 
-<h2>Table of Contents</h2>
-
-<ol>
+  <ol>
     <li>
-        <a href="#About" class="toctext"></a>
-        <a href="#About" class="tocpagenr"></a>
+      <a href="#About" class="toctext"></a>
+      <a href="#About" class="tocpagenr"></a>
     </li>
     <div class="divider"></div>
     <li>
-        <a href="#Blueprint" class="toctext"></a>
-        <a href="#Blueprint" class="tocpagenr"></a>
+      <a href="#Blueprint" class="toctext"></a>
+      <a href="#Blueprint" class="tocpagenr"></a>
     </li>
     <div class="divider"></div>
     <li>
-        <a href="#Corridors" class="toctext"></a>
-        <a href="#Corridors" class="tocpagenr"></a>
+      <a href="#Corridors" class="toctext"></a>
+      <a href="#Corridors" class="tocpagenr"></a>
     </li>
 
     {% for ecosystem in ecosystems %}
-        <div class="divider"></div>
-        <li class="no-border">
-            <a href="#{{ecosystem.id}}" class="toctext"></a>
-            <a href="#{{ecosystem.id}}" class="tocpagenr"></a>
-        </li>
+    <div class="divider"></div>
+    <li class="no-border">
+      <a href="#{{ecosystem.id}}" class="toctext"></a>
+      <a href="#{{ecosystem.id}}" class="tocpagenr"></a>
+    </li>
     {% endfor %}
 
     {% if not results.is_marine %}
-        <div class="divider"></div>
-        <li>
-            <a href="#Threats" class="toctext"></a>
-            <a href="#Threats" class="tocpagenr"></a>
-            <ol>
-                <div class="divider"></div>
-                <li>
-                    <a href="#SLR" class="toctext"></a>
-                    <a href="#SLR" class="tocpagenr"></a>
-                </li>
-
-                <div class="divider"></div>
-                <li>
-                    <a href="#Urban" class="toctext"></a>
-                    <a href="#Urban" class="tocpagenr"></a>
-                </li>
-            </ol>
-        </li>
+    <div class="divider"></div>
+    <li>
+      <a href="#Threats" class="toctext"></a>
+      <a href="#Threats" class="tocpagenr"></a>
+    </li>
     {% endif %}
 
     {% if results.ownership or results.protection or results.counties %}
-        <div class="divider"></div>
-        <li>
-            <a href="#Ownership" class="toctext"></a>
-            <a href="#Ownership" class="tocpagenr"></a>
-        </li>
+    <div class="divider"></div>
+    <li>
+      <a href="#Ownership" class="toctext"></a>
+      <a href="#Ownership" class="tocpagenr"></a>
+    </li>
     {% endif %}
 
     <div class="divider"></div>
     <li>
-        <a href="#Credits" class="toctext"></a>
-        <a href="#Credits" class="tocpagenr"></a>
+      <a href="#Credits" class="toctext"></a>
+      <a href="#Credits" class="tocpagenr"></a>
     </li>
-
-</ol>
-
+  </ol>
 </div>

@@ -6,6 +6,12 @@ from pyogrio.geopandas import read_dataframe, write_dataframe
 import pygeos as pg
 import numpy as np
 
+# suppress warnings abuot writing to feather
+import warnings
+
+warnings.filterwarnings("ignore", message=".*initial implementation of Parquet.*")
+
+
 from analysis.constants import DATA_CRS, GEO_CRS, M2_ACRES
 
 
@@ -17,7 +23,9 @@ tile_dir = data_dir / "for_tiles"
 
 ### Extract the boundary
 
-sa_df = read_dataframe(src_dir / "boundaries/SABlueprint2020_ExtentP.shp")[["geometry"]]
+sa_df = read_dataframe(src_dir / "boundaries/SABlueprint2020_Extent.shp")[["geometry"]]
+# boundary has self-intersections and 4 geometries, need to clean up
+bnd = pg.union_all(pg.make_valid(sa_df.geometry.values.data))
 
 ### Extract HUC12 within boundary
 print("Reading source HUC12s...")
@@ -44,20 +52,18 @@ huc12["geometry"] = pg.make_valid(huc12.geometry.values.data)
 # select out those within the SA boundary
 print("Selecting HUC12s in region...")
 tree = pg.STRtree(huc12.geometry.values.data)
-ix = tree.query(sa_df.geometry.values.data[0], predicate="intersects")
+ix = tree.query(bnd, predicate="intersects")
 huc12 = huc12.iloc[ix].copy().reset_index(drop=True)
 
 huc12["acres"] = (pg.area(huc12.geometry.values.data) * M2_ACRES).round().astype("uint")
 
 # for those at the edge, only keep the ones with > 50% in the extent
 tree = pg.STRtree(huc12.geometry.values.data)
-contains_ix = tree.query(sa_df.geometry.values.data[0], predicate="contains")
+contains_ix = tree.query(bnd, predicate="contains")
 edge_ix = np.setdiff1d(huc12.index, contains_ix)
 
 overlap = pg.area(
-    pg.intersection(
-        huc12.iloc[edge_ix].geometry.values.data, sa_df.geometry.values.data[0]
-    )
+    pg.intersection(huc12.iloc[edge_ix].geometry.values.data, bnd)
 ) / pg.area(huc12.iloc[edge_ix].geometry.values.data)
 keep_ix = np.append(contains_ix, edge_ix[overlap >= 0.5])
 keep_ix.sort()
@@ -72,11 +78,7 @@ write_dataframe(huc12, bnd_dir / "huc12.gpkg", driver="GPKG")
 
 # project to WGS84 for report maps
 huc12_wgs84 = huc12.to_crs(GEO_CRS)
-out_dir = analysis_dir / "huc12"
-if not out_dir.exists():
-    os.makedirs(out_dir)
-
-huc12_wgs84.to_feather(out_dir / "huc12_wgs84.feather")
+huc12_wgs84.to_feather(analysis_dir / "huc12_wgs84.feather")
 
 
 ### Marine units (already in EPSG:5070)
@@ -103,11 +105,7 @@ write_dataframe(marine, bnd_dir / "marine_blocks.gpkg", driver="GPKG")
 
 # project to WGS84 for report maps
 marine_wgs84 = marine.to_crs(GEO_CRS)
-out_dir = analysis_dir / "marine_blocks"
-if not out_dir.exists():
-    os.makedirs(out_dir)
-
-marine_wgs84.to_feather(out_dir / "marine_blocks_wgs84.feather")
+marine_wgs84.to_feather(analysis_dir / "marine_blocks_wgs84.feather")
 
 
 ### Merge HUC12 and marine into single units file and export for creating tiles

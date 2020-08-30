@@ -32,7 +32,7 @@ THREADS = 6
 
 src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
-blueprint_filename = src_dir / "blueprint_2020.tif"
+blueprint_filename = src_dir / "blueprint2020.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_filename = src_dir / "threats/urban/urb_indexed_2060.tif"
 slr_filename = src_dir / "threats/slr/slr.vrt"
@@ -64,12 +64,11 @@ async def render_raster_maps(
 
     task_args = [
         ("blueprint", blueprint_filename, BLUEPRINT_COLORS),
-        # FIXME: enable once corridors are available
-        # (
-        #     "corridors",
-        #     corridors_filename,
-        #     {i: e["color"] for i, e in enumerate(CORRIDORS)},
-        # ),
+        (
+            "corridors",
+            corridors_filename,
+            {i: e["color"] for i, e in enumerate(CORRIDORS)},
+        ),
     ]
 
     for id in indicators:
@@ -151,7 +150,7 @@ async def render_maps(
     scale = get_map_scale(bounds, WIDTH)
 
     tasks = {
-        "locator": get_locator_map_image(*center, bounds=bounds),
+        "locator": get_locator_map_image(*center, bounds=bounds, geometry=geometry),
         "basemap": get_basemap_image(center, zoom, WIDTH, HEIGHT),
     }
 

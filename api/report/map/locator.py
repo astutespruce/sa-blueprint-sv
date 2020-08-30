@@ -6,6 +6,7 @@ import httpx
 from PIL import Image
 
 from api.settings import MBGL_SERVER_URL
+from analysis.pygeos_util import to_dict
 
 
 log = logging.getLogger(__name__)
@@ -56,18 +57,28 @@ LOCATOR_STYLE = {
             },
         },
         {
-            "id": "box",
-            "source": "box",
+            "id": "feature-outline",
+            "source": "feature",
             "type": "line",
-            "paint": {"line-color": "#FF0000", "line-width": 4, "line-opacity": 1},
+            "paint": {"line-color": "#FF0000", "line-width": 3, "line-opacity": 1},
+        },
+        {
+            "id": "feature-fill",
+            "source": "feature",
+            "type": "fill",
+            "paint": {"fill-color": "#FF0000", "fill-opacity": 0.2},
         },
     ],
 }
 
 
-async def get_locator_map_image(longitude, latitude, bounds):
+async def get_locator_map_image(longitude, latitude, bounds, geometry=None):
     """
     Create a rendered locator map image.
+
+    If the bounds cover a large area, `geometry` will be rendered if available,
+    otherwise a box covering the bounds will be rendered.  Otherwise, a
+    representative point will be displayed on the map.
 
     Parameters
     ----------
@@ -77,6 +88,9 @@ async def get_locator_map_image(longitude, latitude, bounds):
         longitude of area of interest marker
     bounds : list-like of xmin, ymin, xmax, ymax
         bounds of geometry to locate on map
+    geometry : pygeos.Geometry, optional (default: None)
+        If present, will be used to render the area of interest if the bounds
+        are very large.
 
     Returns
     -------
@@ -87,22 +101,29 @@ async def get_locator_map_image(longitude, latitude, bounds):
 
     xmin, ymin, xmax, ymax = bounds
 
+    # If boundary is a large extent (more than 0.5 degree on edge)
+    # then render geometry or a box instead of a point
     if xmax - ymax >= 0.5 or ymax - ymin >= 0.5:
-        style["sources"]["box"] = {
-            "type": "geojson",
-            "data": {
-                "type": "Polygon",
-                "coordinates": [
-                    [
-                        [xmin, ymin],
-                        [xmin, ymax],
-                        [xmax, ymax],
-                        [xmax, ymin],
-                        [xmin, ymin],
-                    ]
-                ],
-            },
-        }
+        if geometry:
+            geometry = to_dict(geometry)
+
+        else:
+            geometry = (
+                {
+                    "type": "Polygon",
+                    "coordinates": [
+                        [
+                            [xmin, ymin],
+                            [xmin, ymax],
+                            [xmax, ymax],
+                            [xmax, ymin],
+                            [xmin, ymin],
+                        ]
+                    ],
+                },
+            )
+
+        style["sources"]["feature"] = {"type": "geojson", "data": geometry}
 
     else:
         style["sources"]["marker"] = {

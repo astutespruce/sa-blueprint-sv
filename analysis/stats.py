@@ -17,7 +17,7 @@ from analysis.constants import (
 src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
 indicators_mask_dir = indicators_dir / "masks"
-blueprint_filename = src_dir / "Blueprint_2020.tif"
+blueprint_filename = src_dir / "Blueprint2020.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_dir = src_dir / "threats/urban"
 slr_dir = src_dir / "threats/slr"
@@ -183,16 +183,12 @@ def extract_blueprint_indicator_area(geometries, inland=True):
     )
     blueprint_total = blueprint_counts.sum()
 
-    # FIXME:
-    results["counts"]["corridors"] = np.array([0, 0])
-
-    # TODO: re-enable once we get the latest
-    # corridor_counts = extract_count_in_geometry(
-    #     corridors_filename, geometry_mask, window, np.arange(len(CORRIDORS))
-    # )
-    # results["counts"]["corridors"] = (
-    #     (corridor_counts * cellsize).round(ACRES_PRECISION).astype("float32")
-    # )
+    corridor_counts = extract_count_in_geometry(
+        corridors_filename, geometry_mask, window, np.arange(len(CORRIDORS))
+    )
+    results["counts"]["corridors"] = (
+        (corridor_counts * cellsize).round(ACRES_PRECISION).astype("float32")
+    )
 
     if inland:
         # since some HUCs overlap marine areas, we include all indicators
@@ -204,6 +200,7 @@ def extract_blueprint_indicator_area(geometries, inland=True):
         # Note: no need to run detect_indicators(), all are present everywhere
         # in marine area.
         indicators = [i for i in INDICATORS if i["id"].startswith("marine_")]
+        indicators = detect_indicators(geometries, indicators)
 
     for indicator in indicators:
         id = indicator["id"]

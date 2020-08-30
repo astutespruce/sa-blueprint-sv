@@ -2,3 +2,5 @@
 package.json
 package-lock.json
 public
+**/templates/blocks/*.html
+**/templates/elements/*.html

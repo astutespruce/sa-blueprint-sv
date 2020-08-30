@@ -20,20 +20,17 @@ factors = [2, 4, 8, 16, 32]
 
 src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
-indicators_mask_dir = indicators_dir / "masks"
-blueprint_filename = src_dir / "Blueprint_2020.tif"
+blueprint_filename = src_dir / "Blueprint2020.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_dir = src_dir / "threats/urban"
 slr_dir = src_dir / "threats/slr"
 
 
-# TODO: corridors
-for filename in [blueprint_filename]:
+for filename in [blueprint_filename, corridors_filename]:
     print(f"Processing {filename.name}...")
     with rasterio.open(filename, "r+") as src:
         src.build_overviews(factors, Resampling.nearest)
 
-# TODO: do this in preprocess_grids when making indexed Urban datasets
 for year in URBAN_YEARS:
     print(f"Processing urban {year}...")
     with rasterio.open(urban_dir / f"urb_indexed_{year}.tif", "r+") as src:
