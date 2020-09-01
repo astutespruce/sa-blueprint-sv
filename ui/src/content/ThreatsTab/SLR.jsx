@@ -6,6 +6,8 @@ import { Box, Text } from "theme-ui"
 import { OutboundLink } from "components/link"
 import { LineChart } from "components/chart"
 
+import theme from "theme"
+
 // SLR levels are in feet above current mean sea level: 0...6
 
 const SLR = ({ percents }) => {
@@ -48,11 +50,13 @@ const SLR = ({ percents }) => {
           <LineChart
             areaColor="#004da8"
             areaVisible
-            gridVisible={false}
+            gridVisible={true}
+            gridColor={theme.colors.grey[5]}
             pathWidth={2}
             pathColor="#004da8"
             pointsColor="#004da8"
             pointsStrokeWidth={0}
+            pointsRadius={6}
             labelsStepX={1}
             labelsFormatX={x => x}
             data={percents.map((y, i) => ({ x: i, y }))}

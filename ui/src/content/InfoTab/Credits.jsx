@@ -7,7 +7,7 @@ const Credits = () => {
   return (
     <Box as="section" sx={{ pb: "2rem" }}>
       <Text as="p" sx={{ fontSize: 1 }}>
-        <b>Citation:</b> The South Atlantic Conservation Blueprint Version 2020.
+        <b>Citation:</b> The South Atlantic Conservation Blueprint 2020.
         <br />
         <br />
         This application was developed by{" "}

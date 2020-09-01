@@ -7,13 +7,9 @@ import { Box, Flex, Divider, Heading, Text } from "theme-ui"
 import { PieChartLegend } from "components/chart"
 
 import { extractNodes } from "util/graphql"
+import { sum } from "util/data"
 
-const PrioritiesTab = ({
-  blueprint,
-  blueprintAcres,
-  corridors,
-  corridorAcres,
-}) => {
+const PrioritiesTab = ({ blueprint, blueprintAcres, corridors }) => {
   const query = useStaticQuery(graphql`
     query {
       allBlueprintJson(sort: { fields: value, order: DESC }) {
@@ -43,8 +39,8 @@ const PrioritiesTab = ({
   const blueprintChartData = blueprint
     .slice()
     .reverse()
-    .map((acres, i) => ({
-      value: (100 * acres) / blueprintAcres,
+    .map((percent, i) => ({
+      value: percent,
       ...priorityCategories[i],
     }))
     .filter(({ value }) => value > 0)
@@ -52,15 +48,17 @@ const PrioritiesTab = ({
   const corridorChartData = corridors
     .slice()
     .reverse()
-    .map((acres, i) => ({
-      value: (100 * acres) / blueprintAcres,
+    .map((percent, i) => ({
+      value: percent,
       ...corridorCategories[i],
     }))
     .filter(({ value }) => value > 0)
 
-  if (corridorAcres < blueprintAcres) {
+  const corridorsTotal = sum(corridors)
+
+  if (corridorsTotal < 100) {
     corridorChartData.push({
-      value: (100 * (blueprintAcres - corridorAcres)) / blueprintAcres,
+      value: 100 - corridorsTotal,
       color: "#ffebc2",
       label: "Not a hub or corridor",
     })
@@ -78,14 +76,11 @@ const PrioritiesTab = ({
         <Flex sx={{ alignItems: "center", mt: "2rem" }}>
           <PieChart
             data={blueprintChartData}
-            segmentsShift={1}
-            lineWidth={80}
+            lineWidth={60}
             radius={chartWidth / 4 - 2}
             style={{
               width: chartWidth,
               flex: "0 1 auto",
-              //   background: "#333",
-              //   borderRadius: "100em",
             }}
           />
 
@@ -102,14 +97,11 @@ const PrioritiesTab = ({
             <Flex sx={{ alignItems: "center", mt: "2rem" }}>
               <PieChart
                 data={corridorChartData}
-                segmentsShift={1}
-                lineWidth={80}
+                lineWidth={60}
                 radius={chartWidth / 4 - 2}
                 style={{
                   width: chartWidth,
                   flex: "0 1 auto",
-                  // background: "#333",
-                  // borderRadius: "100em",
                 }}
               />
 
@@ -130,7 +122,6 @@ PrioritiesTab.propTypes = {
   blueprint: PropTypes.arrayOf(PropTypes.number).isRequired,
   blueprintAcres: PropTypes.number.isRequired,
   corridors: PropTypes.arrayOf(PropTypes.number).isRequired,
-  corridorAcres: PropTypes.number.isRequired,
 }
 
 export default PrioritiesTab

@@ -30,10 +30,10 @@ where there was no change from the baseline just include the baseline.
 
 
 Values that could have multiple key:value entries (ownership, protection) are dictionary-encoded:
-FED:<fed_acres>,LOC:<loc_acres>,...
+FED:<fed_%>,LOC:<loc_%>,...
 
 Counties are encoded as:
-<FIPS>|state|county,<FIPS>|...
+<FIPS>:state|county,<FIPS>|...
 
 
 """
@@ -45,83 +45,13 @@ import numpy as np
 import pandas as pd
 
 
-from analysis.constants import INDICATOR_INDEX, URBAN_YEARS
-
-
-def encode_values(df, total, scale=100):
-    """Convert a dataframe from acres to integer scalar values:
-    scale * value / total
-
-    This can be used to express percent where scale = 100
-
-    Values are packed into a pipe-delimited string with 0 values omitted, e.g.,
-    '10|20|70||'
-
-    Parameters
-    ----------
-    df : DataFrame
-        Note: only includes columns to be divided by total.
-    total : number
-        Must be greater than 0.
-
-    Returns
-    -------
-    Series
-        Contains string for each record with pipe-delimited values.  If
-        max encoded value across all bins is 0, an empty string is returned instead.
-    """
-    return (
-        (scale * df.divide(total, axis=0))
-        .round()
-        .astype("uint")
-        .apply(lambda r: "|".join(str(v or "") for v in r) if r.max() else "", axis=1)
-    )
-
-
-def delta_encode_values(df, total, scale=100):
-    """Convert a dataframe from acres to delta-encoded integer scalar values,
-    where original values are first scaled.
-
-    This can be used to express percent where scale = 100.
-
-    Values are packed into a caret-delimited string with 0 values omitted, e.g.,
-    '<baseline_value>^<delta_value1>^<delta_value2>...'
-
-    If there is no change from the baseline value, only that value is returned
-
-    Parameters
-    ----------
-    df : DataFrame
-        Note: only includes columns to be divided by total.
-    total : number
-        Must be greater than 0.
-
-    Returns
-    -------
-    Series
-        Contains string for each record with caret-delimited values.  If
-        max encoded value across all bins is 0, an empty string is returned instead.
-    """
-    scaled = (scale * df.divide(total, axis=0)).round().astype("uint")
-
-    # calculate delta values
-    delta = scaled[scaled.columns[1:]].subtract(
-        scaled[scaled.columns[:-1]].values, axis=0
-    )
-
-    # caret must be escaped
-    nochange = "\^" * len(delta.columns)
-
-    return (
-        scaled[[scaled.columns[0]]]
-        .join(delta)
-        .apply(lambda r: "^".join(str(v or "") for v in r) if r.max() else "", axis=1)
-        .str.replace(nochange, "")
-    )
+from analysis.constants import INDICATOR_INDEX, URBAN_YEARS, DEBUG
+from analysis.lib.attribute_encoding import encode_values, delta_encode_values
 
 
 data_dir = Path("data")
 results_dir = data_dir / "results"
+out_dir = data_dir / "for_tiles"
 
 ### HUC12
 working_dir = results_dir / "huc12"
@@ -131,6 +61,7 @@ huc12 = pd.read_feather(
     data_dir / "inputs/summary_units" / "huc12.feather", columns=["id", "name", "acres"]
 ).set_index("id")
 huc12.acres = huc12.acres.round().astype("uint")
+huc12["type"] = "subwatershed"
 
 
 print("Encoding HUC12 Blueprint & indicator values...")
@@ -177,7 +108,7 @@ for i, id in enumerate(INDICATOR_INDEX.keys()):
 indicator_avgs = (
     pd.DataFrame(indicator_avgs)
     .apply(lambda g: ",".join((f"{k}:{v}" for k, v in g.items() if v)), axis=1)
-    .rename("indicator_avgs")
+    .rename("indicator_avg")
 )
 
 blueprint_df = (
@@ -195,7 +126,9 @@ slr = (
     pd.read_feather(working_dir / "slr.feather").set_index("id").round().astype("uint")
 )
 
-slr = delta_encode_values(slr.drop(columns=["shape_mask"]), slr.shape_mask, 1000)
+slr = delta_encode_values(
+    slr.drop(columns=["shape_mask"]), slr.shape_mask, 1000
+).rename("slr")
 
 
 print("Encoding urban values...")
@@ -206,36 +139,61 @@ urban = (
     .astype("uint")
 )
 
-urban = delta_encode_values(urban.drop(columns=["shape_mask"]), urban.shape_mask, 1000)
+urban = delta_encode_values(
+    urban.drop(columns=["shape_mask"]), urban.shape_mask, 1000
+).rename("urban")
 
 ### Dictionary encode ownership and protection for each HUC12:
 # FED:<fed_acres>,LOC: <loc_acres>, ...
-ownership = pd.read_feather(working_dir / "ownership.feather").set_index("id")
+ownership = (
+    pd.read_feather(working_dir / "ownership.feather")
+    .set_index("id")
+    .join(huc12.acres.rename("total_acres"))
+)
+
+ownership["percent"] = (
+    (1000 * ownership.acres / ownership.total_acres).round().astype("uint")
+)
+# drop anything at 0%
+ownership = ownership.loc[ownership.percent > 0].copy()
+
 ownership = pd.Series(
-    (ownership.FEE_ORGTYP + ":" + ownership.acres.round().astype("uint").astype("str"))
+    (ownership.FEE_ORGTYP + ":" + ownership.percent.astype("str"))
     .groupby(level=0)
     .apply(lambda r: ",".join(v for v in r)),
     name="ownership",
 )
 
-protection = pd.read_feather(working_dir / "protection.feather").set_index("id")
+protection = (
+    pd.read_feather(working_dir / "protection.feather")
+    .set_index("id")
+    .join(huc12.acres.rename("total_acres"))
+)
+
+protection["percent"] = (
+    (1000 * protection.acres / protection.total_acres).round().astype("uint")
+)
+# drop anything at 0%
+protection = protection.loc[protection.percent > 0].copy()
+
+
 protection = pd.Series(
-    (
-        protection.GAP_STATUS.astype("str")
-        + ":"
-        + protection.acres.round().astype("uint").astype("str")
-    )
+    (protection.GAP_STATUS.astype("str") + ":" + protection.percent.astype("str"))
     .groupby(level=0)
     .apply(lambda r: ",".join(v for v in r)),
     name="protection",
 )
 
-### Convert counties into a string per HUC12, dividing fields by "|" and entries by ","
-# <FIPS>|state|county,<FIPS>|...
+### Convert counties into a dict encoded string per HUC12,
+# dividing state and county by "|" and entries by ","
+# <FIPS>:state|county,
 counties = pd.Series(
     pd.read_feather(working_dir / "counties.feather")
     .set_index("id")
-    .apply(lambda r: "|".join((str(v) for v in r.values)), axis=1)
+    .apply(
+        lambda r: ":".join([r.values[0], "|".join((str(v) for v in r.values[1:]))]),
+        axis=1,
+    )
     .groupby(level=0)
     .apply(lambda g: ",".join((v for v in g.values))),
     name="counties",
@@ -252,9 +210,11 @@ out = (
     .fillna("")
 )
 
-out.to_csv(
-    working_dir / "tile_attributes.csv", index_label="id", quoting=csv.QUOTE_NONNUMERIC
-)
+if DEBUG:
+    out.reset_index().to_feather("/tmp/tile_attributes.feather")
+
+
+out.to_csv(out_dir / "unit_atts.csv", index_label="id", quoting=csv.QUOTE_NONNUMERIC)
 
 
 ### TODO: marine

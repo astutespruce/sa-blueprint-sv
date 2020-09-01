@@ -25,6 +25,14 @@ export const indexBy = (records, field) =>
  */
 export const sum = values => values.reduce((prev, value) => prev + value, 0)
 
+/**
+ * Calculate the min and max values for an array of numbers
+ * @param {Array} values
+ */
+export const extent = values => {
+  return [Math.min(...values), Math.max(...values)]
+}
+
 export const sortByFunc = (field, ascending = true) => (a, b) => {
   if (a[field] < b[field]) {
     return ascending ? -1 : 1
@@ -33,4 +41,82 @@ export const sortByFunc = (field, ascending = true) => (a, b) => {
     return ascending ? 1 : -1
   }
   return 0
+}
+
+export const applyFactor = (values, factor) => {
+  if (!values) return values
+
+  return values.map(v => v * factor)
+}
+
+const numericRegex = /\d+/
+const nonNumericRegex = /[^0-9|]/
+
+/**
+ * Parse a pipe-delimited string of integers,strings, or blanks into an array of values.
+ * Blanks are assumed to be 0.
+ * "498||405|90|7" => [498, 0, 405, 90, 7]
+ * "foo|bar" => ["foo", "bar"]
+ * @param {String} text
+ */
+export const parsePipeEncodedValues = text => {
+  if (!text) return null
+
+  const parts = text.split("|")
+
+  if (nonNumericRegex.test(text)) {
+    return parts
+  }
+
+  return parts.map(d => parseInt(d, 10) || 0)
+}
+
+/**
+ * Parse delta-encoded string of integers or blanks into an array of values.
+ * First value is always the baseline.  If delta values are absent, this assumes
+ * there is no change.
+ * "66^23^13^7^15^10^9" => [66, 89, 102, 109, 124, 134, 143]
+ *
+ * @param {String} text
+ */
+export const parseDeltaEncodedValues = text => {
+  if (!text) return null
+
+  let [baseline, ...deltas] = text.split("^").map(d => parseInt(d, 10) || 0)
+
+  const values = [baseline, ...Array(deltas.length)]
+  for (let i = 1; i < values.length; i += 1) {
+    values[i] = values[i - 1] + deltas[i - 1]
+  }
+
+  return values
+}
+
+/**
+ * Parse dictionary encoded values to object.  Values may be pipe encoded.
+ * Numeric values are parsed to floats.
+ * "0:|437|||,1:|438|||" => {0: [0, 437, 0, 0, 0], 1: [0, 438, 0, 0, 0]}
+ * @param {String} text
+ */
+export const parseDictEncodedValues = text => {
+  if (!text) return null
+
+  return text
+    .split(",")
+    .map(d => d.split(":"))
+    .map(([k, v]) => {
+      if (v !== null && v !== undefined && v.indexOf("|") !== -1) {
+        return [k, parsePipeEncodedValues(v)]
+      }
+
+      if (numericRegex.test(v)) {
+        return [k, parseFloat(v)]
+      }
+
+      return [k, v]
+    })
+    .reduce((prev, [k, v]) => {
+      prev[k] = v
+      return prev
+    }, {})
 }

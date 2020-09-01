@@ -72,13 +72,7 @@ PartnersTab.propTypes = {
   analysisAcres: PropTypes.number.isRequired,
   ownershipAcres: PropTypes.objectOf(PropTypes.number),
   protectionAcres: PropTypes.objectOf(PropTypes.number),
-  counties: PropTypes.arrayOf(
-    PropTypes.shape({
-      FIPS: PropTypes.string.isRequired,
-      state: PropTypes.string.isRequired,
-      county: PropTypes.string.isRequired,
-    })
-  ),
+  counties: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string)),
 }
 
 PartnersTab.defaultProps = {

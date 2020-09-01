@@ -121,7 +121,6 @@ const MapContainer = () => {
       blueprint,
       blueprint_total: blueprintAcres,
       corridors,
-      corridors_total: corridorAcres,
       indicators,
       slr,
       slr_acres: slrAcres,
@@ -144,7 +143,6 @@ const MapContainer = () => {
             blueprint={blueprint}
             corridors={corridors}
             blueprintAcres={blueprintAcres}
-            corridorAcres={corridorAcres}
           />
         )
         break

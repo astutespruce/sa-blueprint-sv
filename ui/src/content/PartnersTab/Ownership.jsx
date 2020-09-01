@@ -37,6 +37,7 @@ const Ownership = ({ analysisAcres, ownershipAcres }) => {
   const remainder = 100 - sum(bars.map(({ percent }) => percent))
   if (remainder > 0) {
     bars.push({
+      id: "not_conserved",
       label: "Not conserved",
       color: "grey.5",
       percent: remainder,

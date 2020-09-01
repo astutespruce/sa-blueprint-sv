@@ -6,6 +6,8 @@ import { Box, Text } from "theme-ui"
 import { LineChart } from "components/chart"
 import { OutboundLink } from "components/link"
 
+import theme from "theme"
+
 // Actual urban in 2009, then projected from 2020 onward
 // shifted to 2010 for even scale
 const LEVELS = [2010, 2020, 2030, 2040, 2050, 2060, 2070, 2080, 2090, 2100]
@@ -46,10 +48,12 @@ const Urban = ({ percents }) => {
             areaColor="#D90000"
             areaVisible
             gridVisible={false}
+            gridColor={theme.colors.grey[5]}
             pathWidth={2}
             pathColor="#D90000"
             pointsColor="#D90000"
             pointsStrokeWidth={0}
+            pointsRadius={6}
             labelsStepX={20}
             labelsFormatX={x => x || ""}
             data={percents.map((y, i) => ({ x: LEVELS[i], y }))}

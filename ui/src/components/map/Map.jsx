@@ -9,6 +9,7 @@ import { useSelectedUnit } from "components/layout"
 import { hasWindow } from "util/dom"
 import { getCenterAndZoom } from "./util"
 import { config, sources, layers } from "./config"
+import { unpackFeatureData } from "./features"
 import { siteMetadata } from "../../../gatsby-config"
 
 // TODO: remove
@@ -103,7 +104,7 @@ const Map = ({}) => {
       // TODO: enable
       //   selectUnit(features[0].properties)
 
-      selectUnit(demoUnit)
+      selectUnit(unpackFeatureData(demoUnit))
     })
 
     // Highlight features under mouse and remove previously highlighted ones
