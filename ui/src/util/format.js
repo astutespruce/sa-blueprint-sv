@@ -15,6 +15,8 @@ export const formatPercent = percent => {
   return Math.round(percent)
 }
 
+const decimalRegex = /\./
+
 export const formatNumber = (number, decimals = null) => {
   const absNumber = Math.abs(number)
   let targetDecimals = decimals
@@ -39,10 +41,20 @@ export const formatNumber = (number, decimals = null) => {
   const factor = 10 ** targetDecimals
 
   // format to localeString, and manually set the desired number of decimal places
-  return (Math.round(number * factor) / factor).toLocaleString(undefined, {
-    minimumFractionDigits: targetDecimals,
-    maximumFractionDigits: targetDecimals,
-  })
+  const formatted = (Math.round(number * factor) / factor).toLocaleString(
+    undefined,
+    {
+      minimumFractionDigits: targetDecimals,
+      maximumFractionDigits: targetDecimals,
+    }
+  )
+
+  // trim trailing 0's and periods
+  if (decimalRegex.test(formatted)) {
+    return formatted.replace(/0+$/g, "").replace(/\.$/g, "")
+  }
+
+  return formatted
 }
 
 export const formatPhone = phone => {

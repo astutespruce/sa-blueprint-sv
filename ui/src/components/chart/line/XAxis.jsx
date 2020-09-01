@@ -1,7 +1,17 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-const XAxis = ({ ticks, stroke, strokeWidth, fontSize, labelColor }) => {
+const XAxis = ({
+  ticks,
+  label,
+  labelOffset,
+  stroke,
+  strokeWidth,
+  fontSize,
+  labelColor,
+}) => {
+  const midpointX = (ticks[ticks.length - 1].x - ticks[0].x) / 2 + ticks[0].x
+
   return (
     <g>
       <line
@@ -12,6 +22,18 @@ const XAxis = ({ ticks, stroke, strokeWidth, fontSize, labelColor }) => {
         stroke={stroke}
         strokeWidth={strokeWidth}
       />
+
+      {label ? (
+        <text
+          x={midpointX}
+          y={labelOffset}
+          textAnchor="middle"
+          fill={labelColor}
+          fontSize="larger"
+        >
+          {label}
+        </text>
+      ) : null}
 
       {ticks.map(({ x, label }) => (
         <g key={x} transform={`translate(${x}, -4)`}>
@@ -36,14 +58,18 @@ XAxis.propTypes = {
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
   fontSize: PropTypes.number,
+  label: PropTypes.string,
   labelColor: PropTypes.string,
+  labelOffset: PropTypes.number,
 }
 
 XAxis.defaultProps = {
   strokeWidth: 1,
   stroke: "#AAA",
   fontSize: 10,
+  label: null,
   labelColor: "#666",
+  labelOffset: 30,
 }
 
 export default XAxis

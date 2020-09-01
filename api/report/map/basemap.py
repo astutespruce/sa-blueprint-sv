@@ -54,7 +54,9 @@ async def get_basemap_image(center, zoom, width, height):
             r = await client.post(MBGL_SERVER_URL, json=params)
 
         if r.status_code != 200:
-            log.error(f"Error generating basemap image: {r.text[:255]}")
+            log.error(
+                f"Error generating basemap image, HTTP status not 200: {r.text[:255]}"
+            )
             return None
 
         return Image.open(BytesIO(r.content))

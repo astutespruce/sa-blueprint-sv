@@ -17,58 +17,32 @@ const SLR = ({ percents }) => {
         Extent of inundation by projected sea level rise within this
         subwatershed:
       </Text>
+
       <Box
         sx={{
-          position: "relative",
-          mt: "2rem",
+          height: "200px",
+          "& text": {
+            fontSize: 1,
+            fill: "grey.7",
+          },
         }}
       >
-        <Text
-          sx={{
-            fontSize: 1,
-            color: "grey.7",
-            position: "absolute",
-            transform: "rotate(180deg)",
-            writingMode: "vertical-lr",
-            height: "100%",
-            textAlign: "center",
-          }}
-        >
-          Percent of area
-        </Text>
-        <Box
-          sx={{
-            ml: "1.5rem",
-            mb: "1rem",
-            height: "200px",
-            "& text": {
-              fontSize: 0,
-              fill: "grey.7",
-            },
-          }}
-        >
-          <LineChart
-            areaColor="#004da8"
-            areaVisible
-            gridVisible={true}
-            gridColor={theme.colors.grey[5]}
-            pathWidth={2}
-            pathColor="#004da8"
-            pointsColor="#004da8"
-            pointsStrokeWidth={0}
-            pointsRadius={6}
-            labelsStepX={1}
-            labelsFormatX={x => x}
-            data={percents.map((y, i) => ({ x: i, y }))}
-          />
-        </Box>
-
-        <Text
-          sx={{ fontSize: 1, color: "grey.7", textAlign: "center" }}
-          className="text-center text-quiet text-smaller chart-line-x-axis-label"
-        >
-          Amount of sea level rise (feet)
-        </Text>
+        <LineChart
+          data={percents.map((y, i) => ({ x: i, y }))}
+          fontSize={10}
+          yTicks={5}
+          xTicks={percents.length}
+          yLabel="Percent of area"
+          yLabelOffset={36}
+          xLabel="Amount of sea level rise (feet)"
+          xLabelOffset={40}
+          areaColor="#004da8"
+          areaOpacity={0.6}
+          pointColor="#004da8"
+          lineColor="#004da8"
+          lineWidth={2}
+          margin={{ left: 50, right: 10, top: 10, bottom: 50 }}
+        />
       </Box>
 
       <Text sx={{ mt: "2rem", color: "grey.7", fontSize: 1 }}>

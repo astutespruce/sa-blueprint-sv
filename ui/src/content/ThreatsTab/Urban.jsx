@@ -18,51 +18,33 @@ const Urban = ({ percents }) => {
       <Text sx={{ color: "grey.7" }}>
         Extent of current and projected urbanization within this subwatershed:
       </Text>
-      <Box sx={{ position: "relative", mt: "2rem" }}>
-        <Text
-          sx={{
+
+      <Box
+        sx={{
+          height: "200px",
+          "& text": {
             fontSize: 1,
-            color: "grey.7",
-            position: "absolute",
-            transform: "rotate(180deg)",
-            writingMode: "vertical-lr",
-            height: "100%",
-            textAlign: "center",
-          }}
-        >
-          Percent of area
-        </Text>
-
-        <Box
-          sx={{
-            ml: "1.5rem",
-            mb: "1rem",
-            height: "200px",
-            "& text": {
-              fontSize: 0,
-              fill: "grey.7",
-            },
-          }}
-        >
-          <LineChart
-            areaColor="#D90000"
-            areaVisible
-            gridVisible={false}
-            gridColor={theme.colors.grey[5]}
-            pathWidth={2}
-            pathColor="#D90000"
-            pointsColor="#D90000"
-            pointsStrokeWidth={0}
-            pointsRadius={6}
-            labelsStepX={20}
-            labelsFormatX={x => x || ""}
-            data={percents.map((y, i) => ({ x: LEVELS[i], y }))}
-          />
-        </Box>
-
-        <Text sx={{ fontSize: 1, color: "grey.7", textAlign: "center" }}>
-          Decade
-        </Text>
+            fill: "grey.7",
+          },
+        }}
+      >
+        <LineChart
+          data={percents.map((y, i) => ({ x: LEVELS[i], y }))}
+          fontSize={10}
+          yTicks={5}
+          xTicks={6}
+          xTickFormatter={x => x}
+          yLabel="Percent of area"
+          yLabelOffset={36}
+          xLabel="Decade"
+          xLabelOffset={40}
+          areaColor="#D90000"
+          areaOpacity={0.6}
+          pointColor="#D90000"
+          lineColor="#D90000"
+          lineWidth={2}
+          margin={{ left: 50, right: 10, top: 10, bottom: 50 }}
+        />
       </Box>
 
       <Text sx={{ mt: "2rem", color: "grey.7", fontSize: 1 }}>

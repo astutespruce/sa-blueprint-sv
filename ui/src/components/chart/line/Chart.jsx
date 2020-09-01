@@ -6,8 +6,9 @@ import { scaleLinear } from "d3-scale"
 import { extent } from "util/data"
 import { formatNumber } from "util/format"
 
-import Points from "./Points"
+import Area from "./Area"
 import Line from "./Line"
+import Points from "./Points"
 import XAxis from "./XAxis"
 import YAxis from "./YAxis"
 
@@ -17,20 +18,29 @@ const Chart = ({
   height,
   margin,
   xTicks,
+  xTickFormatter,
   yTicks,
+  yTickFormatter,
+  xLabel,
+  xLabelOffset,
+  yLabel,
+  yLabelOffset,
   lineColor,
   lineWidth,
+  areaColor,
+  areaOpacity,
   pointRadius,
   pointStrokeColor,
   pointStrokeWidth,
-  pointFillColor,
+  pointColor,
   fontSize,
 }) => {
+  if (!(width && height)) {
+    return null
+  }
+
   const [minX, maxX] = extent(data.map(({ x }) => x))
   const [minY, maxY] = extent(data.map(({ y }) => y))
-
-  console.log("bounds", minX, maxX, minY, maxY)
-  console.log("dims", width, height)
 
   // project points into the drawing area
   // (note that scales are flipped here so that 0,0 is bottom left)
@@ -39,8 +49,9 @@ const Chart = ({
     .range([0, width - margin.right - margin.left])
     .nice()
 
+  // Y scale always starts at 0
   const yScale = scaleLinear()
-    .domain([minY, maxY])
+    .domain([0, maxY])
     .range([height - margin.bottom, margin.top])
     .nice()
 
@@ -48,17 +59,16 @@ const Chart = ({
     ...rest,
     x: xScale(x),
     y: yScale(y),
+    yLabel: formatNumber(y),
   }))
 
   const xAxisTicks = xScale
     .ticks(xTicks)
-    .map(x => ({ x: xScale(x), label: formatNumber(x) }))
+    .map(x => ({ x: xScale(x), label: xTickFormatter(x) }))
 
   const yAxisTicks = yScale
     .ticks(yTicks)
-    .map(y => ({ y: yScale(y), label: formatNumber(y) }))
-
-  console.log("x ticks", xAxisTicks)
+    .map(y => ({ y: yScale(y), label: yTickFormatter(y) }))
 
   return (
     <svg
@@ -69,10 +79,29 @@ const Chart = ({
       viewBox={`0 0 ${width} ${height}`}
     >
       <g transform={`translate(${margin.left},${margin.top})`}>
+        {areaColor ? (
+          <Area
+            points={points}
+            baseline={yScale(0)}
+            fill={areaColor}
+            fillOpacity={areaOpacity}
+          />
+        ) : null}
+
         <g transform={`translate(0, ${height - margin.bottom})`}>
-          <XAxis ticks={xAxisTicks} fontSize={fontSize} />
+          <XAxis
+            ticks={xAxisTicks}
+            label={xLabel}
+            labelOffset={xLabelOffset}
+            fontSize={fontSize}
+          />
         </g>
-        <YAxis ticks={yAxisTicks} fontSize={fontSize} />
+        <YAxis
+          ticks={yAxisTicks}
+          label={yLabel}
+          labelOffset={yLabelOffset}
+          fontSize={fontSize}
+        />
 
         {lineWidth ? (
           <Line points={points} stroke={lineColor} strokeWidth={lineWidth} />
@@ -84,7 +113,8 @@ const Chart = ({
             radius={pointRadius}
             stroke={pointStrokeColor}
             strokeWidth={pointStrokeWidth}
-            fill={pointFillColor}
+            fill={pointColor}
+            baseline={yScale(0)}
           />
         ) : null}
       </g>
@@ -100,30 +130,48 @@ Chart.propTypes = {
       label: PropTypes.string,
     })
   ).isRequired,
-  width: PropTypes.number.isRequired,
-  height: PropTypes.number.isRequired,
+  width: PropTypes.number,
+  height: PropTypes.number,
   xTicks: PropTypes.number,
+  xTickFormatter: PropTypes.func,
   yTicks: PropTypes.number,
+  yTickFormatter: PropTypes.func,
+  xLabel: PropTypes.string,
+  xLabelOffset: PropTypes.number,
+  yLabel: PropTypes.string,
+  yLabelOffset: PropTypes.number,
   lineColor: PropTypes.string,
   lineWidth: PropTypes.number,
+  areaColor: PropTypes.string,
+  areaOpacity: PropTypes.number,
   pointStrokeColor: PropTypes.string,
   pointStrokeWidth: PropTypes.string,
-  pointFillColor: PropTypes.string,
+  pointColor: PropTypes.string,
   pointRadius: PropTypes.number,
   fontSize: PropTypes.number,
   margin: PropTypes.objectOf(PropTypes.number),
 }
 
 Chart.defaultProps = {
+  width: null,
+  height: null,
   xTicks: null,
+  xTickFormatter: formatNumber,
   yTicks: null,
+  yTickFormatter: formatNumber,
+  xLabel: null,
+  xLabelOffset: null,
+  yLabel: null,
+  yLabelOffset: null,
   lineWidth: 1,
+  areaColor: null,
+  areaOpacity: null,
   pointRadius: 4,
   fontSize: 10,
   margin: {
-    left: 40,
-    right: 40,
-    bottom: 30,
+    left: 50,
+    right: 10,
+    bottom: 50,
     top: 10,
   },
 }
