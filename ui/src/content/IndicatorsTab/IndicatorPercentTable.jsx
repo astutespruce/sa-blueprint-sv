@@ -65,7 +65,7 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
             <Divider variant="styles.hr.dashed" />
             <Box>
               <Flex>
-                <Text sx={labelCSS}>The rest:</Text>
+                <Text sx={labelCSS} />
                 <IndicatorPercentChart {...remainder[0]} />
               </Flex>
             </Box>
@@ -155,7 +155,7 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
           <Divider variant="styles.hr.dashed" />
           <Box>
             <Flex>
-              <Text sx={labelCSS}>The rest:</Text>
+              <Text sx={labelCSS} />
               <IndicatorPercentChart {...remainder[0]} />
             </Flex>
           </Box>

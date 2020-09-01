@@ -55,7 +55,7 @@ YAxis.propTypes = {
   ticks: PropTypes.arrayOf(
     PropTypes.shape({
       y: PropTypes.number.isRequired,
-      label: PropTypes.string,
+      label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
     })
   ).isRequired,
 

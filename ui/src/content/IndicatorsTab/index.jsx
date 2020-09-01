@@ -2,19 +2,16 @@ import React from "react"
 import PropTypes from "prop-types"
 import { graphql, useStaticQuery } from "gatsby"
 
-import { useBreakpoints } from "components/layout"
-import { indexBy, sortByFunc } from "util/data"
+import { indexBy, sum } from "util/data"
 import { extractNodes } from "util/graphql"
 
-import DesktopEcosystemList from "./DesktopEcosystemList"
-import MobileEcosystemList from "./MobileEcosystemList"
+import EcosystemList from "./EcosystemList"
 
-// TODO: split between mobile swiper and list view here, let each manage own state?
-
-const IndicatorsTab = ({ unitType, analysisAcres, indicatorAcres }) => {
-  const breakpoint = useBreakpoints()
-  const isMobile = breakpoint === 0
-
+const IndicatorsTab = ({
+  unitType,
+  analysisAcres,
+  indicators: rawIndicators,
+}) => {
   const query = useStaticQuery(graphql`
     query {
       ecosystems: allEcosystemsJson {
@@ -48,66 +45,82 @@ const IndicatorsTab = ({ unitType, analysisAcres, indicatorAcres }) => {
     }
   `)
 
-  const ecosystemsPresent = new Set(
-    Object.keys(indicatorAcres).map(id => id.split("_")[0])
+  // retrieve indicator results by original index
+  const indicators = indexBy(
+    extractNodes(query.indicators)
+      .map((indicator, i) => ({
+        ...indicator,
+        index: i,
+      }))
+      .filter((_, i) => rawIndicators[i] !== undefined)
+      .map(({ index, ...indicator }) => {
+        const { percent, avg = null } = rawIndicators[index]
+        return {
+          ...indicator,
+          values: indicator.values.map(({ value, ...rest }) => ({
+            value,
+            ...rest,
+            percent: percent[value],
+          })),
+          avg,
+          total: sum(percent),
+        }
+      }),
+    "id"
   )
-  console.log("ecosystems present", ecosystemsPresent, ECOSYSTEMS)
 
-  const indicatorsIndex = indexBy(extractNodes(query.indicators), "id")
+  const ecosystemsPresent = new Set(
+    Object.keys(indicators).map(id => id.split("_")[0])
+  )
 
   // Aggregate ecosystems and indicators into a nested data structure
   // ONLY for ecosystems that have indicators present
-
-  const ecosystems = extractNodes(
-    query.ecosystems.filter(({ id }) => ecosystemsPresent.has(id))
-  ).map(
-    ({ id: ecosystemId, label, color, borderColor, indicators, ...rest }) => {
-      const indicatorsPresent = indicators
-        .map(indicatorId => `${ecosystemId}_${indicatorId}`)
-        .filter(indicatorId => indicatorAcres[indicatorId])
-
-      return {
-        ...rest,
+  const ecosystems = extractNodes(query.ecosystems)
+    .filter(({ id }) => ecosystemsPresent.has(id))
+    .map(
+      ({
         id: ecosystemId,
-        indicators: indicatorsPresent.map(indicatorId => ({
-          ...indicatorsIndex[indicatorId],
-          ...indicatorAcres[indicatorId],
-          ecosystem: {
-            id: ecosystemId,
-            label,
-            color,
-            borderColor,
-          },
-        })),
+        label,
+        color,
+        borderColor,
+        indicators: ecosystemIndicators,
+        ...rest
+      }) => {
+        const indicatorsPresent = ecosystemIndicators
+          .map(indicatorId => `${ecosystemId}_${indicatorId}`)
+          .filter(indicatorId => indicators[indicatorId])
+
+        return {
+          ...rest,
+          id: ecosystemId,
+          label,
+          color,
+          borderColor,
+          indicators: indicatorsPresent.map(indicatorId => ({
+            ...indicators[indicatorId],
+            ecosystem: {
+              id: ecosystemId,
+              label,
+              color,
+              borderColor,
+            },
+          })),
+        }
       }
-    }
-  )
+    )
 
-  //   if (isMobile) {
-  //     return (
-  //       <MobileEcosystemList
-  //         analysisAcres={analysisAcres}
-  //         ecosystems={ecosystems}
-  //       />
-  //     )
-  //   }
-
-  return (
-    <DesktopEcosystemList
-      ecosystems={ecosystems}
-      analysisAcres={analysisAcres}
-    />
-  )
+  return <EcosystemList ecosystems={ecosystems} analysisAcres={analysisAcres} />
 }
 
 IndicatorsTab.propTypes = {
   unitType: PropTypes.string.isRequired,
   analysisAcres: PropTypes.number.isRequired,
-  indicatorAcres: PropTypes.objectOf(
+
+  // NOTE: indicators are keyed by index not id
+  indicators: PropTypes.objectOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      acres: PropTypes.arrayOf(PropTypes.number).isRequired,
-      totalAcres: PropTypes.number.isRequired,
+      percent: PropTypes.arrayOf(PropTypes.number).isRequired,
+      avg: PropTypes.number,
     })
   ).isRequired,
 }

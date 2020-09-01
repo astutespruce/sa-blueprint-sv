@@ -8,50 +8,41 @@ import { formatPercent, formatNumber } from "util/format"
 import theme from "theme"
 
 import IndicatorPercentTable from "./IndicatorPercentTable"
+import { IndicatorPropType } from "./proptypes"
 
 const IndicatorDetails = ({
   id,
   label,
-  ecosystem: {
-    label: ecosystemLabel,
-    group: { color, borderColor },
-  },
-  acres,
-  totalAcres,
+  ecosystem: { label: ecosystemLabel, color, borderColor },
   description,
   datasetID,
   goodThreshold,
+  avg,
+  total,
   units,
   domain,
   values,
-  analysisAcres,
   onClose,
 }) => {
   const ecosystemId = id.split("_")[0]
   const icon = require(`images/${ecosystemId}.svg`)
 
   const percentTableValues = values
-    .map(({ value, label }, i) => ({
-      value,
-      label,
-      percent: (100 * acres[value]) / analysisAcres,
+    .map((value, i) => ({
+      ...value,
       isHighValue: i === values.length - 1,
       isLowValue: i === 0,
     }))
     .reverse()
 
   // remainder value for areas not analyzed for this indicator
-  if (totalAcres < analysisAcres) {
+  if (total < 100) {
     percentTableValues.push({
       value: null,
       label: "Not evaluated for this indicator",
-      percent: (100 * (analysisAcres - totalAcres)) / analysisAcres,
+      percent: 100 - total,
     })
   }
-
-  const caption = "TODO: caption derived from this indicator"
-
-  console.log("percent values", percentTableValues)
 
   return (
     <Flex
@@ -106,7 +97,7 @@ const IndicatorDetails = ({
           </Flex>
         </Flex>
         <Box sx={{ color: "grey.8", fontSize: 0, textAlign: "right" }}>
-          <b>{formatPercent((100 * totalAcres) / analysisAcres)}%</b>
+          <b>{formatPercent(total)}%</b>
           <br />
           of area
         </Box>
@@ -122,9 +113,6 @@ const IndicatorDetails = ({
           goodThreshold={goodThreshold}
         />
 
-        <Text as="p" sx={{ mt: "2rem", fontSize: 1 }}>
-          {caption}
-        </Text>
         <Box sx={{ mt: "2rem" }}>
           <OutboundLink
             to={`https://salcc.databasin.org/datasets/${datasetID}`}
@@ -137,37 +125,14 @@ const IndicatorDetails = ({
   )
 }
 
-export const IndicatorPropType = {
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  ecosystem: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    group: PropTypes.shape({
-      color: PropTypes.string.isRequired,
-      borderColor: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  acres: PropTypes.arrayOf(PropTypes.number).isRequired,
-  totalAcres: PropTypes.number.isRequired,
-  analysisAcres: PropTypes.number.isRequired,
-  caption: PropTypes.string.isRequired,
-  description: PropTypes.string.isRequired,
-  datasetID: PropTypes.string.isRequired,
-  goodThreshold: PropTypes.number,
-  units: PropTypes.string,
-  domain: PropTypes.arrayOf(PropTypes.number).isRequired,
-  values: PropTypes.arrayOf(
-    PropTypes.shape({
-      value: PropTypes.number.isRequired,
-      label: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-}
-
 IndicatorDetails.propTypes = {
   ...IndicatorPropType,
   onClose: PropTypes.func.isRequired,
+}
+
+IndicatorDetails.defaultProps = {
+  total: 0,
+  avg: 0,
 }
 
 export default IndicatorDetails

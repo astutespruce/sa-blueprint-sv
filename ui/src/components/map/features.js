@@ -1,5 +1,6 @@
 import {
   applyFactor,
+  percentsToAvg,
   parsePipeEncodedValues,
   parseDeltaEncodedValues,
   parseDictEncodedValues,
@@ -37,22 +38,36 @@ export const unpackFeatureData = properties => {
 
   values.blueprint = applyFactor(values.blueprint, 0.1)
   values.corridors = applyFactor(values.corridors, 0.1)
+
+  // merge avg and percents together
   if (values.indicators) {
     Object.keys(values.indicators).forEach(k => {
-      values.indicators[k] = applyFactor(values.indicators[k], 0.1)
+      const percent = applyFactor(values.indicators[k], 0.1)
+      values.indicators[k] = {
+        percent,
+        // calculate avg bin from percents if not a continuous indicator
+        avg:
+          values.indicator_avgs && values.indicator_avgs[k] !== undefined
+            ? values.indicator_avgs[k]
+            : percentsToAvg(percent),
+      }
     })
   }
+
   if (values.slr) {
     values.slr = applyFactor(values.slr, 0.1)
   }
+
   if (values.urban) {
     values.urban = applyFactor(values.urban, 0.1)
   }
+
   if (values.ownership) {
     Object.keys(values.ownership).forEach(k => {
       values.ownership[k] = values.ownership[k] * 0.1
     })
   }
+
   if (values.protection) {
     Object.keys(values.protection).forEach(k => {
       values.protection[k] = values.protection[k] * 0.1

@@ -148,17 +148,11 @@ const MapContainer = () => {
         break
       }
       case "unit-indicators": {
-        const indicatorArea = indicators.map(indicatorId => ({
-          id: indicatorId,
-          acres: selectedUnit[indicatorId],
-          totalAcres: sum(selectedUnit[indicatorId]),
-        }))
-
         content = (
           <IndicatorsTab
             unitType={unitType}
             analysisAcres={blueprintAcres}
-            indicatorAcres={indexBy(indicatorArea, "id")}
+            indicators={indicators}
           />
         )
         break

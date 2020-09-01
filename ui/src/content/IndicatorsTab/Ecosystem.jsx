@@ -1,78 +1,51 @@
 import React, { useCallback } from "react"
 import PropTypes from "prop-types"
-import { Box, Text } from "theme-ui"
+import { Box } from "theme-ui"
 
 import EcosystemHeader from "./EcosystemHeader"
-import IndicatorAverageChart from "./IndicatorAverageChart"
+import Indicator from "./Indicator"
+import { EcosystemPropType } from "./proptypes"
 
-import { IndicatorPropType } from "./IndicatorDetails"
-
-const Ecosystem = ({ id, label, group, indicators, onSelectIndicator }) => {
-  const handleIndicatorClick = useCallback(
-    indicator => () => onSelectIndicator(indicator),
-    []
-  )
-
+const Ecosystem = ({
+  id,
+  label,
+  color,
+  borderColor,
+  indicators,
+  onSelectIndicator,
+}) => {
   return (
     <Box
       sx={{
         width: "100%",
         flex: "1 0 auto",
         "&:not(:first-of-type)": {
-          mt: "2rem",
+          //   mt: "2rem",
           "&>div:first-of-type": {
             borderTop: "1px solid",
-            borderTopColor: group.borderColor,
+            borderTopColor: borderColor,
           },
         },
       }}
     >
-      <EcosystemHeader id={id} label={label} group={group} />
-      {indicators.map(indicator => (
-        <Box
-          key={indicator.id}
-          onClick={handleIndicatorClick(indicator)}
-          sx={{
-            cursor: "pointer",
-            px: "1rem",
-            pt: "1rem",
-            pb: "1.5rem",
-            "&:hover": {
-              bg: "grey.0",
-            },
-          }}
-        >
-          <Text sx={{ fontSize: 2, fontWeight: "bold" }}>
-            {indicator.label}
-          </Text>
-          {/* TODO: zonal mean from data */}
-          <IndicatorAverageChart
-            value={
-              Math.floor(
-                Math.random() * (indicator.domain[1] - indicator.domain[0])
-              ) + indicator.domain[0]
-            }
-            domain={indicator.domain}
+      <EcosystemHeader
+        id={id}
+        label={label}
+        color={color}
+        borderColor={borderColor}
+      />
+
+      <Box>
+        {indicators.map(indicator => (
+          <Indicator
+            key={indicator.id}
+            indicator={indicator}
+            onSelect={onSelectIndicator}
           />
-        </Box>
-      ))}
+        ))}
+      </Box>
     </Box>
   )
-}
-
-export const EcosystemPropType = {
-  id: PropTypes.string.isRequired,
-  label: PropTypes.string.isRequired,
-  group: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired,
-  }),
-  indicators: PropTypes.arrayOf(
-    PropTypes.shape({
-      ...IndicatorPropType,
-    })
-  ).isRequired,
 }
 
 Ecosystem.propTypes = {

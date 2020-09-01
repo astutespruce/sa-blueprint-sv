@@ -4,11 +4,11 @@ import { Box, Flex, Text } from "theme-ui"
 
 const labelCSS = {
   color: "grey.6",
-  fontSize: [0, 1],
+  fontSize: 0,
   flex: "0 0 auto",
 }
 
-const IndicatorAverageChart = ({ value, domain }) => {
+const IndicatorAverageChart = ({ value, domain, highlight }) => {
   const [minValue, maxValue] = domain
   const percent = (100 * (value - minValue)) / (maxValue - minValue)
 
@@ -31,14 +31,14 @@ const IndicatorAverageChart = ({ value, domain }) => {
             position: "absolute",
             borderRadius: "2em",
             height: "1.5em",
-            width: "1.5em",
+            width: "0.75em",
             left: `${percent}%`,
             ml: "-0.75em",
-            bg: "grey.8",
+            bg: highlight ? "primary" : "grey.8",
             top: "-0.75em",
           }}
         />
-        <Text
+        {/* <Text
           sx={{
             position: "absolute",
             left: `${percent}%`,
@@ -49,7 +49,7 @@ const IndicatorAverageChart = ({ value, domain }) => {
           }}
         >
           avg
-        </Text>
+        </Text> */}
       </Box>
       <Text sx={labelCSS}>High</Text>
     </Flex>
@@ -59,6 +59,11 @@ const IndicatorAverageChart = ({ value, domain }) => {
 IndicatorAverageChart.propTypes = {
   value: PropTypes.number.isRequired,
   domain: PropTypes.arrayOf(PropTypes.number).isRequired,
+  highlight: PropTypes.bool,
+}
+
+IndicatorAverageChart.defaultProps = {
+  highlight: false,
 }
 
 export default IndicatorAverageChart

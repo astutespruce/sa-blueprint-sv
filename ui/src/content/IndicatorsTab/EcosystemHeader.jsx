@@ -1,13 +1,9 @@
 import React from "react"
 import PropTypes from "prop-types"
 
-import { Box, Flex, Heading, Image, Text } from "theme-ui"
+import { Flex, Heading, Image } from "theme-ui"
 
-const EcosystemHeader = ({
-  id,
-  label,
-  group: { id: groupId, label: groupLabel, color, borderColor },
-}) => {
+const EcosystemHeader = ({ id, label, color, borderColor }) => {
   const icon = require(`images/${id}.svg`)
 
   return (
@@ -33,12 +29,8 @@ const EcosystemHeader = ({
             borderRadius: "2.5em",
           }}
         />
-        <Box>
-          {groupId === "marine" ? null : (
-            <Text sx={{ fontSize: 0, color: "grey.8" }}>{groupLabel}</Text>
-          )}
-          <Heading as="h4">{label}</Heading>
-        </Box>
+
+        <Heading as="h4">{label}</Heading>
       </Flex>
     </Flex>
   )
@@ -47,11 +39,8 @@ const EcosystemHeader = ({
 EcosystemHeader.propTypes = {
   id: PropTypes.string.isRequired,
   label: PropTypes.string.isRequired,
-  group: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    label: PropTypes.string.isRequired,
-    color: PropTypes.string.isRequired,
-  }),
+  color: PropTypes.string.isRequired,
+  borderColor: PropTypes.string.isRequired,
 }
 
 export default EcosystemHeader

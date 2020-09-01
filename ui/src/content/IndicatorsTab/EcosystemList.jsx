@@ -3,10 +3,11 @@ import PropTypes from "prop-types"
 
 import { flatten } from "util/data"
 
-import Ecosystem, { EcosystemPropType } from "./Ecosystem"
+import Ecosystem from "./Ecosystem"
 import IndicatorDetails from "./IndicatorDetails"
+import { EcosystemPropType } from "./proptypes"
 
-const DesktopEcosystemList = ({ ecosystems, analysisAcres }) => {
+const EcosystemList = ({ ecosystems, analysisAcres }) => {
   const indicators = flatten(
     Object.values(ecosystems).map(({ indicators }) => indicators)
   )
@@ -41,9 +42,9 @@ const DesktopEcosystemList = ({ ecosystems, analysisAcres }) => {
   )
 }
 
-DesktopEcosystemList.propTypes = {
+EcosystemList.propTypes = {
   ecosystems: PropTypes.arrayOf(PropTypes.shape(EcosystemPropType)).isRequired,
   analysisAcres: PropTypes.number.isRequired,
 }
 
-export default DesktopEcosystemList
+export default EcosystemList
