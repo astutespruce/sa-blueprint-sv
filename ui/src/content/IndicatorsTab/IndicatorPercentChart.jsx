@@ -34,7 +34,7 @@ const IndicatorPercentChart = ({ value, label, percent, isGood }) => {
 }
 
 IndicatorPercentChart.propTypes = {
-  value: PropTypes.string, // if null, is remainder value
+  value: PropTypes.oneOfType([PropTypes.string, PropTypes.number]), // if null, is remainder value
   label: PropTypes.string.isRequired,
   percent: PropTypes.number.isRequired,
   isGood: PropTypes.bool, // true, false, null=not defined for this indicator

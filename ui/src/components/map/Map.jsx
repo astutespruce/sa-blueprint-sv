@@ -4,16 +4,13 @@ import mapboxgl from "mapbox-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
 import { Box } from "theme-ui"
 
-import { useSelectedUnit } from "components/layout"
+import { useBreakpoints, useSelectedUnit } from "components/layout"
 
 import { hasWindow } from "util/dom"
 import { getCenterAndZoom } from "./util"
 import { config, sources, layers } from "./config"
 import { unpackFeatureData } from "./features"
 import { siteMetadata } from "../../../gatsby-config"
-
-// TODO: remove
-import { inlandUnit as demoUnit } from "test/exampleUnits"
 
 const { mapboxToken } = siteMetadata
 
@@ -41,6 +38,8 @@ const Map = ({}) => {
   const mapLoadedRef = useRef(false)
   const highlightIDRef = useRef(null)
 
+  const breakpoint = useBreakpoints()
+  const isMobile = breakpoint === 0
   const { selectedUnit, selectUnit } = useSelectedUnit()
 
   useEffect(() => {
@@ -62,8 +61,9 @@ const Map = ({}) => {
     mapRef.current = map
     window.map = map // for easier debugging and querying via console
 
-    // TODO: only on desktop
-    map.addControl(new mapboxgl.NavigationControl(), "top-right")
+    if (!isMobile) {
+      map.addControl(new mapboxgl.NavigationControl(), "top-right")
+    }
 
     // if (styles.length > 1) {
     //   map.addControl(
@@ -101,10 +101,7 @@ const Map = ({}) => {
 
       map.setFilter("unit-outline-highlight", ["==", "id", properties.id])
 
-      // TODO: enable
-      //   selectUnit(features[0].properties)
-
-      selectUnit(unpackFeatureData(demoUnit))
+      selectUnit(unpackFeatureData(features[0].properties))
     })
 
     // Highlight features under mouse and remove previously highlighted ones
@@ -171,7 +168,5 @@ const Map = ({}) => {
     </Box>
   )
 }
-
-Map.propTypes = {}
 
 export default Map

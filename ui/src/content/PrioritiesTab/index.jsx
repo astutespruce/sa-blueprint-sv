@@ -9,7 +9,7 @@ import { PieChartLegend } from "components/chart"
 import { extractNodes } from "util/graphql"
 import { sum } from "util/data"
 
-const PrioritiesTab = ({ blueprint, blueprintAcres, corridors }) => {
+const PrioritiesTab = ({ blueprint, corridors }) => {
   const query = useStaticQuery(graphql`
     query {
       allBlueprintJson(sort: { fields: value, order: DESC }) {
@@ -64,9 +64,6 @@ const PrioritiesTab = ({ blueprint, blueprintAcres, corridors }) => {
     })
   }
 
-  const index = 0
-  const selected = 0
-
   return (
     <Box sx={{ py: "2rem", pl: "1rem", pr: "2rem" }}>
       <Box as="section">
@@ -119,9 +116,13 @@ const PrioritiesTab = ({ blueprint, blueprintAcres, corridors }) => {
 }
 
 PrioritiesTab.propTypes = {
-  blueprint: PropTypes.arrayOf(PropTypes.number).isRequired,
-  blueprintAcres: PropTypes.number.isRequired,
-  corridors: PropTypes.arrayOf(PropTypes.number).isRequired,
+  blueprint: PropTypes.arrayOf(PropTypes.number),
+  corridors: PropTypes.arrayOf(PropTypes.number),
+}
+
+PrioritiesTab.defaultProps = {
+  blueprint: [],
+  corridors: [],
 }
 
 export default PrioritiesTab

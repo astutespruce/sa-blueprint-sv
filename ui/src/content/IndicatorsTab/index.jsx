@@ -34,6 +34,7 @@ const IndicatorsTab = ({
             description
             units
             domain
+            continuous
             goodThreshold
             values {
               value
@@ -57,6 +58,7 @@ const IndicatorsTab = ({
         const { percent, avg = null } = rawIndicators[index]
         return {
           ...indicator,
+          index,
           values: indicator.values.map(({ value, ...rest }) => ({
             value,
             ...rest,
@@ -108,6 +110,8 @@ const IndicatorsTab = ({
         }
       }
     )
+
+  console.log("ecosystems", ecosystems)
 
   return <EcosystemList ecosystems={ecosystems} analysisAcres={analysisAcres} />
 }

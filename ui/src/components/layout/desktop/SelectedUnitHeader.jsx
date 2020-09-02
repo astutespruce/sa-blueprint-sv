@@ -12,9 +12,10 @@ const SelectedUnitHeader = ({ name, acres, onClose }) => {
         justifyContent: "space-between",
         alignItems: "flex-start",
         p: "1rem",
+        minHeight: "7rem",
       }}
     >
-      <Box>
+      <Box sx={{ mr: "1rem" }}>
         <Heading as="h3">{name}</Heading>
         <Text sx={{ color: "grey.6", fontSize: [0, 1] }}>
           {formatNumber(acres)} acres
