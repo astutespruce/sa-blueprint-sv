@@ -58,7 +58,6 @@ export const unpackFeatureData = properties => {
     Object.keys(values.indicators).forEach(k => {
       const percent = applyFactor(values.indicators[k], 0.1)
 
-      console.log(k, values.indicator_avg[k])
       values.indicators[k] = {
         percent,
         // calculate avg bin from percents if not a continuous indicator

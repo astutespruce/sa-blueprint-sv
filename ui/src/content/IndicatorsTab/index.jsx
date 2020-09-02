@@ -113,12 +113,11 @@ const IndicatorsTab = ({
 
   console.log("ecosystems", ecosystems)
 
-  return <EcosystemList ecosystems={ecosystems} analysisAcres={analysisAcres} />
+  return <EcosystemList ecosystems={ecosystems} />
 }
 
 IndicatorsTab.propTypes = {
   unitType: PropTypes.string.isRequired,
-  analysisAcres: PropTypes.number.isRequired,
 
   // NOTE: indicators are keyed by index not id
   indicators: PropTypes.objectOf(

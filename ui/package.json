@@ -13,6 +13,7 @@
     "@theme-ui/color": "^0.3.1",
     "d3-scale": "^3.2.2",
     "d3-shape": "^2.0.0",
+    "dequal": "^2.0.2",
     "dotenv": "^8.2.0",
     "emotion-icons": "^1.0.0",
     "emotion-theming": "^10.0.27",

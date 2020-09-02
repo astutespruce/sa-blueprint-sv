@@ -1,18 +1,40 @@
-import React, { useState, useCallback, useEffect } from "react"
+import React, { useState, useCallback, memo } from "react"
 import PropTypes from "prop-types"
+import { dequal as deepEqual } from "dequal"
 
-import { flatten } from "util/data"
+import { flatten, indexBy } from "util/data"
+import { useIsEqualEffect } from "util/hooks"
 
 import Ecosystem from "./Ecosystem"
 import IndicatorDetails from "./IndicatorDetails"
 import { EcosystemPropType } from "./proptypes"
 
-const EcosystemList = ({ ecosystems, analysisAcres }) => {
+const EcosystemList = ({ ecosystems }) => {
+  console.log("ecosystems list render", ecosystems)
+
   const indicators = flatten(
     Object.values(ecosystems).map(({ indicators }) => indicators)
   )
+  const indicatorsIndex = indexBy(indicators, "id")
 
   const [selectedIndicator, setSelectedIndicator] = useState(null)
+
+  useIsEqualEffect(() => {
+    if (selectedIndicator === null) {
+      return
+    }
+    console.log(
+      "useEffect on ecosystems list, update selectedEcosystem",
+      selectedIndicator.id
+    )
+
+    if (indicatorsIndex[selectedIndicator.id]) {
+      setSelectedIndicator(() => indicatorsIndex[selectedIndicator.id])
+    } else {
+      // reset selected indicator, it isn't present in this set
+      setSelectedIndicator(() => null)
+    }
+  }, [indicators])
 
   const handleSelectIndicator = useCallback(indicator => {
     console.log("select indicator", indicator)
@@ -25,7 +47,6 @@ const EcosystemList = ({ ecosystems, analysisAcres }) => {
     <>
       {selectedIndicator ? (
         <IndicatorDetails
-          analysisAcres={analysisAcres}
           onClose={handleCloseIndicator}
           {...selectedIndicator}
         />
@@ -44,7 +65,7 @@ const EcosystemList = ({ ecosystems, analysisAcres }) => {
 
 EcosystemList.propTypes = {
   ecosystems: PropTypes.arrayOf(PropTypes.shape(EcosystemPropType)).isRequired,
-  analysisAcres: PropTypes.number.isRequired,
 }
 
-export default EcosystemList
+// TODO: memoize
+export default memo(EcosystemList, (prev, next) => deepEqual(prev, next))
