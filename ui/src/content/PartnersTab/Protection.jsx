@@ -8,7 +8,7 @@ import { OutboundLink } from "components/link"
 import { extractNodes } from "util/graphql"
 import { sortByFunc, sum } from "util/data"
 
-const Protection = ({ analysisAcres, protectionAcres }) => {
+const Protection = ({ analysisAcres, protection }) => {
   const query = useStaticQuery(graphql`
     query {
       allProtectionJson(sort: { fields: value, order: DESC }) {
@@ -26,10 +26,10 @@ const Protection = ({ analysisAcres, protectionAcres }) => {
   const categories = extractNodes(query)
 
   const bars = categories
-    .filter(({ id }) => protectionAcres[id])
+    .filter(({ id }) => protection[id])
     .map(category => ({
       ...category,
-      percent: (100 * protectionAcres[category.id]) / analysisAcres,
+      percent: (100 * protection[category.id]) / analysisAcres,
     }))
 
   bars.sort(sortByFunc("percent", false))
@@ -67,7 +67,7 @@ const Protection = ({ analysisAcres, protectionAcres }) => {
 
 Protection.propTypes = {
   analysisAcres: PropTypes.number.isRequired,
-  protectionAcres: PropTypes.objectOf(PropTypes.number),
+  protection: PropTypes.objectOf(PropTypes.number),
 }
 
 export default Protection

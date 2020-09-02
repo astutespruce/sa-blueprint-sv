@@ -6,7 +6,7 @@ import { Box, Text, Divider, Heading } from "theme-ui"
 import SLR from "./SLR"
 import Urban from "./Urban"
 
-const ThreatsTab = ({ unitType, slr, slrAcres, urban, urbanAcres }) => {
+const ThreatsTab = ({ unitType, slr, urban }) => {
   if (unitType !== "subwatershed") {
     return (
       <Box sx={{ py: "2rem", pl: "1rem", pr: "2rem" }}>
@@ -49,10 +49,13 @@ const ThreatsTab = ({ unitType, slr, slrAcres, urban, urbanAcres }) => {
 
 ThreatsTab.propTypes = {
   unitType: PropTypes.string.isRequired,
-  slr: PropTypes.arrayOf(PropTypes.number).isRequired,
-  slrAcres: PropTypes.number.isRequired,
-  urban: PropTypes.arrayOf(PropTypes.number).isRequired,
-  urbanAcres: PropTypes.number.isRequired,
+  slr: PropTypes.arrayOf(PropTypes.number),
+  urban: PropTypes.arrayOf(PropTypes.number),
+}
+
+ThreatsTab.defaultProps = {
+  slr: null,
+  urban: null,
 }
 
 export default ThreatsTab

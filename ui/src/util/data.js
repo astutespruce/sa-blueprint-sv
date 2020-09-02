@@ -56,7 +56,7 @@ export const applyFactor = (values, factor) => {
  */
 export const percentsToAvg = percents => {
   const total = sum(percents)
-  return Math.round(sum(percents.map((p, i) => i * (p / total))))
+  return sum(percents.map((p, i) => i * (p / total)))
 }
 
 const numericRegex = /\d+/

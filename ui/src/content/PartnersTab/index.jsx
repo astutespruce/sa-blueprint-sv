@@ -10,8 +10,8 @@ import LTAList from "./LTAList"
 const PartnersTab = ({
   unitType,
   analysisAcres,
-  ownershipAcres,
-  protectionAcres,
+  ownership,
+  protection,
   counties,
 }) => {
   if (unitType !== "subwatershed") {
@@ -29,13 +29,10 @@ const PartnersTab = ({
     <Box sx={{ py: "2rem", pl: "1rem", pr: "2rem" }}>
       <Box as="section">
         <Heading as="h3">Conserved Lands Ownership</Heading>
-        {ownershipAcres === null ? (
+        {ownership === null ? (
           <Text sx={{ color: "grey.7" }}>No information available.</Text>
         ) : (
-          <Ownership
-            analysisAcres={analysisAcres}
-            ownershipAcres={ownershipAcres}
-          />
+          <Ownership analysisAcres={analysisAcres} ownership={ownership} />
         )}
       </Box>
 
@@ -43,13 +40,10 @@ const PartnersTab = ({
 
       <Box as="section">
         <Heading as="h3">Land Protection Status</Heading>
-        {protectionAcres === null ? (
+        {protection === null ? (
           <Text sx={{ color: "grey.7" }}>No information available.</Text>
         ) : (
-          <Protection
-            analysisAcres={analysisAcres}
-            protectionAcres={protectionAcres}
-          />
+          <Protection analysisAcres={analysisAcres} protection={protection} />
         )}
       </Box>
 
@@ -70,8 +64,8 @@ const PartnersTab = ({
 PartnersTab.propTypes = {
   unitType: PropTypes.string.isRequired,
   analysisAcres: PropTypes.number.isRequired,
-  ownershipAcres: PropTypes.objectOf(PropTypes.number),
-  protectionAcres: PropTypes.objectOf(PropTypes.number),
+  ownership: PropTypes.objectOf(PropTypes.number),
+  protection: PropTypes.objectOf(PropTypes.number),
   counties: PropTypes.objectOf(PropTypes.arrayOf(PropTypes.string)),
 }
 

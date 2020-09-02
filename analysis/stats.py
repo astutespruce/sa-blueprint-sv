@@ -209,15 +209,15 @@ def extract_blueprint_indicator_area(geometries, inland=True):
         values = [e["value"] for e in indicator["values"]]
         bins = np.arange(0, max(values) + 1)
         counts = extract_count_in_geometry(filename, geometry_mask, window, bins)
+
+        # Some indicators exclude 0 values, their counts need to be zeroed out here
+        min_value = min(values)
+        if min_value > 0:
+            counts[range(0, min_value)] = 0
+
         results["counts"][id] = (
             (counts * cellsize).round(ACRES_PRECISION).astype("float32")
         )
-
-        # sanity check, indicators should be <= blueprint area
-        # if counts.sum() > blueprint_total:
-        #     print(
-        #         f"\nWARNING: indicator {id} area is greater than blueprint in summary unit"
-        #     )
 
         if indicator.get("continuous"):
             continuous_filename = indicators_dir / indicator["filename"].replace(

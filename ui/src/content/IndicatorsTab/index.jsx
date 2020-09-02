@@ -2,7 +2,7 @@ import React from "react"
 import PropTypes from "prop-types"
 import { graphql, useStaticQuery } from "gatsby"
 
-import { indexBy, sum } from "util/data"
+import { indexBy, sum, percentsToAvg } from "util/data"
 import { extractNodes } from "util/graphql"
 
 import EcosystemList from "./EcosystemList"
@@ -56,18 +56,28 @@ const IndicatorsTab = ({
       .filter((_, i) => rawIndicators[i] !== undefined)
       .map(({ index, ...indicator }) => {
         const { percent, avg = null } = rawIndicators[index]
+
+        const values = indicator.values.map(({ value, ...rest }) => ({
+          value,
+          ...rest,
+          percent: percent[value],
+        }))
+
         return {
           ...indicator,
           index,
-          values: indicator.values.map(({ value, ...rest }) => ({
-            value,
-            ...rest,
-            percent: percent[value],
-          })),
-          avg,
-          total: sum(percent),
+          values,
+          // calculate average based on the values that are present
+          // if values do not start at 1
+          avg:
+            avg !== null
+              ? avg
+              : percentsToAvg(values.map(({ percent: p }) => p)) +
+                values[0].value,
+          total: sum(values.map(({ percent }) => percent)),
         }
-      }),
+      })
+      .filter(({ total }) => total > 0),
     "id"
   )
 

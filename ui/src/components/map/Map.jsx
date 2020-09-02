@@ -145,8 +145,6 @@ const Map = ({}) => {
   }, [])
 
   useEffect(() => {
-    console.log("Map effect, selected unit changed", selectedUnit)
-
     if (!mapLoadedRef.current) return
 
     if (selectedUnit === null) {

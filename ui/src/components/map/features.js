@@ -28,8 +28,13 @@ export const unpackFeatureData = properties => {
       if (!value || typeof value !== "string") {
         return [key, value]
       }
+
       if (isEmpty(value)) {
         return [key, null]
+      }
+
+      if (key === "name") {
+        return [key, value]
       }
 
       if (value.indexOf("^") !== -1) {
@@ -61,10 +66,7 @@ export const unpackFeatureData = properties => {
       values.indicators[k] = {
         percent,
         // calculate avg bin from percents if not a continuous indicator
-        avg:
-          values.indicator_avg && values.indicator_avg[k] !== undefined
-            ? values.indicator_avg[k]
-            : percentsToAvg(percent),
+        avg: values.indicator_avg ? values.indicator_avg[k] || null : null,
       }
     })
   } else {

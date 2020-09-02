@@ -17,14 +17,12 @@ import {
   ThreatsTab,
   PartnersTab,
 } from "content"
-import { Tabs as MobileTabs } from "components/layout/mobile"
 
+import { Tabs as MobileTabs } from "components/layout/mobile"
 import {
   SelectedUnitHeader as DesktopSelectedUnitHeader,
   Tabs as DesktopTabs,
 } from "components/layout/desktop"
-
-import { sum, indexBy } from "util/data"
 
 import Map from "./Map"
 
@@ -123,11 +121,9 @@ const MapContainer = () => {
       corridors,
       indicators,
       slr,
-      slr_acres: slrAcres,
       urban,
-      urban_acres: urbanAcres,
-      ownership: ownershipAcres,
-      protection: protectionAcres,
+      ownership,
+      protection,
       counties,
     } = selectedUnit
 
@@ -158,15 +154,7 @@ const MapContainer = () => {
         break
       }
       case "unit-threats": {
-        content = (
-          <ThreatsTab
-            unitType={unitType}
-            slr={slr}
-            slrAcres={slrAcres}
-            urban={urban}
-            urbanAcres={urbanAcres}
-          />
-        )
+        content = <ThreatsTab unitType={unitType} slr={slr} urban={urban} />
         break
       }
       case "unit-partners": {
@@ -174,8 +162,6 @@ const MapContainer = () => {
           <PartnersTab
             unitType={unitType}
             analysisAcres={unitAcres}
-            ownershipAcres={ownershipAcres}
-            protectionAcres={protectionAcres}
             counties={counties}
           />
         )

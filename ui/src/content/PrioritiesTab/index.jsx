@@ -12,7 +12,7 @@ import { sum } from "util/data"
 const PrioritiesTab = ({ blueprint, corridors }) => {
   const query = useStaticQuery(graphql`
     query {
-      allBlueprintJson(sort: { fields: value, order: DESC }) {
+      allBlueprintJson(sort: { fields: value, order: ASC }) {
         edges {
           node {
             color
@@ -20,7 +20,7 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
           }
         }
       }
-      allCorridorsJson(sort: { order: ASC, fields: value }) {
+      allCorridorsJson(sort: { fields: value, order: ASC }) {
         edges {
           node {
             label
@@ -34,25 +34,28 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
   const priorityCategories = extractNodes(query.allBlueprintJson)
   const corridorCategories = extractNodes(query.allCorridorsJson)
 
+  console.log("corridor categories", corridorCategories, corridors)
+
   const chartWidth = 200
 
   const blueprintChartData = blueprint
     .slice()
-    .reverse()
     .map((percent, i) => ({
       value: percent,
       ...priorityCategories[i],
     }))
     .filter(({ value }) => value > 0)
+    .reverse()
 
   const corridorChartData = corridors
     .slice()
-    .reverse()
+
     .map((percent, i) => ({
       value: percent,
       ...corridorCategories[i],
     }))
     .filter(({ value }) => value > 0)
+    .reverse()
 
   const corridorsTotal = sum(corridors)
 

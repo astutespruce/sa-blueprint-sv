@@ -8,7 +8,7 @@ import { OutboundLink } from "components/link"
 import { extractNodes } from "util/graphql"
 import { sortByFunc, sum } from "util/data"
 
-const Ownership = ({ analysisAcres, ownershipAcres }) => {
+const Ownership = ({ analysisAcres, ownership }) => {
   const query = useStaticQuery(graphql`
     query {
       allOwnershipJson(sort: { fields: value, order: DESC }) {
@@ -26,10 +26,10 @@ const Ownership = ({ analysisAcres, ownershipAcres }) => {
   const categories = extractNodes(query)
 
   const bars = categories
-    .filter(({ id }) => ownershipAcres[id])
+    .filter(({ id }) => ownership[id])
     .map(category => ({
       ...category,
-      percent: (100 * ownershipAcres[category.id]) / analysisAcres,
+      percent: (100 * ownership[category.id]) / analysisAcres,
     }))
 
   bars.sort(sortByFunc("percent", false))
@@ -67,7 +67,7 @@ const Ownership = ({ analysisAcres, ownershipAcres }) => {
 
 Ownership.propTypes = {
   analysisAcres: PropTypes.number.isRequired,
-  ownershipAcres: PropTypes.objectOf(PropTypes.number),
+  ownership: PropTypes.objectOf(PropTypes.number),
 }
 
 export default Ownership

@@ -200,7 +200,7 @@ counties = pd.Series(
 )
 
 
-out = (
+huc12 = (
     huc12.join(blueprint_df, how="left")
     .join(slr, how="left")
     .join(urban, how="left")
@@ -210,11 +210,89 @@ out = (
     .fillna("")
 )
 
+
+### Read in marine data
+working_dir = results_dir / "marine_blocks"
+
+print("Reading marine_blocks...")
+marine = pd.read_feather(
+    data_dir / "inputs/summary_units/marine_blocks.feather",
+    columns=["id", "name", "acres"],
+).set_index("id")
+marine.acres = marine.acres.round().astype("uint")
+marine["type"] = "marine lease block"
+
+
+print("Encoding marine Blueprint & indicator values...")
+blueprint = pd.read_feather(working_dir / "blueprint.feather").set_index("id")
+
+# Unpack blueprint values
+blueprint_cols = [c for c in blueprint.columns if c.startswith("blueprint_")]
+corridor_cols = [c for c in blueprint.columns if c.startswith("corridors_")]
+blueprint_total = blueprint[blueprint_cols].sum(axis=1).rename("blueprint_total")
+
+# convert Blueprint to integer percents * 10, and pack into pipe-delimited string
+blueprint_percent = encode_values(
+    blueprint[blueprint_cols], blueprint_total, 1000
+).rename("blueprint")
+
+# convert corridors to integer percents * 10, and pack into pipe-delimited string
+corridors_percent = encode_values(
+    blueprint[corridor_cols], blueprint_total, 1000
+).rename("corridors")
+
+indicators = dict()
+# serialized id is based on position
+for i, id in enumerate(INDICATOR_INDEX.keys()):
+    cols = [c for c in blueprint.columns if c.startswith(id) and not c.endswith("avg")]
+    indicators[i] = encode_values(blueprint[cols], blueprint_total, 1000).rename(i)
+
+# encode to dict-encoded value <i>:<percents>,...
+# dropping any that are not present in a given record
+indicators = (
+    pd.DataFrame(indicators)
+    .apply(lambda g: ",".join((f"{k}:{v}" for k, v in g.items() if v)), axis=1)
+    .rename("indicators")
+)
+
+indicator_avgs = dict()
+for i, id in enumerate(INDICATOR_INDEX.keys()):
+    col = f"{id}_avg"
+    if col in blueprint.columns:
+        # all averages should be unsigned integer where present
+        indicator_avgs[i] = blueprint[col].apply(
+            lambda v: str(round(v)) if not pd.isnull(v) else ""
+        )
+
+indicator_avgs = (
+    pd.DataFrame(indicator_avgs)
+    .apply(lambda g: ",".join((f"{k}:{v}" for k, v in g.items() if v)), axis=1)
+    .rename("indicator_avg")
+)
+
+blueprint_df = (
+    pd.DataFrame(blueprint_total.round().astype("uint"))
+    .join(blueprint_percent)
+    .join(corridors_percent)
+    .join(indicators)
+    .join(indicator_avgs)
+)
+
+marine = marine.join(blueprint_df, how="left").fillna("")
+
+
+out = (
+    huc12.reset_index()
+    .append(marine.reset_index(), ignore_index=True, sort=False)
+    .fillna("")
+)
+
+
 if DEBUG:
-    out.reset_index().to_feather("/tmp/tile_attributes.feather")
+    out.to_feather("/tmp/tile_attributes.feather")
 
 
-out.to_csv(out_dir / "unit_atts.csv", index_label="id", quoting=csv.QUOTE_NONNUMERIC)
+out.to_csv(out_dir / "unit_atts.csv", index=False, quoting=csv.QUOTE_NONNUMERIC)
 
 
 ### TODO: marine

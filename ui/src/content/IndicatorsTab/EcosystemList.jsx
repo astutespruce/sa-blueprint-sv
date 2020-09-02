@@ -10,8 +10,6 @@ import IndicatorDetails from "./IndicatorDetails"
 import { EcosystemPropType } from "./proptypes"
 
 const EcosystemList = ({ ecosystems }) => {
-  console.log("ecosystems list render", ecosystems)
-
   const indicators = flatten(
     Object.values(ecosystems).map(({ indicators }) => indicators)
   )
@@ -23,10 +21,6 @@ const EcosystemList = ({ ecosystems }) => {
     if (selectedIndicator === null) {
       return
     }
-    console.log(
-      "useEffect on ecosystems list, update selectedEcosystem",
-      selectedIndicator.id
-    )
 
     if (indicatorsIndex[selectedIndicator.id]) {
       setSelectedIndicator(() => indicatorsIndex[selectedIndicator.id])
@@ -37,7 +31,6 @@ const EcosystemList = ({ ecosystems }) => {
   }, [indicators])
 
   const handleSelectIndicator = useCallback(indicator => {
-    console.log("select indicator", indicator)
     setSelectedIndicator(indicator)
   }, [])
 
@@ -67,5 +60,4 @@ EcosystemList.propTypes = {
   ecosystems: PropTypes.arrayOf(PropTypes.shape(EcosystemPropType)).isRequired,
 }
 
-// TODO: memoize
 export default memo(EcosystemList, (prev, next) => deepEqual(prev, next))
