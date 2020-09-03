@@ -64,9 +64,13 @@ class CustomArea(object):
         counts = blueprint["counts"]
         means = blueprint["means"]
 
+        blueprint_total = counts["blueprint"].sum()
+
         results = {
+            "analysis_acres": counts["shape_mask"],
+            "analysis_remainder": counts["shape_mask"] - blueprint_total,
             "blueprint": counts["blueprint"].tolist(),
-            "blueprint_total": counts["blueprint"].sum(),
+            "blueprint_total": blueprint_total,
             "corridors": counts["corridors"].tolist(),
             "corridors_total": counts["corridors"].sum(),
         }
@@ -79,7 +83,10 @@ class CustomArea(object):
                 continue
 
             values = counts[id]
-            if values.max() > 0:
+
+            # drop indicators that are not present in this area
+            # if only 0 values are present, ignore this indicator
+            if values[1:].max() > 0:
                 indicators.append(id)
                 results[id] = values
 

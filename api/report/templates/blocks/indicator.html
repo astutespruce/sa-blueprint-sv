@@ -9,8 +9,10 @@
         <div class="map-container">
             <img src="data:image/png;base64,{{maps[indicator.id]}}" alt="Map for {{indicator.label}}" class="map">
 
-            {% include "elements/map_footer.html" %}
+            {% include "elements/north_arrow.html" %}
         </div>
+
+        {% include "elements/map_footer.html" %}
 
         <div class="flex map-footer">
             <div class="map-locator-container">
@@ -39,7 +41,6 @@
 
 </div>
 
-
 <div class="no-break">
     {% with acres=results[indicator.id][::-1],entries=indicator['values']|reverse,has_good_threshold=indicator.goodThreshold,min_value=indicator['values'][0].value %}
 
@@ -51,15 +52,9 @@
         {% else %}
             A good condition threshold is not yet defined for this indicator.
         {% endif %}
-
-        This indicator was evaluated on {{total_area|format_number}} acres ({{(100 * total_area / results.blueprint_total)|format_percent}}% of area).
     {% endwith %}
     </div>
     {% set table.counter=table.counter+1 %}
-
-    <!-- all indicators are presented in descending order -->
-    <!-- use sum of area in regionwide indicators -->
-
 
     {% if has_good_threshold %}
         <table class="centered">
@@ -110,6 +105,15 @@
                 {% endif %}
                 {% endwith %}
 
+                {% if results.analysis_remainder > 0 %}
+                    <tr class="remainder-row">
+                        <td class="level no-border"></td>
+                        <td class="label">Area outside South Atlantic Blueprint</td>
+                        <td class="acres">{{results.analysis_remainder|format_number}}</td>
+                        <td class="percent">{{(100 * results.analysis_remainder / results.analysis_acres)|format_percent}}%</td>
+                    </tr>
+                {% endif %}
+
                 <tr class="total-row">
                     <td class="no-border no-background"></td>
                     <td class="label align-right">Total area</td>
@@ -156,6 +160,15 @@
                     </tr>
                 {% endif %}
                 {% endwith %}
+
+                {% if results.analysis_remainder > 0 %}
+                    <tr class="remainder-row">
+                        <td class="no-border no-background"></td>
+                        <td class="label">Area outside South Atlantic Blueprint</td>
+                        <td class="acres">{{results.analysis_remainder|format_number}}</td>
+                        <td class="percent">{{(100 * results.analysis_remainder / results.analysis_acres)|format_percent}}%</td>
+                    </tr>
+                {% endif %}
 
                 <tr class="total-row">
                     <td class="no-border no-background"></td>

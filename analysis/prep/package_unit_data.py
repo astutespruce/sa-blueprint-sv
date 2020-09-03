@@ -71,22 +71,28 @@ blueprint = pd.read_feather(results_dir / "huc12/blueprint.feather").set_index("
 blueprint_cols = [c for c in blueprint.columns if c.startswith("blueprint_")]
 corridor_cols = [c for c in blueprint.columns if c.startswith("corridors_")]
 blueprint_total = blueprint[blueprint_cols].sum(axis=1).rename("blueprint_total")
+shape_mask = blueprint.shape_mask
 
 # convert Blueprint to integer percents * 10, and pack into pipe-delimited string
-blueprint_percent = encode_values(
-    blueprint[blueprint_cols], blueprint_total, 1000
-).rename("blueprint")
+blueprint_percent = encode_values(blueprint[blueprint_cols], shape_mask, 1000).rename(
+    "blueprint"
+)
 
 # convert corridors to integer percents * 10, and pack into pipe-delimited string
-corridors_percent = encode_values(
-    blueprint[corridor_cols], blueprint_total, 1000
-).rename("corridors")
+corridors_percent = encode_values(blueprint[corridor_cols], shape_mask, 1000).rename(
+    "corridors"
+)
 
 indicators = dict()
 # serialized id is based on position
 for i, id in enumerate(INDICATOR_INDEX.keys()):
     cols = [c for c in blueprint.columns if c.startswith(id) and not c.endswith("avg")]
-    indicators[i] = encode_values(blueprint[cols], blueprint_total, 1000).rename(i)
+    values = blueprint[cols]
+
+    # drop indicators that are not present in this area
+    # if only 0 values are present, ignore this indicator
+    ix = values[cols[1:]].sum(axis=1) > 0
+    indicators[i] = encode_values(values.loc[ix], shape_mask.loc[ix], 1000).rename(i)
 
 # encode to dict-encoded value <i>:<percents>,...
 # dropping any that are not present in a given record
@@ -112,7 +118,8 @@ indicator_avgs = (
 )
 
 blueprint_df = (
-    pd.DataFrame(blueprint_total.round().astype("uint"))
+    blueprint[["shape_mask"]]
+    .join(blueprint_total.round().astype("uint"))
     .join(blueprint_percent)
     .join(corridors_percent)
     .join(indicators)
@@ -230,22 +237,28 @@ blueprint = pd.read_feather(working_dir / "blueprint.feather").set_index("id")
 blueprint_cols = [c for c in blueprint.columns if c.startswith("blueprint_")]
 corridor_cols = [c for c in blueprint.columns if c.startswith("corridors_")]
 blueprint_total = blueprint[blueprint_cols].sum(axis=1).rename("blueprint_total")
+shape_mask = blueprint.shape_mask
 
 # convert Blueprint to integer percents * 10, and pack into pipe-delimited string
-blueprint_percent = encode_values(
-    blueprint[blueprint_cols], blueprint_total, 1000
-).rename("blueprint")
+blueprint_percent = encode_values(blueprint[blueprint_cols], shape_mask, 1000).rename(
+    "blueprint"
+)
 
 # convert corridors to integer percents * 10, and pack into pipe-delimited string
-corridors_percent = encode_values(
-    blueprint[corridor_cols], blueprint_total, 1000
-).rename("corridors")
+corridors_percent = encode_values(blueprint[corridor_cols], shape_mask, 1000).rename(
+    "corridors"
+)
 
 indicators = dict()
 # serialized id is based on position
 for i, id in enumerate(INDICATOR_INDEX.keys()):
     cols = [c for c in blueprint.columns if c.startswith(id) and not c.endswith("avg")]
-    indicators[i] = encode_values(blueprint[cols], blueprint_total, 1000).rename(i)
+    values = blueprint[cols]
+
+    # drop indicators that are not present in this area
+    # if only 0 values are present, ignore this indicator
+    ix = values[cols[1:]].sum(axis=1) > 0
+    indicators[i] = encode_values(values.loc[ix], shape_mask.loc[ix], 1000).rename(i)
 
 # encode to dict-encoded value <i>:<percents>,...
 # dropping any that are not present in a given record
@@ -271,7 +284,8 @@ indicator_avgs = (
 )
 
 blueprint_df = (
-    pd.DataFrame(blueprint_total.round().astype("uint"))
+    blueprint[["shape_mask"]]
+    .join(blueprint_total.round().astype("uint"))
     .join(blueprint_percent)
     .join(corridors_percent)
     .join(indicators)

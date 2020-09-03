@@ -5,8 +5,10 @@
         <div class="map-container">
             <img src="data:image/png;base64,{{maps.slr}}" alt="Map for projected sea-level rise" class="map">
 
-            {% include "elements/map_footer.html" %}
+            {% include "elements/north_arrow.html" %}
         </div>
+
+        {% include "elements/map_footer.html" %}
 
         <div class="flex map-footer">
             <div class="map-locator-container">
@@ -71,6 +73,25 @@
                 <td class="percent">{{(100 * acres / results.slr_acres)|format_number}}%</td>
             </tr>
         {% endfor %}
+
+
+        {% with remainder=results.urban_acres - results['slr'][-1] %}
+        {% if remainder > 0 %}
+            <tr class="remainder-row">
+                <td class="label">Not projected to be inundated by up to 6 feet</td>
+                <td class="acres">{{remainder|format_number}}</td>
+                <td class="percent">{{(100 * remainder / results.slr_acres)|format_percent}}%</td>
+            </tr>
+        {% endif %}
+        {% endwith %}
+
+        <tr class="total-row">
+            <td class="align-right">Total area</td>
+            <td class="acres">{{results.slr_acres|format_number}}</td>
+            <td class="percent">100%</td>
+        </tr>
+
+
         </tbody>
     </table>
 

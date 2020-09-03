@@ -14,23 +14,14 @@ log = logging.getLogger(__name__)
 
 STYLE = {
     "version": 8,
-    "sources": {
-        "aoi": {"type": "geojson", "data": ""},
-        "aoi-mask": {"type": "geojson", "data": ""},
-    },
+    "sources": {"aoi": {"type": "geojson", "data": ""}},
     "layers": [
-        {
-            "id": "aoi-mask",
-            "source": "aoi-mask",
-            "type": "fill",
-            "paint": {"fill-color": "#FFFFFF", "fill-opacity": 0.5},
-        },
         {
             "id": "aoi",
             "source": "aoi",
             "type": "line",
             "paint": {"line-width": 2, "line-color": "#000000", "line-opacity": 1},
-        },
+        }
     ],
 }
 
@@ -53,10 +44,7 @@ async def get_aoi_map_image(geometry, center, zoom, width, height):
     Image object
     """
 
-    mask = pg.difference(pg.box(-180, -85, 180, 85), geometry)
-
     style = deepcopy(STYLE)
-    style["sources"]["aoi-mask"]["data"] = to_dict(mask)
     style["sources"]["aoi"]["data"] = to_dict(geometry)
 
     params = {

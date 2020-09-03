@@ -4,6 +4,7 @@ import logging
 
 import httpx
 from PIL import Image
+import pygeos as pg
 
 from api.settings import MBGL_SERVER_URL
 from analysis.pygeos_util import to_dict
@@ -11,7 +12,7 @@ from analysis.pygeos_util import to_dict
 
 log = logging.getLogger(__name__)
 
-ZOOM = 2.8
+ZOOM = 2.6
 CENTER = [-78.593, 33.221]
 WIDTH = 150
 HEIGHT = 150
@@ -62,12 +63,6 @@ LOCATOR_STYLE = {
             "type": "line",
             "paint": {"line-color": "#FF0000", "line-width": 3, "line-opacity": 1},
         },
-        {
-            "id": "feature-fill",
-            "source": "feature",
-            "type": "fill",
-            "paint": {"fill-color": "#FF0000", "fill-opacity": 0.2},
-        },
     ],
 }
 
@@ -102,9 +97,11 @@ async def get_locator_map_image(longitude, latitude, bounds, geometry=None):
     xmin, ymin, xmax, ymax = bounds
 
     # If boundary is a large extent (more than 0.5 degree on edge)
-    # then render geometry or a box instead of a point
+    # and has big enough area then render geometry or a box instead of a point
+    # NOTE: some multipart features cover large extent and small area, so these
+    # drop out if we do not use area threshold.
     if xmax - ymax >= 0.5 or ymax - ymin >= 0.5:
-        if geometry:
+        if geometry and pg.area(geometry) > 0.1:
             geometry = to_dict(geometry)
 
         else:

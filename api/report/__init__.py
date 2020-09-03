@@ -13,6 +13,7 @@ from analysis.constants import (
     BLUEPRINT,
     ECOSYSTEMS,
     ECOSYSTEM_INDEX,
+    INDICATORS,
     INDICATOR_INDEX,
     CORRIDORS,
     URBAN_LEGEND,
@@ -78,17 +79,29 @@ def create_report(maps, results):
         if not id in ecosystem_ids:
             continue
 
-        # update ecosystem with only indicators that are present
         ecosystem = deepcopy(ECOSYSTEM_INDEX[ecosystem["id"]])
 
-        ecosystem["indicators"] = [
-            INDICATOR_INDEX[i]
-            for i in sorted(
-                {f"{id}_{i}" for i in ecosystem["indicators"]}.intersection(
-                    results["indicators"]
-                )
-            )
+        # convert to long ids
+        ecosystem["indicators"] = [f"{id}_{i}" for i in ecosystem["indicators"]]
+
+        indicators_present = set(ecosystem["indicators"]).intersection(
+            results["indicators"]
+        )
+
+        ecosystem["indicator_summary"] = [
+            {
+                "id": i,
+                "label": INDICATOR_INDEX[i]["label"],
+                "present": i in indicators_present,
+            }
+            for i in ecosystem["indicators"]
         ]
+
+        # update ecosystem with only indicators that are present
+        ecosystem["indicators"] = [
+            INDICATOR_INDEX[i] for i in sorted(indicators_present)
+        ]
+
         ecosystems.append(ecosystem)
 
     ownership_acres = sum([e["acres"] for e in results.get("ownership", [])])

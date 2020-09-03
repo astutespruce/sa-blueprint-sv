@@ -3,32 +3,41 @@
 
   <ol>
     <li>
-      <a href="#About" class="toctext"></a>
+      <a href="#About" class="toctext">About the Blueprint</a>
       <a href="#About" class="tocpagenr"></a>
     </li>
+
     <div class="divider"></div>
     <li>
-      <a href="#Blueprint" class="toctext"></a>
+      <a href="#Blueprint" class="toctext">Blueprint Priorities</a>
       <a href="#Blueprint" class="tocpagenr"></a>
     </li>
+
     <div class="divider"></div>
     <li>
-      <a href="#Corridors" class="toctext"></a>
+      <a href="#Corridors" class="toctext">Corridors</a>
       <a href="#Corridors" class="tocpagenr"></a>
+    </li>
+
+    <div class="divider"></div>
+    <li>
+      <a href="#IndicatorSummary" class="toctext">Indicator Summary</a>
+      <a href="#IndicatorSummary" class="tocpagenr"></a>
     </li>
 
     {% for ecosystem in ecosystems %}
     <div class="divider"></div>
     <li class="no-border">
-      <a href="#{{ecosystem.id}}" class="toctext"></a>
-      <a href="#{{ecosystem.id}}" class="tocpagenr"></a>
+        <a href="#{{ecosystem.id}}" class="toctext">{{ecosystem.label}} Indicators</a>
+        <a href="#{{ecosystem.id}}" class="tocpagenr"></a>
     </li>
     {% endfor %}
+
 
     {% if not results.is_marine %}
     <div class="divider"></div>
     <li>
-      <a href="#Threats" class="toctext"></a>
+      <a href="#Threats" class="toctext">Threats</a>
       <a href="#Threats" class="tocpagenr"></a>
     </li>
     {% endif %}
@@ -36,14 +45,14 @@
     {% if results.ownership or results.protection or results.counties %}
     <div class="divider"></div>
     <li>
-      <a href="#Ownership" class="toctext"></a>
+      <a href="#Ownership" class="toctext">Ownership and Partners</a>
       <a href="#Ownership" class="tocpagenr"></a>
     </li>
     {% endif %}
 
     <div class="divider"></div>
     <li>
-      <a href="#Credits" class="toctext"></a>
+      <a href="#Credits" class="toctext">Credits</a>
       <a href="#Credits" class="tocpagenr"></a>
     </li>
   </ol>

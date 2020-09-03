@@ -1,5 +1,9 @@
-<div id="{{indicator.id}}" class="indicator-header flex align-center space-between" style="background-color: {{ecosystem.color}};border-color: {{ecosystem.borderColor}};">
-    <div class="flex flex-grow align-center">
+<div id="{{indicator.id}}" class="indicator-header" style="background-color: {{ecosystem.color}};border-color: {{ecosystem.borderColor}};">
+    {% if index == 0 %}
+        <span id="{{ecosystem.id}}" />
+    {% endif %}
+
+    <div class="flex align-center">
         <img src="{{(ecosystem.id + '.svg')|load_asset}}" class="ecosystem-icon" alt="Icon for {{ecosystem.label}}"/>
         <div>
             <div class="indicator-header-ecosystem">
@@ -8,16 +12,5 @@
 
             <h2>{{indicator.label}}</h2>
         </div>
-    </div>
-
-    <div class="flex-no-shrink text-right indicator-area">
-        {% with acres=results[indicator.id]|sum %}
-            <div>
-                {{acres|format_number}} acres
-            </div>
-            <div>
-                {{(100 * acres / results.blueprint_total)|format_number}}% of area
-            </div>
-        {% endwith %}
     </div>
 </div>

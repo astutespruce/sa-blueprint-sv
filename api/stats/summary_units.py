@@ -71,7 +71,6 @@ class SummaryUnits(object):
             return results
 
         # unpack blueprint, corridors, and indicators
-
         blueprint_values = np.array(
             [
                 getattr(blueprint, c)
@@ -81,6 +80,11 @@ class SummaryUnits(object):
         )
         results["blueprint"] = blueprint_values.tolist()
         results["blueprint_total"] = blueprint_values.sum()
+
+        results["analysis_acres"] = blueprint.shape_mask
+        results["analysis_remainder"] = (
+            blueprint.shape_mask - results["blueprint_total"]
+        )
 
         results["corridors"] = [
             getattr(blueprint, c) for c in blueprint.index if c.startswith("corridors_")
@@ -102,7 +106,8 @@ class SummaryUnits(object):
                 ]
             )
             # drop indicators that are not present in this area
-            if values.max():
+            # if only 0 values are present, ignore this indicator
+            if values[1:].max() > 0:
                 indicators.append(indicator_id)
                 results[indicator_id] = values.tolist()
 

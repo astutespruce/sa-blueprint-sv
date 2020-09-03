@@ -41,11 +41,10 @@ def format_number(number):
 
 def format_percent(number):
     """Format percents for display.
-    uses format_number precision, clipped to [0, 100] range.
+    uses whole numbers, clipped to [0, 100] range.
     """
-    if number > 100:
-        number = 100
-    elif number < 0:
-        number = 0
 
-    return format_number(number)
+    if number < 1:
+        return "<1"
+
+    return min(round(number), 100)

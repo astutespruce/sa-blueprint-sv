@@ -1,24 +1,7 @@
 <div class="ecosystem">
-
-    <div class="ecosystem-header flex align-center flex-grow" style="background-color: {{ecosystem.color}};border-color: {{ecosystem.borderColor}};">
-        <img src="{{(ecosystem.id + '.svg')|load_asset}}"  class="ecosystem-icon" alt="Icon for {{ecosystem.label}}"/>
-        <h2 class="no-margin">
-            <span id="{{ecosystem.id}}">{{ecosystem.label}} Indicators</span>
-        </h2>
-    </div>
-
-    {% include "blocks/ecosystem_summary_table.html" %}
-
     {% for indicator in ecosystem.indicators %}
-        {% include "blocks/indicator.html" %}
+        {% with index=loop.index0 %}
+            {% include "blocks/indicator.html" %}
+        {% endwith %}
     {% endfor %}
 </div>
-
-</div>
-
-
-
-
-
-
-

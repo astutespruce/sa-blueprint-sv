@@ -82,7 +82,7 @@
 
             {% with gap=results.acres - ownership_acres %}
                 {% if gap %}
-                    <tr>
+                    <tr class="remainder-row">
                         <td class="label">Not conserved</td>
                         <td class="acres">{{gap|format_number}}</td>
                         <td class="percent">{{(100 * gap / results.acres)|format_percent}}%</td>
@@ -167,7 +167,7 @@
 
             {% with gap=results.acres - protection_acres %}
             {% if gap %}
-                <tr>
+                <tr class="remainder-row">
                     <td class="label">Not conserved</td>
                     <td class="acres">{{gap|format_number}}</td>
                     <td class="percent">{{(100 * gap / results.acres)|format_percent}}%</td>
