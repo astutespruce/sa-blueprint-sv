@@ -19,6 +19,12 @@ resampled to 30m by USFWS staff for consistency with the other indicators and pr
 The final Blueprint 2020 data were posted by USFWS to https://www.sciencebase.gov/catalog/file/get/5f13148d82ce21d4c40a4ac8?name=Blueprint_2020_Data_Download.zip
 on 8/14/2020.
 
+Binned versions of continuous indicators were prepared by USFWS and sent separately.
+
+Greenways and Trails were preprocessed before using, to set 0 values to NODATA.
+This is so that this still appear in lower-resolution overviews created from the
+data (these are derived from linear features).
+
 ### Summary units
 
 Blueprint data were summarized to HUC12 subwatersheds and marine lease blocks.
@@ -33,9 +39,9 @@ Marine lease blocks were carried over from Blueprint 2.2.
 Summary units were prepared using `analysis/prepare_summary_units.py`. This script extracted the summary units and created two sets outputs for each, plus an aggregated
 dataset for tile creation:
 
--   `/summary_units/<huc12|marine_blocks>.feather` are the projected datasets for use in spatial analysis
--   `/results/<huc12|marine_blocks>/<huc12|marine_blocks>_wgs84.feather` are the WGS84 versions for use in mapping
--   `/summary_units/units_wgs84.gpkg` is the combined WGS 84 units for tile creation.
+- `/summary_units/<huc12|marine_blocks>.feather` are the projected datasets for use in spatial analysis
+- `/results/<huc12|marine_blocks>/<huc12|marine_blocks>_wgs84.feather` are the WGS84 versions for use in mapping
+- `/summary_units/units_wgs84.gpkg` is the combined WGS 84 units for tile creation.
 
 ### States and counties
 
@@ -91,9 +97,9 @@ bounds of all SLR files are extracted to a dataset using
 
 Vector tiles were created using `create_tiles.sh`:
 
--   state boundaries (used for report maps)
--   mask and boundary
--   HUC12 and marine lease blocks with IDs
+- state boundaries (used for report maps)
+- mask and boundary
+- HUC12 and marine lease blocks with IDs
 
 Raster tiles for the Blueprint were created using `render_blueprint_tiles.py`.
 

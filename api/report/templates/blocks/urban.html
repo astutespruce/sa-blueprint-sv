@@ -60,7 +60,7 @@
             <tr>
                 <td class="label">Urban in 2009</td>
                 <td class="percent">{{acres|format_number}}</td>
-                <td class="percent">{{(100 * acres / results.urban_acres)|format_number}}%</td>
+                <td class="percent">{{(100 * acres / results.urban_acres)|format_percent}}%</td>
             </tr>
             {% endwith %}
 
@@ -68,7 +68,7 @@
             <tr>
                 <td class="label">{{2020 + (10*(loop.index-1))}} projected extent</td>
                 <td class="percent">{{acres|format_number}}</td>
-                <td class="percent">{{(100 * acres / results.urban_acres)|format_number}}%</td>
+                <td class="percent">{{(100 * acres / results.urban_acres)|format_percent}}%</td>
             </tr>
         {% endfor %}
 
@@ -92,16 +92,10 @@
     </table>
 </div>
 
-
-<!--
-{% if results['proj_urban'][-1] > results.urban %}
+{% if results.urban and results['proj_urban'][4] > results.urban %}
     <p class="no-break">
-        Urbanization is projected to increase at an average rate of
-        <b>{{((100*(results['proj_urban'][4] - results.urban) / results.urban) / 51)|format_percent}}%</b>
-        per year between 2009 and 2060 and
-        <b>{{((100*(results['proj_urban'][-1] - results.urban) / results.urban) / 91)|format_percent}}%</b>
-        between 2009 and 2100.
+    By 2060, urbanization is projected to increase
+        <b>{{(100*(results['proj_urban'][4] - results.urban) / results.urban)|format_number}}%</b>
+        over 2009 levels.
     </p>
 {% endif %}
-
--->

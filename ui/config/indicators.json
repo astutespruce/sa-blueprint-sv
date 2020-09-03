@@ -61,6 +61,7 @@
       }
     ],
     "domain": [1, 4],
+    "goodThreshold": 3,
     "datasetID": "e5491baf54d5408da2ae1c547ca4cb2f",
     "description": "Migratory fish connectivity is an index capturing how far upstream migratory fish have been observed. It also includes adjacent areas where habitat access could be restored through fish passage and hydrological barrier removal efforts. Migratory fish presence reflects uninterrupted connections between freshwater, estuarine, and marine ecosystems. This indicator applies only to the estimated floodplain, which spatially defines areas estimated to be inundated by a 100-year flood, also known as the 1% annual chance flood."
   },
@@ -106,6 +107,7 @@
       }
     ],
     "domain": [1, 7],
+    "goodThreshold": 4,
     "datasetID": "32302c8318504f2c9961eb21695a9c50",
     "description": "Network complexity depicts the number of different stream size classes in a river network not separated by large dams. River networks with a variety of connected stream classes help retain aquatic biodiversity in a changing climate by allowing species to access climate refugia and move between habitats. This indicator applies only to the estimated floodplain, which spatially defines areas estimated to be inundated by a 100-year flood, also known as the 1% annual chance flood."
   },
@@ -259,7 +261,7 @@
       }
     ],
     "domain": [0, 5],
-    "goodThreshold": 3,
+    "goodThreshold": 2,
     "datasetID": "d9ed8722ea7e4609aac2860f60988f1f",
     "description": "Forest birds is an index of habitat suitability for twelve upland hardwood and forested wetand bird species (wood thrush, whip-poor-will, American woodcock, red-headed woodpecker, Chuck-will's widow, hooded warbler, Kentucky warbler, Acadian flycatcher, Northern parula, black-throated green warbler, prothonotary warbler, Swainson's warbler) based on patch size and other ecosystem characteristics such as proximity to water and proximity to forest and ecotone edge. The needs of these species are increasingly restrictive at higher index values, reflecting better quality habitat."
   },
@@ -330,6 +332,7 @@
       }
     ],
     "domain": [0, 7],
+    "goodThreshold": 4,
     "datasetID": "3329625f3c3a409da3565c56e5fa0adb",
     "description": "This cultural resource indicator measures both the natural condition and connected length of greenways and trails to characterize the quality of the recreational experience. Natural condition is based on the amount of impervious surface surrounding the path. Connected length captures how far a person can go without leaving a dedicated path, based on common distances for walking, running, and biking."
   },
@@ -361,7 +364,7 @@
       }
     ],
     "domain": [0, 445312],
-    "goodThreshold": 2,
+    "goodThreshold": 1,
     "datasetID": "e19abd87161f495fbf1859ac57641008",
     "description": "This indicator represents the size of large, unfragmented patches of natural habitat. It identifies minimally disturbed natural areas at least 100 acres in size and greater than 200 meters wide. Large areas of intact natural habitat benefit numerous species, including reptiles and amphibians, birds, and large mammals."
   },

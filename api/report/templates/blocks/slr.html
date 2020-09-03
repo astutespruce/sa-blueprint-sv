@@ -70,12 +70,12 @@
                     {% endif %}
                 </td>
                 <td class="acres">{{acres|format_number}}</td>
-                <td class="percent">{{(100 * acres / results.slr_acres)|format_number}}%</td>
+                <td class="percent">{{(100 * acres / results.slr_acres)|format_percent}}%</td>
             </tr>
         {% endfor %}
 
 
-        {% with remainder=results.urban_acres - results['slr'][-1] %}
+        {% with remainder=results.slr_acres - results['slr'][-1] %}
         {% if remainder > 0 %}
             <tr class="remainder-row">
                 <td class="label">Not projected to be inundated by up to 6 feet</td>
@@ -90,8 +90,6 @@
             <td class="acres">{{results.slr_acres|format_number}}</td>
             <td class="percent">100%</td>
         </tr>
-
-
         </tbody>
     </table>
 

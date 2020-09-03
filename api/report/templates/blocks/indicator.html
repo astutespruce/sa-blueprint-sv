@@ -146,7 +146,7 @@
                         </td>
                         <td class="label">{{entry.label}}</td>
                         <td class="acres">{{acres[loop.index-1]|format_number}}</td>
-                        <td class="percent">{{(100 * acres[loop.index-1] / results.blueprint_total)|format_number}}%</td>
+                        <td class="percent">{{(100 * acres[loop.index-1] / results.blueprint_total)|format_percent}}%</td>
                     </tr>
                 {% endfor %}
 
@@ -156,7 +156,7 @@
                         <td class="no-border no-background"></td>
                         <td class="label">Area not evaluated for this indicator</td>
                         <td class="acres">{{remainder|format_number}}</td>
-                        <td class="percent">{{(100 * remainder / results.blueprint_total)|format_number}}%</td>
+                        <td class="percent">{{(100 * remainder / results.blueprint_total)|format_percent}}%</td>
                     </tr>
                 {% endif %}
                 {% endwith %}

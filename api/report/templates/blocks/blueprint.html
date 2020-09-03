@@ -75,7 +75,7 @@
         <tr>
             <td class="label">{{item.label}}</td>
             <td class="acres">{{acres[loop.index-1]|format_number}}</td>
-            <td class="percent">{{(100 * acres[loop.index-1] / results.analysis_acres)|format_number}}%</td>
+            <td class="percent">{{(100 * acres[loop.index-1] / results.analysis_acres)|format_percent}}%</td>
         </tr>
         {% endfor %}
         {% endwith %}

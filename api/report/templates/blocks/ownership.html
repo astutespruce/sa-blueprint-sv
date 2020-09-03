@@ -161,7 +161,7 @@
             <tr>
                 <td class="label">{{entry.label}}</td>
                 <td class="acres">{{entry.acres|format_number}}</td>
-                <td class="percent">{{(100 * entry.acres / results.acres)|format_number}}%</td>
+                <td class="percent">{{(100 * entry.acres / results.acres)|format_percent}}%</td>
             </tr>
             {% endfor %}
 
