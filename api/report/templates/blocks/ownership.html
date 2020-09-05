@@ -186,11 +186,29 @@
 </div>
 {% endif %}
 
+{% if results.num_protected_areas %}
+    <h4 id="ProtectedAreas">Protected Areas</h4>
+
+    <ul>
+        {% for entry in results.protected_areas %}
+            <li>
+                {{entry.name}} ({{entry.owner}}; {{entry.acres|format_number}} acres)
+            </li>
+        {% endfor %}
+
+        {% if results.num_protected_areas > 25 %}
+            <li>
+                ... and {{(results.num_protected_areas - 25)|format_number}} more protected areas ...
+            </li>
+        {% endif %}
+    </ul>
+{% endif %}
+
+
 
 {% if results.counties %}
-<h4>
-    <span id="LandTrusts">Land Trusts</span>
-    (by county)
+<h4 id="LandTrusts">
+    Land Trusts (by county)
 </h4>
 <ul>
     {% for county in results.counties %}

@@ -81,7 +81,7 @@ print("Processing TNC secured lands...")
 # already in EPSG:5070
 df = read_dataframe(
     src_dir / "boundaries/TNC_SA2018_InterimPublic.gdb",
-    columns=["FEE_ORGTYP", "GAP_STATUS"],
+    columns=["FEE_ORGTYP", "GAP_STATUS", "AREA_NAME", "FEE_OWNER"],
 )
 
 tree = pg.STRtree(df.geometry.values.data)
@@ -94,5 +94,29 @@ df["geometry"] = pg.make_valid(df.geometry.values.data)
 # Explode the polygons for better spatial index results in downstream functions
 df = explode(df)
 
-write_dataframe(df.to_crs(GEO_CRS), tile_dir / "ownership.geojson", driver="GeoJSONSeq")
+write_dataframe(
+    df[["FEE_ORGTYP", "GAP_STATUS", "geometry"]].to_crs(GEO_CRS),
+    tile_dir / "ownership.geojson",
+    driver="GeoJSONSeq",
+)
 df.to_feather(out_dir / "ownership.feather")
+
+
+### PARCAs (Amphibian & reptile aras)
+# already in EPSG:5070
+print("Processing PARCAs...")
+df = read_dataframe(
+    src_dir / "boundaries/SouthAtlanticPARCAs.gdb",
+    columns=["FID", "Name", "Description"],
+    force_2d=True,
+).rename(columns={"FID": "parca_id", "Name": "name", "Description": "description"})
+
+df = explode(df)
+tree = pg.STRtree(df.geometry.values.data)
+ix = tree.query(bnd, predicate="intersects")
+df = df.iloc[ix].copy()
+
+df.geometry = pg.make_valid(df.geometry.values.data)
+
+df.to_feather(out_dir / "parca.feather")
+

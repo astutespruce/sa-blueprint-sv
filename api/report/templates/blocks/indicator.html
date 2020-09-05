@@ -183,4 +183,25 @@
     {% endwith %}
 </div>
 
+
+{% if indicator.id=="land_amphibianreptiles" and results["parca"] %}
+    <div class="no-break">
+
+        <h4>Priority Amphibian and Reptile Conservation Areas:</h4>
+
+        <div class="parca">
+            {% for entry in results['parca'] %}
+                <p>
+                    <b>{{entry.name}}</b>
+                    <br/>
+
+                    {{entry.description}}
+                    <br/>
+                    <br/>
+                </p>
+            {% endfor %}
+        </div>
+    </div>
+{% endif %}
+
 </div>

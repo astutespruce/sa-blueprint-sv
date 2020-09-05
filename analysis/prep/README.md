@@ -93,6 +93,13 @@ To assist with checking if a given area of interest overlaps SLR data, the
 bounds of all SLR files are extracted to a dataset using
 `util/extract_slr_bounds.py`.
 
+### Priority Amphibian and Reptile Areas (PARCAs)
+
+These were downloaded 9/3/2020 from: https://salcc.databasin.org/datasets/66fa0f3bd6b3499d92c9395ff5b1828b
+
+These are intersected with subwatersheds and custom areas of interest.
+Name & description are displayed where they overlap.
+
 ### Map tiles
 
 Vector tiles were created using `create_tiles.sh`:

@@ -50,6 +50,8 @@ class SummaryUnits(object):
                 "id"
             )
 
+            self.parca = pd.read_feather(working_dir / "parca.feather").set_index("id")
+
     def get_results(self, id):
         if not id in self.units.index:
             raise ValueError("ID not in units index")
@@ -165,6 +167,13 @@ class SummaryUnits(object):
                 by=["state", "county"]
             )
             results["counties"] = counties.to_dict(orient="records")
+
+        except KeyError:
+            pass
+
+        try:
+            parca = self.parca.loc[self.parca.index.isin([id])].sort_values(by="name")
+            results["parca"] = parca.to_dict(orient="records")
 
         except KeyError:
             pass

@@ -151,15 +151,15 @@
     "values": [
       {
         "value": 1,
-        "label": "Less than 80% natural habitat surrounding rivers and streams",
+        "label": "Less than 80% natural habitat within the estimated floodplain, by catchment",
         "color": "#C3533D"
       },
-      { "value": 2, "label": "80 - 85% natural cover", "color": "#F8D80B" },
-      { "value": 3, "label": "85 - 90% natural cover", "color": "#A0F300" },
-      { "value": 4, "label": "90 - 95% natural cover", "color": "#14C34D" },
+      { "value": 2, "label": "80 - 85% natural habitat", "color": "#F8D80B" },
+      { "value": 3, "label": "85 - 90% natural habitat", "color": "#A0F300" },
+      { "value": 4, "label": "90 - 95% natural habitat", "color": "#14C34D" },
       {
         "value": 5,
-        "label": "Greater than 95% natural habitat surrounding rivers and streams",
+        "label": "Greater than 95% natural habitat within the estimated floodplain, by catchment",
         "color": "#0B317C"
       }
     ],
@@ -271,11 +271,6 @@
     "label": "Forested wetland extent",
     "values": [
       {
-        "value": 0,
-        "label": "Not currently forested wetland (within forested wetland ecosystem)",
-        "color": null
-      },
-      {
         "value": 1,
         "label": "Currently forested wetland (within forested wetland ecosystem)",
         "color": "#7B2A80"
@@ -349,7 +344,7 @@
       },
       {
         "value": 1,
-        "label": "Small core (<=1,000 acres)",
+        "label": "Small core (> 100 - <=1,000 acres)",
         "color": "#FA0068"
       },
       {
@@ -495,12 +490,12 @@
     "values": [
       {
         "value": 0,
-        "label": "Not recently burned or not open canopy",
+        "label": "Not burned between 1999-2010 or not open canopy",
         "color": "#FFEBAF"
       },
       {
         "value": 1,
-        "label": "Recently burned and open canopy",
+        "label": "Burned between 1999-2010 and open canopy",
         "color": "#FFAA00"
       }
     ],
@@ -554,7 +549,7 @@
     "filename": "ResilientTerrestrialSites.tif",
     "label": "Resilient terrestrial sites",
     "values": [
-      { "value": 0, "label": "Urban", "color": "#9B5521" },
+      { "value": 0, "label": "Developed", "color": "#9B5521" },
       {
         "value": 1,
         "label": "Final resilience score: Far below average (<-2 SD)",

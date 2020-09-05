@@ -27,14 +27,14 @@ from analysis.stats import (
 
 data_dir = Path("data/inputs")
 county_filename = data_dir / "boundaries/counties.feather"
+parca_filename = data_dir / "boundaries/parca.feather"
 ownership_filename = data_dir / "boundaries/ownership.feather"
 slr_bounds_filename = data_dir / "threats/slr/slr_bounds.feather"
 
 # Load targets into memory for faster calculations below
 counties = gp.read_feather(county_filename)[["geometry", "FIPS", "state", "county"]]
-ownership = gp.read_feather(ownership_filename)[
-    ["geometry", "FEE_ORGTYP", "GAP_STATUS"]
-]
+parca = gp.read_feather(parca_filename)
+ownership = gp.read_feather(ownership_filename)
 slr_bounds = gp.read_feather(slr_bounds_filename).geometry
 
 
@@ -150,6 +150,31 @@ class CustomArea(object):
 
         return {"counties": df.to_dict(orient="records")}
 
+    def get_parca(self):
+        df = intersection(pd.DataFrame({"geometry": self.geometry}), parca)
+
+        if not len(df):
+            return None
+
+        df["acres"] = pg.area(df.geometry_right.values.data) * M2_ACRES
+        df = df.loc[df.acres > 0].copy()
+
+        # aggregate these back up by ID
+        by_parca = (
+            df[["parca_id", "name", "description", "acres"]]
+            .groupby(by=[df.index.get_level_values(0), "parca_id"])
+            .agg({"name": "first", "description": "first", "acres": "sum"})
+            .reset_index()
+            .rename(columns={"level_0": "id"})
+        )
+        by_parca.acres = by_parca.acres.astype("float32").round()
+
+        return {
+            "parca": by_parca[["name", "description", "acres"]].to_dict(
+                orient="records"
+            )
+        }
+
     def get_ownership(self):
         df = intersection(pd.DataFrame({"geometry": self.geometry}), ownership)
 
@@ -192,6 +217,24 @@ class CustomArea(object):
             if key in by_protection
         ]
 
+        by_area = (
+            df[["AREA_NAME", "FEE_OWNER", "acres"]]
+            .groupby(by=[df.index.get_level_values(0), "AREA_NAME", "FEE_OWNER"])
+            .acres.sum()
+            .astype("float32")
+            .round()
+            .reset_index()
+            .rename(
+                columns={"level_0": "id", "AREA_NAME": "name", "FEE_OWNER": "owner"}
+            )
+            .sort_values(by="acres", ascending=False)
+        )
+        # drop very small areas, these are not helpful
+        by_area = by_area.loc[by_area.acres >= 1].copy()
+
+        results["protected_areas"] = by_area.head(25).to_dict(orient="records")
+        results["num_protected_areas"] = len(by_area)
+
         return results
 
     def get_results(self):
@@ -228,5 +271,9 @@ class CustomArea(object):
         county_results = self.get_counties()
         if county_results is not None:
             results.update(county_results)
+
+        parca_results = self.get_parca()
+        if parca_results is not None:
+            results.update(parca_results)
 
         return results
