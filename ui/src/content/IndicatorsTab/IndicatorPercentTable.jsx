@@ -62,12 +62,18 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
 
         {remainder.length > 0 ? (
           <>
-            <Divider variant="styles.hr.dashed" />
+            <Divider variant="styles.hr.dashed" sx={{ mb: "1.5rem" }} />
             <Box>
-              <Flex>
-                <Text sx={labelCSS} />
-                <IndicatorPercentChart {...remainder[0]} />
-              </Flex>
+              {remainder.map(({ value, label, percent }) => (
+                <Flex sx={{ mt: "1rem" }}>
+                  <Text sx={labelCSS} />
+                  <IndicatorPercentChart
+                    value={value}
+                    label={label}
+                    percent={percent}
+                  />
+                </Flex>
+              ))}
             </Box>
           </>
         ) : null}
@@ -152,12 +158,18 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
 
       {remainder.length > 0 ? (
         <>
-          <Divider variant="styles.hr.dashed" />
+          <Divider variant="styles.hr.dashed" sx={{ mb: "1.5rem" }} />
           <Box>
-            <Flex>
-              <Text sx={labelCSS} />
-              <IndicatorPercentChart {...remainder[0]} />
-            </Flex>
+            {remainder.map(({ value, label, percent }) => (
+              <Flex sx={{ mt: "1rem" }}>
+                <Text sx={labelCSS} />
+                <IndicatorPercentChart
+                  value={value}
+                  label={label}
+                  percent={percent}
+                />
+              </Flex>
+            ))}
           </Box>
         </>
       ) : null}

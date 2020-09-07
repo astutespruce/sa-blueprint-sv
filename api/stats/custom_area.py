@@ -66,9 +66,13 @@ class CustomArea(object):
 
         blueprint_total = counts["blueprint"].sum()
 
+        remainder = abs(counts["shape_mask"] - blueprint_total)
+        # there are small rounding errors
+        remainder = remainder if remainder >= 1 else 0
+
         results = {
             "analysis_acres": counts["shape_mask"],
-            "analysis_remainder": counts["shape_mask"] - blueprint_total,
+            "analysis_remainder": remainder,
             "blueprint": counts["blueprint"].tolist(),
             "blueprint_total": blueprint_total,
             "corridors": counts["corridors"].tolist(),

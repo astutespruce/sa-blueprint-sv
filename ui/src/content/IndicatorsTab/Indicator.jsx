@@ -49,34 +49,15 @@ const Indicator = ({ indicator, onSelect }) => {
         },
       }}
     >
-      <Flex
+      <Text
         sx={{
-          justifyContent: "space-between",
-          alignItems: "flex-end",
+          color: "primary",
+          fontSize: 2,
+          fontWeight: "bold",
         }}
       >
-        <Text
-          sx={{
-            color: "primary",
-            fontSize: 2,
-            fontWeight: "bold",
-          }}
-        >
-          {label}
-        </Text>
-
-        <Text
-          sx={{
-            fontSize: 0,
-            borderRadius: "1em",
-            bg: "grey.1",
-            px: "0.5em",
-            py: "0.25em",
-          }}
-        >
-          {formatPercent(total)}% of area
-        </Text>
-      </Flex>
+        {label}
+      </Text>
 
       <Text
         sx={{

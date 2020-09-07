@@ -8,9 +8,9 @@ import { extractNodes } from "util/graphql"
 import EcosystemList from "./EcosystemList"
 
 const IndicatorsTab = ({
-  unitType,
-  analysisAcres,
   indicators: rawIndicators,
+  analysisAcres,
+  blueprintAcres,
 }) => {
   const query = useStaticQuery(graphql`
     query {
@@ -77,6 +77,7 @@ const IndicatorsTab = ({
           total: sum(values.map(({ percent }) => percent)),
         }
       })
+      // Only include those that have nonzero values
       .filter(({ total }) => total > 0),
     "id"
   )
@@ -123,12 +124,18 @@ const IndicatorsTab = ({
 
   console.log("ecosystems", ecosystems)
 
-  return <EcosystemList ecosystems={ecosystems} />
+  return (
+    <EcosystemList
+      ecosystems={ecosystems}
+      analysisAcres={analysisAcres}
+      blueprintAcres={blueprintAcres}
+    />
+  )
 }
 
 IndicatorsTab.propTypes = {
-  unitType: PropTypes.string.isRequired,
-
+  analysisAcres: PropTypes.number.isRequired,
+  blueprintAcres: PropTypes.number.isRequired,
   // NOTE: indicators are keyed by index not id
   indicators: PropTypes.objectOf(
     PropTypes.shape({

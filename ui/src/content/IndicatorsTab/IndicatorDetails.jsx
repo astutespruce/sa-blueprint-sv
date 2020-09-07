@@ -17,15 +17,17 @@ const IndicatorDetails = ({
   description,
   datasetID,
   goodThreshold,
-  avg,
   total,
-  units,
-  domain,
   values,
+  analysisAcres,
+  blueprintAcres,
   onClose,
 }) => {
   const ecosystemId = id.split("_")[0]
   const icon = require(`images/${ecosystemId}.svg`)
+
+  const remainder =
+    (100 * Math.abs(analysisAcres - blueprintAcres)) / analysisAcres
 
   const percentTableValues = values
     .map((value, i) => ({
@@ -35,12 +37,20 @@ const IndicatorDetails = ({
     }))
     .reverse()
 
+  if (remainder >= 1) {
+    percentTableValues.push({
+      value: null,
+      label: "Area outside South Atlantic Blueprint",
+      percent: remainder,
+    })
+  }
+
   // remainder value for areas not analyzed for this indicator
-  if (total < 100) {
+  if (total + remainder < 100) {
     percentTableValues.push({
       value: null,
       label: "Not evaluated for this indicator",
-      percent: 100 - total,
+      percent: 100 - total - remainder,
     })
   }
 
@@ -127,6 +137,8 @@ const IndicatorDetails = ({
 
 IndicatorDetails.propTypes = {
   ...IndicatorPropType,
+  analysisAcres: PropTypes.number.isRequired,
+  blueprintAcres: PropTypes.number.isRequired,
   onClose: PropTypes.func.isRequired,
 }
 

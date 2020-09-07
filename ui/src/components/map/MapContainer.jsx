@@ -118,6 +118,7 @@ const MapContainer = () => {
       acres: unitAcres,
       blueprint,
       blueprint_total: blueprintAcres,
+      shape_mask: analysisAcres,
       corridors,
       indicators,
       slr,
@@ -147,7 +148,8 @@ const MapContainer = () => {
         content = (
           <IndicatorsTab
             unitType={unitType}
-            analysisAcres={blueprintAcres}
+            blueprintAcres={blueprintAcres}
+            analysisAcres={analysisAcres}
             indicators={indicators}
           />
         )

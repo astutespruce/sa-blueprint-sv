@@ -5,9 +5,9 @@ import { siteMetadata } from "../../../gatsby-config"
 const { tileHost } = siteMetadata
 
 export const config = {
-  // bounds: [-85.89816168, 28.98417231, -71.28723327, 37.45871183],
+  bounds: [-85.89816168, 28.98417231, -71.28723327, 37.45871183],
   // FIXME: temp for testing
-  bounds: [-81.392, 31.5566, -80.3124, 32.509],
+  // bounds: [-81.392, 31.5566, -80.3124, 32.509],
   // maxBounds: [-92, 10, -62, 50],
   maxBounds: [-115, 10, -30, 50],
   styleIDs: ["light-v9", "satellite-streets-v10"],

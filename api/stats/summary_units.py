@@ -84,9 +84,10 @@ class SummaryUnits(object):
         results["blueprint_total"] = blueprint_values.sum()
 
         results["analysis_acres"] = blueprint.shape_mask
-        results["analysis_remainder"] = (
-            blueprint.shape_mask - results["blueprint_total"]
-        )
+
+        remainder = abs(blueprint.shape_mask - results["blueprint_total"])
+        # there are small rounding errors
+        results["analysis_remainder"] = remainder if remainder >= 1 else 0
 
         results["corridors"] = [
             getattr(blueprint, c) for c in blueprint.index if c.startswith("corridors_")

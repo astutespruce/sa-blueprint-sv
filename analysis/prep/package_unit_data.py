@@ -98,6 +98,7 @@ for i, id in enumerate(INDICATOR_INDEX.keys()):
 # dropping any that are not present in a given record
 indicators = (
     pd.DataFrame(indicators)
+    .fillna("")
     .apply(lambda g: ",".join((f"{k}:{v}" for k, v in g.items() if v)), axis=1)
     .rename("indicators")
 )
@@ -119,12 +120,14 @@ indicator_avgs = (
 
 blueprint_df = (
     blueprint[["shape_mask"]]
+    .round()
+    .astype("uint")
     .join(blueprint_total.round().astype("uint"))
     .join(blueprint_percent)
     .join(corridors_percent)
     .join(indicators)
     .join(indicator_avgs)
-)
+).fillna("")
 
 
 ### Convert SLR and urban to integer acres, and delta encode
@@ -264,6 +267,7 @@ for i, id in enumerate(INDICATOR_INDEX.keys()):
 # dropping any that are not present in a given record
 indicators = (
     pd.DataFrame(indicators)
+    .fillna("")
     .apply(lambda g: ",".join((f"{k}:{v}" for k, v in g.items() if v)), axis=1)
     .rename("indicators")
 )
@@ -285,6 +289,8 @@ indicator_avgs = (
 
 blueprint_df = (
     blueprint[["shape_mask"]]
+    .round()
+    .astype("uint")
     .join(blueprint_total.round().astype("uint"))
     .join(blueprint_percent)
     .join(corridors_percent)

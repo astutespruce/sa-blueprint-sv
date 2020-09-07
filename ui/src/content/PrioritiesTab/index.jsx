@@ -34,12 +34,9 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
   const priorityCategories = extractNodes(query.allBlueprintJson)
   const corridorCategories = extractNodes(query.allCorridorsJson)
 
-  console.log("corridor categories", corridorCategories, corridors)
-
   const chartWidth = 200
 
   const blueprintChartData = blueprint
-    .slice()
     .map((percent, i) => ({
       value: percent,
       ...priorityCategories[i],
@@ -47,9 +44,19 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
     .filter(({ value }) => value > 0)
     .reverse()
 
-  const corridorChartData = corridors
-    .slice()
+  const blueprintTotal = sum(blueprint)
+  let remainder = 0
 
+  if (blueprintTotal < 100) {
+    remainder = 100 - blueprintTotal
+    blueprintChartData.push({
+      value: remainder,
+      color: "#EEE",
+      label: "Area outside South Atlantic Blueprint",
+    })
+  }
+
+  const corridorChartData = corridors
     .map((percent, i) => ({
       value: percent,
       ...corridorCategories[i],
@@ -59,11 +66,19 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
 
   const corridorsTotal = sum(corridors)
 
-  if (corridorsTotal < 100) {
+  if (corridorsTotal < 100 - remainder) {
     corridorChartData.push({
-      value: 100 - corridorsTotal,
+      value: 100 - remainder - corridorsTotal,
       color: "#ffebc2",
       label: "Not a hub or corridor",
+    })
+  }
+
+  if (remainder > 0) {
+    corridorChartData.push({
+      value: remainder,
+      color: "#EEE",
+      label: "Area outside South Atlantic Blueprint",
     })
   }
 
@@ -101,7 +116,7 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
                 radius={chartWidth / 4 - 2}
                 style={{
                   width: chartWidth,
-                  flex: "0 1 auto",
+                  flex: "0 0 auto",
                 }}
               />
 
