@@ -1,38 +1,19 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { graphql, useStaticQuery } from "gatsby"
-import { Box, Flex, Text } from "theme-ui"
+import { Text } from "theme-ui"
 
 import { PercentBarChart } from "components/chart"
+import { useOwnership } from "components/data"
 import { OutboundLink } from "components/link"
-import { extractNodes } from "util/graphql"
-import { sortByFunc, sum } from "util/data"
+import { sum } from "util/data"
 
-const Protection = ({ analysisAcres, protection }) => {
-  const query = useStaticQuery(graphql`
-    query {
-      allProtectionJson(sort: { fields: value, order: DESC }) {
-        edges {
-          node {
-            id: value
-            label
-            color
-          }
-        }
-      }
-    }
-  `).allProtectionJson
+const Protection = ({ protection }) => {
+  const { protection: PROTECTION } = useOwnership()
 
-  const categories = extractNodes(query)
-
-  const bars = categories
-    .filter(({ id }) => protection[id])
-    .map(category => ({
-      ...category,
-      percent: (100 * protection[category.id]) / analysisAcres,
-    }))
-
-  bars.sort(sortByFunc("percent", false))
+  const bars = PROTECTION.filter(({ id }) => protection[id]).map(category => ({
+    ...category,
+    percent: protection[category.id],
+  }))
 
   const remainder = 100 - sum(bars.map(({ percent }) => percent))
   if (remainder > 0) {
@@ -66,8 +47,7 @@ const Protection = ({ analysisAcres, protection }) => {
 }
 
 Protection.propTypes = {
-  analysisAcres: PropTypes.number.isRequired,
-  protection: PropTypes.objectOf(PropTypes.number),
+  protection: PropTypes.objectOf(PropTypes.number).isRequired,
 }
 
 export default Protection

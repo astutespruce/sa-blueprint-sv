@@ -70,8 +70,8 @@ PartnersTab.propTypes = {
 }
 
 PartnersTab.defaultProps = {
-  ownershipAcres: null,
-  protectionAcres: null,
+  ownership: null,
+  protection: null,
   counties: null,
 }
 

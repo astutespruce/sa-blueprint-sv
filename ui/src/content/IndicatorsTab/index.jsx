@@ -1,9 +1,8 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { graphql, useStaticQuery } from "gatsby"
 
+import { useIndicators } from "components/data"
 import { indexBy, sum, percentsToAvg } from "util/data"
-import { extractNodes } from "util/graphql"
 
 import EcosystemList from "./EcosystemList"
 
@@ -12,47 +11,14 @@ const IndicatorsTab = ({
   analysisAcres,
   blueprintAcres,
 }) => {
-  const query = useStaticQuery(graphql`
-    query {
-      ecosystems: allEcosystemsJson {
-        edges {
-          node {
-            id
-            label
-            color
-            borderColor
-            indicators
-          }
-        }
-      }
-      indicators: allIndicatorsJson {
-        edges {
-          node {
-            id
-            label
-            datasetID
-            description
-            units
-            domain
-            continuous
-            goodThreshold
-            values {
-              value
-              label
-            }
-          }
-        }
-      }
-    }
-  `)
+  const { ecosystems: ECOSYSTEMS, indicators: INDICATORS } = useIndicators()
 
   // retrieve indicator results by original index
   const indicators = indexBy(
-    extractNodes(query.indicators)
-      .map((indicator, i) => ({
-        ...indicator,
-        index: i,
-      }))
+    INDICATORS.map((indicator, i) => ({
+      ...indicator,
+      index: i,
+    }))
       .filter((_, i) => rawIndicators[i] !== undefined)
       .map(({ index, ...indicator }) => {
         const { percent, avg = null } = rawIndicators[index]
@@ -88,39 +54,39 @@ const IndicatorsTab = ({
 
   // Aggregate ecosystems and indicators into a nested data structure
   // ONLY for ecosystems that have indicators present
-  const ecosystems = extractNodes(query.ecosystems)
-    .filter(({ id }) => ecosystemsPresent.has(id))
-    .map(
-      ({
+  const ecosystems = ECOSYSTEMS.filter(({ id }) =>
+    ecosystemsPresent.has(id)
+  ).map(
+    ({
+      id: ecosystemId,
+      label,
+      color,
+      borderColor,
+      indicators: ecosystemIndicators,
+      ...rest
+    }) => {
+      const indicatorsPresent = ecosystemIndicators
+        .map(indicatorId => `${ecosystemId}_${indicatorId}`)
+        .filter(indicatorId => indicators[indicatorId])
+
+      return {
+        ...rest,
         id: ecosystemId,
         label,
         color,
         borderColor,
-        indicators: ecosystemIndicators,
-        ...rest
-      }) => {
-        const indicatorsPresent = ecosystemIndicators
-          .map(indicatorId => `${ecosystemId}_${indicatorId}`)
-          .filter(indicatorId => indicators[indicatorId])
-
-        return {
-          ...rest,
-          id: ecosystemId,
-          label,
-          color,
-          borderColor,
-          indicators: indicatorsPresent.map(indicatorId => ({
-            ...indicators[indicatorId],
-            ecosystem: {
-              id: ecosystemId,
-              label,
-              color,
-              borderColor,
-            },
-          })),
-        }
+        indicators: indicatorsPresent.map(indicatorId => ({
+          ...indicators[indicatorId],
+          ecosystem: {
+            id: ecosystemId,
+            label,
+            color,
+            borderColor,
+          },
+        })),
       }
-    )
+    }
+  )
 
   console.log("ecosystems", ecosystems)
 

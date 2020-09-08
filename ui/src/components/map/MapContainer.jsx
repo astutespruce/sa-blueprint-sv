@@ -164,6 +164,8 @@ const MapContainer = () => {
           <PartnersTab
             unitType={unitType}
             analysisAcres={unitAcres}
+            ownership={ownership}
+            protection={protection}
             counties={counties}
           />
         )
@@ -187,12 +189,15 @@ const MapContainer = () => {
           height: "100%",
           flex: "1 1 auto",
           overflowY: "hidden",
+          position: "relative",
         }}
       >
         <Flex
           sx={{
             display: content === null ? "none !important" : "flex",
             height: "100%",
+            bg: "#FFF",
+            zIndex: 1000,
             flexGrow: 1,
             flexShrink: 0,
             flexBasis: layout.sidebar.width,

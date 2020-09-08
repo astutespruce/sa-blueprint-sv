@@ -1,48 +1,28 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { graphql, useStaticQuery } from "gatsby"
+
 import { PieChart } from "react-minimal-pie-chart"
 import { Box, Flex, Divider, Heading, Text } from "theme-ui"
 
 import { PieChartLegend } from "components/chart"
+import { useBlueprintPriorities, useCorridors } from "components/data"
 
-import { extractNodes } from "util/graphql"
 import { sum } from "util/data"
 
 const PrioritiesTab = ({ blueprint, corridors }) => {
-  const query = useStaticQuery(graphql`
-    query {
-      allBlueprintJson(sort: { fields: value, order: ASC }) {
-        edges {
-          node {
-            color
-            label
-          }
-        }
-      }
-      allCorridorsJson(sort: { fields: value, order: ASC }) {
-        edges {
-          node {
-            label
-            color
-          }
-        }
-      }
-    }
-  `)
-
-  const priorityCategories = extractNodes(query.allBlueprintJson)
-  const corridorCategories = extractNodes(query.allCorridorsJson)
+  const { all: priorityCategories } = useBlueprintPriorities()
+  const corridorCategories = useCorridors()
 
   const chartWidth = 200
 
   const blueprintChartData = blueprint
+    .slice()
+    .reverse()
     .map((percent, i) => ({
       value: percent,
       ...priorityCategories[i],
     }))
     .filter(({ value }) => value > 0)
-    .reverse()
 
   const blueprintTotal = sum(blueprint)
   let remainder = 0
@@ -52,7 +32,7 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
     blueprintChartData.push({
       value: remainder,
       color: "#EEE",
-      label: "Area outside South Atlantic Blueprint",
+      label: "Outside South Atlantic Blueprint",
     })
   }
 
@@ -78,7 +58,7 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
     corridorChartData.push({
       value: remainder,
       color: "#EEE",
-      label: "Area outside South Atlantic Blueprint",
+      label: "Outside South Atlantic Blueprint",
     })
   }
 

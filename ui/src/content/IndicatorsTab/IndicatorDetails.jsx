@@ -49,7 +49,7 @@ const IndicatorDetails = ({
   if (remainder >= 1) {
     percentTableValues.push({
       value: null,
-      label: "Area outside South Atlantic Blueprint",
+      label: "Outside South Atlantic Blueprint",
       percent: remainder,
     })
   }

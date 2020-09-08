@@ -1,38 +1,20 @@
 import React from "react"
 import PropTypes from "prop-types"
-import { graphql, useStaticQuery } from "gatsby"
-import { Box, Flex, Text } from "theme-ui"
+import { Text } from "theme-ui"
 
 import { PercentBarChart } from "components/chart"
+import { useOwnership } from "components/data"
 import { OutboundLink } from "components/link"
-import { extractNodes } from "util/graphql"
-import { sortByFunc, sum } from "util/data"
 
-const Ownership = ({ analysisAcres, ownership }) => {
-  const query = useStaticQuery(graphql`
-    query {
-      allOwnershipJson(sort: { fields: value, order: DESC }) {
-        edges {
-          node {
-            id: value
-            label
-            color
-          }
-        }
-      }
-    }
-  `).allOwnershipJson
+import { sum } from "util/data"
 
-  const categories = extractNodes(query)
+const Ownership = ({ ownership }) => {
+  const { ownership: OWNERSHIP } = useOwnership()
 
-  const bars = categories
-    .filter(({ id }) => ownership[id])
-    .map(category => ({
-      ...category,
-      percent: (100 * ownership[category.id]) / analysisAcres,
-    }))
-
-  bars.sort(sortByFunc("percent", false))
+  const bars = OWNERSHIP.filter(({ id }) => ownership[id]).map(category => ({
+    ...category,
+    percent: ownership[category.id],
+  }))
 
   const remainder = 100 - sum(bars.map(({ percent }) => percent))
   if (remainder > 0) {
@@ -66,8 +48,7 @@ const Ownership = ({ analysisAcres, ownership }) => {
 }
 
 Ownership.propTypes = {
-  analysisAcres: PropTypes.number.isRequired,
-  ownership: PropTypes.objectOf(PropTypes.number),
+  ownership: PropTypes.objectOf(PropTypes.number).isRequired,
 }
 
 export default Ownership

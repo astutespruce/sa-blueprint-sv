@@ -1,30 +1,11 @@
 import React from "react"
-import { useStaticQuery, graphql } from "gatsby"
+
 import { Box, Flex, Heading, Text } from "theme-ui"
 
-import { extractNodes } from "util/graphql"
+import { useBlueprintPriorities } from "components/data"
 
 const Blueprint = () => {
-  const query = useStaticQuery(graphql`
-    query {
-      allBlueprintJson(
-        filter: { value: { gt: 0 } }
-        sort: { fields: value, order: DESC }
-      ) {
-        edges {
-          node {
-            color
-            label
-            labelColor
-            percent
-            description
-          }
-        }
-      }
-    }
-  `).allBlueprintJson
-
-  const priorities = extractNodes(query)
+  const { priorities } = useBlueprintPriorities()
 
   return (
     <Box as="section" sx={{ mt: "2rem" }}>

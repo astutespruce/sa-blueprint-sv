@@ -1,15 +1,17 @@
-import React, { useEffect, useRef } from "react"
-import PropTypes from "prop-types"
+import React, { useEffect, useRef, useState } from "react"
 import mapboxgl from "mapbox-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
-import { Box } from "theme-ui"
+import { Box, Text } from "theme-ui"
 
+import { useBlueprintPriorities } from "components/data"
 import { useBreakpoints, useSelectedUnit } from "components/layout"
 
 import { hasWindow } from "util/dom"
 import { getCenterAndZoom } from "./util"
 import { config, sources, layers } from "./config"
 import { unpackFeatureData } from "./features"
+import { LegendContainer } from "./legend"
+import ZoomInNote from "./ZoomInNote"
 import { siteMetadata } from "../../../gatsby-config"
 
 const { mapboxToken } = siteMetadata
@@ -27,7 +29,7 @@ const mapWidgetCSS = {
   },
 }
 
-const Map = ({}) => {
+const Map = () => {
   // if there is no window, we cannot render this component
   if (!hasWindow) {
     return null
@@ -37,10 +39,16 @@ const Map = ({}) => {
   const mapRef = useRef(null)
   const mapLoadedRef = useRef(false)
   const highlightIDRef = useRef(null)
+  const [zoom, setZoom] = useState(null)
 
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
   const { selectedUnit, selectUnit } = useSelectedUnit()
+
+  const { priorities } = useBlueprintPriorities()
+  const legend = [
+    { id: "blueprint", label: "Blueprint Priority", elements: priorities },
+  ]
 
   useEffect(() => {
     const { bounds, maxBounds, minZoom, maxZoom, styleIDs } = config
@@ -90,8 +98,9 @@ const Map = ({}) => {
       mapLoadedRef.current = true
     })
 
-    // hook up map events here, such as click, mouseenter, mouseleave
-    // e.g., map.on('click', (e) => {})
+    map.on("zoomend", () => {
+      setZoom(mapRef.current.getZoom())
+    })
 
     map.on("click", "unit-fill", ({ features }) => {
       if (!(features && features.length > 0)) return
@@ -159,10 +168,25 @@ const Map = ({}) => {
         height: "100%",
         flex: "1 1 auto",
         position: "relative",
-        ...mapWidgetCSS,
       }}
     >
-      <div ref={mapNode} style={{ width: "100%", height: "100%" }} />
+      <Box
+        sx={{
+          bottom: 0,
+          top: 0,
+          left: 0,
+          right: 0,
+
+          position: "absolute",
+          ...mapWidgetCSS,
+        }}
+      >
+        <div ref={mapNode} style={{ width: "100%", height: "100%" }} />
+
+        <LegendContainer legend={legend} />
+
+        <ZoomInNote isVisible={zoom < 8} isMobile={isMobile} />
+      </Box>
     </Box>
   )
 }

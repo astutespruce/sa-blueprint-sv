@@ -16,9 +16,8 @@ const MobileInstructions = () => (
       of summary information available.
       <br />
       <br />
-      On the Indicators tab, you can swipe between ecosystems or click on an
-      ecosystem icon to see the average value for each indicator present in that
-      area. Tap or click on an indicator to see more details.
+      On the Indicators tab, you can see the average value for each indicator
+      present in that area.
       <br />
       <br />
       {/* TODO: */}
