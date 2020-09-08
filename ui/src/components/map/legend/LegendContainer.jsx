@@ -1,36 +1,66 @@
 import React, { memo, useState, useCallback } from "react"
 import PropTypes from "prop-types"
-import { dequal as deepEqual } from "dequal"
 import { Box, Text } from "theme-ui"
+
+import { useBlueprintPriorities } from "components/data"
 
 import Legend from "./Legend"
 
-const LegendContainer = ({ legend }) => {
+const coreCSS = { position: "absolute", color: "grey.8", bg: "#FFF" }
+
+const desktopCSS = {
+  cursor: "pointer",
+  bottom: ["40px", "40px", "24px"],
+  right: "10px",
+  borderRadius: "0.25rem",
+  boxShadow: "2px 2px 6px #333",
+  maxWidth: "200px",
+}
+const mobileCSS = {
+  bottom: 0,
+  left: 0,
+  right: 0,
+  borderTop: "1px solid",
+  borderTopColor: "grey.7",
+}
+
+const LegendContainer = ({ isMobile }) => {
   const [isOpen, setIsOpen] = useState(true)
 
   const handleClick = useCallback(() => {
+    if (isMobile) {
+      return
+    }
     setIsOpen(prevIsOpen => !prevIsOpen)
   }, [])
+
+  const { priorities } = useBlueprintPriorities()
+  const legend = [
+    {
+      id: "blueprint",
+      label: "Blueprint Priority",
+      elements: isMobile
+        ? priorities.map(({ label, ...rest }) => ({
+            ...rest,
+            label: label.replace(" priority", ""),
+          }))
+        : priorities,
+    },
+  ]
+  const legendCSS = isMobile ? mobileCSS : desktopCSS
 
   return (
     <Box
       sx={{
-        position: "absolute",
-        bottom: "24px",
-        right: "10px",
-        bg: "#FFF",
-        borderRadius: "0.25rem",
-        boxShadow: "2px 2px 6px #333",
-        maxWidth: "200px",
-        color: "grey.8",
-        cursor: "pointer",
+        ...coreCSS,
+        ...legendCSS,
       }}
       onClick={handleClick}
     >
       {isOpen ? (
         <Box
           sx={{
-            p: "1rem",
+            p: isMobile ? "0.5rem" : "1rem",
           }}
           title="Click to hide legend"
         >
@@ -47,7 +77,7 @@ const LegendContainer = ({ legend }) => {
                 />
               ) : null}
               <Box key={legend.id}>
-                <Legend {...group} />
+                <Legend {...group} isMobile={isMobile} />
               </Box>
             </React.Fragment>
           ))}
@@ -60,10 +90,12 @@ const LegendContainer = ({ legend }) => {
 }
 
 LegendContainer.propTypes = {
-  legend: PropTypes.arrayOf(PropTypes.shape(Legend.propTypes)).isRequired,
+  isMobile: PropTypes.bool,
 }
 
-// Only render legend container if underlying values actually changed
-export default memo(LegendContainer, (prev, next) => {
-  return deepEqual(prev, next)
-})
+LegendContainer.defaultProps = {
+  isMobile: false,
+}
+
+// TODO: memoize
+export default LegendContainer

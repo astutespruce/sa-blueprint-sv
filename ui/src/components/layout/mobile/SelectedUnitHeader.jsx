@@ -13,6 +13,7 @@ const SelectedUnitHeader = ({ name, onClose }) => {
         alignItems: "center",
         p: "0.25rem",
         lineHeight: 1.2,
+        minHeight: "3rem",
       }}
     >
       <Text sx={{ pr: "0.5rem", fontSize: 2 }}>{name}</Text>

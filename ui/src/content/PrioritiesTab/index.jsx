@@ -96,7 +96,7 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
                 radius={chartWidth / 4 - 2}
                 style={{
                   width: chartWidth,
-                  flex: "0 0 auto",
+                  flex: "0 1 auto",
                 }}
               />
 

@@ -237,7 +237,9 @@ const MapContainer = () => {
           </Box>
         </Flex>
 
-        <Map />
+        <Map
+          isVisible={isMobile ? tab === "map" || tab === "unit-map" : true}
+        />
       </Flex>
 
       {/* Mobile footer tabs */}

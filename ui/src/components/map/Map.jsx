@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react"
+import PropTypes from "prop-types"
 import mapboxgl from "mapbox-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
-import { Box, Text } from "theme-ui"
+import { Box } from "theme-ui"
 
-import { useBlueprintPriorities } from "components/data"
 import { useBreakpoints, useSelectedUnit } from "components/layout"
 
 import { hasWindow } from "util/dom"
@@ -27,9 +27,15 @@ const mapWidgetCSS = {
   ".mapboxgl-ctrl-zoom-in, .mapboxgl-ctrl-zoom-out, .mapboxgl-ctrl-compass": {
     display: ["none", "inherit"],
   },
+  ".mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right": {
+    bottom: ["3rem", 0],
+  },
+  "mapboxgl-canvas": {
+    outline: "none",
+  },
 }
 
-const Map = () => {
+const Map = ({ isVisible }) => {
   // if there is no window, we cannot render this component
   if (!hasWindow) {
     return null
@@ -44,11 +50,6 @@ const Map = () => {
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
   const { selectedUnit, selectUnit } = useSelectedUnit()
-
-  const { priorities } = useBlueprintPriorities()
-  const legend = [
-    { id: "blueprint", label: "Blueprint Priority", elements: priorities },
-  ]
 
   useEffect(() => {
     const { bounds, maxBounds, minZoom, maxZoom, styleIDs } = config
@@ -168,27 +169,28 @@ const Map = () => {
         height: "100%",
         flex: "1 1 auto",
         position: "relative",
+        outline: "none",
+        ...mapWidgetCSS,
       }}
     >
-      <Box
-        sx={{
-          bottom: 0,
-          top: 0,
-          left: 0,
-          right: 0,
+      <div ref={mapNode} style={{ width: "100%", height: "100%" }} />
 
-          position: "absolute",
-          ...mapWidgetCSS,
-        }}
-      >
-        <div ref={mapNode} style={{ width: "100%", height: "100%" }} />
-
-        <LegendContainer legend={legend} />
-
-        <ZoomInNote isVisible={zoom < 8} isMobile={isMobile} />
-      </Box>
+      {isVisible ? (
+        <>
+          <LegendContainer isMobile={isMobile} />
+          <ZoomInNote isVisible={zoom < 8} isMobile={isMobile} />
+        </>
+      ) : null}
     </Box>
   )
+}
+
+Map.propTypes = {
+  isVisible: PropTypes.bool,
+}
+
+Map.defaultProps = {
+  isVisible: true,
 }
 
 export default Map

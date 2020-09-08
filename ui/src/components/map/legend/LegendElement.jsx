@@ -7,7 +7,6 @@ const LegendElement = ({ label, type, color, outlineColor, outlineWidth }) => {
     <Flex
       sx={{
         alignItems: "flex-start",
-        fontSize: 1,
         lineHeight: 1,
       }}
     >
