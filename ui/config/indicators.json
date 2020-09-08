@@ -390,13 +390,8 @@
     "label": "Maritime forest extent",
     "values": [
       {
-        "value": 0,
-        "label": "Not currently maritime forest (within extent of maritime forest ecosystem)",
-        "color": null
-      },
-      {
         "value": 1,
-        "label": "Currently maritime forest (within extent of maritime forest ecosystem)",
+        "label": "Currently maritime forest",
         "color": "#00E6A9"
       }
     ],
@@ -410,13 +405,8 @@
     "label": "Marsh extent",
     "values": [
       {
-        "value": 0,
-        "label": "Not currently freshwater marsh (within extent of freshwater marsh ecosystem)",
-        "color": null
-      },
-      {
         "value": 1,
-        "label": "Currently freshwater marsh (within extent of freshwater marsh ecosystem)",
+        "label": "Freshwater or saltwater marsh",
         "color": "#5C8945"
       }
     ],

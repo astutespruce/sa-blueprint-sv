@@ -32,7 +32,7 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
           .filter(({ value }) => value !== null)
           .map(({ value, label, percent, isHighValue, isLowValue }) => (
             <Flex
-              key={value}
+              key={value || label}
               sx={{
                 alignItems: isLowValue ? "flex-end" : "flex-start",
                 "&:not(:first-of-type)": { mt: "1rem" },

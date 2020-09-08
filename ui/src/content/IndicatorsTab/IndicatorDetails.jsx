@@ -37,20 +37,20 @@ const IndicatorDetails = ({
     }))
     .reverse()
 
-  if (remainder >= 1) {
-    percentTableValues.push({
-      value: null,
-      label: "Area outside South Atlantic Blueprint",
-      percent: remainder,
-    })
-  }
-
   // remainder value for areas not analyzed for this indicator
   if (total + remainder < 100) {
     percentTableValues.push({
       value: null,
       label: "Not evaluated for this indicator",
       percent: 100 - total - remainder,
+    })
+  }
+
+  if (remainder >= 1) {
+    percentTableValues.push({
+      value: null,
+      label: "Area outside South Atlantic Blueprint",
+      percent: remainder,
     })
   }
 
