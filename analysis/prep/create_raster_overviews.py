@@ -26,15 +26,15 @@ urban_dir = src_dir / "threats/urban"
 slr_dir = src_dir / "threats/slr"
 
 
-# for filename in [blueprint_filename, corridors_filename]:
-#     print(f"Processing {filename.name}...")
-#     with rasterio.open(filename, "r+") as src:
-#         src.build_overviews(factors, Resampling.nearest)
+for filename in [blueprint_filename, corridors_filename]:
+    print(f"Processing {filename.name}...")
+    with rasterio.open(filename, "r+") as src:
+        src.build_overviews(factors, Resampling.nearest)
 
-# for year in URBAN_YEARS:
-#     print(f"Processing urban {year}...")
-#     with rasterio.open(urban_dir / f"urb_indexed_{year}.tif", "r+") as src:
-#         src.build_overviews(factors, Resampling.nearest)
+for year in URBAN_YEARS:
+    print(f"Processing urban {year}...")
+    with rasterio.open(urban_dir / f"urb_indexed_{year}.tif", "r+") as src:
+        src.build_overviews(factors, Resampling.nearest)
 
 
 for indicator in INDICATORS:

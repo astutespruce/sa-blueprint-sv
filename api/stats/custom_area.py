@@ -62,7 +62,6 @@ class CustomArea(object):
             return None
 
         counts = blueprint["counts"]
-        means = blueprint["means"]
 
         blueprint_total = counts["blueprint"].sum()
 
@@ -101,9 +100,6 @@ class CustomArea(object):
                     results[f"{id}_good_total"] = values[
                         indicator["goodThreshold"] :
                     ].sum()
-
-                if id in means:
-                    results[f"{id}_avg"] = means[id]
 
         results["indicators"] = indicators
 

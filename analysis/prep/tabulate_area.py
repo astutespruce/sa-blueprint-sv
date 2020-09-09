@@ -261,7 +261,9 @@ index = []
 for id, geometry in Bar(
     "Calculating Blueprint and Indicator counts for marine blocks", max=len(geometries)
 ).iter(geometries.iteritems()):
-    zone_results = extract_blueprint_indicator_area([to_dict(geometry)], inland=False)
+    zone_results = extract_blueprint_indicator_area(
+        [to_dict(geometry)], inland=False, zonal_means=True
+    )
     if zone_results is None:
         continue
 

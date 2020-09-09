@@ -16,6 +16,7 @@ from analysis.constants import (
 
 src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
+continuous_indicator_dir = Path("data/continuous_indicators")
 indicators_mask_dir = indicators_dir / "masks"
 blueprint_filename = src_dir / "Blueprint2020.tif"
 corridors_filename = src_dir / "corridors.tif"
@@ -130,7 +131,7 @@ def detect_indicators(geometries, indicators):
     return indicators_with_data
 
 
-def extract_blueprint_indicator_area(geometries, inland=True):
+def extract_blueprint_indicator_area(geometries, inland=True, zonal_means=False):
     """Calculate the area of overlap between geometries and Blueprint, indicators,
     and corridors.
 
@@ -141,6 +142,8 @@ def extract_blueprint_indicator_area(geometries, inland=True):
     geometries : list-like of geometry objects that provide __geo_interface__
     inland : bool (default False)
         if False will use only marine indicators
+    zonal_means : bool (default False)
+        if True, results will include zonal means of continuous indicators
 
     Returns
     -------
@@ -219,10 +222,10 @@ def extract_blueprint_indicator_area(geometries, inland=True):
             (counts * cellsize).round(ACRES_PRECISION).astype("float32")
         )
 
-        if indicator.get("continuous"):
-            continuous_filename = indicators_dir / indicator["filename"].replace(
-                "_Binned", ""
-            )
+        if zonal_means and indicator.get("continuous"):
+            continuous_filename = continuous_indicator_dir / indicator[
+                "filename"
+            ].replace("_Binned", "")
             mean = extract_zonal_mean(continuous_filename, geometry_mask, window)
             if mean is not None:
                 results["means"][id] = mean

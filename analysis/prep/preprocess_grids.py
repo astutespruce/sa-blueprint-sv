@@ -23,7 +23,7 @@ data[data > 60] = 60
 # round up to nearest foot
 data = np.round(data / 10, 0).astype("int8")
 
-with rasterio.open(src_dir / "threats" / "slr_binned.tif", "w", **src.meta) as out:
+with rasterio.open(out_dir / "threats/slr" / "slr_binned.tif", "w", **src.meta) as out:
     out.write(data, 1)
 
 
@@ -50,9 +50,10 @@ for year in URBAN_YEARS:
 
         meta = src.meta.copy()
         meta["dtype"] = "uint8"
+        meta["compress"] = "lzw"
 
         with rasterio.open(
-            src_dir / "threats" / f"urb_indexed_{year}.tif", "w", **meta
+            out_dir / "threats/urban" / f"urb_indexed_{year}.tif", "w", **meta
         ) as out:
             out.write(data.astype("uint8"), 1)
 
