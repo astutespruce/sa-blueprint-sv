@@ -1,4 +1,4 @@
-import React from "react"
+import React, { memo } from "react"
 import PropTypes from "prop-types"
 import { Box, Text } from "theme-ui"
 
@@ -39,4 +39,4 @@ ZoomInNote.defaultProps = {
   isPixelMode: false,
 }
 
-export default ZoomInNote
+export default memo(ZoomInNote)

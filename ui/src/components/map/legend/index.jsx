@@ -1,5 +1,3 @@
-import LegendContainer from './LegendContainer'
-import Legend from './Legend'
-import LegendElement from './LegendElement'
+import Legend from "./Legend"
 
-export { LegendContainer, Legend, LegendElement }
+export { Legend }

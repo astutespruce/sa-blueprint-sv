@@ -10,8 +10,10 @@ import { hasWindow } from "util/dom"
 import { getCenterAndZoom } from "./util"
 import { config, sources, layers } from "./config"
 import { unpackFeatureData } from "./features"
-import { LegendContainer } from "./legend"
+import { Legend } from "./legend"
 import ZoomInNote from "./ZoomInNote"
+import StyleToggle from "./StyleToggle"
+import LegendPortal from "./legend/Legend"
 import { siteMetadata } from "../../../gatsby-config"
 
 const { mapboxToken } = siteMetadata
@@ -26,9 +28,6 @@ if (!mapboxToken) {
 const mapWidgetCSS = {
   ".mapboxgl-ctrl-zoom-in, .mapboxgl-ctrl-zoom-out, .mapboxgl-ctrl-compass": {
     display: ["none", "inherit"],
-  },
-  ".mapboxgl-ctrl-bottom-left, .mapboxgl-ctrl-bottom-right": {
-    bottom: ["3rem", 0],
   },
   "mapboxgl-canvas": {
     outline: "none",
@@ -52,7 +51,7 @@ const Map = ({ isVisible }) => {
   const { selectedUnit, selectUnit } = useSelectedUnit()
 
   useEffect(() => {
-    const { bounds, maxBounds, minZoom, maxZoom, styleIDs } = config
+    const { bounds, maxBounds, minZoom, maxZoom } = config
     const { center, zoom } = getCenterAndZoom(mapNode.current, bounds, 0.1)
 
     // Token must be set before constructing map
@@ -60,7 +59,7 @@ const Map = ({ isVisible }) => {
 
     const map = new mapboxgl.Map({
       container: mapNode.current,
-      style: `mapbox://styles/mapbox/${styleIDs[0]}`,
+      style: "mapbox://styles/mapbox/light-v9",
       center,
       zoom,
       minZoom,
@@ -73,16 +72,6 @@ const Map = ({ isVisible }) => {
     if (!isMobile) {
       map.addControl(new mapboxgl.NavigationControl(), "top-right")
     }
-
-    // if (styles.length > 1) {
-    //   map.addControl(
-    //     new StyleSelector({
-    //       styles,
-    //       token: mapboxToken,
-    //     }),
-    //     'bottom-left'
-    //   )
-    // }
 
     map.on("load", () => {
       console.log("map onload")
@@ -107,19 +96,20 @@ const Map = ({ isVisible }) => {
       if (!(features && features.length > 0)) return
 
       const { id: selectedId, properties } = features[0]
-      console.log("selectedID", selectedId, properties.id, properties)
 
+      // highlight selected
       map.setFilter("unit-outline-highlight", ["==", "id", properties.id])
 
       selectUnit(unpackFeatureData(features[0].properties))
     })
 
-    // Highlight features under mouse and remove previously highlighted ones
-    // TODO: can we do this with just the first feature highlighted and avoid set comparison?
+    // Highlight units on mouseover
     map.on("mousemove", "unit-fill", ({ features }) => {
       map.getCanvas().style.cursor = "pointer"
 
-      if (!(features && features.length > 0)) return
+      if (!(features && features.length > 0)) {
+        return
+      }
 
       const { id } = features[0]
 
@@ -177,8 +167,14 @@ const Map = ({ isVisible }) => {
 
       {isVisible ? (
         <>
-          <LegendContainer isMobile={isMobile} />
+          {!isMobile ? <Legend /> : null}
           <ZoomInNote isVisible={zoom < 8} isMobile={isMobile} />
+          <StyleToggle
+            mapRef={mapRef}
+            sources={sources}
+            layers={layers}
+            isMobile={isMobile}
+          />
         </>
       ) : null}
     </Box>

@@ -1,49 +1,62 @@
-import React from "react"
-import PropTypes from "prop-types"
-import { Box, Flex, Text } from "theme-ui"
+import React, { memo, useState, useCallback } from "react"
+import { Box, Text } from "theme-ui"
 
+import { useBlueprintPriorities } from "components/data"
 import LegendElement from "./LegendElement"
 
-const desktopCSS = {
-  flexDirection: "column",
-}
+const Legend = () => {
+  const [isOpen, setIsOpen] = useState(true)
 
-const mobileCSS = {
-  alignItems: "flex-end",
-  justifyContent: "space-between",
-}
+  const handleClick = useCallback(() => {
+    setIsOpen(prevIsOpen => !prevIsOpen)
+  }, [])
 
-const Legend = ({ label, elements, isMobile }) => {
+  const { priorities } = useBlueprintPriorities()
+
   return (
-    <Box sx={{ fontSize: isMobile ? 0 : 1 }}>
-      {label ? (
-        <Text sx={{ lineHeight: 1, fontWeight: "bold" }}>{label}</Text>
-      ) : null}
-      <Flex sx={isMobile ? mobileCSS : desktopCSS}>
-        {elements.map(element => (
-          <Box
-            key={element.label}
-            sx={{
-              mt: "0.5rem",
-            }}
-          >
-            <LegendElement {...element} />
+    <Box
+      sx={{
+        position: "absolute",
+        color: "grey.8",
+        bg: "#FFF",
+        pointerEvents: "auto",
+        cursor: "pointer",
+        bottom: ["40px", "40px", "24px"],
+        right: "10px",
+        borderRadius: "0.25rem",
+        boxShadow: "2px 2px 6px #333",
+        maxWidth: "200px",
+      }}
+      onClick={handleClick}
+    >
+      {isOpen ? (
+        <Box
+          sx={{
+            p: "1rem",
+          }}
+          title="Click to hide legend"
+        >
+          <Text sx={{ fontWeight: "bold" }}>Blueprint Priority</Text>
+          <Box sx={{ fontSize: 1 }}>
+            {priorities.map(element => (
+              <Box
+                key={element.label}
+                sx={{
+                  mt: "0.5rem",
+                }}
+              >
+                <LegendElement {...element} />
+              </Box>
+            ))}
           </Box>
-        ))}
-      </Flex>
+        </Box>
+      ) : (
+        <Text sx={{ py: "0.25rem", px: "0.5rem" }}>Show Legend</Text>
+      )}
     </Box>
   )
 }
-Legend.propTypes = {
-  label: PropTypes.string,
-  elements: PropTypes.arrayOf(PropTypes.shape(LegendElement.propTypes))
-    .isRequired,
-  isMobile: PropTypes.bool,
-}
 
-Legend.defaultProps = {
-  label: null,
-  isMobile: false,
-}
+Legend.propTypes = {}
 
-export default Legend
+export default memo(Legend)

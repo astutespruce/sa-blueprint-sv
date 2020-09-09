@@ -10,7 +10,6 @@ export const config = {
   // bounds: [-81.392, 31.5566, -80.3124, 32.509],
   // maxBounds: [-92, 10, -62, 50],
   maxBounds: [-115, 10, -30, 50],
-  styleIDs: ["light-v9", "satellite-streets-v10"],
   minZoom: 4,
   maxZoom: 24,
 }
