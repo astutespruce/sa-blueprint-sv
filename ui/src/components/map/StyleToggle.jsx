@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useRef, useEffect, memo } from "react"
+import React, { useState, useCallback, useRef, memo } from "react"
 import PropTypes from "prop-types"
 import { Box, Image } from "theme-ui"
 
@@ -45,77 +45,81 @@ const styles = [
   },
 ]
 
-const StyleToggle = ({ mapRef, sources, layers, isMobile, onChange }) => {
+const StyleToggle = ({ map, sources, layers, isMobile }) => {
   const [index, setIndex] = useState(0)
   const styleRef = useRef(null)
 
-  const handleBasemapChange = useCallback(styleID => {
-    const { current: map } = mapRef
+  const handleBasemapChange = useCallback(
+    styleID => {
+      if (!map) {
+        return
+      }
 
-    // save as a ref since this might be called several times in series,
-    // and we want to make sure we grab the latest
-    styleRef.current = map.getStyle()
+      // save as a ref since this might be called several times in series,
+      // and we want to make sure we grab the latest
+      styleRef.current = map.getStyle()
 
-    const updateStyle = () => {
-      map.setStyle(`mapbox://styles/mapbox/${styleID}`)
+      const updateStyle = () => {
+        map.setStyle(`mapbox://styles/mapbox/${styleID}`)
 
-      map.once("style.load", () => {
-        const {
-          sources: styleSources,
-          layers: styleLayers,
-          metadata: { "mapbox:origin": curStyleId },
-        } = map.getStyle()
-        const layerIndex = indexBy(styleLayers, "id")
+        map.once("style.load", () => {
+          const {
+            sources: styleSources,
+            layers: styleLayers,
+            metadata: { "mapbox:origin": curStyleId },
+          } = map.getStyle()
+          const layerIndex = indexBy(styleLayers, "id")
 
-        if (curStyleId === "satellite-streets-v11") {
-          // make satellite a bit more washed out
-          map.setPaintProperty("background", "background-color", "#FFF")
-          map.setPaintProperty("satellite", "raster-opacity", 0.75)
-        }
-
-        // add sources back
-        Object.entries(sources).forEach(([id, source]) => {
-          // make sure we're not trying to reload the same style, which already has these
-          if (!styleSources[id]) {
-            map.addSource(id, source)
-          }
-        })
-
-        // add layers and reapply filters
-        layers.forEach(l => {
-          // make sure we're not trying to reload the same layers
-          if (layerIndex[l.id]) {
-            return
+          if (curStyleId === "satellite-streets-v11") {
+            // make satellite a bit more washed out
+            map.setPaintProperty("background", "background-color", "#FFF")
+            map.setPaintProperty("satellite", "raster-opacity", 0.75)
           }
 
-          const layer = { ...l }
-
-          if (l.id === "unit-outline-highlight") {
-            const [prevLyr] = styleRef.current.layers.filter(
-              ({ id }) => id === "unit-outline-highlight"
-            )
-
-            if (prevLyr) {
-              layer.filter = prevLyr.filter
+          // add sources back
+          Object.entries(sources).forEach(([id, source]) => {
+            // make sure we're not trying to reload the same style, which already has these
+            if (!styleSources[id]) {
+              map.addSource(id, source)
             }
-          }
-          map.addLayer(layer, layer.before || null)
-        })
-      })
-    }
+          })
 
-    // wait for previous to finish loading, if necessary
-    if (map.isStyleLoaded()) {
-      updateStyle()
-    } else {
-      map.once("idle", updateStyle)
-    }
-  }, [])
+          // add layers and reapply filters
+          layers.forEach(l => {
+            // make sure we're not trying to reload the same layers
+            if (layerIndex[l.id]) {
+              return
+            }
+
+            const layer = { ...l }
+
+            if (l.id === "unit-outline-highlight") {
+              const [prevLyr] = styleRef.current.layers.filter(
+                ({ id }) => id === "unit-outline-highlight"
+              )
+
+              if (prevLyr) {
+                layer.filter = prevLyr.filter
+              }
+            }
+            map.addLayer(layer, layer.before || null)
+          })
+        })
+      }
+
+      // wait for previous to finish loading, if necessary
+      if (map.isStyleLoaded()) {
+        updateStyle()
+      } else {
+        map.once("idle", updateStyle)
+      }
+    },
+    [map]
+  )
 
   const handleToggle = () => {
     setIndex(prevIndex => {
       const nextIndex = prevIndex === 0 ? 1 : 0
-      //   onChange(styles[nextIndex].id)
       handleBasemapChange(styles[nextIndex].id)
       return nextIndex
     })
@@ -136,11 +140,13 @@ const StyleToggle = ({ mapRef, sources, layers, isMobile, onChange }) => {
 }
 
 StyleToggle.propTypes = {
-  mapRef: PropTypes.shape({ current: PropTypes.object }).isRequired,
+  map: PropTypes.object,
   isMobile: PropTypes.bool,
-  //   onChange: PropTypes.func.isRequired,
 }
 
-// TODO:
-// export default memo(StyleToggle)
-export default StyleToggle
+StyleToggle.defaultProps = {
+  map: null,
+  isMobile: false,
+}
+
+export default memo(StyleToggle)

@@ -17,12 +17,13 @@ import {
   ThreatsTab,
   PartnersTab,
 } from "content"
-
 import { Tabs as MobileTabs } from "components/layout/mobile"
 import {
   SelectedUnitHeader as DesktopSelectedUnitHeader,
   Tabs as DesktopTabs,
 } from "components/layout/desktop"
+
+import { useSearch } from "components/search"
 
 import Map from "./Map"
 
@@ -30,6 +31,8 @@ const MapContainer = () => {
   const {
     theme: { layout },
   } = useThemeUI()
+
+  const { location } = useSearch()
 
   const contentNode = useRef(null)
 
@@ -41,7 +44,7 @@ const MapContainer = () => {
 
   const { selectedUnit, selectUnit, deselectUnit } = useSelectedUnit()
 
-  const [{ tab, location }, setState] = useState({
+  const [{ tab }, setState] = useState({
     tab: breakpoint === 0 ? "map" : "info",
   })
 
@@ -81,6 +84,13 @@ const MapContainer = () => {
       setState(prevState => ({ ...prevState, tab: nextTab }))
     }
   }, [breakpoint])
+
+  // if location is set in mobile view, automatically switch to map tab
+  useEffect(() => {
+    if (isMobile && location !== null && tab !== "map") {
+      setState(prevState => ({ ...prevState, tab: "map" }))
+    }
+  }, [location, selectedUnit, isMobile])
 
   const handleTabChange = useCallback(tab => {
     setState(prevState => ({

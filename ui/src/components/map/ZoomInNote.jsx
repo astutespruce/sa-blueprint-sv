@@ -1,9 +1,29 @@
-import React, { memo } from "react"
+import React, { memo, useEffect, useState } from "react"
 import PropTypes from "prop-types"
 import { Box, Text } from "theme-ui"
 
-const ZoomInNote = ({ isVisible, isMobile, isPixelMode }) => {
-  if (!isVisible) return null
+const ZoomInNote = ({ map, isMobile, isPixelMode }) => {
+  const [zoom, setZoom] = useState(0)
+
+  useEffect(() => {
+    if (!map) {
+      return
+    }
+
+    const updateZoom = () => {
+      setZoom(map.getZoom())
+    }
+
+    map.on("zoomend", updateZoom)
+
+    return () => {
+      if (!map) return
+
+      map.off("zoomend", updateZoom)
+    }
+  }, [map])
+
+  if (zoom > 8) return null
 
   return (
     <Box

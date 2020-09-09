@@ -43,10 +43,9 @@ const Map = ({ isVisible }) => {
 
   const mapNode = useRef(null)
   const mapRef = useRef(null)
-  const mapLoadedRef = useRef(false)
+  const [isLoaded, setIsLoaded] = useState(false)
   const highlightIDRef = useRef(null)
   const locationMarkerRef = useRef(null)
-  const [zoom, setZoom] = useState(null)
 
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
@@ -86,12 +85,6 @@ const Map = ({ isVisible }) => {
       layers.forEach(layer => {
         map.addLayer(layer, layer.before || null)
       })
-
-      mapLoadedRef.current = true
-    })
-
-    map.on("zoomend", () => {
-      setZoom(mapRef.current.getZoom())
     })
 
     map.on("click", "unit-fill", ({ features }) => {
@@ -140,6 +133,9 @@ const Map = ({ isVisible }) => {
       }
     })
 
+    // update state once to trigger other components to update with map object
+    setIsLoaded(() => true)
+
     // when this component is destroyed, remove the map
     return () => {
       map.remove()
@@ -147,7 +143,7 @@ const Map = ({ isVisible }) => {
   }, [])
 
   useIsEqualEffect(() => {
-    if (!mapLoadedRef.current) return
+    if (!isLoaded) return
 
     if (selectedUnit === null) {
       map.setFilter("unit-outline-highlight", ["==", "id", Infinity])
@@ -155,7 +151,7 @@ const Map = ({ isVisible }) => {
   }, [selectedUnit])
 
   useIsEqualEffect(() => {
-    if (!mapLoadedRef.current) return
+    if (!isLoaded) return
 
     if (location !== null) {
       const { current: map } = mapRef
@@ -193,9 +189,9 @@ const Map = ({ isVisible }) => {
       {isVisible ? (
         <>
           {!isMobile ? <Legend /> : null}
-          <ZoomInNote isVisible={zoom < 8} isMobile={isMobile} />
+          <ZoomInNote map={mapRef.current} isMobile={isMobile} />
           <StyleToggle
-            mapRef={mapRef}
+            map={mapRef.current}
             sources={sources}
             layers={layers}
             isMobile={isMobile}

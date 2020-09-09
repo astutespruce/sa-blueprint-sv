@@ -57,8 +57,6 @@ export const useSearch = () => {
     console.error("ERROR loading search API results", error)
   }
 
-  console.log("search data", results)
-
   return {
     query,
     setQuery,

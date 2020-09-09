@@ -1,4 +1,4 @@
-import React, { useCallback, useState, memo } from "react"
+import React, { useCallback, useEffect, useState, memo } from "react"
 import { Box } from "theme-ui"
 
 import { useSearch } from "./Provider"
@@ -51,6 +51,10 @@ const Search = () => {
     },
     [results, index]
   )
+
+  useEffect(() => {
+    setIndex(null)
+  }, [query])
 
   return (
     <Box onKeyDown={handleKeyDown}>

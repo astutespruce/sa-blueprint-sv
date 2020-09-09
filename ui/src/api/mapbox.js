@@ -30,8 +30,7 @@ export const searchPlaces = query => {
       })
     })
     .then(({ features = [] }) => {
-      console.log("got features")
-      const results = features.map(
+      return features.map(
         ({
           id,
           center: [longitude, latitude],
@@ -63,10 +62,6 @@ export const searchPlaces = query => {
           }
         }
       )
-
-      console.log("results", results)
-      return results
-      // return Promise.resolve(results)
     })
 
     .catch(error => {
