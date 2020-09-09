@@ -1,7 +1,7 @@
 import React from "react"
-import { Box, Flex, Image, Heading } from "theme-ui"
+import { Flex, Image, Heading } from "theme-ui"
 
-import { OutboundLink } from "components/link"
+import { Link } from "components/link"
 import LogoURL from "images/sa_logo.png"
 import HeaderButtons from "./HeaderButtons"
 import { useBreakpoints } from "./Breakpoints"
@@ -38,10 +38,10 @@ const Header = () => {
               alignItems: "center",
             }}
           >
-            <OutboundLink
-              to="http://www.southatlanticlcc.org/blueprint/"
+            <Link
+              to="/"
               sx={{
-                textDecoration: "none",
+                textDecoration: "none !important",
                 lineHeight: 0,
                 flex: "0 0 auto",
                 display: "block",
@@ -55,11 +55,15 @@ const Header = () => {
                   height: "2rem",
                 }}
               />
-            </OutboundLink>
+            </Link>
 
-            <OutboundLink
-              to="http://www.southatlanticlcc.org/blueprint/"
-              sx={{ textDecoration: "none", display: "block", color: "#FFF" }}
+            <Link
+              to="/"
+              sx={{
+                textDecoration: "none !important",
+                display: "block",
+                color: "#FFF",
+              }}
             >
               <Flex
                 sx={{
@@ -112,7 +116,7 @@ const Header = () => {
                   Simple Viewer
                 </Heading>
               </Flex>
-            </OutboundLink>
+            </Link>
           </Flex>
           {breakpoint >= 1 && <HeaderButtons />}
         </>

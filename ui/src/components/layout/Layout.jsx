@@ -3,6 +3,7 @@ import PropTypes from "prop-types"
 import { Box, Flex } from "theme-ui"
 import { useErrorBoundary } from "use-error-boundary"
 
+import { Provider as SearchProvider } from "components/search"
 import { isUnsupported } from "util/dom"
 import ErrorMessage from "./ErrorMessage"
 import UnsupportedBrowser from "./UnsupportedBrowser"
@@ -18,26 +19,28 @@ const Layout = ({ children, title, overflowY }) => {
   return (
     <BreakpointProvider>
       <SelectedUnitProvider>
-        <Flex
-          sx={{
-            height: "100%",
-            flexDirection: "column",
-          }}
-        >
-          <SEO title={title || siteMetadata.title} />
-          <Header />
-          {isUnsupported ? (
-            <UnsupportedBrowser />
-          ) : (
-            <Box sx={{ flex: "1 1 auto", overflowY, height: "100%" }}>
-              {didCatch ? (
-                <ErrorMessage />
-              ) : (
-                <ErrorBoundary>{children}</ErrorBoundary>
-              )}
-            </Box>
-          )}
-        </Flex>
+        <SearchProvider>
+          <Flex
+            sx={{
+              height: "100%",
+              flexDirection: "column",
+            }}
+          >
+            <SEO title={title || siteMetadata.title} />
+            <Header />
+            {isUnsupported ? (
+              <UnsupportedBrowser />
+            ) : (
+              <Box sx={{ flex: "1 1 auto", overflowY, height: "100%" }}>
+                {didCatch ? (
+                  <ErrorMessage />
+                ) : (
+                  <ErrorBoundary>{children}</ErrorBoundary>
+                )}
+              </Box>
+            )}
+          </Flex>
+        </SearchProvider>
       </SelectedUnitProvider>
     </BreakpointProvider>
   )

@@ -41,7 +41,7 @@ const MapContainer = () => {
 
   const { selectedUnit, selectUnit, deselectUnit } = useSelectedUnit()
 
-  const [{ tab }, setState] = useState({
+  const [{ tab, location }, setState] = useState({
     tab: breakpoint === 0 ? "map" : "info",
   })
 
@@ -173,8 +173,6 @@ const MapContainer = () => {
       }
     }
   }
-
-  console.log("selected unit", selectedUnit, "tab", tab)
 
   return (
     <Flex

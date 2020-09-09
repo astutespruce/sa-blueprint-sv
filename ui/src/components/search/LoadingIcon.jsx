@@ -1,0 +1,26 @@
+/** @jsx jsx */
+import React from "react"
+import { Compass as Icon } from "emotion-icons/fa-solid"
+import { keyframes, css } from "@emotion/core"
+import { jsx } from "theme-ui"
+
+const animation = keyframes`
+from {
+transform: rotate(0deg);
+}
+
+to {
+    transform: rotate(360deg);
+}
+`
+
+const animationCSS = css`
+  transform-origin: "50% 50%";
+  animation: ${animation} 1s ease-in-out infinite;
+`
+
+const LoadingIcon = ({ ...props }) => {
+  return <Icon {...props} css={animationCSS} />
+}
+
+export default LoadingIcon

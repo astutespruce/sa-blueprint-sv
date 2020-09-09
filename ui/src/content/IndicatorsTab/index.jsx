@@ -88,8 +88,6 @@ const IndicatorsTab = ({
     }
   )
 
-  console.log("ecosystems", ecosystems)
-
   return (
     <EcosystemList
       ecosystems={ecosystems}

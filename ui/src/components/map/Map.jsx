@@ -4,16 +4,17 @@ import mapboxgl from "mapbox-gl"
 import "mapbox-gl/dist/mapbox-gl.css"
 import { Box } from "theme-ui"
 
+import { useSearch } from "components/search"
 import { useBreakpoints, useSelectedUnit } from "components/layout"
 
 import { hasWindow } from "util/dom"
+import { useIsEqualEffect } from "util/hooks"
 import { getCenterAndZoom } from "./util"
 import { config, sources, layers } from "./config"
 import { unpackFeatureData } from "./features"
 import { Legend } from "./legend"
 import ZoomInNote from "./ZoomInNote"
 import StyleToggle from "./StyleToggle"
-import LegendPortal from "./legend/Legend"
 import { siteMetadata } from "../../../gatsby-config"
 
 const { mapboxToken } = siteMetadata
@@ -44,11 +45,13 @@ const Map = ({ isVisible }) => {
   const mapRef = useRef(null)
   const mapLoadedRef = useRef(false)
   const highlightIDRef = useRef(null)
+  const locationMarkerRef = useRef(null)
   const [zoom, setZoom] = useState(null)
 
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
   const { selectedUnit, selectUnit } = useSelectedUnit()
+  const { location } = useSearch()
 
   useEffect(() => {
     const { bounds, maxBounds, minZoom, maxZoom } = config
@@ -74,7 +77,6 @@ const Map = ({ isVisible }) => {
     }
 
     map.on("load", () => {
-      console.log("map onload")
       // add sources
       Object.entries(sources).forEach(([id, source]) => {
         map.addSource(id, source)
@@ -144,13 +146,36 @@ const Map = ({ isVisible }) => {
     }
   }, [])
 
-  useEffect(() => {
+  useIsEqualEffect(() => {
     if (!mapLoadedRef.current) return
 
     if (selectedUnit === null) {
       map.setFilter("unit-outline-highlight", ["==", "id", Infinity])
     }
   }, [selectedUnit])
+
+  useIsEqualEffect(() => {
+    if (!mapLoadedRef.current) return
+
+    if (location !== null) {
+      const { current: map } = mapRef
+      const { latitude, longitude } = location
+      map.flyTo({ center: [longitude, latitude], zoom: 12 })
+
+      if (locationMarkerRef.current === null) {
+        locationMarkerRef.current = new mapboxgl.Marker()
+          .setLngLat([longitude, latitude])
+          .addTo(map)
+      } else {
+        locationMarkerRef.current.setLngLat([longitude, latitude])
+      }
+    } else {
+      if (locationMarkerRef.current !== null) {
+        locationMarkerRef.current.remove()
+        locationMarkerRef.current = null
+      }
+    }
+  }, [location])
 
   return (
     <Box
