@@ -1,13 +1,13 @@
-import React, { useCallback, useState } from "react"
-import PropTypes from "prop-types"
-import { Flex, Box, Text } from "theme-ui"
-import { lighten } from "@theme-ui/color"
+import React, { useCallback, useState } from 'react'
+import PropTypes from 'prop-types'
+import { Flex, Box, Text } from 'theme-ui'
+import { lighten } from '@theme-ui/color'
 
-import { useBreakpoints } from "components/layout"
-import { formatPercent } from "util/format"
+import { useBreakpoints } from 'components/layout'
+import { formatPercent } from 'util/format'
 
-import IndicatorAverageChart from "./IndicatorAverageChart"
-import { IndicatorPropType } from "./proptypes"
+import IndicatorAverageChart from './IndicatorAverageChart'
+import { IndicatorPropType } from './proptypes'
 
 const Indicator = ({ indicator, onSelect }) => {
   const { id, label, avg, total, domain } = indicator
@@ -35,25 +35,25 @@ const Indicator = ({ indicator, onSelect }) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       sx={{
-        cursor: "pointer",
-        px: "1rem",
-        pt: "1rem",
-        pb: "2.5rem",
-        position: "relative",
-        "&:hover": {
-          bg: lighten("grey.0", 0.01),
+        cursor: 'pointer',
+        px: '1rem',
+        pt: '1rem',
+        pb: '2.5rem',
+        position: 'relative',
+        '&:hover': {
+          bg: lighten('grey.0', 0.01),
         },
-        "&:not(:first-of-type)": {
-          borderTop: "2px solid",
-          borderTopColor: "grey.1",
+        '&:not(:first-of-type)': {
+          borderTop: '2px solid',
+          borderTopColor: 'grey.1',
         },
       }}
     >
       <Text
         sx={{
-          color: "primary",
+          color: 'primary',
           fontSize: 2,
-          fontWeight: "bold",
+          fontWeight: 'bold',
         }}
       >
         {label}
@@ -62,8 +62,8 @@ const Indicator = ({ indicator, onSelect }) => {
       <Text
         sx={{
           fontSize: 0,
-          color: "grey.7",
-          visibility: isHover ? "visible" : "hidden",
+          color: 'grey.7',
+          visibility: isHover ? 'visible' : 'hidden',
         }}
       >
         Average value in this area:
@@ -73,17 +73,17 @@ const Indicator = ({ indicator, onSelect }) => {
 
       <Text
         sx={{
-          color: "primary",
-          fontSize: "small",
-          textAlign: "center",
-          position: "absolute",
+          color: 'primary',
+          fontSize: 'small',
+          textAlign: 'center',
+          position: 'absolute',
           bottom: 0,
           left: 0,
           right: 0,
-          display: isHover ? "block" : "none",
+          display: isHover ? 'block' : 'none',
         }}
       >
-        {isMobile ? "tap" : "click"} for more details
+        {isMobile ? 'tap' : 'click'} for more details
       </Text>
     </Box>
   )

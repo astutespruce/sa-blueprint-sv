@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useState, memo } from "react"
-import { Box } from "theme-ui"
+import React, { useCallback, useEffect, useState, memo } from 'react'
+import { Box } from 'theme-ui'
 
-import { useSearch } from "./Provider"
-import SearchField from "./SearchField"
-import Results from "./Results"
+import { useSearch } from './Provider'
+import SearchField from './SearchField'
+import Results from './Results'
 
 const Search = () => {
   const [index, setIndex] = useState(null)
@@ -21,8 +21,8 @@ const Search = () => {
   const handleKeyDown = useCallback(
     ({ key }) => {
       // escape clears everything
-      if (key === "Escape") {
-        setQuery("")
+      if (key === 'Escape') {
+        setQuery('')
         return
       }
 
@@ -31,7 +31,7 @@ const Search = () => {
       }
 
       let nextIndex = 0
-      if (key === "ArrowUp" && index !== null) {
+      if (key === 'ArrowUp' && index !== null) {
         if (index > 0) {
           nextIndex = index - 1
         } else {
@@ -39,7 +39,7 @@ const Search = () => {
           nextIndex = results.length - 1
         }
         setIndex(() => nextIndex)
-      } else if (key === "ArrowDown") {
+      } else if (key === 'ArrowDown') {
         if (index !== null) {
           if (index < results.length - 1) {
             nextIndex = index + 1

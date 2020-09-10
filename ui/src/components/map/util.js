@@ -1,4 +1,4 @@
-import geoViewport from "@mapbox/geo-viewport"
+import geoViewport from '@mapbox/geo-viewport'
 
 /**
  * Calculate the appropriate center and zoom to fit the bounds, given padding.

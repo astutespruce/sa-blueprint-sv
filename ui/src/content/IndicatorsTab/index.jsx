@@ -1,10 +1,10 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import { useIndicators } from "components/data"
-import { indexBy, sum, percentsToAvg } from "util/data"
+import { useIndicators } from 'components/data'
+import { indexBy, sum, percentsToAvg } from 'util/data'
 
-import EcosystemList from "./EcosystemList"
+import EcosystemList from './EcosystemList'
 
 const IndicatorsTab = ({
   indicators: rawIndicators,
@@ -45,11 +45,11 @@ const IndicatorsTab = ({
       })
       // Only include those that have nonzero values
       .filter(({ total }) => total > 0),
-    "id"
+    'id'
   )
 
   const ecosystemsPresent = new Set(
-    Object.keys(indicators).map(id => id.split("_")[0])
+    Object.keys(indicators).map((id) => id.split('_')[0])
   )
 
   // Aggregate ecosystems and indicators into a nested data structure
@@ -66,8 +66,8 @@ const IndicatorsTab = ({
       ...rest
     }) => {
       const indicatorsPresent = ecosystemIndicators
-        .map(indicatorId => `${ecosystemId}_${indicatorId}`)
-        .filter(indicatorId => indicators[indicatorId])
+        .map((indicatorId) => `${ecosystemId}_${indicatorId}`)
+        .filter((indicatorId) => indicators[indicatorId])
 
       return {
         ...rest,
@@ -75,7 +75,7 @@ const IndicatorsTab = ({
         label,
         color,
         borderColor,
-        indicators: indicatorsPresent.map(indicatorId => ({
+        indicators: indicatorsPresent.map((indicatorId) => ({
           ...indicators[indicatorId],
           ecosystem: {
             id: ecosystemId,

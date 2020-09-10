@@ -1,19 +1,19 @@
-import React, { useState, useCallback, memo } from "react"
-import PropTypes from "prop-types"
-import { dequal as deepEqual } from "dequal"
+import React, { useState, useCallback, memo } from 'react'
+import PropTypes from 'prop-types'
+import { dequal as deepEqual } from 'dequal'
 
-import { flatten, indexBy } from "util/data"
-import { useIsEqualEffect } from "util/hooks"
+import { flatten, indexBy } from 'util/data'
+import { useIsEqualEffect } from 'util/hooks'
 
-import Ecosystem from "./Ecosystem"
-import IndicatorDetails from "./IndicatorDetails"
-import { EcosystemPropType } from "./proptypes"
+import Ecosystem from './Ecosystem'
+import IndicatorDetails from './IndicatorDetails'
+import { EcosystemPropType } from './proptypes'
 
 const EcosystemList = ({ ecosystems, analysisAcres, blueprintAcres }) => {
   const indicators = flatten(
     Object.values(ecosystems).map(({ indicators }) => indicators)
   )
-  const indicatorsIndex = indexBy(indicators, "id")
+  const indicatorsIndex = indexBy(indicators, 'id')
 
   const [selectedIndicator, setSelectedIndicator] = useState(null)
 
@@ -30,7 +30,7 @@ const EcosystemList = ({ ecosystems, analysisAcres, blueprintAcres }) => {
     }
   }, [indicators])
 
-  const handleSelectIndicator = useCallback(indicator => {
+  const handleSelectIndicator = useCallback((indicator) => {
     setSelectedIndicator(indicator)
   }, [])
 
@@ -46,7 +46,7 @@ const EcosystemList = ({ ecosystems, analysisAcres, blueprintAcres }) => {
           {...selectedIndicator}
         />
       ) : (
-        ecosystems.map(ecosystem => (
+        ecosystems.map((ecosystem) => (
           <Ecosystem
             key={ecosystem.id}
             onSelectIndicator={handleSelectIndicator}

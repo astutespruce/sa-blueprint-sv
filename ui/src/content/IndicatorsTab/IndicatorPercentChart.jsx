@@ -1,30 +1,30 @@
-import React from "react"
-import PropTypes from "prop-types"
-import { Flex, Box, Text, Progress } from "theme-ui"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Flex, Box, Text, Progress } from 'theme-ui'
 
-import { formatPercent } from "util/format"
+import { formatPercent } from 'util/format'
 
 const IndicatorPercentChart = ({ value, label, percent, isGood }) => {
   let color = null
   if (value === null) {
-    color = "grey.7"
+    color = 'grey.7'
   } else if (isGood) {
-    color = "rgb(95, 183, 133)"
+    color = 'rgb(95, 183, 133)'
   } else if (isGood === false) {
-    color = "rgb(231, 119, 120)"
+    color = 'rgb(231, 119, 120)'
   }
 
   return (
-    <Box sx={{ flex: "1 1 auto" }}>
+    <Box sx={{ flex: '1 1 auto' }}>
       <Flex
         sx={{
-          justifyContent: "space-between",
-          alignItems: "flex-end",
+          justifyContent: 'space-between',
+          alignItems: 'flex-end',
           fontSize: 0,
         }}
       >
-        <Text sx={{ flex: "1 1 auto" }}>{label}</Text>
-        <Text sx={{ color: "grey.6", flex: "0 0 auto", ml: "1em" }}>
+        <Text sx={{ flex: '1 1 auto' }}>{label}</Text>
+        <Text sx={{ color: 'grey.6', flex: '0 0 auto', ml: '1em' }}>
           {formatPercent(percent)}% of area
         </Text>
       </Flex>

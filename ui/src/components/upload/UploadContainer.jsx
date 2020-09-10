@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react"
+import React, { useState, useCallback } from 'react'
 import {
   Alert,
   Box,
@@ -10,19 +10,19 @@ import {
   Link,
   Progress,
   Text,
-} from "theme-ui"
+} from 'theme-ui'
 import {
   ExclamationTriangle,
   Download,
   CheckCircle,
-} from "emotion-icons/fa-solid"
+} from 'emotion-icons/fa-solid'
 
-import { captureException } from "util/log"
-import { uploadFile } from "./upload"
-import UploadForm from "./UploadForm"
-import config from "../../../gatsby-config"
-import { ThemeContext } from "@emotion/core"
-import { useTheme } from "emotion-theming"
+import { captureException } from 'util/log'
+import { uploadFile } from './upload'
+import UploadForm from './UploadForm'
+import config from '../../../gatsby-config'
+import { ThemeContext } from '@emotion/core'
+import { useTheme } from 'emotion-theming'
 
 const { contactEmail } = config.siteMetadata
 
@@ -35,7 +35,7 @@ const UploadContainer = () => {
   })
 
   const handleCreateReport = useCallback(async (file, name) => {
-    setState(prevState => ({
+    setState((prevState) => ({
       ...prevState,
       inProgress: true,
       progress: 0,
@@ -43,13 +43,13 @@ const UploadContainer = () => {
       reportURL: null,
     }))
     try {
-      const { error, result } = await uploadFile(file, name, progress => {
-        setState(prevState => ({ ...prevState, progress }))
+      const { error, result } = await uploadFile(file, name, (progress) => {
+        setState((prevState) => ({ ...prevState, progress }))
       })
 
       if (error) {
         console.error(error)
-        setState(prevState => ({
+        setState((prevState) => ({
           ...prevState,
           inProgress: false,
           progress: 0,
@@ -58,7 +58,7 @@ const UploadContainer = () => {
         return
       }
 
-      setState(prevState => ({
+      setState((prevState) => ({
         ...prevState,
         progress: 100,
         inProgress: false,
@@ -67,32 +67,32 @@ const UploadContainer = () => {
 
       window.location.href = result
     } catch (ex) {
-      captureException("File upload failed", ex)
-      console.error("Caught unhandled error from uploadFile", ex)
+      captureException('File upload failed', ex)
+      console.error('Caught unhandled error from uploadFile', ex)
 
-      setState(prevState => ({
+      setState((prevState) => ({
         ...prevState,
         inProgress: false,
         progress: 0,
-        error: "", // no meaningful error to show to user, but needs to be non-null
+        error: '', // no meaningful error to show to user, but needs to be non-null
       }))
     }
   }, [])
 
   const handleClearError = () => {
-    setState(prevState => ({ ...prevState, error: null }))
+    setState((prevState) => ({ ...prevState, error: null }))
   }
 
   return (
-    <Container sx={{ py: "2rem" }}>
+    <Container sx={{ py: '2rem' }}>
       {reportURL != null && (
-        <Box sx={{ mb: "6rem" }}>
-          <Heading as="h2" sx={{ mb: "0.5rem" }}>
+        <Box sx={{ mb: '6rem' }}>
+          <Heading as="h2" sx={{ mb: '0.5rem' }}>
             <CheckCircle
               css={{
-                height: "1em",
-                width: "1em",
-                marginRight: "0.5rem",
+                height: '1em',
+                width: '1em',
+                marginRight: '0.5rem',
               }}
             ></CheckCircle>
             All done!
@@ -106,7 +106,7 @@ const UploadContainer = () => {
 
           <Link href={reportURL} target="_blank">
             <Download
-              css={{ width: "1rem", height: "1rem", marginRight: "0.5rem" }}
+              css={{ width: '1rem', height: '1rem', marginRight: '0.5rem' }}
             />
             Download report
           </Link>
@@ -119,23 +119,23 @@ const UploadContainer = () => {
 
       {inProgress ? (
         <>
-          <Heading as="h2" sx={{ mb: "0.5rem" }}>
+          <Heading as="h2" sx={{ mb: '0.5rem' }}>
             Creating report...
           </Heading>
-          <Flex sx={{ alignItems: "center" }}>
+          <Flex sx={{ alignItems: 'center' }}>
             <Progress variant="progress" max={100} value={progress}></Progress>
-            <Text sx={{ ml: "1rem" }}>{progress}%</Text>
+            <Text sx={{ ml: '1rem' }}>{progress}%</Text>
           </Flex>
         </>
       ) : (
         <>
           {error != null && (
-            <Alert variant="error" sx={{ mt: "2rem", mb: "4rem", py: "1rem" }}>
+            <Alert variant="error" sx={{ mt: '2rem', mb: '4rem', py: '1rem' }}>
               <ExclamationTriangle
                 css={{
-                  width: "2rem",
-                  height: "2rem",
-                  margin: "0 1rem 0 0",
+                  width: '2rem',
+                  height: '2rem',
+                  margin: '0 1rem 0 0',
                 }}
               />
               <Box>
@@ -148,9 +148,9 @@ const UploadContainer = () => {
                     <Text as="span">
                       Please try again. If that doesn't work, try a different
                       file or
-                    </Text>{" "}
+                    </Text>{' '}
                     <Link
-                      sx={{ color: "#FFF" }}
+                      sx={{ color: '#FFF' }}
                       href={`mailto:${contactEmail}`}
                     >
                       Contact Us

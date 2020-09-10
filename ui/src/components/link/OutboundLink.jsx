@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import React from "react"
-import { OutboundLink as Link } from "gatsby-plugin-google-gtag"
-import PropTypes from "prop-types"
-import { jsx } from "theme-ui"
+import React from 'react'
+import { OutboundLink as Link } from 'gatsby-plugin-google-gtag'
+import PropTypes from 'prop-types'
+import { jsx } from 'theme-ui'
 
 const OutboundLink = ({ to, target, rel, children, ...props }) => {
   return (
@@ -20,8 +20,8 @@ OutboundLink.propTypes = {
 }
 
 OutboundLink.defaultProps = {
-  target: "_blank",
-  rel: "noopener noreferrer",
+  target: '_blank',
+  rel: 'noopener noreferrer',
 }
 
 export default OutboundLink

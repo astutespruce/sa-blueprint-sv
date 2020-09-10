@@ -1,11 +1,11 @@
-import React from "react"
-import PropTypes from "prop-types"
-import { Box, Flex, Text } from "theme-ui"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Box, Flex, Text } from 'theme-ui'
 
 const labelCSS = {
-  color: "grey.6",
+  color: 'grey.6',
   fontSize: 0,
-  flex: "0 0 auto",
+  flex: '0 0 auto',
 }
 
 const IndicatorAverageChart = ({ value, domain, highlight }) => {
@@ -13,29 +13,29 @@ const IndicatorAverageChart = ({ value, domain, highlight }) => {
   const percent = (100 * (value - minValue)) / (maxValue - minValue)
 
   return (
-    <Flex sx={{ alignItems: "center", mt: "0.5rem" }}>
+    <Flex sx={{ alignItems: 'center', mt: '0.5rem' }}>
       <Text sx={labelCSS}>Low</Text>
       <Box
         sx={{
-          flex: "1 1 auto",
-          width: "100%",
-          position: "relative",
+          flex: '1 1 auto',
+          width: '100%',
+          position: 'relative',
           zIndex: 1,
-          mx: "1rem",
-          height: "2px",
-          bg: "grey.3",
+          mx: '1rem',
+          height: '2px',
+          bg: 'grey.3',
         }}
       >
         <Box
           sx={{
-            position: "absolute",
-            borderRadius: "2em",
-            height: "1.5em",
-            width: "0.75em",
+            position: 'absolute',
+            borderRadius: '2em',
+            height: '1.5em',
+            width: '0.75em',
             left: `${percent}%`,
-            ml: "-0.75em",
-            bg: highlight ? "primary" : "grey.8",
-            top: "-0.75em",
+            ml: '-0.75em',
+            bg: highlight ? 'primary' : 'grey.8',
+            top: '-0.75em',
           }}
         />
         {/* <Text

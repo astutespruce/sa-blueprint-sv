@@ -1,6 +1,6 @@
-import { useStaticQuery, graphql } from "gatsby"
+import { useStaticQuery, graphql } from 'gatsby'
 
-import { extractNodes } from "util/graphql"
+import { extractNodes } from 'util/graphql'
 
 /**
  * Provides Blueprint priority categories in decreasing priority order

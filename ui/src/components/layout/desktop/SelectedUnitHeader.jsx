@@ -1,23 +1,23 @@
-import React from "react"
-import PropTypes from "prop-types"
-import { Box, Button, Flex, Heading, Text } from "theme-ui"
-import { TimesCircle } from "emotion-icons/fa-regular"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Box, Button, Flex, Heading, Text } from 'theme-ui'
+import { TimesCircle } from 'emotion-icons/fa-regular'
 
-import { formatNumber } from "util/format"
+import { formatNumber } from 'util/format'
 
 const SelectedUnitHeader = ({ name, acres, onClose }) => {
   return (
     <Flex
       sx={{
-        justifyContent: "space-between",
-        alignItems: "flex-start",
-        p: "1rem",
-        minHeight: "7rem",
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+        p: '1rem',
+        minHeight: '7rem',
       }}
     >
-      <Box sx={{ mr: "1rem" }}>
+      <Box sx={{ mr: '1rem' }}>
         <Heading as="h3">{name}</Heading>
-        <Text sx={{ color: "grey.6", fontSize: [0, 1] }}>
+        <Text sx={{ color: 'grey.6', fontSize: [0, 1] }}>
           {formatNumber(acres)} acres
         </Text>
 
@@ -27,12 +27,12 @@ const SelectedUnitHeader = ({ name, acres, onClose }) => {
       <Button
         variant="close"
         onClick={onClose}
-        sx={{ flex: "0 0 auto", margin: 0, padding: 0 }}
+        sx={{ flex: '0 0 auto', margin: 0, padding: 0 }}
       >
         <TimesCircle
           css={{
-            width: "1.5em",
-            height: "1.5em",
+            width: '1.5em',
+            height: '1.5em',
           }}
         />
       </Button>

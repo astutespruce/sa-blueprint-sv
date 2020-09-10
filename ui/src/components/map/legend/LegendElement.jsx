@@ -1,25 +1,25 @@
-import React, { memo } from "react"
-import PropTypes from "prop-types"
-import { Flex, Box, Text } from "theme-ui"
+import React, { memo } from 'react'
+import PropTypes from 'prop-types'
+import { Flex, Box, Text } from 'theme-ui'
 
 const LegendElement = ({ label, type, color, outlineColor, outlineWidth }) => {
   return (
     <Flex
       sx={{
-        alignItems: "flex-start",
+        alignItems: 'flex-start',
         lineHeight: 1,
       }}
     >
-      {type === "fill" && (
+      {type === 'fill' && (
         <Box
           sx={{
-            flex: "0 0 auto",
-            width: "1.25em",
-            height: "1em",
-            borderRadius: "0.25em",
-            mr: "0.5rem",
+            flex: '0 0 auto',
+            width: '1.25em',
+            height: '1em',
+            borderRadius: '0.25em',
+            mr: '0.5rem',
             bg: color,
-            border: outlineWidth !== 0 ? `${outlineWidth}px solid` : "none",
+            border: outlineWidth !== 0 ? `${outlineWidth}px solid` : 'none',
             borderColor: outlineColor,
           }}
         />
@@ -38,7 +38,7 @@ LegendElement.propTypes = {
 }
 
 LegendElement.defaultProps = {
-  type: "fill",
+  type: 'fill',
   outlineColor: null,
   outlineWidth: 0,
 }

@@ -1,6 +1,6 @@
-import PropTypes from "prop-types"
+import PropTypes from 'prop-types'
 
-export const GraphQLArrayPropType = node =>
+export const GraphQLArrayPropType = (node) =>
   PropTypes.shape({
     edges: PropTypes.arrayOf(
       PropTypes.shape({

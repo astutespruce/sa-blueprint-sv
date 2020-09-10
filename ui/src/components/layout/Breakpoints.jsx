@@ -1,9 +1,11 @@
-import React, { useContext, createContext } from "react"
+import React, { useContext, createContext } from 'react'
 
-import theme from "gatsby-plugin-theme-ui"
-import { hasWindow } from "util/dom"
+import theme from 'gatsby-plugin-theme-ui'
+import { hasWindow } from 'util/dom'
 
-const breakpoints = theme.breakpoints.map(b => parseInt(b.replace("px", ""), 0))
+const breakpoints = theme.breakpoints.map((b) =>
+  parseInt(b.replace('px', ''), 0)
+)
 
 const getBreakpoint = () => {
   if (!hasWindow) return 0
@@ -33,8 +35,8 @@ export const BreakpointProvider = ({ children }) => {
   }
 
   React.useEffect(() => {
-    window.addEventListener("resize", handleWindowResize)
-    return () => window.removeEventListener("resize", handleWindowResize)
+    window.addEventListener('resize', handleWindowResize)
+    return () => window.removeEventListener('resize', handleWindowResize)
   }, [])
 
   return <context.Provider value={breakpoint}>{children}</context.Provider>

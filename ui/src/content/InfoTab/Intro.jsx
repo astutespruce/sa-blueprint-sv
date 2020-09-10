@@ -1,10 +1,10 @@
-import React, { useState } from "react"
-import { Box, Button, Flex, Heading, Text } from "theme-ui"
-import { Play } from "emotion-icons/fa-solid"
-import YouTube from "react-youtube"
+import React, { useState } from 'react'
+import { Box, Button, Flex, Heading, Text } from 'theme-ui'
+import { Play } from 'emotion-icons/fa-solid'
+import YouTube from 'react-youtube'
 
-import { OutboundLink } from "components/link"
-import { Modal } from "components/Modal"
+import { OutboundLink } from 'components/link'
+import { Modal } from 'components/Modal'
 
 const Intro = () => {
   const [videoOpen, setVideoOpen] = useState(false)
@@ -25,10 +25,10 @@ const Intro = () => {
         </Heading> */}
 
         <p>
-          The{" "}
+          The{' '}
           <OutboundLink to="http://www.southatlanticlcc.org/blueprint/">
             Conservation Blueprint
-          </OutboundLink>{" "}
+          </OutboundLink>{' '}
           is a living spatial plan to conserve natural and cultural resources
           for future generations. It identifies priority areas for shared
           conservation action. Blueprint 2020 is completely data-driven,
@@ -41,12 +41,12 @@ const Intro = () => {
           Blueprint.
         </p>
 
-        <Flex sx={{ justifyContent: "center" }}>
+        <Flex sx={{ justifyContent: 'center' }}>
           <Button
             onClick={openVideo}
-            sx={{ display: "flex", alignItems: "center" }}
+            sx={{ display: 'flex', alignItems: 'center' }}
           >
-            <Play css={{ height: "1em", width: "1em", marginRight: "0.5em" }} />
+            <Play css={{ height: '1em', width: '1em', marginRight: '0.5em' }} />
             <Text>Overview Video</Text>
           </Button>
         </Flex>
@@ -67,7 +67,7 @@ const Intro = () => {
         >
           <YouTube
             videoId="wSPbCiCTQOM"
-            opts={{ height: "464", width: "100%" }}
+            opts={{ height: '464', width: '100%' }}
           />
         </Modal>
       )}

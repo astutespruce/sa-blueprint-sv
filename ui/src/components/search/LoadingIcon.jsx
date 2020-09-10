@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import React from "react"
-import { Compass as Icon } from "emotion-icons/fa-solid"
-import { keyframes, css } from "@emotion/core"
-import { jsx } from "theme-ui"
+import React from 'react'
+import { Compass as Icon } from 'emotion-icons/fa-solid'
+import { keyframes, css } from '@emotion/core'
+import { jsx } from 'theme-ui'
 
 const animation = keyframes`
 from {
@@ -15,7 +15,7 @@ to {
 `
 
 const animationCSS = css`
-  transform-origin: "50% 50%";
+  transform-origin: '50% 50%';
   animation: ${animation} 1s ease-in-out infinite;
 `
 

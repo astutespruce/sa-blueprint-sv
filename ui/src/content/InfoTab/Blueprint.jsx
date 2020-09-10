@@ -1,17 +1,17 @@
-import React from "react"
+import React from 'react'
 
-import { Box, Flex, Heading, Text } from "theme-ui"
+import { Box, Flex, Heading, Text } from 'theme-ui'
 
-import { useBlueprintPriorities } from "components/data"
+import { useBlueprintPriorities } from 'components/data'
 
 const Blueprint = () => {
   const { priorities } = useBlueprintPriorities()
 
   return (
-    <Box as="section" sx={{ mt: "2rem" }}>
-      <Heading as="h3" sx={{ mb: "1rem" }}>
+    <Box as="section" sx={{ mt: '2rem' }}>
+      <Heading as="h3" sx={{ mb: '1rem' }}>
         Blueprint Priorities
-        <Text sx={{ color: "grey.8", fontSize: 0, fontWeight: "normal" }}>
+        <Text sx={{ color: 'grey.8', fontSize: 0, fontWeight: 'normal' }}>
           (% of the South Atlantic)
         </Text>
       </Heading>
@@ -20,38 +20,38 @@ const Blueprint = () => {
         <Box key={label}>
           <Box
             sx={{
-              justifyContent: "space-between",
-              alignItems: "center",
-              flexWrap: "wrap",
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              flexWrap: 'wrap',
               //   mb: "0.5rem",
             }}
           >
             <Flex
-              sx={{ alignItems: "center", width: ["100%", "100%", "auto"] }}
+              sx={{ alignItems: 'center', width: ['100%', '100%', 'auto'] }}
             >
               <Flex
                 sx={{
-                  alignItems: "center",
-                  justifyContent: "center",
-                  width: "2.5rem",
-                  height: "2.5rem",
-                  borderRadius: "2rem",
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  width: '2.5rem',
+                  height: '2.5rem',
+                  borderRadius: '2rem',
                   bg: color,
-                  mr: "0.5rem",
-                  flex: "0 0 auto",
+                  mr: '0.5rem',
+                  flex: '0 0 auto',
                 }}
               >
                 <Text
                   sx={{
-                    color: labelColor || "#FFF",
+                    color: labelColor || '#FFF',
                     fontSize: 0,
-                    fontWeight: "bold",
+                    fontWeight: 'bold',
                   }}
                 >
                   {percent}%
                 </Text>
               </Flex>
-              <Text as="div" sx={{ fontWeight: "bold" }}>
+              <Text as="div" sx={{ fontWeight: 'bold' }}>
                 {label}
               </Text>
             </Flex>
@@ -71,7 +71,7 @@ const Blueprint = () => {
 
           <Text
             as="p"
-            sx={{ fontSize: [2, 1, 2], mb: "2rem", ml: "3rem", mt: "-0.5rem" }}
+            sx={{ fontSize: [2, 1, 2], mb: '2rem', ml: '3rem', mt: '-0.5rem' }}
           >
             {description}
           </Text>

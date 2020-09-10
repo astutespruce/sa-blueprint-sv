@@ -1,5 +1,5 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React from 'react'
+import PropTypes from 'prop-types'
 
 const XAxis = ({
   ticks,
@@ -65,10 +65,10 @@ XAxis.propTypes = {
 
 XAxis.defaultProps = {
   strokeWidth: 1,
-  stroke: "#AAA",
+  stroke: '#AAA',
   fontSize: 10,
   label: null,
-  labelColor: "#666",
+  labelColor: '#666',
   labelOffset: 30,
 }
 

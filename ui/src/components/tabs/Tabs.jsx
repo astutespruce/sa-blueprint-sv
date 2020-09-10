@@ -1,16 +1,16 @@
-import React, { useState, useCallback, useEffect } from "react"
-import PropTypes from "prop-types"
+import React, { useState, useCallback, useEffect } from 'react'
+import PropTypes from 'prop-types'
 
-import { Box, Flex, Grid, Text } from "theme-ui"
+import { Box, Flex, Grid, Text } from 'theme-ui'
 
-import Icon from "./Icon"
+import Icon from './Icon'
 
 const defaultStyle = {
-  color: "grey.7",
+  color: 'grey.7',
 }
 
 const defaultActiveStyle = {
-  color: ["primary" || "text"],
+  color: ['primary' || 'text'],
 }
 
 const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
@@ -23,7 +23,7 @@ const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
   }, [activeTab])
 
   const handleClick = useCallback(
-    id => () => {
+    (id) => () => {
       setTab(() => id)
       onChange(id)
     },
@@ -36,9 +36,9 @@ const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
       gap={0}
       columns={tabs.length}
       sx={{
-        alignItems: "center",
-        justifyContent: "space-evenly",
-        fontSize: ["10px", 0, 1],
+        alignItems: 'center',
+        justifyContent: 'space-evenly',
+        fontSize: ['10px', 0, 1],
       }}
     >
       {tabs.map(({ id, label }) => (
@@ -47,22 +47,22 @@ const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
           onClick={handleClick(id)}
           variant={
             id === tab
-              ? activeVariant || "tabs.active"
-              : variant || "tabs.default"
+              ? activeVariant || 'tabs.active'
+              : variant || 'tabs.default'
           }
           sx={{
-            flexDirection: ["column", "column", "row"],
-            alignItems: "center",
-            justifyContent: "center",
-            flex: "1 0 auto",
-            p: "0.5em",
-            height: "100%",
+            flexDirection: ['column', 'column', 'row'],
+            alignItems: 'center',
+            justifyContent: 'center',
+            flex: '1 0 auto',
+            p: '0.5em',
+            height: '100%',
           }}
         >
           <Box>
-            <Icon name={id} sx={{ width: "1.5em", height: "1.5em" }} />
+            <Icon name={id} sx={{ width: '1.5em', height: '1.5em' }} />
           </Box>
-          <Text sx={{ ml: [0, "0.5em"], textAlign: ["center", "unset"] }}>
+          <Text sx={{ ml: [0, '0.5em'], textAlign: ['center', 'unset'] }}>
             {label}
           </Text>
         </Flex>

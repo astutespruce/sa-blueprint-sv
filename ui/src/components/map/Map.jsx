@@ -1,37 +1,37 @@
-import React, { useEffect, useRef, useState } from "react"
-import PropTypes from "prop-types"
-import mapboxgl from "mapbox-gl"
-import "mapbox-gl/dist/mapbox-gl.css"
-import { Box } from "theme-ui"
+import React, { useEffect, useRef, useState } from 'react'
+import PropTypes from 'prop-types'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
+import { Box } from 'theme-ui'
 
-import { useSearch } from "components/search"
-import { useBreakpoints, useSelectedUnit } from "components/layout"
+import { useSearch } from 'components/search'
+import { useBreakpoints, useSelectedUnit } from 'components/layout'
 
-import { hasWindow } from "util/dom"
-import { useIsEqualEffect } from "util/hooks"
-import { getCenterAndZoom } from "./util"
-import { config, sources, layers } from "./config"
-import { unpackFeatureData } from "./features"
-import { Legend } from "./legend"
-import ZoomInNote from "./ZoomInNote"
-import StyleToggle from "./StyleToggle"
-import { siteMetadata } from "../../../gatsby-config"
+import { hasWindow } from 'util/dom'
+import { useIsEqualEffect } from 'util/hooks'
+import { getCenterAndZoom } from './util'
+import { config, sources, layers } from './config'
+import { unpackFeatureData } from './features'
+import { Legend } from './legend'
+import ZoomInNote from './ZoomInNote'
+import StyleToggle from './StyleToggle'
+import { siteMetadata } from '../../../gatsby-config'
 
 const { mapboxToken } = siteMetadata
 
 if (!mapboxToken) {
   console.error(
-    "ERROR: Mapbox token is required in gatsby-config.js siteMetadata"
+    'ERROR: Mapbox token is required in gatsby-config.js siteMetadata'
   )
 }
 
 // CSS props that control the responsive display of map widgets
 const mapWidgetCSS = {
-  ".mapboxgl-ctrl-zoom-in, .mapboxgl-ctrl-zoom-out, .mapboxgl-ctrl-compass": {
-    display: ["none", "inherit"],
+  '.mapboxgl-ctrl-zoom-in, .mapboxgl-ctrl-zoom-out, .mapboxgl-ctrl-compass': {
+    display: ['none', 'inherit'],
   },
-  "mapboxgl-canvas": {
-    outline: "none",
+  'mapboxgl-canvas': {
+    outline: 'none',
   },
 }
 
@@ -61,7 +61,7 @@ const Map = ({ isVisible }) => {
 
     const map = new mapboxgl.Map({
       container: mapNode.current,
-      style: "mapbox://styles/mapbox/light-v9",
+      style: 'mapbox://styles/mapbox/light-v9',
       center,
       zoom,
       minZoom,
@@ -72,35 +72,35 @@ const Map = ({ isVisible }) => {
     window.map = map // for easier debugging and querying via console
 
     if (!isMobile) {
-      map.addControl(new mapboxgl.NavigationControl(), "top-right")
+      map.addControl(new mapboxgl.NavigationControl(), 'top-right')
     }
 
-    map.on("load", () => {
+    map.on('load', () => {
       // add sources
       Object.entries(sources).forEach(([id, source]) => {
         map.addSource(id, source)
       })
 
       // add layers
-      layers.forEach(layer => {
+      layers.forEach((layer) => {
         map.addLayer(layer, layer.before || null)
       })
     })
 
-    map.on("click", "unit-fill", ({ features }) => {
+    map.on('click', 'unit-fill', ({ features }) => {
       if (!(features && features.length > 0)) return
 
       const { id: selectedId, properties } = features[0]
 
       // highlight selected
-      map.setFilter("unit-outline-highlight", ["==", "id", properties.id])
+      map.setFilter('unit-outline-highlight', ['==', 'id', properties.id])
 
       selectUnit(unpackFeatureData(features[0].properties))
     })
 
     // Highlight units on mouseover
-    map.on("mousemove", "unit-fill", ({ features }) => {
-      map.getCanvas().style.cursor = "pointer"
+    map.on('mousemove', 'unit-fill', ({ features }) => {
+      map.getCanvas().style.cursor = 'pointer'
 
       if (!(features && features.length > 0)) {
         return
@@ -111,23 +111,23 @@ const Map = ({ isVisible }) => {
       const { current: prevId } = highlightIDRef
       if (prevId !== null && prevId !== id) {
         map.setFeatureState(
-          { source: "mapUnits", sourceLayer: "units", id: prevId },
+          { source: 'mapUnits', sourceLayer: 'units', id: prevId },
           { highlight: false }
         )
       }
       map.setFeatureState(
-        { source: "mapUnits", sourceLayer: "units", id },
+        { source: 'mapUnits', sourceLayer: 'units', id },
         { highlight: true }
       )
       highlightIDRef.current = id
     })
 
     // Unhighlight all hover features on mouseout
-    map.on("mouseout", () => {
+    map.on('mouseout', () => {
       const { current: prevId } = highlightIDRef
       if (prevId !== null) {
         map.setFeatureState(
-          { source: "mapUnits", sourceLayer: "units", id: prevId },
+          { source: 'mapUnits', sourceLayer: 'units', id: prevId },
           { highlight: false }
         )
       }
@@ -146,7 +146,7 @@ const Map = ({ isVisible }) => {
     if (!isLoaded) return
 
     if (selectedUnit === null) {
-      map.setFilter("unit-outline-highlight", ["==", "id", Infinity])
+      map.setFilter('unit-outline-highlight', ['==', 'id', Infinity])
     }
   }, [selectedUnit])
 
@@ -176,15 +176,15 @@ const Map = ({ isVisible }) => {
   return (
     <Box
       sx={{
-        width: "100%",
-        height: "100%",
-        flex: "1 1 auto",
-        position: "relative",
-        outline: "none",
+        width: '100%',
+        height: '100%',
+        flex: '1 1 auto',
+        position: 'relative',
+        outline: 'none',
         ...mapWidgetCSS,
       }}
     >
-      <div ref={mapNode} style={{ width: "100%", height: "100%" }} />
+      <div ref={mapNode} style={{ width: '100%', height: '100%' }} />
 
       {isVisible ? (
         <>

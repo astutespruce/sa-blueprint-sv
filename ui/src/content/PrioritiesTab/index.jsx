@@ -1,13 +1,13 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import { PieChart } from "react-minimal-pie-chart"
-import { Box, Flex, Divider, Heading, Text } from "theme-ui"
+import { PieChart } from 'react-minimal-pie-chart'
+import { Box, Flex, Divider, Heading, Text } from 'theme-ui'
 
-import { PieChartLegend } from "components/chart"
-import { useBlueprintPriorities, useCorridors } from "components/data"
+import { PieChartLegend } from 'components/chart'
+import { useBlueprintPriorities, useCorridors } from 'components/data'
 
-import { sum } from "util/data"
+import { sum } from 'util/data'
 
 const PrioritiesTab = ({ blueprint, corridors }) => {
   const { all: priorityCategories } = useBlueprintPriorities()
@@ -31,8 +31,8 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
     remainder = 100 - blueprintTotal
     blueprintChartData.push({
       value: remainder,
-      color: "#EEE",
-      label: "Outside South Atlantic Blueprint",
+      color: '#EEE',
+      label: 'Outside South Atlantic Blueprint',
     })
   }
 
@@ -49,33 +49,33 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
   if (corridorsTotal < 100 - remainder) {
     corridorChartData.push({
       value: 100 - remainder - corridorsTotal,
-      color: "#ffebc2",
-      label: "Not a hub or corridor",
+      color: '#ffebc2',
+      label: 'Not a hub or corridor',
     })
   }
 
   if (remainder > 0) {
     corridorChartData.push({
       value: remainder,
-      color: "#EEE",
-      label: "Outside South Atlantic Blueprint",
+      color: '#EEE',
+      label: 'Outside South Atlantic Blueprint',
     })
   }
 
   return (
-    <Box sx={{ py: "2rem", pl: "1rem", pr: "2rem" }}>
+    <Box sx={{ py: '2rem', pl: '1rem', pr: '2rem' }}>
       <Box as="section">
         <Heading as="h3">Blueprint 2020 Priority</Heading>
-        <Text sx={{ color: "grey.7" }}>for shared conservation action</Text>
+        <Text sx={{ color: 'grey.7' }}>for shared conservation action</Text>
 
-        <Flex sx={{ alignItems: "center", mt: "2rem" }}>
+        <Flex sx={{ alignItems: 'center', mt: '2rem' }}>
           <PieChart
             data={blueprintChartData}
             lineWidth={60}
             radius={chartWidth / 4 - 2}
             style={{
               width: chartWidth,
-              flex: "0 1 auto",
+              flex: '0 1 auto',
             }}
           />
 
@@ -85,18 +85,18 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
 
       {corridorChartData.length > 0 ? (
         <>
-          <Divider variant="styles.hr.light" sx={{ my: "3rem" }} />
+          <Divider variant="styles.hr.light" sx={{ my: '3rem' }} />
           <Box as="section">
             <Heading as="h3">Hubs &amp; Corridors</Heading>
 
-            <Flex sx={{ alignItems: "center", mt: "2rem" }}>
+            <Flex sx={{ alignItems: 'center', mt: '2rem' }}>
               <PieChart
                 data={corridorChartData}
                 lineWidth={60}
                 radius={chartWidth / 4 - 2}
                 style={{
                   width: chartWidth,
-                  flex: "0 1 auto",
+                  flex: '0 1 auto',
                 }}
               />
 
@@ -105,7 +105,7 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
           </Box>
         </>
       ) : (
-        <Text sx={{ textAlign: "center", color: "grey.6" }}>
+        <Text sx={{ textAlign: 'center', color: 'grey.6' }}>
           No hubs or corridors in this area.
         </Text>
       )}

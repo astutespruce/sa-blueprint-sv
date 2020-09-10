@@ -1,5 +1,5 @@
-import { graphql, useStaticQuery } from "gatsby"
-import { extractNodes } from "util/graphql"
+import { graphql, useStaticQuery } from 'gatsby'
+import { extractNodes } from 'util/graphql'
 
 export const useIndicators = () => {
   const { ecosystems, indicators } = useStaticQuery(graphql`

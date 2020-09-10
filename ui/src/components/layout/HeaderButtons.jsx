@@ -1,19 +1,19 @@
-import React, { useState, useCallback } from "react"
-import { Box, Button, Flex } from "theme-ui"
-import { CommentDots, Envelope, FileAlt } from "emotion-icons/fa-regular"
+import React, { useState, useCallback } from 'react'
+import { Box, Button, Flex } from 'theme-ui'
+import { CommentDots, Envelope, FileAlt } from 'emotion-icons/fa-regular'
 
-import { Link } from "components/link"
-import { Modal } from "components/Modal"
-import { Feedback, Contact } from "content/ContactTab"
+import { Link } from 'components/link'
+import { Modal } from 'components/Modal'
+import { Feedback, Contact } from 'content/ContactTab'
 
-const iconCSS = { width: "1em", height: "1em" }
-const labelCSS = { marginLeft: "0.5rem", display: ["none", "none", "block"] }
+const iconCSS = { width: '1em', height: '1em' }
+const labelCSS = { marginLeft: '0.5rem', display: ['none', 'none', 'block'] }
 
 const buttonProps = {
-  variant: "header",
+  variant: 'header',
   sx: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
   },
 }
 
@@ -25,15 +25,15 @@ const HeaderButtons = () => {
   }, [])
 
   const openFeedback = () => {
-    setActiveModal(() => "feedback")
+    setActiveModal(() => 'feedback')
   }
 
   const openContact = () => {
-    setActiveModal(() => "contact")
+    setActiveModal(() => 'contact')
   }
 
   let modal = null
-  if (activeModal === "feedback") {
+  if (activeModal === 'feedback') {
     modal = (
       <Modal
         title="Give your feedback to Blueprint staff"
@@ -42,7 +42,7 @@ const HeaderButtons = () => {
         <Feedback />
       </Modal>
     )
-  } else if (activeModal === "contact") {
+  } else if (activeModal === 'contact') {
     modal = (
       <Modal
         title="Contact Blueprint staff for help using the Blueprint"
@@ -54,7 +54,7 @@ const HeaderButtons = () => {
   }
 
   return (
-    <Flex sx={{ alignItems: "center", flex: "0 0 auto" }}>
+    <Flex sx={{ alignItems: 'center', flex: '0 0 auto' }}>
       <Button {...buttonProps} onClick={openFeedback}>
         <CommentDots css={iconCSS} />
         <Box sx={{ ...labelCSS }}>Feedback</Box>

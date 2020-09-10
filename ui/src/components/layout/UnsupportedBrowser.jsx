@@ -1,21 +1,21 @@
-import React from "react"
-import { Container, Box, Heading } from "theme-ui"
-import { ExclamationTriangle } from "emotion-icons/fa-solid"
+import React from 'react'
+import { Container, Box, Heading } from 'theme-ui'
+import { ExclamationTriangle } from 'emotion-icons/fa-solid'
 
 const UnsupportedBrowser = () => (
   <Container>
     <Box
       sx={{
-        m: "2rem",
-        p: "2rem",
-        background: "primary",
+        m: '2rem',
+        p: '2rem',
+        background: 'primary',
       }}
     >
       <Heading as="h2">
         <ExclamationTriangle
           height="2rem"
           width="2rem"
-          css={{ marginRight: ".5rem" }}
+          css={{ marginRight: '.5rem' }}
         />
         Unfortunately, you are using an unsupported version of Internet
         Explorer.

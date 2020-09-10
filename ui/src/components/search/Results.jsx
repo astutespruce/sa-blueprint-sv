@@ -1,19 +1,19 @@
-import React, { useCallback, useEffect, useRef } from "react"
-import PropTypes from "prop-types"
-import { Box, Flex, Text } from "theme-ui"
-import { ExclamationTriangle } from "emotion-icons/fa-solid"
+import React, { useCallback, useEffect, useRef } from 'react'
+import PropTypes from 'prop-types'
+import { Box, Flex, Text } from 'theme-ui'
+import { ExclamationTriangle } from 'emotion-icons/fa-solid'
 
-import { OutboundLink } from "components/link"
-import LoadingIcon from "./LoadingIcon"
-import { siteMetadata } from "../../../gatsby-config"
+import { OutboundLink } from 'components/link'
+import LoadingIcon from './LoadingIcon'
+import { siteMetadata } from '../../../gatsby-config'
 
 const { contactEmail } = siteMetadata
 
 const highlightCSS = {
-  fontWeight: "bold",
-  bg: "blue.0",
-  "&:hover": {
-    bg: "blue.0",
+  fontWeight: 'bold',
+  bg: 'blue.0',
+  '&:hover': {
+    bg: 'blue.0',
   },
 }
 
@@ -40,7 +40,7 @@ const Results = ({
   }, [index])
 
   const handleSetLocation = useCallback(
-    index => {
+    (index) => {
       const { id, name, longitude, latitude } = results[index]
 
       onSetLocation({
@@ -73,7 +73,7 @@ const Results = ({
         dataset: { index },
       },
     }) => {
-      if (key === "Enter" && index !== undefined) {
+      if (key === 'Enter' && index !== undefined) {
         handleSetLocation(index)
       }
     },
@@ -84,24 +84,24 @@ const Results = ({
     return (
       <Box
         sx={{
-          color: "grey.7",
-          pl: "1rem",
-          pr: "1.5rem",
-          py: "2rem",
+          color: 'grey.7',
+          pl: '1rem',
+          pr: '1.5rem',
+          py: '2rem',
         }}
       >
         <Text>
-          <Flex sx={{ alignItems: "center" }}>
+          <Flex sx={{ alignItems: 'center' }}>
             <ExclamationTriangle
               height="1.5rem"
               width="1.5rem"
-              css={{ margin: "0 0.5rem 0 0" }}
+              css={{ margin: '0 0.5rem 0 0' }}
             />
             <Text sx={{ fontSize: [2, 3] }}>Error loading search results.</Text>
           </Flex>
 
-          <Text sx={{ mt: "1rem" }}>
-            Please try a different search term. If the error continues, please{" "}
+          <Text sx={{ mt: '1rem' }}>
+            Please try a different search term. If the error continues, please{' '}
             <OutboundLink to={`mailto:${contactEmail}`}>
               let us know
             </OutboundLink>
@@ -116,19 +116,19 @@ const Results = ({
     return (
       <Flex
         sx={{
-          alignItems: "center",
-          justifyContent: "center",
-          color: "grey.7",
-          px: "1rem",
-          py: "2rem",
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'grey.7',
+          px: '1rem',
+          py: '2rem',
         }}
       >
         <LoadingIcon
           sx={{
-            width: "2rem",
-            height: "2rem",
-            margin: "0 0.5rem 0 0",
-            color: "grey.5",
+            width: '2rem',
+            height: '2rem',
+            margin: '0 0.5rem 0 0',
+            color: 'grey.5',
           }}
         />
         <Text>Loading...</Text>
@@ -140,11 +140,11 @@ const Results = ({
     return (
       <Flex
         sx={{
-          alignItems: "center",
-          justifyContent: "center",
-          color: "grey.7",
-          px: "1rem",
-          py: "2rem",
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'grey.7',
+          px: '1rem',
+          py: '2rem',
         }}
       >
         No results found
@@ -162,22 +162,22 @@ const Results = ({
           onKeyDown={handleKeyDown}
           onClick={handleClick}
           sx={{
-            cursor: "pointer",
-            borderBottom: "1px solid",
-            borderBottomColor: "grey.1",
-            py: "0.75rem",
-            pl: "1rem",
-            pr: "1.5rem",
-            "&:hover": {
-              bg: "grey.0",
+            cursor: 'pointer',
+            borderBottom: '1px solid',
+            borderBottomColor: 'grey.1',
+            py: '0.75rem',
+            pl: '1rem',
+            pr: '1.5rem',
+            '&:hover': {
+              bg: 'grey.0',
             },
             ...(location && id === location.id ? highlightCSS : {}),
           }}
         >
-          <Box sx={{ pointerEvents: "none" }}>
+          <Box sx={{ pointerEvents: 'none' }}>
             <Text>{name}</Text>
             {address ? (
-              <Text sx={{ fontSize: [0, 1], color: "grey.7" }}>{address}</Text>
+              <Text sx={{ fontSize: [0, 1], color: 'grey.7' }}>{address}</Text>
             ) : null}
           </Box>
         </Box>

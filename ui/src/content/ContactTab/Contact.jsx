@@ -1,7 +1,7 @@
-import React from "react"
+import React from 'react'
 
-import { formatPhone } from "util/format"
-import { siteMetadata } from "../../../gatsby-config"
+import { formatPhone } from 'util/format'
+import { siteMetadata } from '../../../gatsby-config'
 
 const { contactEmail, contactPhone, title } = siteMetadata
 
@@ -13,7 +13,7 @@ const Contact = () => {
       are here to support you! We really mean it. It is what we do!
       <br />
       <br />
-      <b>email</b>{" "}
+      <b>email</b>{' '}
       <a
         href={`mailto:${contactEmail}?subject=${title} Support (Simple Viewer)`}
         target="_blank"
@@ -22,7 +22,7 @@ const Contact = () => {
         {contactEmail}
       </a>
       <br />
-      <b>call</b>{" "}
+      <b>call</b>{' '}
       <a href={`tel:${contactPhone}`}>{formatPhone(contactPhone)}</a>
     </p>
   )

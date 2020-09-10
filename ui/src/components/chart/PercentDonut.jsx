@@ -1,8 +1,8 @@
 /** @jsx jsx */
-import React from "react"
-import PropTypes from "prop-types"
-import { useThemeUI, jsx } from "theme-ui"
-import { formatPercent } from "util/format"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { useThemeUI, jsx } from 'theme-ui'
+import { formatPercent } from 'util/format'
 
 const PercentDonut = ({
   size,
@@ -24,7 +24,7 @@ const PercentDonut = ({
     <svg
       width={`${size}px`}
       height={`${size}px`}
-      sx={{ flex: "0 0 auto", ...sx }}
+      sx={{ flex: '0 0 auto', ...sx }}
     >
       <circle
         cx={center}
@@ -49,8 +49,8 @@ const PercentDonut = ({
         y={halfsize}
         fill="#FFFFFF"
         style={{
-          textAnchor: "middle",
-          dominantBaseline: "central",
+          textAnchor: 'middle',
+          dominantBaseline: 'central',
         }}
       >
         {formatPercent(percent)}%

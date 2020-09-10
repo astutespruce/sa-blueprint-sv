@@ -4,9 +4,9 @@ import {
   parsePipeEncodedValues,
   parseDeltaEncodedValues,
   parseDictEncodedValues,
-} from "util/data"
+} from 'util/data'
 
-const isEmpty = text => {
+const isEmpty = (text) => {
   if (!text) {
     return true
   }
@@ -22,10 +22,10 @@ const isEmpty = text => {
  * NOTE: indicators are returned by their index, not id.
  * @param {Object} properties
  */
-export const unpackFeatureData = properties => {
+export const unpackFeatureData = (properties) => {
   const values = Object.entries(properties)
     .map(([key, value]) => {
-      if (!value || typeof value !== "string") {
+      if (!value || typeof value !== 'string') {
         return [key, value]
       }
 
@@ -33,17 +33,17 @@ export const unpackFeatureData = properties => {
         return [key, null]
       }
 
-      if (key === "name") {
+      if (key === 'name') {
         return [key, value]
       }
 
-      if (value.indexOf("^") !== -1) {
+      if (value.indexOf('^') !== -1) {
         return [key, parseDeltaEncodedValues(value)]
       }
-      if (value.indexOf(":") !== -1) {
+      if (value.indexOf(':') !== -1) {
         return [key, parseDictEncodedValues(value)]
       }
-      if (value.indexOf("|") !== -1) {
+      if (value.indexOf('|') !== -1) {
         return [key, parsePipeEncodedValues(value)]
       }
       return [key, value]
@@ -60,7 +60,7 @@ export const unpackFeatureData = properties => {
 
   // merge avg and percents together
   if (values.indicators) {
-    Object.keys(values.indicators).forEach(k => {
+    Object.keys(values.indicators).forEach((k) => {
       const percent = applyFactor(values.indicators[k], 0.1)
 
       values.indicators[k] = {
@@ -82,18 +82,18 @@ export const unpackFeatureData = properties => {
   }
 
   if (values.ownership) {
-    Object.keys(values.ownership).forEach(k => {
+    Object.keys(values.ownership).forEach((k) => {
       values.ownership[k] = values.ownership[k] * 0.1
     })
   }
 
   if (values.protection) {
-    Object.keys(values.protection).forEach(k => {
+    Object.keys(values.protection).forEach((k) => {
       values.protection[k] = values.protection[k] * 0.1
     })
   }
 
-  console.log("transformed values", values)
+  console.log('transformed values', values)
 
   return values
 }

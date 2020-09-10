@@ -1,61 +1,61 @@
-import React, { memo, useState, useCallback } from "react"
-import PropTypes from "prop-types"
-import { Box, Flex, Text } from "theme-ui"
+import React, { memo, useState, useCallback } from 'react'
+import PropTypes from 'prop-types'
+import { Box, Flex, Text } from 'theme-ui'
 
-import { useBlueprintPriorities } from "components/data"
+import { useBlueprintPriorities } from 'components/data'
 
-import LegendElement from "./LegendElement"
+import LegendElement from './LegendElement'
 
 const MobileLegend = () => {
   const [isOpen, setIsOpen] = useState(true)
 
   const handleClick = useCallback(() => {
-    setIsOpen(prevIsOpen => !prevIsOpen)
+    setIsOpen((prevIsOpen) => !prevIsOpen)
   }, [])
 
   const { priorities } = useBlueprintPriorities()
   const elements = priorities.map(({ label, ...rest }) => ({
     ...rest,
-    label: label.replace(" priority", ""),
+    label: label.replace(' priority', ''),
   }))
 
   return (
     <Box
       sx={{
         //   position: "absolute",
-        color: "grey.8",
-        bg: "#FFF",
-        pointerEvents: "auto",
+        color: 'grey.8',
+        bg: '#FFF',
+        pointerEvents: 'auto',
         bottom: 0,
         left: 0,
         right: 0,
-        borderTop: "1px solid",
-        borderTopColor: "grey.7",
+        borderTop: '1px solid',
+        borderTopColor: 'grey.7',
       }}
       onClick={handleClick}
     >
       {isOpen ? (
         <Box
           sx={{
-            p: "0.5rem",
+            p: '0.5rem',
           }}
           title="Click to hide legend"
         >
           <Box sx={{ fontSize: 0 }}>
-            <Text sx={{ lineHeight: 1, fontWeight: "bold" }}>
+            <Text sx={{ lineHeight: 1, fontWeight: 'bold' }}>
               Blueprint Priority
             </Text>
             <Flex
               sx={{
-                alignItems: "flex-end",
-                justifyContent: "space-between",
+                alignItems: 'flex-end',
+                justifyContent: 'space-between',
               }}
             >
-              {elements.map(element => (
+              {elements.map((element) => (
                 <Box
                   key={element.label}
                   sx={{
-                    mt: "0.5rem",
+                    mt: '0.5rem',
                   }}
                 >
                   <LegendElement {...element} />
@@ -65,7 +65,7 @@ const MobileLegend = () => {
           </Box>
         </Box>
       ) : (
-        <Text sx={{ fontSize: 0, py: "0.25rem", px: "0.5rem" }}>Legend</Text>
+        <Text sx={{ fontSize: 0, py: '0.25rem', px: '0.5rem' }}>Legend</Text>
       )}
     </Box>
   )

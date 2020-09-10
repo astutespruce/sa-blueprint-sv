@@ -1,16 +1,16 @@
-import React, { useCallback } from "react"
-import PropTypes from "prop-types"
-import { Box } from "theme-ui"
-import { scaleLinear } from "d3-scale"
+import React, { useCallback } from 'react'
+import PropTypes from 'prop-types'
+import { Box } from 'theme-ui'
+import { scaleLinear } from 'd3-scale'
 
-import { extent } from "util/data"
-import { formatNumber } from "util/format"
+import { extent } from 'util/data'
+import { formatNumber } from 'util/format'
 
-import Area from "./Area"
-import Line from "./Line"
-import Points from "./Points"
-import XAxis from "./XAxis"
-import YAxis from "./YAxis"
+import Area from './Area'
+import Line from './Line'
+import Points from './Points'
+import XAxis from './XAxis'
+import YAxis from './YAxis'
 
 const Chart = ({
   data,
@@ -64,17 +64,17 @@ const Chart = ({
 
   const xAxisTicks = xScale
     .ticks(xTicks)
-    .map(x => ({ x: xScale(x), label: xTickFormatter(x) }))
+    .map((x) => ({ x: xScale(x), label: xTickFormatter(x) }))
 
   const yAxisTicks = yScale
     .ticks(yTicks)
-    .map(y => ({ y: yScale(y), label: yTickFormatter(y) }))
+    .map((y) => ({ y: yScale(y), label: yTickFormatter(y) }))
 
   return (
     <svg
       style={{
-        display: "block",
-        overflow: "visible",
+        display: 'block',
+        overflow: 'visible',
       }}
       viewBox={`0 0 ${width} ${height}`}
     >

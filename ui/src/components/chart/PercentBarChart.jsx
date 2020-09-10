@@ -1,24 +1,24 @@
 /** @jsx jsx */
-import React from "react"
-import PropTypes from "prop-types"
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import { Box, Flex, Progress, Text, jsx } from "theme-ui"
+import { Box, Flex, Progress, Text, jsx } from 'theme-ui'
 
-import theme from "theme"
-import { formatPercent } from "util/format"
+import theme from 'theme'
+import { formatPercent } from 'util/format'
 
 const PercentBarChart = ({ label, percent, color, ...props }) => (
   <Box {...props}>
     <Flex
       sx={{
-        justifyContent: "space-between",
+        justifyContent: 'space-between',
         fontSize: 1,
-        flexWrap: "nowrap",
-        alignItems: "flex-end",
+        flexWrap: 'nowrap',
+        alignItems: 'flex-end',
       }}
     >
-      <Text sx={{ flex: "1 1 auto", mr: "1em" }}>{label}</Text>
-      <Text sx={{ color: "grey.6", flex: "0 0 auto", fontSize: 0 }}>
+      <Text sx={{ flex: '1 1 auto', mr: '1em' }}>{label}</Text>
+      <Text sx={{ color: 'grey.6', flex: '0 0 auto', fontSize: 0 }}>
         {formatPercent(percent)}% of area
       </Text>
     </Flex>

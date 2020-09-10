@@ -1,12 +1,12 @@
-export const formatPercent = percent => {
+export const formatPercent = (percent) => {
   if (percent === 0) {
-    return "0"
+    return '0'
   }
   if (percent < 1) {
-    return "< 1"
+    return '< 1'
   }
   if (percent > 99 && percent < 100) {
-    return "> 99" // it looks odd to have 100% stack up next to categories with <1
+    return '> 99' // it looks odd to have 100% stack up next to categories with <1
   }
   return Math.round(percent)
 }
@@ -47,12 +47,12 @@ export const formatNumber = (number, decimals = null) => {
 
   // trim trailing 0's and periods
   if (decimalRegex.test(formatted)) {
-    return formatted.replace(/0+$/g, "").replace(/\.$/g, "")
+    return formatted.replace(/0+$/g, '').replace(/\.$/g, '')
   }
 
   return formatted
 }
 
-export const formatPhone = phone => {
+export const formatPhone = (phone) => {
   return `(${phone.slice(0, 3)}) ${phone.slice(3, 6)}-${phone.slice(6)}`
 }

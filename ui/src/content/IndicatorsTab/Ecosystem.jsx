@@ -1,10 +1,10 @@
-import React, { useCallback } from "react"
-import PropTypes from "prop-types"
-import { Box } from "theme-ui"
+import React, { useCallback } from 'react'
+import PropTypes from 'prop-types'
+import { Box } from 'theme-ui'
 
-import EcosystemHeader from "./EcosystemHeader"
-import Indicator from "./Indicator"
-import { EcosystemPropType } from "./proptypes"
+import EcosystemHeader from './EcosystemHeader'
+import Indicator from './Indicator'
+import { EcosystemPropType } from './proptypes'
 
 const Ecosystem = ({
   id,
@@ -17,12 +17,12 @@ const Ecosystem = ({
   return (
     <Box
       sx={{
-        width: "100%",
-        flex: "1 0 auto",
-        "&:not(:first-of-type)": {
+        width: '100%',
+        flex: '1 0 auto',
+        '&:not(:first-of-type)': {
           //   mt: "2rem",
-          "&>div:first-of-type": {
-            borderTop: "1px solid",
+          '&>div:first-of-type': {
+            borderTop: '1px solid',
             borderTopColor: borderColor,
           },
         },
@@ -36,7 +36,7 @@ const Ecosystem = ({
       />
 
       <Box>
-        {indicators.map(indicator => (
+        {indicators.map((indicator) => (
           <Indicator
             key={indicator.id}
             indicator={indicator}

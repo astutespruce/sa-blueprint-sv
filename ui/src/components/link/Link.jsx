@@ -1,10 +1,10 @@
 /** @jsx jsx */
-import React from "react"
-import PropTypes from "prop-types"
-import { Link as BaseLink } from "gatsby"
-import { jsx } from "theme-ui"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Link as BaseLink } from 'gatsby'
+import { jsx } from 'theme-ui'
 
-const Link = props => {
+const Link = (props) => {
   return <BaseLink {...props} />
 }
 

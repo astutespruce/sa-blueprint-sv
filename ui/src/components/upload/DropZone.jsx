@@ -1,9 +1,9 @@
-import React, { useCallback } from "react"
-import PropTypes from "prop-types"
-import { useDropzone } from "react-dropzone"
-import { Flex, Heading, Text } from "theme-ui"
-import { transparentize } from "@theme-ui/color"
-import { Download } from "emotion-icons/fa-solid"
+import React, { useCallback } from 'react'
+import PropTypes from 'prop-types'
+import { useDropzone } from 'react-dropzone'
+import { Flex, Heading, Text } from 'theme-ui'
+import { transparentize } from '@theme-ui/color'
+import { Download } from 'emotion-icons/fa-solid'
 
 const MAXSIZE_MB = 100
 
@@ -18,8 +18,8 @@ const DropZone = ({ onDrop }) => {
       if (rejectedFiles.length > 1) {
         alert(
           `Multiple files not allowed: ${rejectedFiles
-            .map(d => d.name)
-            .join(", ")}`
+            .map((d) => d.name)
+            .join(', ')}`
         )
         return
       }
@@ -50,50 +50,50 @@ const DropZone = ({ onDrop }) => {
     isDragReject,
   } = useDropzone({
     onDrop: handleDrop,
-    accept: "application/zip",
+    accept: 'application/zip',
     maxSize: MAXSIZE_MB * 1e6,
     multiple: false,
   })
 
-  let color = "grey.5"
+  let color = 'grey.5'
   if (isDragAccept) {
-    color = "ok"
+    color = 'ok'
   } else if (isDragReject) {
-    color = "error"
+    color = 'error'
   }
 
   return (
     <Flex
       sx={{
-        flexDirection: "column",
-        alignItems: "center",
-        justifyContent: "center",
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
     >
       <Flex
         {...getRootProps({ isDragActive, isDragAccept, isDragReject })}
         sx={{
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          p: "2rem",
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          p: '2rem',
           //   mt:
-          cursor: "pointer",
-          outline: "none",
-          borderWidth: "2px",
-          borderStyle: "dashed",
-          borderRadius: "1rem",
+          cursor: 'pointer',
+          outline: 'none',
+          borderWidth: '2px',
+          borderStyle: 'dashed',
+          borderRadius: '1rem',
           borderColor: color,
           backgroundColor: transparentize(color, 0.9),
         }}
       >
         <input {...getInputProps()} />
-        <Download width="2rem" height="2rem" css={{ marginBottom: "1rem" }} />
-        <Heading as="h3" sx={{ mb: "1rem" }}>
+        <Download width="2rem" height="2rem" css={{ marginBottom: '1rem' }} />
+        <Heading as="h3" sx={{ mb: '1rem' }}>
           Drop your zip file here
         </Heading>
-        <Text as="p" sx={{ color: "grey.7", textAlign: "center", fontSize: 1 }}>
+        <Text as="p" sx={{ color: 'grey.7', textAlign: 'center', fontSize: 1 }}>
           Zip file must contain all associated files for a shapefile (.shp,
           .prj, .dbf) or file geodatabase (.gdb).
           <br />

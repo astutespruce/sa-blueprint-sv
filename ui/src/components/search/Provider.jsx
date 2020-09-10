@@ -1,23 +1,23 @@
-import React, { createContext, useContext, useState, useCallback } from "react"
-import PropTypes from "prop-types"
-import { useQuery } from "react-query"
+import React, { createContext, useContext, useState, useCallback } from 'react'
+import PropTypes from 'prop-types'
+import { useQuery } from 'react-query'
 
-import { searchPlaces } from "api/mapbox"
+import { searchPlaces } from 'api/mapbox'
 
 const Context = createContext()
 
 export const Provider = ({ children }) => {
   const [{ query, location }, setState] = useState({
-    query: "",
+    query: '',
     location: null,
   })
 
-  const setQuery = useCallback(newQuery => {
-    setState(prevState => ({ ...prevState, query: newQuery, location: null }))
+  const setQuery = useCallback((newQuery) => {
+    setState((prevState) => ({ ...prevState, query: newQuery, location: null }))
   }, [])
 
-  const setLocation = useCallback(newLocation => {
-    setState(prevState => ({ ...prevState, location: newLocation }))
+  const setLocation = useCallback((newLocation) => {
+    setState((prevState) => ({ ...prevState, location: newLocation }))
   }, [])
 
   return (
@@ -35,7 +35,7 @@ export const useSearch = () => {
   const { query, setQuery, location, setLocation } = useContext(Context)
 
   const { isLoading, error, data: results = [] } = useQuery(
-    ["search", query],
+    ['search', query],
     () => {
       if (!query) {
         return null
@@ -54,7 +54,7 @@ export const useSearch = () => {
 
   // Just log the error, there isn't much we can show the user here
   if (error) {
-    console.error("ERROR loading search API results", error)
+    console.error('ERROR loading search API results', error)
   }
 
   return {

@@ -1,9 +1,9 @@
-import React from "react"
-import { Box, Heading } from "theme-ui"
+import React from 'react'
+import { Box, Heading } from 'theme-ui'
 
 const MobileInstructions = () => (
   <>
-    <Heading as="h4" sx={{ mb: "0.5rem" }}>
+    <Heading as="h4" sx={{ mb: '0.5rem' }}>
       Subwatershed and marine lease block details:
     </Heading>
     <p>
@@ -91,8 +91,8 @@ const Instructions = () => {
   const isMobile = false // TODO
 
   return (
-    <Box as="section" sx={{ mt: "2rem" }}>
-      <Heading as="h3" sx={{ mb: "0.5rem" }}>
+    <Box as="section" sx={{ mt: '2rem' }}>
+      <Heading as="h3" sx={{ mb: '0.5rem' }}>
         How To Use This Viewer
       </Heading>
 

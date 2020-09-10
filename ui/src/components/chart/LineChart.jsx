@@ -1,9 +1,9 @@
-import React from "react"
+import React from 'react'
 
-import ResponsiveChart from "./ResponsiveChart"
-import { Chart } from "./line"
+import ResponsiveChart from './ResponsiveChart'
+import { Chart } from './line'
 
-const LineChart = props => {
+const LineChart = (props) => {
   return (
     <ResponsiveChart>
       <Chart {...props} />

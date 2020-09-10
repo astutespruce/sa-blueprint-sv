@@ -1,6 +1,6 @@
-import { graphql, useStaticQuery } from "gatsby"
+import { graphql, useStaticQuery } from 'gatsby'
 
-import { extractNodes } from "util/graphql"
+import { extractNodes } from 'util/graphql'
 
 /**
  * Provides ownership and protection levels

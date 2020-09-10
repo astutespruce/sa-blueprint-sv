@@ -1,29 +1,29 @@
-import React from "react"
-import PropTypes from "prop-types"
+import React from 'react'
+import PropTypes from 'prop-types'
 
-import { Box, Text } from "theme-ui"
+import { Box, Text } from 'theme-ui'
 
-import { OutboundLink } from "components/link"
-import { LineChart } from "components/chart"
+import { OutboundLink } from 'components/link'
+import { LineChart } from 'components/chart'
 
-import theme from "theme"
+import theme from 'theme'
 
 // SLR levels are in feet above current mean sea level: 0...6
 
 const SLR = ({ percents }) => {
   return (
     <>
-      <Text sx={{ color: "grey.7" }}>
+      <Text sx={{ color: 'grey.7' }}>
         Extent of inundation by projected sea level rise within this
         subwatershed:
       </Text>
 
       <Box
         sx={{
-          height: "200px",
-          "& text": {
+          height: '200px',
+          '& text': {
             fontSize: 1,
-            fill: "grey.7",
+            fill: 'grey.7',
           },
         }}
       >
@@ -45,8 +45,8 @@ const SLR = ({ percents }) => {
         />
       </Box>
 
-      <Text sx={{ mt: "2rem", color: "grey.7", fontSize: 1 }}>
-        Sea level rise estimates derived from the{" "}
+      <Text sx={{ mt: '2rem', color: 'grey.7', fontSize: 1 }}>
+        Sea level rise estimates derived from the{' '}
         <OutboundLink to="https://coast.noaa.gov/digitalcoast/data/slr.html">
           NOAA sea-level rise inundation data
         </OutboundLink>

@@ -1,11 +1,11 @@
-import React from "react"
-import { createPortal } from "react-dom"
-import PropTypes from "prop-types"
-import { Box, Button, Flex, Heading } from "theme-ui"
-import { TimesCircle } from "emotion-icons/fa-regular"
+import React from 'react'
+import { createPortal } from 'react-dom'
+import PropTypes from 'prop-types'
+import { Box, Button, Flex, Heading } from 'theme-ui'
+import { TimesCircle } from 'emotion-icons/fa-regular'
 
 const absPostionCSS = {
-  position: "absolute",
+  position: 'absolute',
   top: 0,
   bottom: 0,
   left: 0,
@@ -22,10 +22,10 @@ const Modal = ({ children, title, width, onClose }) => {
       sx={{
         ...absPostionCSS,
         zIndex: 10000,
-        alignItems: "center",
-        justifyContent: "center",
+        alignItems: 'center',
+        justifyContent: 'center',
 
-        overflow: "auto",
+        overflow: 'auto',
       }}
     >
       <Box
@@ -33,51 +33,51 @@ const Modal = ({ children, title, width, onClose }) => {
         sx={{
           ...absPostionCSS,
           zIndex: 1,
-          bg: "rgba(0,0,0,0.5)",
+          bg: 'rgba(0,0,0,0.5)',
         }}
       />
 
       <Box
         sx={{
-          width: ["100%", width],
-          p: "0.5rem",
-          background: "#fff",
+          width: ['100%', width],
+          p: '0.5rem',
+          background: '#fff',
           zIndex: 2,
-          borderRadius: [0, "1rem"],
-          boxShadow: ["none", "1px 1px 6px #000"],
+          borderRadius: [0, '1rem'],
+          boxShadow: ['none', '1px 1px 6px #000'],
         }}
       >
         <Heading
           as="h3"
           sx={{
-            pb: "0.5rem",
-            borderBottom: "1px solid",
-            borderBottomColor: "grey.3",
+            pb: '0.5rem',
+            borderBottom: '1px solid',
+            borderBottomColor: 'grey.3',
           }}
         >
           <Flex
             sx={{
-              justifyContent: "space-between",
-              alignItems: "flex-start",
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
             }}
           >
-            <Box sx={{ p: "0.5rem" }}>{title}</Box>
+            <Box sx={{ p: '0.5rem' }}>{title}</Box>
             <Button
               variant="close"
               onClick={handleClose}
-              sx={{ flex: "0 0 auto", margin: "0" }}
+              sx={{ flex: '0 0 auto', margin: '0' }}
             >
               <TimesCircle
                 css={{
-                  width: "1.5em",
-                  height: "1.5em",
+                  width: '1.5em',
+                  height: '1.5em',
                 }}
               />
             </Button>
           </Flex>
         </Heading>
 
-        <Box sx={{ px: "0.5rem" }}>{children}</Box>
+        <Box sx={{ px: '0.5rem' }}>{children}</Box>
       </Box>
     </Flex>,
     document.body
@@ -92,7 +92,7 @@ Modal.propTypes = {
 }
 
 Modal.defaultProps = {
-  width: "500px",
+  width: '500px',
 }
 
 export default Modal

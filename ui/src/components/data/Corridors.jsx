@@ -1,6 +1,6 @@
-import { graphql, useStaticQuery } from "gatsby"
+import { graphql, useStaticQuery } from 'gatsby'
 
-import { extractNodes } from "util/graphql"
+import { extractNodes } from 'util/graphql'
 
 /**
  * Provides corridors data in ascending order

@@ -2,7 +2,7 @@
  * Flatten an array of arrays (2D) to an array (1D)
  * @param {Array} records
  */
-export const flatten = records =>
+export const flatten = (records) =>
   records.reduce((prev, record) => {
     prev.push(...record)
     return prev
@@ -23,13 +23,13 @@ export const indexBy = (records, field) =>
  * Calculate the sum of an array of numbers
  * @param {Array} values - array of numbers
  */
-export const sum = values => values.reduce((prev, value) => prev + value, 0)
+export const sum = (values) => values.reduce((prev, value) => prev + value, 0)
 
 /**
  * Calculate the min and max values for an array of numbers
  * @param {Array} values
  */
-export const extent = values => {
+export const extent = (values) => {
   return [Math.min(...values), Math.max(...values)]
 }
 
@@ -46,7 +46,7 @@ export const sortByFunc = (field, ascending = true) => (a, b) => {
 export const applyFactor = (values, factor) => {
   if (!values) return values
 
-  return values.map(v => v * factor)
+  return values.map((v) => v * factor)
 }
 
 /**
@@ -54,7 +54,7 @@ export const applyFactor = (values, factor) => {
  * and bin index as value.
  * @param {*} percents
  */
-export const percentsToAvg = percents => {
+export const percentsToAvg = (percents) => {
   const total = sum(percents)
   return sum(percents.map((p, i) => i * (p / total)))
 }
@@ -69,16 +69,16 @@ const nonNumericRegex = /[^0-9|]/
  * "foo|bar" => ["foo", "bar"]
  * @param {String} text
  */
-export const parsePipeEncodedValues = text => {
+export const parsePipeEncodedValues = (text) => {
   if (!text) return null
 
-  const parts = text.split("|")
+  const parts = text.split('|')
 
   if (nonNumericRegex.test(text)) {
     return parts
   }
 
-  return parts.map(d => parseInt(d, 10) || 0)
+  return parts.map((d) => parseInt(d, 10) || 0)
 }
 
 /**
@@ -89,10 +89,10 @@ export const parsePipeEncodedValues = text => {
  *
  * @param {String} text
  */
-export const parseDeltaEncodedValues = text => {
+export const parseDeltaEncodedValues = (text) => {
   if (!text) return null
 
-  let [baseline, ...deltas] = text.split("^").map(d => parseInt(d, 10) || 0)
+  let [baseline, ...deltas] = text.split('^').map((d) => parseInt(d, 10) || 0)
 
   const values = [baseline, ...Array(deltas.length)]
   for (let i = 1; i < values.length; i += 1) {
@@ -108,14 +108,14 @@ export const parseDeltaEncodedValues = text => {
  * "0:|437|||,1:|438|||" => {0: [0, 437, 0, 0, 0], 1: [0, 438, 0, 0, 0]}
  * @param {String} text
  */
-export const parseDictEncodedValues = text => {
+export const parseDictEncodedValues = (text) => {
   if (!text) return null
 
   return text
-    .split(",")
-    .map(d => d.split(":"))
+    .split(',')
+    .map((d) => d.split(':'))
     .map(([k, v]) => {
-      if (v !== null && v !== undefined && v.indexOf("|") !== -1) {
+      if (v !== null && v !== undefined && v.indexOf('|') !== -1) {
         return [k, parsePipeEncodedValues(v)]
       }
 

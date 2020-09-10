@@ -1,7 +1,7 @@
 /** @jsx jsx */
-import React from "react"
-import PropTypes from "prop-types"
-import { jsx } from "theme-ui"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { jsx } from 'theme-ui'
 
 import {
   InfoCircle,
@@ -13,33 +13,33 @@ import {
   ChartPie,
   SlidersH,
   UserFriends,
-} from "emotion-icons/fa-solid"
+} from 'emotion-icons/fa-solid'
 
 const Icon = ({ name, ...props }) => {
   switch (name) {
-    case "info": {
+    case 'info': {
       return <InfoCircle {...props} />
     }
-    case "map":
-    case "unit-map": {
+    case 'map':
+    case 'unit-map': {
       return <Map {...props} />
     }
-    case "find": {
+    case 'find': {
       return <SearchLocation {...props} />
     }
-    case "contact": {
+    case 'contact': {
       return <Envelope {...props} />
     }
-    case "unit-priorities": {
+    case 'unit-priorities': {
       return <ChartPie {...props} />
     }
-    case "unit-indicators": {
+    case 'unit-indicators': {
       return <SlidersH {...props} />
     }
-    case "unit-threats": {
+    case 'unit-threats': {
       return <SkullCrossbones {...props} />
     }
-    case "unit-partners": {
+    case 'unit-partners': {
       return <UserFriends {...props} />
     }
     default: {

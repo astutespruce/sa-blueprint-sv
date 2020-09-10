@@ -1,6 +1,6 @@
-import React, { useRef, useLayoutEffect, useState } from "react"
-import PropTypes from "prop-types"
-import { Box } from "theme-ui"
+import React, { useRef, useLayoutEffect, useState } from 'react'
+import PropTypes from 'prop-types'
+import { Box } from 'theme-ui'
 
 const ResponsiveChart = ({ children }) => {
   const node = useRef(null)
@@ -19,13 +19,13 @@ const ResponsiveChart = ({ children }) => {
         height: node.current.clientHeight,
       })
     }
-    window.addEventListener("resize", handleResize)
+    window.addEventListener('resize', handleResize)
 
-    return () => window.removeEventListener("resize", handleResize)
+    return () => window.removeEventListener('resize', handleResize)
   }, [])
 
   return (
-    <Box ref={node} sx={{ height: "100%", width: "100%" }}>
+    <Box ref={node} sx={{ height: '100%', width: '100%' }}>
       {width && height ? React.cloneElement(children, { width, height }) : null}
     </Box>
   )

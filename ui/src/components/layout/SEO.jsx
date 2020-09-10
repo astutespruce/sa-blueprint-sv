@@ -1,7 +1,7 @@
-import React from "react"
-import PropTypes from "prop-types"
-import Helmet from "react-helmet"
-import { useStaticQuery, graphql } from "gatsby"
+import React from 'react'
+import PropTypes from 'prop-types'
+import Helmet from 'react-helmet'
+import { useStaticQuery, graphql } from 'gatsby'
 
 function SEO({ description, meta, title }) {
   const { site } = useStaticQuery(
@@ -23,8 +23,8 @@ function SEO({ description, meta, title }) {
   return (
     <Helmet
       htmlAttributes={{
-        lang: "en",
-        viewport: "width=device-width, initial-scale=1, shrink-to-fit=no",
+        lang: 'en',
+        viewport: 'width=device-width, initial-scale=1, shrink-to-fit=no',
       }}
       title={title}
       titleTemplate={title ? `%s | ${site.siteMetadata.title}` : `%s`}

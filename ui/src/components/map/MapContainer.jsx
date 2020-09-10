@@ -4,10 +4,10 @@ import React, {
   useRef,
   useEffect,
   useLayoutEffect,
-} from "react"
-import { Box, Flex, useThemeUI } from "theme-ui"
+} from 'react'
+import { Box, Flex, useThemeUI } from 'theme-ui'
 
-import { useBreakpoints, useSelectedUnit } from "components/layout"
+import { useBreakpoints, useSelectedUnit } from 'components/layout'
 import {
   InfoTab,
   ContactTab,
@@ -16,16 +16,16 @@ import {
   IndicatorsTab,
   ThreatsTab,
   PartnersTab,
-} from "content"
-import { Tabs as MobileTabs } from "components/layout/mobile"
+} from 'content'
+import { Tabs as MobileTabs } from 'components/layout/mobile'
 import {
   SelectedUnitHeader as DesktopSelectedUnitHeader,
   Tabs as DesktopTabs,
-} from "components/layout/desktop"
+} from 'components/layout/desktop'
 
-import { useSearch } from "components/search"
+import { useSearch } from 'components/search'
 
-import Map from "./Map"
+import Map from './Map'
 
 const MapContainer = () => {
   const {
@@ -45,7 +45,7 @@ const MapContainer = () => {
   const { selectedUnit, selectUnit, deselectUnit } = useSelectedUnit()
 
   const [{ tab }, setState] = useState({
-    tab: breakpoint === 0 ? "map" : "info",
+    tab: breakpoint === 0 ? 'map' : 'info',
   })
 
   useEffect(() => {
@@ -57,17 +57,17 @@ const MapContainer = () => {
     // we need to update the tabs.
     let nextTab = tab
     if (selectedUnit === null) {
-      nextTab = tab === "unit-map" || isMobile ? "map" : "info"
+      nextTab = tab === 'unit-map' || isMobile ? 'map' : 'info'
     } else {
-      if (tab === "map") {
-        nextTab = "unit-map"
-      } else if (!tab.startsWith("unit-")) {
-        nextTab = "unit-priorities"
+      if (tab === 'map') {
+        nextTab = 'unit-map'
+      } else if (!tab.startsWith('unit-')) {
+        nextTab = 'unit-priorities'
       }
     }
 
     if (nextTab !== tab) {
-      setState(prevState => ({
+      setState((prevState) => ({
         ...prevState,
         tab: nextTab,
       }))
@@ -80,20 +80,20 @@ const MapContainer = () => {
   // if map tab previously selected
   useEffect(() => {
     if (breakpoint > 0 && !isDuringLoad) {
-      const nextTab = tab === "map" ? "info" : "unit-priorities"
-      setState(prevState => ({ ...prevState, tab: nextTab }))
+      const nextTab = tab === 'map' ? 'info' : 'unit-priorities'
+      setState((prevState) => ({ ...prevState, tab: nextTab }))
     }
   }, [breakpoint])
 
   // if location is set in mobile view, automatically switch to map tab
   useEffect(() => {
-    if (isMobile && location !== null && tab !== "map") {
-      setState(prevState => ({ ...prevState, tab: "map" }))
+    if (isMobile && location !== null && tab !== 'map') {
+      setState((prevState) => ({ ...prevState, tab: 'map' }))
     }
   }, [location, selectedUnit, isMobile])
 
-  const handleTabChange = useCallback(tab => {
-    setState(prevState => ({
+  const handleTabChange = useCallback((tab) => {
+    setState((prevState) => ({
       ...prevState,
       tab,
     }))
@@ -104,20 +104,20 @@ const MapContainer = () => {
   let content = null
   if (selectedUnit === null) {
     switch (tab) {
-      case "info": {
+      case 'info': {
         content = <InfoTab />
         break
       }
-      case "map": {
+      case 'map': {
         // don't show anything
         content = null
         break
       }
-      case "find": {
+      case 'find': {
         content = <FindLocationTab />
         break
       }
-      case "contact": {
+      case 'contact': {
         content = <ContactTab />
         break
       }
@@ -139,12 +139,12 @@ const MapContainer = () => {
     } = selectedUnit
 
     switch (tab) {
-      case "unit-map": {
+      case 'unit-map': {
         // don't show anything
         content = null
         break
       }
-      case "unit-priorities": {
+      case 'unit-priorities': {
         content = (
           <PrioritiesTab
             blueprint={blueprint}
@@ -154,7 +154,7 @@ const MapContainer = () => {
         )
         break
       }
-      case "unit-indicators": {
+      case 'unit-indicators': {
         content = (
           <IndicatorsTab
             unitType={unitType}
@@ -165,11 +165,11 @@ const MapContainer = () => {
         )
         break
       }
-      case "unit-threats": {
+      case 'unit-threats': {
         content = <ThreatsTab unitType={unitType} slr={slr} urban={urban} />
         break
       }
-      case "unit-partners": {
+      case 'unit-partners': {
         content = (
           <PartnersTab
             unitType={unitType}
@@ -187,38 +187,38 @@ const MapContainer = () => {
   return (
     <Flex
       sx={{
-        height: "100%",
-        flex: "1 1 auto",
-        flexDirection: "column",
+        height: '100%',
+        flex: '1 1 auto',
+        flexDirection: 'column',
       }}
     >
       <Flex
         sx={{
-          height: "100%",
-          flex: "1 1 auto",
-          overflowY: "hidden",
-          position: "relative",
+          height: '100%',
+          flex: '1 1 auto',
+          overflowY: 'hidden',
+          position: 'relative',
         }}
       >
         <Flex
           sx={{
-            display: content === null ? "none !important" : "flex",
-            height: "100%",
-            bg: "#FFF",
+            display: content === null ? 'none !important' : 'flex',
+            height: '100%',
+            bg: '#FFF',
             zIndex: 1000,
             flexGrow: 1,
             flexShrink: 0,
             flexBasis: layout.sidebar.width,
-            flexDirection: "column",
-            overflowX: "hidden",
-            overflowY: "hidden",
+            flexDirection: 'column',
+            overflowX: 'hidden',
+            overflowY: 'hidden',
             borderRightColor: layout.sidebar.borderRightColor,
             borderRightWidth: layout.sidebar.borderRightWidth,
-            borderRightStyle: "solid",
+            borderRightStyle: 'solid',
           }}
         >
           {!isMobile && (
-            <Box sx={{ flex: "0 0 auto" }}>
+            <Box sx={{ flex: '0 0 auto' }}>
               {selectedUnit !== null && (
                 <DesktopSelectedUnitHeader
                   name={selectedUnit.name}
@@ -237,8 +237,8 @@ const MapContainer = () => {
           <Box
             ref={contentNode}
             sx={{
-              height: "100%",
-              overflowY: "auto",
+              height: '100%',
+              overflowY: 'auto',
             }}
           >
             {content}
@@ -246,7 +246,7 @@ const MapContainer = () => {
         </Flex>
 
         <Map
-          isVisible={isMobile ? tab === "map" || tab === "unit-map" : true}
+          isVisible={isMobile ? tab === 'map' || tab === 'unit-map' : true}
         />
       </Flex>
 
@@ -254,9 +254,9 @@ const MapContainer = () => {
       {isMobile && (
         <Box
           sx={{
-            flex: "0 0 auto",
-            borderTop: "1px solid",
-            borderTopColor: "grey.9",
+            flex: '0 0 auto',
+            borderTop: '1px solid',
+            borderTopColor: 'grey.9',
           }}
         >
           <MobileTabs

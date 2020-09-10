@@ -1,13 +1,13 @@
-import { config } from "components/map/config"
-import { siteMetadata } from "../../gatsby-config"
+import { config } from 'components/map/config'
+import { siteMetadata } from '../../gatsby-config'
 
 const { mapboxToken } = siteMetadata
 
-const apiURL = "https://api.mapbox.com/geocoding/v5/mapbox.places"
+const apiURL = 'https://api.mapbox.com/geocoding/v5/mapbox.places'
 const { bounds } = config
-const types = ["region", "place", "poi"]
+const types = ['region', 'place', 'poi']
 
-export const searchPlaces = query => {
+export const searchPlaces = (query) => {
   const controller = new AbortController()
 
   // TODO: limit bounds: https://docs.mapbox.com/api/search/
@@ -16,17 +16,17 @@ export const searchPlaces = query => {
   )}.json?language=en-US&fuzzyMatch=false&country=us&bbox=${bounds.toString()}&types=${types.toString()}&access_token=${mapboxToken}`
 
   const promise = fetch(url, {
-    method: "GET",
-    mode: "cors",
+    method: 'GET',
+    mode: 'cors',
     signal: controller.signal,
   })
-    .then(response => {
+    .then((response) => {
       if (!response.ok) {
         return Promise.reject(new Error(response.statusText))
       }
 
-      return response.json().catch(error => {
-        return Promise.reject(new Error("Invalid JSON: ", error.message))
+      return response.json().catch((error) => {
+        return Promise.reject(new Error('Invalid JSON: ', error.message))
       })
     })
     .then(({ features = [] }) => {
@@ -39,8 +39,8 @@ export const searchPlaces = query => {
           properties: { address },
           context = [],
         }) => {
-          const [city] = context.filter(({ id }) => id.startsWith("place."))
-          const [state] = context.filter(({ id }) => id.startsWith("region."))
+          const [city] = context.filter(({ id }) => id.startsWith('place.'))
+          const [state] = context.filter(({ id }) => id.startsWith('region.'))
 
           const parts = []
           if (address) {
@@ -58,13 +58,13 @@ export const searchPlaces = query => {
             longitude,
             latitude,
             name: altName || name,
-            address: parts.length ? parts.join(", ") : null,
+            address: parts.length ? parts.join(', ') : null,
           }
         }
       )
     })
 
-    .catch(error => {
+    .catch((error) => {
       return Promise.reject(new Error(error.message))
     })
 

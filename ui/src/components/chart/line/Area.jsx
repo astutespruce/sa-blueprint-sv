@@ -1,6 +1,6 @@
-import React from "react"
-import PropTypes from "prop-types"
-import { area } from "d3-shape"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { area } from 'd3-shape'
 
 const Area = ({ points, baseline, fill, fillOpacity }) => {
   const path = area()
@@ -25,7 +25,7 @@ Area.propTypes = {
 }
 
 Area.defaultProps = {
-  fill: "#EEE",
+  fill: '#EEE',
   fillOpacity: 0.75,
 }
 

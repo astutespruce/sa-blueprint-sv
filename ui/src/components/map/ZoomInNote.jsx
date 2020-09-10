@@ -1,6 +1,6 @@
-import React, { memo, useEffect, useState } from "react"
-import PropTypes from "prop-types"
-import { Box, Text } from "theme-ui"
+import React, { memo, useEffect, useState } from 'react'
+import PropTypes from 'prop-types'
+import { Box, Text } from 'theme-ui'
 
 const ZoomInNote = ({ map, isMobile, isPixelMode }) => {
   const [zoom, setZoom] = useState(0)
@@ -14,12 +14,12 @@ const ZoomInNote = ({ map, isMobile, isPixelMode }) => {
       setZoom(map.getZoom())
     }
 
-    map.on("zoomend", updateZoom)
+    map.on('zoomend', updateZoom)
 
     return () => {
       if (!map) return
 
-      map.off("zoomend", updateZoom)
+      map.off('zoomend', updateZoom)
     }
   }, [map])
 
@@ -29,32 +29,32 @@ const ZoomInNote = ({ map, isMobile, isPixelMode }) => {
     <Box
       sx={{
         fontSize: 0,
-        position: "absolute",
+        position: 'absolute',
         top: 0,
-        left: isMobile ? 0 : "54px",
-        right: isMobile ? 0 : "54px",
-        textAlign: "center",
-        py: "0.25em",
-        px: "1em",
-        bg: "#FFF",
-        color: "grey.7",
-        borderRadius: isMobile ? null : "0 0 1em 1em",
-        boxShadow: "0 2px 6px #666",
+        left: isMobile ? 0 : '54px',
+        right: isMobile ? 0 : '54px',
+        textAlign: 'center',
+        py: '0.25em',
+        px: '1em',
+        bg: '#FFF',
+        color: 'grey.7',
+        borderRadius: isMobile ? null : '0 0 1em 1em',
+        boxShadow: '0 2px 6px #666',
       }}
     >
-      <Text sx={{ mx: "auto" }}>Zoom in to select an area</Text>
+      <Text sx={{ mx: 'auto' }}>Zoom in to select an area</Text>
     </Box>
   )
 }
 
 ZoomInNote.propTypes = {
-  isVisible: PropTypes.bool,
+  map: PropTypes.object,
   isMobile: PropTypes.bool,
   isPixelMode: PropTypes.bool,
 }
 
 ZoomInNote.defaultProps = {
-  isVisible: true,
+  map: null,
   isMobile: false,
   isPixelMode: false,
 }

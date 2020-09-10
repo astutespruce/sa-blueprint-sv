@@ -1,20 +1,20 @@
-import React from "react"
-import PropTypes from "prop-types"
-import { Box } from "theme-ui"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { Box } from 'theme-ui'
 
-import { Tabs as BaseTabs } from "components/tabs"
+import { Tabs as BaseTabs } from 'components/tabs'
 
 const tabs = [
-  { id: "info", label: "Info" },
-  { id: "find", label: "Find Location" },
-  { id: "contact", label: "Contact" },
+  { id: 'info', label: 'Info' },
+  { id: 'find', label: 'Find Location' },
+  { id: 'contact', label: 'Contact' },
 ]
 
 const unitTabs = [
-  { id: "unit-priorities", label: "Priorities" },
-  { id: "unit-indicators", label: "Indicators" },
-  { id: "unit-threats", label: "Threats" },
-  { id: "unit-partners", label: "Partners" },
+  { id: 'unit-priorities', label: 'Priorities' },
+  { id: 'unit-indicators', label: 'Indicators' },
+  { id: 'unit-threats', label: 'Threats' },
+  { id: 'unit-partners', label: 'Partners' },
 ]
 
 const Tabs = ({ tab, hasSelectedUnit, onChange }) => {

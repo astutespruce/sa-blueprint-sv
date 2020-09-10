@@ -1,46 +1,46 @@
-import React, { useState, useCallback, useRef, memo } from "react"
-import PropTypes from "prop-types"
-import { Box, Image } from "theme-ui"
+import React, { useState, useCallback, useRef, memo } from 'react'
+import PropTypes from 'prop-types'
+import { Box, Image } from 'theme-ui'
 
-import { indexBy } from "util/data"
+import { indexBy } from 'util/data'
 
-import LightIcon from "images/light-v9.jpg"
-import SatelliteIcon from "images/satellite-streets-v11.jpg"
+import LightIcon from 'images/light-v9.jpg'
+import SatelliteIcon from 'images/satellite-streets-v11.jpg'
 
 const coreCSS = {
-  cursor: "pointer",
-  position: "absolute",
+  cursor: 'pointer',
+  position: 'absolute',
   zIndex: 999,
-  overflow: "hidden",
+  overflow: 'hidden',
 }
 
 const desktopCSS = {
   ...coreCSS,
-  left: "10px",
-  bottom: "40px",
-  borderRadius: "64px",
-  border: "2px solid #FFF",
-  boxShadow: "0 1px 5px rgba(0, 0, 0, 0.65)",
-  width: "64px",
-  height: "64px",
+  left: '10px',
+  bottom: '40px',
+  borderRadius: '64px',
+  border: '2px solid #FFF',
+  boxShadow: '0 1px 5px rgba(0, 0, 0, 0.65)',
+  width: '64px',
+  height: '64px',
 }
 
 const mobileCSS = {
   ...coreCSS,
-  right: "10px",
-  top: "24px",
-  width: "40px",
-  height: "40px",
-  borderRadius: "32px",
-  boxShadow: "0 1px 5px #000",
-  border: "1px solid #FFF",
+  right: '10px',
+  top: '24px',
+  width: '40px',
+  height: '40px',
+  borderRadius: '32px',
+  boxShadow: '0 1px 5px #000',
+  border: '1px solid #FFF',
 }
 
 const styles = [
-  { id: "light-v9", label: "Light Basemap", icon: LightIcon },
+  { id: 'light-v9', label: 'Light Basemap', icon: LightIcon },
   {
-    id: "satellite-streets-v11",
-    label: "Satellite Basemap",
+    id: 'satellite-streets-v11',
+    label: 'Satellite Basemap',
     icon: SatelliteIcon,
   },
 ]
@@ -50,7 +50,7 @@ const StyleToggle = ({ map, sources, layers, isMobile }) => {
   const styleRef = useRef(null)
 
   const handleBasemapChange = useCallback(
-    styleID => {
+    (styleID) => {
       if (!map) {
         return
       }
@@ -62,18 +62,18 @@ const StyleToggle = ({ map, sources, layers, isMobile }) => {
       const updateStyle = () => {
         map.setStyle(`mapbox://styles/mapbox/${styleID}`)
 
-        map.once("style.load", () => {
+        map.once('style.load', () => {
           const {
             sources: styleSources,
             layers: styleLayers,
-            metadata: { "mapbox:origin": curStyleId },
+            metadata: { 'mapbox:origin': curStyleId },
           } = map.getStyle()
-          const layerIndex = indexBy(styleLayers, "id")
+          const layerIndex = indexBy(styleLayers, 'id')
 
-          if (curStyleId === "satellite-streets-v11") {
+          if (curStyleId === 'satellite-streets-v11') {
             // make satellite a bit more washed out
-            map.setPaintProperty("background", "background-color", "#FFF")
-            map.setPaintProperty("satellite", "raster-opacity", 0.75)
+            map.setPaintProperty('background', 'background-color', '#FFF')
+            map.setPaintProperty('satellite', 'raster-opacity', 0.75)
           }
 
           // add sources back
@@ -85,7 +85,7 @@ const StyleToggle = ({ map, sources, layers, isMobile }) => {
           })
 
           // add layers and reapply filters
-          layers.forEach(l => {
+          layers.forEach((l) => {
             // make sure we're not trying to reload the same layers
             if (layerIndex[l.id]) {
               return
@@ -93,9 +93,9 @@ const StyleToggle = ({ map, sources, layers, isMobile }) => {
 
             const layer = { ...l }
 
-            if (l.id === "unit-outline-highlight") {
+            if (l.id === 'unit-outline-highlight') {
               const [prevLyr] = styleRef.current.layers.filter(
-                ({ id }) => id === "unit-outline-highlight"
+                ({ id }) => id === 'unit-outline-highlight'
               )
 
               if (prevLyr) {
@@ -111,14 +111,14 @@ const StyleToggle = ({ map, sources, layers, isMobile }) => {
       if (map.isStyleLoaded()) {
         updateStyle()
       } else {
-        map.once("idle", updateStyle)
+        map.once('idle', updateStyle)
       }
     },
     [map]
   )
 
   const handleToggle = () => {
-    setIndex(prevIndex => {
+    setIndex((prevIndex) => {
       const nextIndex = prevIndex === 0 ? 1 : 0
       handleBasemapChange(styles[nextIndex].id)
       return nextIndex
@@ -130,7 +130,7 @@ const StyleToggle = ({ map, sources, layers, isMobile }) => {
   return (
     <Box sx={isMobile ? mobileCSS : desktopCSS}>
       <Image
-        sx={{ height: "100%", width: "100%" }}
+        sx={{ height: '100%', width: '100%' }}
         alt={label}
         src={icon}
         onClick={handleToggle}

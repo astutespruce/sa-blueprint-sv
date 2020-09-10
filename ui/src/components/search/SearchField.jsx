@@ -1,10 +1,10 @@
-import React, { useEffect, useState, useCallback, useRef } from "react"
-import PropTypes from "prop-types"
-import { Search, TimesCircle } from "emotion-icons/fa-solid"
-import { Box, Flex, Input } from "theme-ui"
+import React, { useEffect, useState, useCallback, useRef } from 'react'
+import PropTypes from 'prop-types'
+import { Search, TimesCircle } from 'emotion-icons/fa-solid'
+import { Box, Flex, Input } from 'theme-ui'
 
 const SearchField = ({ value, onChange }) => {
-  const [internalValue, setInternalValue] = useState("")
+  const [internalValue, setInternalValue] = useState('')
   const timeoutRef = useRef(null)
   //   const { query, setQuery } = useSearchQuery()
 
@@ -26,72 +26,72 @@ const SearchField = ({ value, onChange }) => {
   )
 
   const handleReset = useCallback(() => {
-    setInternalValue(() => "")
-    onChange("")
+    setInternalValue(() => '')
+    onChange('')
     // setQuery("")
   }, [onChange])
 
   useEffect(() => {
     // set value on mount if context has a previous value
     if (
-      (value !== "" && internalValue === "") ||
-      (value === "" && internalValue !== "")
+      (value !== '' && internalValue === '') ||
+      (value === '' && internalValue !== '')
     ) {
       setInternalValue(value)
     }
   }, [value])
 
   return (
-    <Box sx={{ py: "0.5rem", px: "1rem", bg: "grey.1" }}>
+    <Box sx={{ py: '0.5rem', px: '1rem', bg: 'grey.1' }}>
       <Flex
         sx={{
-          bg: "#FFF",
-          px: "0.5rem",
-          borderRadius: "0.5rem",
-          color: value === "" ? "grey.4" : "grey.9",
-          alignItems: "center",
-          "&:focus, &:focus-within": {
-            color: "grey.9",
+          bg: '#FFF',
+          px: '0.5rem',
+          borderRadius: '0.5rem',
+          color: value === '' ? 'grey.4' : 'grey.9',
+          alignItems: 'center',
+          '&:focus, &:focus-within': {
+            color: 'grey.9',
           },
         }}
       >
         <Search
           css={{
-            width: "1em",
-            height: "1em",
-            flex: "0 0 auto",
+            width: '1em',
+            height: '1em',
+            flex: '0 0 auto',
           }}
         />
         <Input
           autoFocus
           sx={{
-            width: "100%",
-            flex: "1 1 auto",
-            border: "none",
-            outline: "none",
-            "&::placeholder": {
-              color: "grey.4",
+            width: '100%',
+            flex: '1 1 auto',
+            border: 'none',
+            outline: 'none',
+            '&::placeholder': {
+              color: 'grey.4',
             },
           }}
           placeholder="Enter a location name"
           value={internalValue}
           onChange={handleChange}
         />
-        {value !== "" && (
+        {value !== '' && (
           <Box
             sx={{
-              color: "grey.5",
-              "&:hover": {
-                color: "grey.9",
+              color: 'grey.5',
+              '&:hover': {
+                color: 'grey.9',
               },
             }}
           >
             <TimesCircle
               css={{
-                width: "1.25em",
-                height: "1.25em",
-                flex: "0 0 auto",
-                cursor: "pointer",
+                width: '1.25em',
+                height: '1.25em',
+                flex: '0 0 auto',
+                cursor: 'pointer',
               }}
               onClick={handleReset}
             />
@@ -108,7 +108,7 @@ SearchField.propTypes = {
 }
 
 SearchField.defaultProps = {
-  value: "",
+  value: '',
 }
 
 export default SearchField

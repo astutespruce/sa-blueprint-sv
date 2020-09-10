@@ -1,5 +1,5 @@
-import React, { useCallback, useState } from "react"
-import PropTypes from "prop-types"
+import React, { useCallback, useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Points = ({
   points,
@@ -76,7 +76,7 @@ const Points = ({
             cy={y}
             fill="transparent"
             stroke="none"
-            style={{ cursor: "pointer" }}
+            style={{ cursor: 'pointer' }}
             data-index={i}
             onMouseEnter={handleMouseOver}
             onMouseLeave={handleMouseOut}
@@ -114,9 +114,9 @@ Points.defaultProps = {
   radius: 4,
   stroke: null,
   strokeWidth: 0,
-  fill: "#AAA",
+  fill: '#AAA',
   hoverRadius: null,
-  axisDropStroke: "#666",
+  axisDropStroke: '#666',
   axisDropStrokeWidth: 1,
 }
 

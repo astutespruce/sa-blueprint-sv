@@ -1,3 +1,3 @@
-import UploadContainer from "./UploadContainer"
+import UploadContainer from './UploadContainer'
 
 export { UploadContainer }

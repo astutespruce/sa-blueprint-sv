@@ -1,6 +1,6 @@
-import React from "react"
-import PropTypes from "prop-types"
-import { line } from "d3-shape"
+import React from 'react'
+import PropTypes from 'prop-types'
+import { line } from 'd3-shape'
 
 const Line = ({ points, stroke, strokeWidth }) => {
   const path = line()(points.map(({ x, y }) => [x, y]))
@@ -20,7 +20,7 @@ Line.propTypes = {
 }
 
 Line.defaultProps = {
-  stroke: "#AAA",
+  stroke: '#AAA',
   strokeWidth: 1,
 }
 

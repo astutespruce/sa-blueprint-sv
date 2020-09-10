@@ -1,14 +1,14 @@
-import React, { useCallback, useState } from "react"
-import PropTypes from "prop-types"
-import { Button, Flex, Heading, Input, Text, Divider } from "theme-ui"
+import React, { useCallback, useState } from 'react'
+import PropTypes from 'prop-types'
+import { Button, Flex, Heading, Input, Text, Divider } from 'theme-ui'
 
-import DropZone from "./DropZone"
+import DropZone from './DropZone'
 
 const UploadForm = ({ onFileChange, onCreateReport }) => {
-  const [name, setName] = useState("")
+  const [name, setName] = useState('')
   const [file, setFile] = useState(null)
 
-  const handleDrop = useCallback(file => {
+  const handleDrop = useCallback((file) => {
     setFile(file)
     onFileChange()
   }, [])
@@ -28,17 +28,17 @@ const UploadForm = ({ onFileChange, onCreateReport }) => {
 
   return (
     <>
-      <Heading as="h3" sx={{ mb: "0.5rem" }}>
+      <Heading as="h3" sx={{ mb: '0.5rem' }}>
         Area Name:
       </Heading>
       <Input type="text" onChange={handleInputChange} />
 
       <Flex
         sx={{
-          mt: "2rem",
-          mb: "0.5em",
-          justifyContent: "space-between",
-          alignItems: "center",
+          mt: '2rem',
+          mb: '0.5em',
+          justifyContent: 'space-between',
+          alignItems: 'center',
         }}
       >
         <div>
@@ -61,7 +61,7 @@ const UploadForm = ({ onFileChange, onCreateReport }) => {
           <Divider />
           <Flex
             sx={{
-              justifyContent: "space-between",
+              justifyContent: 'space-between',
             }}
           >
             <Button variant="secondary" onClick={handleResetFile}>

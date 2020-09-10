@@ -1,4 +1,4 @@
-import FluidImage from "./Fluid"
-import BannerImage from "./Banner"
+import FluidImage from './Fluid'
+import BannerImage from './Banner'
 
 export { FluidImage, BannerImage }
