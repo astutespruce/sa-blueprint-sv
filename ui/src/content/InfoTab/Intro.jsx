@@ -1,10 +1,10 @@
 import React, { useState } from 'react'
-import { Box, Button, Flex, Heading, Text } from 'theme-ui'
-import { Play } from 'emotion-icons/fa-solid'
+import { Box, Button, Flex, Text } from 'theme-ui'
+import { Play } from '@emotion-icons/fa-solid'
 import YouTube from 'react-youtube'
 
 import { OutboundLink } from 'components/link'
-import { Modal } from 'components/Modal'
+import { Modal } from 'components/modal'
 
 const Intro = () => {
   const [videoOpen, setVideoOpen] = useState(false)
@@ -20,10 +20,6 @@ const Intro = () => {
   return (
     <>
       <Box as="section">
-        {/* <Heading as="h3" sx={{ mb: "0.5rem" }}>
-          South Atlantic Conservation Blueprint Simple Viewer
-        </Heading> */}
-
         <p>
           The{' '}
           <OutboundLink to="http://www.southatlanticlcc.org/blueprint/">
@@ -46,7 +42,7 @@ const Intro = () => {
             onClick={openVideo}
             sx={{ display: 'flex', alignItems: 'center' }}
           >
-            <Play css={{ height: '1em', width: '1em', marginRight: '0.5em' }} />
+            <Play size="1em" style={{ marginRight: '0.5em' }} />
             <Text>Overview Video</Text>
           </Button>
         </Flex>

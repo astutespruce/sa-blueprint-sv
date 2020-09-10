@@ -2,7 +2,7 @@ import React from 'react'
 import { createPortal } from 'react-dom'
 import PropTypes from 'prop-types'
 import { Box, Button, Flex, Heading } from 'theme-ui'
-import { TimesCircle } from 'emotion-icons/fa-regular'
+import { TimesCircle } from '@emotion-icons/fa-regular'
 
 const absPostionCSS = {
   position: 'absolute',
@@ -67,12 +67,7 @@ const Modal = ({ children, title, width, onClose }) => {
               onClick={handleClose}
               sx={{ flex: '0 0 auto', margin: '0' }}
             >
-              <TimesCircle
-                css={{
-                  width: '1.5em',
-                  height: '1.5em',
-                }}
-              />
+              <TimesCircle size="1.5em" />
             </Button>
           </Flex>
         </Heading>

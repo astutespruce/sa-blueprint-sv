@@ -35,12 +35,12 @@ const XAxis = ({
         </text>
       ) : null}
 
-      {ticks.map(({ x, label }) => (
+      {ticks.map(({ x, label: tickLabel }) => (
         <g key={x} transform={`translate(${x}, -4)`}>
           <line x1={0} y1={0} x2={0} y2={8} stroke={stroke} strokeWidth={1} />
 
           <text textAnchor="middle" x={0} y={fontSize + 12} fill={labelColor}>
-            {label}
+            {tickLabel}
           </text>
         </g>
       ))}

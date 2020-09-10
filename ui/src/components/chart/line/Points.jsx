@@ -11,23 +11,16 @@ const Points = ({
   hoverRadius,
   axisDropStroke,
   axisDropStrokeWidth,
-  onHover,
 }) => {
   const [activeIndex, setActiveIndex] = useState(null)
 
-  const handleMouseOver = useCallback(
-    ({
-      target: {
-        dataset: { index },
-      },
-    }) => {
-      setActiveIndex(() => parseInt(index, 10))
-    }
-  )
+  const handleMouseOver = useCallback(({ target: { dataset: { index } } }) => {
+    setActiveIndex(() => parseInt(index, 10))
+  }, [])
 
   const handleMouseOut = useCallback(() => {
     setActiveIndex(() => null)
-  })
+  }, [])
 
   const minX = Math.min(...points.map(({ x }) => x))
 
@@ -102,6 +95,7 @@ Points.propTypes = {
     })
   ).isRequired,
   baseline: PropTypes.number.isRequired,
+  radius: PropTypes.number,
   stroke: PropTypes.string,
   strokeWidth: PropTypes.number,
   fill: PropTypes.string,

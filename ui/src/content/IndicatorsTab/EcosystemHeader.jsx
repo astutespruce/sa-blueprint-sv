@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import { Flex, Heading, Image } from 'theme-ui'
 
 const EcosystemHeader = ({ id, label, color, borderColor }) => {
+  // eslint-disable-next-line global-require, import/no-dynamic-require
   const icon = require(`images/${id}.svg`)
 
   return (

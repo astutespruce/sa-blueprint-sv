@@ -1,12 +1,11 @@
 import React, { useEffect, useState, useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
-import { Search, TimesCircle } from 'emotion-icons/fa-solid'
+import { Search, TimesCircle } from '@emotion-icons/fa-solid'
 import { Box, Flex, Input } from 'theme-ui'
 
 const SearchField = ({ value, onChange }) => {
   const [internalValue, setInternalValue] = useState('')
   const timeoutRef = useRef(null)
-  //   const { query, setQuery } = useSearchQuery()
 
   const handleChange = useCallback(
     ({ target: { value: newValue } }) => {
@@ -18,7 +17,6 @@ const SearchField = ({ value, onChange }) => {
       }
       timeoutRef.current = setTimeout(() => {
         onChange(newValue)
-        // setQuery(newValue)
         clearTimeout(timeoutRef.current)
       }, 250)
     },
@@ -28,15 +26,11 @@ const SearchField = ({ value, onChange }) => {
   const handleReset = useCallback(() => {
     setInternalValue(() => '')
     onChange('')
-    // setQuery("")
   }, [onChange])
 
   useEffect(() => {
     // set value on mount if context has a previous value
-    if (
-      (value !== '' && internalValue === '') ||
-      (value === '' && internalValue !== '')
-    ) {
+    if (value !== '') {
       setInternalValue(value)
     }
   }, [value])
@@ -55,13 +49,7 @@ const SearchField = ({ value, onChange }) => {
           },
         }}
       >
-        <Search
-          css={{
-            width: '1em',
-            height: '1em',
-            flex: '0 0 auto',
-          }}
-        />
+        <Search size="1em" style={{ flex: '0 0 auto' }} />
         <Input
           autoFocus
           sx={{
@@ -87,11 +75,11 @@ const SearchField = ({ value, onChange }) => {
             }}
           >
             <TimesCircle
-              css={{
-                width: '1.25em',
-                height: '1.25em',
+              size="1.25em"
+              style={{
                 flex: '0 0 auto',
                 cursor: 'pointer',
+                display: 'block',
               }}
               onClick={handleReset}
             />

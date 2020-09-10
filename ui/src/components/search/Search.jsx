@@ -49,7 +49,7 @@ const Search = () => {
         setIndex(() => nextIndex)
       }
     },
-    [results, index]
+    [results, index, setQuery]
   )
 
   useEffect(() => {
@@ -60,7 +60,7 @@ const Search = () => {
     <Box onKeyDown={handleKeyDown}>
       <SearchField value={query} onChange={setQuery} />
 
-      {query ? (
+      {query && query.length >= 3 ? (
         <Results
           results={results}
           index={index}

@@ -1,6 +1,5 @@
 import {
   applyFactor,
-  percentsToAvg,
   parsePipeEncodedValues,
   parseDeltaEncodedValues,
   parseDictEncodedValues,
@@ -49,6 +48,7 @@ export const unpackFeatureData = (properties) => {
       return [key, value]
     })
     .reduce((prev, [key, value]) => {
+      // eslint-disable-next-line no-param-reassign
       prev[key] = value
       return prev
     }, {})
@@ -83,17 +83,15 @@ export const unpackFeatureData = (properties) => {
 
   if (values.ownership) {
     Object.keys(values.ownership).forEach((k) => {
-      values.ownership[k] = values.ownership[k] * 0.1
+      values.ownership[k] *= 0.1
     })
   }
 
   if (values.protection) {
     Object.keys(values.protection).forEach((k) => {
-      values.protection[k] = values.protection[k] * 0.1
+      values.protection[k] *= 0.1
     })
   }
-
-  console.log('transformed values', values)
 
   return values
 }

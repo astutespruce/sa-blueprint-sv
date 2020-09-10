@@ -11,7 +11,7 @@ import { EcosystemPropType } from './proptypes'
 
 const EcosystemList = ({ ecosystems, analysisAcres, blueprintAcres }) => {
   const indicators = flatten(
-    Object.values(ecosystems).map(({ indicators }) => indicators)
+    Object.values(ecosystems).map(({ indicators: i }) => i)
   )
   const indicatorsIndex = indexBy(indicators, 'id')
 

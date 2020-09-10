@@ -8,7 +8,7 @@ const Area = ({ points, baseline, fill, fillOpacity }) => {
     .y0(baseline)
     .y1(({ y }) => y)(points)
 
-  return <path d={path} fill="none" fill={fill} fillOpacity={fillOpacity} />
+  return <path d={path} fill={fill} fillOpacity={fillOpacity} />
 }
 
 Area.propTypes = {

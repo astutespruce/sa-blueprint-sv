@@ -92,7 +92,7 @@ export const parsePipeEncodedValues = (text) => {
 export const parseDeltaEncodedValues = (text) => {
   if (!text) return null
 
-  let [baseline, ...deltas] = text.split('^').map((d) => parseInt(d, 10) || 0)
+  const [baseline, ...deltas] = text.split('^').map((d) => parseInt(d, 10) || 0)
 
   const values = [baseline, ...Array(deltas.length)]
   for (let i = 1; i < values.length; i += 1) {
@@ -126,6 +126,7 @@ export const parseDictEncodedValues = (text) => {
       return [k, v]
     })
     .reduce((prev, [k, v]) => {
+      // eslint-disable-next-line no-param-reassign
       prev[k] = v
       return prev
     }, {})

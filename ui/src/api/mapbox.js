@@ -39,8 +39,12 @@ export const searchPlaces = (query) => {
           properties: { address },
           context = [],
         }) => {
-          const [city] = context.filter(({ id }) => id.startsWith('place.'))
-          const [state] = context.filter(({ id }) => id.startsWith('region.'))
+          const [city] = context.filter(({ id: featureId }) =>
+            featureId.startsWith('place.')
+          )
+          const [state] = context.filter(({ id: featureId }) =>
+            featureId.startsWith('region.')
+          )
 
           const parts = []
           if (address) {

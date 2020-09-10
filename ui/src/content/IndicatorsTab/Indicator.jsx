@@ -1,16 +1,15 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Flex, Box, Text } from 'theme-ui'
+import { Box, Text } from 'theme-ui'
 import { lighten } from '@theme-ui/color'
 
 import { useBreakpoints } from 'components/layout'
-import { formatPercent } from 'util/format'
 
 import IndicatorAverageChart from './IndicatorAverageChart'
 import { IndicatorPropType } from './proptypes'
 
 const Indicator = ({ indicator, onSelect }) => {
-  const { id, label, avg, total, domain } = indicator
+  const { label, avg, domain } = indicator
 
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
@@ -23,11 +22,11 @@ const Indicator = ({ indicator, onSelect }) => {
 
   const handleMouseEnter = useCallback(() => {
     setIsHover(() => true)
-  })
+  }, [])
 
   const handleMouseLeave = useCallback(() => {
     setIsHover(() => false)
-  })
+  }, [])
 
   return (
     <Box
@@ -90,7 +89,7 @@ const Indicator = ({ indicator, onSelect }) => {
 }
 
 Indicator.propTypes = {
-  indicator: PropTypes.shape(IndicatorPropType),
+  indicator: PropTypes.shape(IndicatorPropType).isRequired,
   onSelect: PropTypes.func.isRequired,
 }
 

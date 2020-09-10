@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex, Image, Heading } from 'theme-ui'
 
 import { Link } from 'components/link'
-import LogoURL from 'images/sa_logo.png'
+import LogoURL from 'images/logo.svg'
 import HeaderButtons from './HeaderButtons'
 import { useBreakpoints } from './Breakpoints'
 import { useSelectedUnit } from './SelectedUnit'

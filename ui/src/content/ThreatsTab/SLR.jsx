@@ -6,8 +6,6 @@ import { Box, Text } from 'theme-ui'
 import { OutboundLink } from 'components/link'
 import { LineChart } from 'components/chart'
 
-import theme from 'theme'
-
 // SLR levels are in feet above current mean sea level: 0...6
 
 const SLR = ({ percents }) => {

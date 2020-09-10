@@ -37,7 +37,7 @@
         "extensions": [".js", ".jsx"]
       }
     ],
-    "react/jsx-props-no-spreading": 1,
+    "react/jsx-props-no-spreading": "off",
     "quotes": [
       2,
       "single",

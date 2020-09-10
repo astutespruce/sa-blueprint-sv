@@ -40,7 +40,7 @@ const IndicatorsTab = ({
               ? avg
               : percentsToAvg(values.map(({ percent: p }) => p)) +
                 values[0].value,
-          total: sum(values.map(({ percent }) => percent)),
+          total: sum(values.map(({ percent: p }) => p)),
         }
       })
       // Only include those that have nonzero values

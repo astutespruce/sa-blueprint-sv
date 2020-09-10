@@ -114,7 +114,7 @@ const StyleToggle = ({ map, sources, layers, isMobile }) => {
         map.once('idle', updateStyle)
       }
     },
-    [map]
+    [map, layers, sources]
   )
 
   const handleToggle = () => {
@@ -141,6 +141,15 @@ const StyleToggle = ({ map, sources, layers, isMobile }) => {
 
 StyleToggle.propTypes = {
   map: PropTypes.object,
+  sources: PropTypes.objectOf(
+    PropTypes.shape({ type: PropTypes.string.isRequired })
+  ).isRequired,
+  layers: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      paint: PropTypes.object,
+    })
+  ).isRequired,
   isMobile: PropTypes.bool,
 }
 

@@ -8,10 +8,13 @@ const UploadForm = ({ onFileChange, onCreateReport }) => {
   const [name, setName] = useState('')
   const [file, setFile] = useState(null)
 
-  const handleDrop = useCallback((file) => {
-    setFile(file)
-    onFileChange()
-  }, [])
+  const handleDrop = useCallback(
+    (newFile) => {
+      setFile(newFile)
+      onFileChange()
+    },
+    [onFileChange]
+  )
 
   const handleInputChange = useCallback(({ target: { value } }) => {
     setName(value)

@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { formatNumber } from 'util/format'
-
 const YAxis = ({
   ticks,
   label,
@@ -38,12 +36,12 @@ const YAxis = ({
         </text>
       ) : null}
 
-      {ticks.map(({ y, label }) => (
+      {ticks.map(({ y, label: tickLabel }) => (
         <g key={y} transform={`translate(-4, ${y})`}>
           <line x1={0} y1={0} x2={8} y2={0} stroke={stroke} strokeWidth={1} />
 
           <text textAnchor="end" x={-4} y={fontSize / 2} fill={labelColor}>
-            {label}
+            {tickLabel}
           </text>
         </g>
       ))}

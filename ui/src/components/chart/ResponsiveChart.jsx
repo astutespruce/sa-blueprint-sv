@@ -32,7 +32,7 @@ const ResponsiveChart = ({ children }) => {
 }
 
 ResponsiveChart.propTypes = {
-  children: PropTypes.object, // must be a singular child
+  children: PropTypes.object.isRequired, // must be a singular child
 }
 
 export default ResponsiveChart

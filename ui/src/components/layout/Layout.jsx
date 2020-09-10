@@ -14,7 +14,7 @@ import { BreakpointProvider } from './Breakpoints'
 import { siteMetadata } from '../../../gatsby-config'
 
 const Layout = ({ children, title, overflowY }) => {
-  const { ErrorBoundary, didCatch, error } = useErrorBoundary()
+  const { ErrorBoundary, didCatch } = useErrorBoundary()
 
   return (
     <BreakpointProvider>

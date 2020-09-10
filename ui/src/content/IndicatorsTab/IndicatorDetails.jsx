@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Box, Flex, Text, Heading, Image } from 'theme-ui'
-import { Reply } from 'emotion-icons/fa-solid'
+import { Reply } from '@emotion-icons/fa-solid'
 
 import { OutboundLink } from 'components/link'
-import { formatPercent, formatNumber } from 'util/format'
+import { formatPercent } from 'util/format'
 import theme from 'theme'
 
 import IndicatorPercentTable from './IndicatorPercentTable'
@@ -24,6 +24,7 @@ const IndicatorDetails = ({
   onClose,
 }) => {
   const ecosystemId = id.split('_')[0]
+  // eslint-disable-next-line global-require,import/no-dynamic-require
   const icon = require(`images/${ecosystemId}.svg`)
 
   const remainder =
@@ -77,15 +78,15 @@ const IndicatorDetails = ({
         }}
       >
         <Flex sx={{}}>
-          <Reply
-            css={{
-              width: '0.75em',
-              height: '0.75em',
-              flex: '0 0 auto',
-              margin: 0,
-              color: theme.colors.grey[7],
-            }}
-          />
+          <Text sx={{ color: theme.colors.grey[7], flex: '0 0 auto' }}>
+            <Reply
+              size="0.75em"
+              style={{
+                display: 'block',
+                margin: 0,
+              }}
+            />
+          </Text>
 
           <Flex sx={{ alignItems: 'center' }}>
             <Image
@@ -139,12 +140,12 @@ IndicatorDetails.propTypes = {
   ...IndicatorPropType,
   analysisAcres: PropTypes.number.isRequired,
   blueprintAcres: PropTypes.number.isRequired,
+  total: PropTypes.number,
   onClose: PropTypes.func.isRequired,
 }
 
 IndicatorDetails.defaultProps = {
   total: 0,
-  avg: 0,
 }
 
 export default IndicatorDetails

@@ -1,7 +1,11 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Box, Flex, Text, Divider } from 'theme-ui'
-import { ArrowUp, ArrowDown } from 'emotion-icons/fa-solid'
+import {
+  ArrowUp as ArrowUpIcon,
+  ArrowDown as ArrowDownIcon,
+} from '@emotion-icons/fa-solid'
+import styled from '@emotion/styled'
 
 import { sum } from 'util/data'
 import { formatPercent } from 'util/format'
@@ -15,12 +19,19 @@ const labelCSS = {
   fontSize: 0,
 }
 
-const arrowCSS = {
-  margin: 0,
-  flex: '0 0 auto',
+const ArrowUp = styled(ArrowUpIcon)({
   width: '1em',
   height: '1em',
-}
+  margin: 0,
+  flex: '0 0 auto',
+})
+
+const ArrowDown = styled(ArrowDownIcon)({
+  width: '1em',
+  height: '1em',
+  margin: 0,
+  flex: '0 0 auto',
+})
 
 const IndicatorPercentTable = ({ values, goodThreshold }) => {
   const remainder = values.filter(({ value }) => value === null)
@@ -41,13 +52,13 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
               <Text sx={labelCSS}>
                 {isHighValue && (
                   <Flex sx={{ alignItems: 'center' }}>
-                    <ArrowUp css={arrowCSS} />
+                    <ArrowUp />
                     <Text sx={{ ml: '0.1rem' }}>High:</Text>
                   </Flex>
                 )}
                 {isLowValue && (
                   <Flex sx={{ alignItems: 'center' }}>
-                    <ArrowDown css={arrowCSS} />
+                    <ArrowDown />
                     <Text sx={{ ml: '0.1rem' }}>Low:</Text>
                   </Flex>
                 )}
@@ -98,7 +109,7 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
           <Text sx={labelCSS}>
             {isHighValue && (
               <Flex sx={{ alignItems: 'center' }}>
-                <ArrowUp css={arrowCSS} />
+                <ArrowUp />
                 <Text sx={{ ml: '0.1rem' }}>High:</Text>
               </Flex>
             )}
@@ -107,14 +118,14 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
             value={value}
             label={label}
             percent={percent}
-            isGood={true}
+            isGood
           />
         </Flex>
       ))}
 
       <Box sx={{ mt: '1.5rem', color: 'grey.7', fontSize: 0 }}>
         <Flex sx={{ justifyContent: 'center', alignItems: 'center' }}>
-          <ArrowUp css={arrowCSS} />
+          <ArrowUp />
           <Text sx={{ width: '14em', ml: '0.1em' }}>
             {formatPercent(totalGoodPercent)}% in good condition
           </Text>
@@ -130,7 +141,7 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
         />
 
         <Flex sx={{ justifyContent: 'center', alignItems: 'center' }}>
-          <ArrowDown css={arrowCSS} />
+          <ArrowDown />
           <Text sx={{ width: '14em', ml: '0.1em' }}>
             {formatPercent(totalNotGoodPercent)}% not in good condition
           </Text>
@@ -142,7 +153,7 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
           <Text sx={labelCSS}>
             {isLowValue && (
               <Flex sx={{ alignItems: 'center' }}>
-                <ArrowDown css={arrowCSS} />
+                <ArrowDown />
                 <Text sx={{ ml: '0.1rem' }}>Low:</Text>
               </Flex>
             )}

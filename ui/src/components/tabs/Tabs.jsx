@@ -5,14 +5,6 @@ import { Box, Flex, Grid, Text } from 'theme-ui'
 
 import Icon from './Icon'
 
-const defaultStyle = {
-  color: 'grey.7',
-}
-
-const defaultActiveStyle = {
-  color: ['primary' || 'text'],
-}
-
 const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
   const [tab, setTab] = useState(activeTab || tabs[0].id)
 
@@ -20,14 +12,14 @@ const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
     if (activeTab !== tab) {
       setTab(activeTab)
     }
-  }, [activeTab])
+  }, [activeTab, tab])
 
   const handleClick = useCallback(
     (id) => () => {
       setTab(() => id)
       onChange(id)
     },
-    []
+    [onChange]
   )
 
   return (
@@ -77,7 +69,7 @@ Tabs.propTypes = {
       id: PropTypes.string.isRequired,
       label: PropTypes.string.isRequired,
     })
-  ),
+  ).isRequired,
   onChange: PropTypes.func.isRequired,
   activeTab: PropTypes.string,
   variant: PropTypes.string,

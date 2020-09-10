@@ -28,7 +28,7 @@ const uploadFile = async (file, name, onProgress) => {
   const json = await response.json()
   const { job, detail } = json
 
-  if (response.status == 400) {
+  if (response.status === 400) {
     // indicates error with user request, show error to user
 
     // just for logging

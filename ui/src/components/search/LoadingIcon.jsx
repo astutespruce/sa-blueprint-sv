@@ -1,6 +1,8 @@
 /** @jsx jsx */
+
+// eslint-disable-next-line no-unused-vars
 import React from 'react'
-import { Compass as Icon } from 'emotion-icons/fa-solid'
+import { Compass as Icon } from '@emotion-icons/fa-solid'
 import { keyframes, css } from '@emotion/core'
 import { jsx } from 'theme-ui'
 

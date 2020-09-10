@@ -32,7 +32,7 @@ const NotFoundPage = ({ data: { image } }) => (
         >
           <Heading as="h1">NOT FOUND</Heading>
           <Heading as="h2">
-            Sorry, we couldn't find what you were looking for here.
+            Sorry, we could not find what you were looking for here.
           </Heading>
         </Box>
       </Flex>

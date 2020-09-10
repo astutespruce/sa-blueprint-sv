@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
-import PropTypes from 'prop-types'
+import React, { useEffect, useRef, useState, memo } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { Box } from 'theme-ui'
@@ -20,6 +19,7 @@ import { siteMetadata } from '../../../gatsby-config'
 const { mapboxToken } = siteMetadata
 
 if (!mapboxToken) {
+  // eslint-disable-next-line no-console
   console.error(
     'ERROR: Mapbox token is required in gatsby-config.js siteMetadata'
   )
@@ -35,12 +35,7 @@ const mapWidgetCSS = {
   },
 }
 
-const Map = ({ isVisible }) => {
-  // if there is no window, we cannot render this component
-  if (!hasWindow) {
-    return null
-  }
-
+const Map = () => {
   const mapNode = useRef(null)
   const mapRef = useRef(null)
   const [isLoaded, setIsLoaded] = useState(false)
@@ -53,6 +48,11 @@ const Map = ({ isVisible }) => {
   const { location } = useSearch()
 
   useEffect(() => {
+    // if there is no window, we cannot render this component
+    if (!hasWindow) {
+      return null
+    }
+
     const { bounds, maxBounds, minZoom, maxZoom } = config
     const { center, zoom } = getCenterAndZoom(mapNode.current, bounds, 0.1)
 
@@ -85,12 +85,15 @@ const Map = ({ isVisible }) => {
       layers.forEach((layer) => {
         map.addLayer(layer, layer.before || null)
       })
+
+      // update state once to trigger other components to update with map object
+      setIsLoaded(() => true)
     })
 
     map.on('click', 'unit-fill', ({ features }) => {
       if (!(features && features.length > 0)) return
 
-      const { id: selectedId, properties } = features[0]
+      const { properties } = features[0]
 
       // highlight selected
       map.setFilter('unit-outline-highlight', ['==', 'id', properties.id])
@@ -133,22 +136,23 @@ const Map = ({ isVisible }) => {
       }
     })
 
-    // update state once to trigger other components to update with map object
-    setIsLoaded(() => true)
-
     // when this component is destroyed, remove the map
     return () => {
       map.remove()
     }
-  }, [])
+  }, [isMobile, selectUnit])
 
   useIsEqualEffect(() => {
     if (!isLoaded) return
+    const { current: map } = mapRef
+
+    // sometimes map is not fully loaded on hot reload
+    if (!map.loaded()) return
 
     if (selectedUnit === null) {
       map.setFilter('unit-outline-highlight', ['==', 'id', Infinity])
     }
-  }, [selectedUnit])
+  }, [selectedUnit, isLoaded])
 
   useIsEqualEffect(() => {
     if (!isLoaded) return
@@ -165,13 +169,11 @@ const Map = ({ isVisible }) => {
       } else {
         locationMarkerRef.current.setLngLat([longitude, latitude])
       }
-    } else {
-      if (locationMarkerRef.current !== null) {
-        locationMarkerRef.current.remove()
-        locationMarkerRef.current = null
-      }
+    } else if (locationMarkerRef.current !== null) {
+      locationMarkerRef.current.remove()
+      locationMarkerRef.current = null
     }
-  }, [location])
+  }, [location, isLoaded])
 
   return (
     <Box
@@ -186,28 +188,17 @@ const Map = ({ isVisible }) => {
     >
       <div ref={mapNode} style={{ width: '100%', height: '100%' }} />
 
-      {isVisible ? (
-        <>
-          {!isMobile ? <Legend /> : null}
-          <ZoomInNote map={mapRef.current} isMobile={isMobile} />
-          <StyleToggle
-            map={mapRef.current}
-            sources={sources}
-            layers={layers}
-            isMobile={isMobile}
-          />
-        </>
-      ) : null}
+      {!isMobile ? <Legend /> : null}
+      <ZoomInNote map={mapRef.current} isMobile={isMobile} />
+      <StyleToggle
+        map={mapRef.current}
+        sources={sources}
+        layers={layers}
+        isMobile={isMobile}
+      />
     </Box>
   )
 }
 
-Map.propTypes = {
-  isVisible: PropTypes.bool,
-}
-
-Map.defaultProps = {
-  isVisible: true,
-}
-
-export default Map
+// prevent rerender on props change
+export default memo(Map, () => true)

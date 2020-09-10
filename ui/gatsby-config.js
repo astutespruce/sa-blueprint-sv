@@ -1,4 +1,4 @@
-require("dotenv").config({
+require('dotenv').config({
   path: `.env.${process.env.NODE_ENV}`,
 })
 
@@ -60,6 +60,7 @@ module.exports = {
       options: {
         name: `South Atlantic Conservation Blueprint 2020`,
         short_name: `Blueprint 2020`,
+        icon: 'src/images/logo.svg',
         start_url: `/`,
         background_color: `#0892d0`,
         theme_color: `#0892d0`,

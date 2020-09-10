@@ -2,12 +2,12 @@ import React, { memo, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Box, Text } from 'theme-ui'
 
-const ZoomInNote = ({ map, isMobile, isPixelMode }) => {
+const ZoomInNote = ({ map, isMobile }) => {
   const [zoom, setZoom] = useState(0)
 
   useEffect(() => {
     if (!map) {
-      return
+      return undefined
     }
 
     const updateZoom = () => {
@@ -50,13 +50,11 @@ const ZoomInNote = ({ map, isMobile, isPixelMode }) => {
 ZoomInNote.propTypes = {
   map: PropTypes.object,
   isMobile: PropTypes.bool,
-  isPixelMode: PropTypes.bool,
 }
 
 ZoomInNote.defaultProps = {
   map: null,
   isMobile: false,
-  isPixelMode: false,
 }
 
 export default memo(ZoomInNote)

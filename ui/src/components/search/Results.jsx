@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { Box, Flex, Text } from 'theme-ui'
-import { ExclamationTriangle } from 'emotion-icons/fa-solid'
+import { ExclamationTriangle } from '@emotion-icons/fa-solid'
 
 import { OutboundLink } from 'components/link'
 import LoadingIcon from './LoadingIcon'
@@ -40,8 +40,8 @@ const Results = ({
   }, [index])
 
   const handleSetLocation = useCallback(
-    (index) => {
-      const { id, name, longitude, latitude } = results[index]
+    (nextIndex) => {
+      const { id, name, longitude, latitude } = results[nextIndex]
 
       onSetLocation({
         id,
@@ -50,34 +50,34 @@ const Results = ({
         latitude,
       })
     },
-    [results]
+    [results, onSetLocation]
   )
 
   const handleClick = useCallback(
     ({
       target: {
-        dataset: { index },
+        dataset: { index: nextIndex },
       },
     }) => {
-      if (index !== undefined) {
-        handleSetLocation(index)
+      if (nextIndex !== undefined) {
+        handleSetLocation(nextIndex)
       }
     },
-    [results, handleSetLocation]
+    [handleSetLocation]
   )
 
   const handleKeyDown = useCallback(
     ({
       key,
       target: {
-        dataset: { index },
+        dataset: { index: nextIndex },
       },
     }) => {
-      if (key === 'Enter' && index !== undefined) {
-        handleSetLocation(index)
+      if (key === 'Enter' && nextIndex !== undefined) {
+        handleSetLocation(nextIndex)
       }
     },
-    [results, handleSetLocation]
+    [handleSetLocation]
   )
 
   if (error) {
@@ -93,9 +93,8 @@ const Results = ({
         <Text>
           <Flex sx={{ alignItems: 'center' }}>
             <ExclamationTriangle
-              height="1.5rem"
-              width="1.5rem"
-              css={{ margin: '0 0.5rem 0 0' }}
+              size="1.5rem"
+              style={{ margin: '0 0.5rem 0 0' }}
             />
             <Text sx={{ fontSize: [2, 3] }}>Error loading search results.</Text>
           </Flex>
@@ -154,7 +153,7 @@ const Results = ({
 
   return (
     <Box ref={listNode}>
-      {results.map(({ id, name, category, address }, i) => (
+      {results.map(({ id, name, address }, i) => (
         <Box
           key={id}
           data-index={i}
@@ -200,6 +199,7 @@ Results.propTypes = {
   isLoading: PropTypes.bool,
   error: PropTypes.object,
   location: PropTypes.shape({
+    id: PropTypes.string.isRequired,
     latitude: PropTypes.number.isRequired,
     longitude: PropTypes.number.isRequired,
     name: PropTypes.string,

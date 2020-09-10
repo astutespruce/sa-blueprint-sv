@@ -5,6 +5,8 @@
   "version": "0.5.0",
   "author": "Brendan Ward <bcward@astutespruce.com>",
   "dependencies": {
+    "@emotion-icons/fa-regular": "^2.10.0",
+    "@emotion-icons/fa-solid": "^2.10.0",
     "@emotion/core": "^10.0.35",
     "@emotion/styled": "^10.0.27",
     "@mapbox/geo-viewport": "^0.4.0",
@@ -15,7 +17,6 @@
     "d3-shape": "^2.0.0",
     "dequal": "^2.0.2",
     "dotenv": "^8.2.0",
-    "emotion-icons": "^2.11.0",
     "emotion-theming": "^10.0.27",
     "gatsby": "^2.24.56",
     "gatsby-background-image": "^1.1.2",

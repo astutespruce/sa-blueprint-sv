@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Box, Heading, Text, Container } from 'theme-ui'
-import { ExclamationTriangle } from 'emotion-icons/fa-solid'
+import { ExclamationTriangle } from '@emotion-icons/fa-solid'
 
 import { OutboundLink } from 'components/link'
 import { siteMetadata } from '../../../gatsby-config'
@@ -11,11 +11,7 @@ const ErrorMessage = ({ message }) => {
     <Container sx={{ py: '4rem' }}>
       <Box>
         <Heading as="h2" sx={{ mb: '1rem' }}>
-          <ExclamationTriangle
-            height="2rem"
-            width="2rem"
-            css={{ marginRight: '.5rem' }}
-          />
+          <ExclamationTriangle size="2rem" style={{ marginRight: '.5rem' }} />
           Whoops! Something went wrong...
         </Heading>
         <Text sx={{ fontSize: 3, color: 'grey.9' }}>

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Box, Button, Flex, Heading, Text } from 'theme-ui'
-import { TimesCircle } from 'emotion-icons/fa-regular'
+import { TimesCircle } from '@emotion-icons/fa-regular'
 
 import { formatNumber } from 'util/format'
 
@@ -29,12 +29,7 @@ const SelectedUnitHeader = ({ name, acres, onClose }) => {
         onClick={onClose}
         sx={{ flex: '0 0 auto', margin: 0, padding: 0 }}
       >
-        <TimesCircle
-          css={{
-            width: '1.5em',
-            height: '1.5em',
-          }}
-        />
+        <TimesCircle size="1.5em" />
       </Button>
     </Flex>
   )

@@ -1,14 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Button, Flex, Text } from 'theme-ui'
-import { TimesCircle } from 'emotion-icons/fa-regular'
+import { TimesCircle } from '@emotion-icons/fa-regular'
 
 const SelectedUnitHeader = ({ name, onClose }) => {
   return (
     <Flex
       sx={{
         justifyContent: 'space-between',
-        alignItems: 'flex-start',
         flex: '1 1 auto',
         alignItems: 'center',
         p: '0.25rem',
@@ -22,12 +21,7 @@ const SelectedUnitHeader = ({ name, onClose }) => {
         onClick={onClose}
         sx={{ flex: '0 0 auto', margin: 0, padding: 0 }}
       >
-        <TimesCircle
-          css={{
-            width: '1.5em',
-            height: '1.5em',
-          }}
-        />
+        <TimesCircle size="1.5em" />
       </Button>
     </Flex>
   )

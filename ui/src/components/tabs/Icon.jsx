@@ -1,4 +1,6 @@
 /** @jsx jsx */
+
+// eslint-disable-next-line no-unused-vars
 import React from 'react'
 import PropTypes from 'prop-types'
 import { jsx } from 'theme-ui'
@@ -13,7 +15,7 @@ import {
   ChartPie,
   SlidersH,
   UserFriends,
-} from 'emotion-icons/fa-solid'
+} from '@emotion-icons/fa-solid'
 
 const Icon = ({ name, ...props }) => {
   switch (name) {

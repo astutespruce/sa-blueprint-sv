@@ -1,6 +1,5 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { Box } from 'theme-ui'
 import { scaleLinear } from 'd3-scale'
 
 import { extent } from 'util/data'
@@ -40,7 +39,8 @@ const Chart = ({
   }
 
   const [minX, maxX] = extent(data.map(({ x }) => x))
-  const [minY, maxY] = extent(data.map(({ y }) => y))
+  // minY is always set to 0
+  const maxY = extent(data.map(({ y }) => y))[1]
 
   // project points into the drawing area
   // (note that scales are flipped here so that 0,0 is bottom left)
@@ -145,7 +145,7 @@ Chart.propTypes = {
   areaColor: PropTypes.string,
   areaOpacity: PropTypes.number,
   pointStrokeColor: PropTypes.string,
-  pointStrokeWidth: PropTypes.string,
+  pointStrokeWidth: PropTypes.number,
   pointColor: PropTypes.string,
   pointRadius: PropTypes.number,
   fontSize: PropTypes.number,
@@ -164,8 +164,12 @@ Chart.defaultProps = {
   yLabel: null,
   yLabelOffset: null,
   lineWidth: 1,
+  lineColor: '#AAA',
   areaColor: null,
   areaOpacity: null,
+  pointStrokeColor: null,
+  pointStrokeWidth: 0,
+  pointColor: '#AAA',
   pointRadius: 4,
   fontSize: 10,
   margin: {

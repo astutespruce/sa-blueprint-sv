@@ -1,9 +1,10 @@
+/* eslint-disable no-alert */
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { useDropzone } from 'react-dropzone'
 import { Flex, Heading, Text } from 'theme-ui'
 import { transparentize } from '@theme-ui/color'
-import { Download } from 'emotion-icons/fa-solid'
+import { Download } from '@emotion-icons/fa-solid'
 
 const MAXSIZE_MB = 100
 
@@ -13,34 +14,37 @@ const DropZone = ({ onDrop }) => {
    * They must be only one file, must be right MIME type and be less than the
    * maximum size.
    */
-  const handleDrop = useCallback((acceptedFiles, rejectedFiles) => {
-    if (rejectedFiles && rejectedFiles.length > 0) {
-      if (rejectedFiles.length > 1) {
-        alert(
-          `Multiple files not allowed: ${rejectedFiles
-            .map((d) => d.name)
-            .join(', ')}`
-        )
+  const handleDrop = useCallback(
+    (acceptedFiles, rejectedFiles) => {
+      if (rejectedFiles && rejectedFiles.length > 0) {
+        if (rejectedFiles.length > 1) {
+          alert(
+            `Multiple files not allowed: ${rejectedFiles
+              .map((d) => d.name)
+              .join(', ')}`
+          )
+          return
+        }
+
+        const { name, size } = rejectedFiles[0]
+        const mb = size / 1e6
+        if (mb >= MAXSIZE_MB) {
+          alert(
+            `File is too large: ${name} (${Math.round(mb).toLocaleString()} MB)`
+          )
+          return
+        }
+
+        alert(`File type not supported: ${name}`)
         return
       }
 
-      const { name, size } = rejectedFiles[0]
-      const mb = size / 1e6
-      if (mb >= MAXSIZE_MB) {
-        alert(
-          `File is too large: ${name} (${Math.round(mb).toLocaleString()} MB)`
-        )
-        return
+      if (acceptedFiles && acceptedFiles.length > 0) {
+        onDrop(acceptedFiles[0])
       }
-
-      alert(`File type not supported: ${name}`)
-      return
-    }
-
-    if (acceptedFiles && acceptedFiles.length > 0) {
-      onDrop(acceptedFiles[0])
-    }
-  }, [])
+    },
+    [onDrop]
+  )
 
   const {
     getRootProps,
@@ -89,7 +93,7 @@ const DropZone = ({ onDrop }) => {
         }}
       >
         <input {...getInputProps()} />
-        <Download width="2rem" height="2rem" css={{ marginBottom: '1rem' }} />
+        <Download size="2rem" style={{ marginBottom: '1rem' }} />
         <Heading as="h3" sx={{ mb: '1rem' }}>
           Drop your zip file here
         </Heading>

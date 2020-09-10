@@ -1,6 +1,6 @@
 import React from 'react'
 import { Container, Box, Heading } from 'theme-ui'
-import { ExclamationTriangle } from 'emotion-icons/fa-solid'
+import { ExclamationTriangle } from '@emotion-icons/fa-solid'
 
 const UnsupportedBrowser = () => (
   <Container>
@@ -12,11 +12,7 @@ const UnsupportedBrowser = () => (
       }}
     >
       <Heading as="h2">
-        <ExclamationTriangle
-          height="2rem"
-          width="2rem"
-          css={{ marginRight: '.5rem' }}
-        />
+        <ExclamationTriangle size="2rem" style={{ marginRight: '.5rem' }} />
         Unfortunately, you are using an unsupported version of Internet
         Explorer.
         <br />

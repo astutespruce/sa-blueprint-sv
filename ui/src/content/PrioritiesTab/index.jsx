@@ -13,7 +13,7 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
   const { all: priorityCategories } = useBlueprintPriorities()
   const corridorCategories = useCorridors()
 
-  const chartWidth = 200
+  const chartWidth = 180
 
   const blueprintChartData = blueprint
     .slice()

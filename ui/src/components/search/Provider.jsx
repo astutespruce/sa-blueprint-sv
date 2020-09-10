@@ -45,6 +45,7 @@ export const useSearch = () => {
     },
     {
       enabled: query && query.length >= 3,
+      // FIXME:
       //   staleTime: 60 * 60 * 1000, // 60 minutes
       staleTime: 1, // use then reload to force refresh of underlying data during dev
       refetchOnWindowFocus: false,
@@ -54,6 +55,7 @@ export const useSearch = () => {
 
   // Just log the error, there isn't much we can show the user here
   if (error) {
+    // eslint-disable-next-line no-console
     console.error('ERROR loading search API results', error)
   }
 
@@ -67,5 +69,3 @@ export const useSearch = () => {
     results,
   }
 }
-
-export default Provider
