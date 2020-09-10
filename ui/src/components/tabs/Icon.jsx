@@ -11,7 +11,7 @@ import {
   SearchLocation,
   QuestionCircle,
   Envelope,
-  SkullCrossbones,
+  ExclamationCircle,
   ChartPie,
   SlidersH,
   UserFriends,
@@ -39,7 +39,7 @@ const Icon = ({ name, ...props }) => {
       return <SlidersH {...props} />
     }
     case 'unit-threats': {
-      return <SkullCrossbones {...props} />
+      return <ExclamationCircle {...props} />
     }
     case 'unit-partners': {
       return <UserFriends {...props} />
