@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import React from "react"
-import { OutboundLink as Link } from "gatsby-plugin-google-analytics"
+import { OutboundLink as Link } from "gatsby-plugin-google-gtag"
 import PropTypes from "prop-types"
 import { jsx } from "theme-ui"
 
