@@ -6,7 +6,6 @@ verify_ssl = true
 [dev-packages]
 black = "==19.3b0"
 pylint = "*"
-geofeather = {editable = true,path = "./../geofeather"}
 watchgod = "*"
 flake8 = "*"
 
@@ -15,7 +14,6 @@ rasterio = "*"
 pandas = "*"
 numpy = "*"
 fastapi = "*"
-sa-reports = {editable = true,path = "."}
 python-dotenv = "*"
 httpx = "*"
 pillow = "*"
@@ -30,8 +28,8 @@ aiofiles = "*"
 arq = "*"
 sentry-sdk = "*"
 pygeos = "*"
-pyogrio = {editable = true,path = "./../pyogrio"}
 raster-tilecutter = {editable = true,path = "./../raster-tilecutter"}
+pyogrio = {editable = true,path = "./../pyogrio"}
 
 [requires]
 python_version = "3.8"

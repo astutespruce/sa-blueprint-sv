@@ -3,10 +3,9 @@ from setuptools import setup
 
 
 setup(
-    name="sa-reports",
-    version="0.1.0",
-    # packages=[],
-    url="https://github.com/brendan-ward/sa-reports",
+    name="sa-blueprint-sv",
+    version="0.5.0",
+    url="https://github.com/astutespruce/sa-blueprint-sv",
     license="MIT",
     author="Brendan C. Ward",
     author_email="bcward@astutespruce.com",

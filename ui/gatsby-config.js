@@ -17,6 +17,19 @@ module.exports = {
     mapboxToken: process.env.GATSBY_MAPBOX_API_TOKEN,
   },
   plugins: [
+    {
+      resolve: `gatsby-plugin-google-gtag`,
+      options: {
+        trackingIds: [process.env.GATSBY_GOOGLE_ANALYTICS_ID],
+        gtagConfig: {
+          anonymize_ip: true,
+        },
+        pluginConfig: {
+          head: true,
+          respectDNT: true,
+        },
+      },
+    },
     `gatsby-plugin-react-helmet`,
     {
       resolve: `gatsby-source-filesystem`,
@@ -39,29 +52,19 @@ module.exports = {
         typeName: ({ node }) => `${node.name}Json`,
       },
     },
-
     `gatsby-plugin-theme-ui`,
     `gatsby-transformer-sharp`,
     `gatsby-plugin-sharp`,
     {
-      resolve: `gatsby-plugin-google-analytics`,
+      resolve: `gatsby-plugin-manifest`,
       options: {
-        trackingId: process.env.GATSBY_GOOGLE_ANALYTICS_ID,
-        anonymize: true,
+        name: `South Atlantic Conservation Blueprint 2020`,
+        short_name: `Blueprint 2020`,
+        start_url: `/`,
+        background_color: `#0892d0`,
+        theme_color: `#0892d0`,
+        display: `minimal-ui`,
       },
     },
-
-    // TODO:
-    // {
-    //   resolve: `gatsby-plugin-manifest`,
-    //   options: {
-    //     name: `sa-reports`,
-    //     short_name: `sa-reports`,
-    //     start_url: `/`,
-    //     background_color: `#663399`,
-    //     theme_color: `#663399`,
-    //     display: `minimal-ui`,
-    //   },
-    // },
   ],
 }
