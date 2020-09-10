@@ -51,6 +51,16 @@ const MapContainer = () => {
     tab: isMobile ? 'map' : 'info',
   })
 
+  const handleTabChange = useCallback((newTab) => {
+    tabRef.current = newTab
+    setState((prevState) => ({
+      ...prevState,
+      tab: newTab,
+    }))
+    // scroll content to top
+    contentNode.current.scrollTop = 0
+  }, [])
+
   useEffect(() => {
     hasSelectedUnitRef.current = selectedUnit !== null
   }, [selectedUnit])
@@ -98,16 +108,6 @@ const MapContainer = () => {
       handleTabChange('map')
     }
   }, [isMobile, location, handleTabChange])
-
-  const handleTabChange = useCallback((newTab) => {
-    tabRef.current = newTab
-    setState((prevState) => ({
-      ...prevState,
-      tab: newTab,
-    }))
-    // scroll content to top
-    contentNode.current.scrollTop = 0
-  }, [])
 
   let content = null
   if (selectedUnit === null) {
