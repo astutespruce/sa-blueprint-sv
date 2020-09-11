@@ -17,7 +17,7 @@ const Legend = () => {
     <Box
       sx={{
         position: 'absolute',
-        color: 'grey.8',
+        color: 'grey.9',
         bg: '#FFF',
         pointerEvents: 'auto',
         cursor: 'pointer',

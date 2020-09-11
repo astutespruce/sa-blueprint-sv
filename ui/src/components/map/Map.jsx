@@ -175,6 +175,11 @@ const Map = () => {
     }
   }, [location, isLoaded])
 
+  // if there is no window, we cannot render this component
+  if (!hasWindow) {
+    return null
+  }
+
   return (
     <Box
       sx={{

@@ -8,7 +8,8 @@ const breakpoints = theme.breakpoints.map((b) =>
 )
 
 const getBreakpoint = () => {
-  if (!hasWindow) return 0
+  // make sure build uses desktop version
+  if (!hasWindow) return breakpoints.length - 1
 
   const { innerWidth } = window
 

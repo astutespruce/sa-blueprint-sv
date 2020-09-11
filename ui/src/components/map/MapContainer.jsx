@@ -24,6 +24,7 @@ import {
 } from 'components/layout/desktop'
 
 import { useSearch } from 'components/search'
+import { hasWindow } from 'util/dom'
 
 import Map from './Map'
 
@@ -204,6 +205,10 @@ const MapContainer = () => {
         top: 0,
       }
     : {}
+
+  // Force exit here when building gatsby, otherwise
+  // the wrong layout gets built
+  if (!hasWindow) return null
 
   return (
     <Flex
