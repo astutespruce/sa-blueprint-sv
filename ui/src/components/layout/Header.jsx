@@ -49,6 +49,7 @@ const Header = () => {
             >
               <Image
                 src={LogoURL}
+                alt="South Atlantic Conservation Blueprint 2020 - logo"
                 sx={{
                   mr: '0.5rem',
                   width: '2rem',

@@ -9,10 +9,10 @@ const pollInterval = 500 // milliseconds; 1 second
 const jobTimeout = 600000 // milliseconds; 10 minutes
 
 if (hasWindow && !apiHost) {
-  apiHost = window.location.host
+  apiHost = `//${window.location.host}`
 }
 
-const API = `//${apiHost}/api/reports`
+const API = `${apiHost}/api/reports`
 
 const uploadFile = async (file, name, onProgress) => {
   // NOTE: both file and name are required by API
@@ -76,7 +76,7 @@ const pollJob = async (jobId, onProgress) => {
     }
 
     if (status === 'success') {
-      return { result: `//${apiHost}${result}` }
+      return { result: `${apiHost}${result}` }
     }
 
     if (progress != null) {
