@@ -21,23 +21,46 @@ const Intro = () => {
     <>
       <Box as="section">
         <p>
-          The{' '}
+          The South Atlantic Conservation Blueprint is a living spatial plan to
+          conserve natural and cultural resources for future generations. It
+          identifies shared conservation priorities across the South Atlantic
+          region.
+          <br />
+          <br />
+          Blueprint 2020, released in August 2020, is a totally data-driven plan
+          based on terrestrial, freshwater, marine, and cross-ecosystem
+          indicators. It uses the current condition of those indicators to
+          prioritize the most important areas for natural and cultural resources
+          across the South Atlantic geography. Through a connectivity analysis,
+          the Blueprint also identifies corridors that link coastal and inland
+          areas and span climate gradients. The Blueprint reflects extensive
+          feedback from the broader cooperative community, with more than 700
+          people from over 200 different organizations actively participating in
+          its development so far. The Blueprint integrates with neighboring
+          priorities in a Southeast-wide plan as part of the{' '}
+          <OutboundLink to="http://secassoutheast.org/">
+            Southeast Conservation Adaptation Strategy
+          </OutboundLink>
+          .
+          <br />
+          <br />
+          For more information, visit{' '}
           <OutboundLink to="http://www.southatlanticlcc.org/blueprint/">
-            Conservation Blueprint
+            the Blueprint webpage
+          </OutboundLink>
+          . On that page, you can see who’s using the Blueprint to inform
+          conservation action and investment.
+          <br />
+          <br />
+          If you want to overlay additional datasets, view indicator layers, and
+          download Blueprint data, visit{' '}
+          <OutboundLink to="https://salcc.databasin.org/">
+            the Conservation Planning Atlas
           </OutboundLink>{' '}
-          is a living spatial plan to conserve natural and cultural resources
-          for future generations. It identifies priority areas for shared
-          conservation action. Blueprint 2020 is completely data-driven,
-          prioritizing the lands and waters of the South Atlantic region based
-          on ecosystem indicator models and a connectivity analysis. Better
-          indicator condition suggests higher ecosystem integrity and higher
-          importance for natural and cultural resources across all ecosystems
-          collectively. So far, more than 500 people from 150 organizations
-          actively participated in the collaborative development of the
-          Blueprint.
+          (CPA).
         </p>
 
-        <Flex sx={{ justifyContent: 'center' }}>
+        {/* <Flex sx={{ justifyContent: 'center' }}>
           <Button
             onClick={openVideo}
             sx={{ display: 'flex', alignItems: 'center' }}
@@ -45,13 +68,13 @@ const Intro = () => {
             <Play size="1em" style={{ marginRight: '0.5em' }} />
             <Text>Overview Video</Text>
           </Button>
-        </Flex>
+        </Flex> */}
 
         <p>
           This <b>Simple Viewer</b> summarizes the Blueprint priorities and
-          supporting information within subwatersheds and marine lease blocks.
-          In a new pixel mode, you can also explore pixel-level details of what
-          indicators are driving the Blueprint priorities.
+          supporting information within subwatersheds and marine lease blocks as
+          well as pixel-level details of what indicators are driving the
+          Blueprint priorities.
         </p>
       </Box>
 

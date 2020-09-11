@@ -7,27 +7,27 @@
       {
         "value": 0,
         "label": "No aquatic imperiled (G1/G2) or threatened/endangered species observed",
-        "color": "#E9BFFF"
+        "color": null
       },
       {
         "value": 1,
         "label": "1 aquatic imperiled (G1/G2) or threatened/endangered species observed",
-        "color": "#C28EED"
+        "color": "#DFB8E6"
       },
       {
         "value": 2,
         "label": "2 aquatic imperiled (G1/G2) or threatened/endangered species observed",
-        "color": "#9E61DB"
+        "color": "#BE7FEB"
       },
       {
         "value": 3,
         "label": "3 aquatic imperiled (G1/G2) or threatened/endangered species observed",
-        "color": "#7738C7"
+        "color": "#9A4AF0"
       },
       {
         "value": 4,
         "label": "4 or more aquatic imperiled (G1/G2) or threatened/endangered species observed",
-        "color": "#550BB5"
+        "color": "#700CF2"
       }
     ],
     "domain": [0, 4],
@@ -42,22 +42,22 @@
       {
         "value": 1,
         "label": "Migratory fish connectivity index species not adjacent/not observed",
-        "color": "#D7F2ED"
+        "color": null
       },
       {
         "value": 2,
         "label": "Adjacent to presence of migratory fish connectivity index species",
-        "color": "#8DB5AF"
+        "color": "#BBDEFB"
       },
       {
         "value": 3,
         "label": "Presence of Alabama shad, American shad, blueback herring, or striped bass",
-        "color": "#4B7D77"
+        "color": "#42A5F5"
       },
       {
         "value": 4,
         "label": "Presence of Gulf or Atlantic sturgeon",
-        "color": "#144F4B"
+        "color": "#1976D2"
       }
     ],
     "domain": [1, 4],
@@ -73,37 +73,37 @@
       {
         "value": 1,
         "label": "1 connected stream size class",
-        "color": "#FFFF80"
+        "color": "#FFFFCC"
       },
       {
         "value": 2,
         "label": "2 connected stream size classes",
-        "color": "#A1F24B"
+        "color": "#C7E9B4"
       },
       {
         "value": 3,
         "label": "3 connected stream size classes ",
-        "color": "#38E00B"
+        "color": "#7FCDBB"
       },
       {
         "value": 4,
         "label": "4 connected stream size classes ",
-        "color": "#3DB868"
+        "color": "#41B6C4"
       },
       {
         "value": 5,
         "label": "5 connected stream size classes",
-        "color": "#1B93AB"
+        "color": "#1D91C0"
       },
       {
         "value": 6,
         "label": "6 connected stream size classes",
-        "color": "#214B91"
+        "color": "#225EA8"
       },
       {
         "value": 7,
         "label": "7 connected stream size classes",
-        "color": "#0B0B77"
+        "color": "#0C2C84"
       }
     ],
     "domain": [1, 7],
@@ -120,22 +120,22 @@
       {
         "value": 1,
         "label": "Less than 70% of catchment permeable, likely degraded instream flow, water quality, and aquatic species communities",
-        "color": "#BFEEF3"
+        "color": "#CCCCFF"
       },
       {
         "value": 2,
         "label": "70 - 90% of catchment permeable, likely degraded water quality and not supporting many aquatic species",
-        "color": "#79B3EA"
+        "color": "#9783F7"
       },
       {
         "value": 3,
         "label": "90 - 95% of catchment permeable, likely declining water quality and supporting most aquatic species",
-        "color": "#4765CC"
+        "color": "#6145ED"
       },
       {
         "value": 4,
         "label": "Greater than 95% of catchment permeable, likely high water quality and supporting most sensitive aquatic species",
-        "color": "#3100A1"
+        "color": "#0000E0"
       }
     ],
     "domain": [9, 100],
@@ -152,15 +152,15 @@
       {
         "value": 1,
         "label": "Less than 80% natural habitat within the estimated floodplain, by catchment",
-        "color": "#C3533D"
+        "color": "#d0d1e6"
       },
-      { "value": 2, "label": "80 - 85% natural habitat", "color": "#F8D80B" },
-      { "value": 3, "label": "85 - 90% natural habitat", "color": "#A0F300" },
-      { "value": 4, "label": "90 - 95% natural habitat", "color": "#14C34D" },
+      { "value": 2, "label": "80 - 85% natural habitat", "color": "#a6bddb" },
+      { "value": 3, "label": "85 - 90% natural habitat", "color": "#67a9cf" },
+      { "value": 4, "label": "90 - 95% natural habitat", "color": "#1c9099" },
       {
         "value": 5,
         "label": "Greater than 95% natural habitat within the estimated floodplain, by catchment",
-        "color": "#0B317C"
+        "color": "#016c59"
       }
     ],
     "domain": [0, 100],
@@ -176,12 +176,12 @@
       {
         "value": 0,
         "label": "Not a Priority Amphibian and Reptile Conservation Area",
-        "color": "#FFFFFF"
+        "color": null
       },
       {
         "value": 1,
         "label": "Priority Amphibian and Reptile Conservation Area",
-        "color": "#70A800"
+        "color": "#38A800"
       }
     ],
     "domain": [0, 1],
@@ -197,27 +197,27 @@
       {
         "value": 1,
         "label": "Below the 20th percentile of importance for bird index species",
-        "color": "#F4FD92"
+        "color": "#D0ADD4"
       },
       {
         "value": 2,
         "label": "20th - 40th percentile of importance",
-        "color": "#F3D15D"
+        "color": "#D875B8"
       },
       {
         "value": 3,
         "label": "40th - 60th percentile of importance",
-        "color": "#EFB43C"
+        "color": "#E7298A"
       },
       {
         "value": 4,
         "label": "60th - 80th percentile of importance",
-        "color": "#CA7E1B"
+        "color": "#BC0C50"
       },
       {
         "value": 5,
         "label": "Above the 80th percentile of importance for bird index species (American oystercatcher, Wilson's plover, least tern, and piping plover)",
-        "color": "#7F0000"
+        "color": "#800031"
       }
     ],
     "domain": [0, 100],
@@ -232,32 +232,32 @@
       {
         "value": 0,
         "label": "Less potential for presence of bird index species",
-        "color": "#FFFFFF"
+        "color": null
       },
       {
         "value": 1,
         "label": "Potential for presence of wood thrush, whip-poor-will, red-headed woodpecker, Chuck-will’s widow, or  American woodcock",
-        "color": "#90F040"
+        "color": "#FBE6C5"
       },
       {
         "value": 2,
         "label": "Potential for additional presence of hooded warbler or Kentucky warbler",
-        "color": "#3DD13A"
+        "color": "#F5BA98"
       },
       {
         "value": 3,
         "label": "Potential for additional presence of Acadian flycatcher",
-        "color": "#2EA190"
+        "color": "#E67E7D"
       },
       {
         "value": 4,
         "label": "Potential for additional presence of Northern parula, black-throated green warbler, or Prothonotary warbler",
-        "color": "#215896"
+        "color": "#B24C65"
       },
       {
         "value": 5,
         "label": "Potential for additional presence of Swainson’s warbler",
-        "color": "#0B1477"
+        "color": "#70284A"
       }
     ],
     "domain": [0, 5],
@@ -273,7 +273,7 @@
       {
         "value": 1,
         "label": "Currently forested wetland (within forested wetland ecosystem)",
-        "color": "#7B2A80"
+        "color": "#606B2D"
       }
     ],
     "domain": [0, 1],
@@ -288,42 +288,42 @@
       {
         "value": 0,
         "label": "Not a greenway, trail, sidewalk, or other path",
-        "color": "#FFFFFF"
+        "color": null
       },
       {
         "value": 1,
         "label": "Sidewalk or other path",
-        "color": "#EAFFBF"
+        "color": "#A50026"
       },
       {
         "value": 2,
         "label": "Developed and connected for <1.9 km",
-        "color": "#C1E18E"
+        "color": "#EA593A"
       },
       {
         "value": 3,
         "label": "Partly natural and connected for <1.9 km or developed and connected for 1.9-5 km",
-        "color": "#96C261"
+        "color": "#FDBF6F"
       },
       {
         "value": 4,
         "label": "Mostly natural and connected for <1.9 km, partly natural and connected for 1.9-5 km, or developed and connected for 5-40 km",
-        "color": "#70A33D"
+        "color": "#FFFFBF"
       },
       {
         "value": 5,
         "label": "Mostly natural and connected for 5-1.9 km, partly natural and connected for 5-40 km, or developed and >40 km",
-        "color": "#4D8721"
+        "color": "#B7E075"
       },
       {
         "value": 6,
         "label": "Mostly natural and connected for 5-40 km or partly natural and connected for >40 km",
-        "color": "#31680B"
+        "color": "#4DB15D"
       },
       {
         "value": 7,
         "label": "Mostly natural and connected for >40 km",
-        "color": "#1B4D00"
+        "color": "#006837"
       }
     ],
     "domain": [0, 7],
@@ -340,22 +340,22 @@
       {
         "value": 0,
         "label": "Not a core",
-        "color": "#EFF4B1"
+        "color": null
       },
       {
         "value": 1,
         "label": "Small core (> 100 - <=1,000 acres)",
-        "color": "#FA0068"
+        "color": "#AADFD3"
       },
       {
         "value": 2,
         "label": "Medium core (>1,000 - 10,000 acres)",
-        "color": "#F20BEA"
+        "color": "#37A266"
       },
       {
         "value": 3,
         "label": "Large core (>10,000 acres)",
-        "color": "#3A14BA"
+        "color": "#00441B"
       }
     ],
     "domain": [0, 445312],
@@ -371,12 +371,12 @@
       {
         "value": 1,
         "label": "Historic place with nearby high-urban buffer",
-        "color": "#F2A72E"
+        "color": "#BCAAA4"
       },
       {
         "value": 2,
         "label": "Historic place with nearby low-urban buffer",
-        "color": "#6B0000"
+        "color": "#795548"
       }
     ],
     "domain": [1, 2],
@@ -392,7 +392,7 @@
       {
         "value": 1,
         "label": "Currently maritime forest",
-        "color": "#00E6A9"
+        "color": "#AAD82F"
       }
     ],
     "domain": [0, 1],
@@ -407,7 +407,7 @@
       {
         "value": 1,
         "label": "Freshwater or saltwater marsh",
-        "color": "#5C8945"
+        "color": "#61E5F3"
       }
     ],
     "domain": [0, 1],
@@ -423,17 +423,17 @@
       {
         "value": 1,
         "label": "<=5 ha, Less potential for presence of bird index species",
-        "color": "#77FCE4"
+        "color": "#89E8AC"
       },
       {
         "value": 2,
         "label": ">5 - 20 ha, Potential for presence of least bittern, Northern pintail, and Northern shoveler",
-        "color": "#49BF7D"
+        "color": "#4CC8A3"
       },
       {
         "value": 3,
         "label": ">20 ha, Potential for additional presence of king rail",
-        "color": "#008300"
+        "color": "#2C98A0"
       }
     ],
     "domain": [0, 11907],
@@ -450,22 +450,22 @@
       {
         "value": 0,
         "label": "Less potential for presence of bird index species",
-        "color": "#D7F0AF"
+        "color": null
       },
       {
         "value": 1,
         "label": "Potential for presence of 1 bird index species",
-        "color": "#ACBF7E"
+        "color": "#FFCCFF"
       },
       {
         "value": 2,
         "label": "Potential for presence of 2 bird index species",
-        "color": "#839151"
+        "color": "#E675E4"
       },
       {
         "value": 3,
         "label": "Potential for presence of all 3 bird index species (Bachman's sparrow, bobwhite quail, and red-cockaded woodpecker)",
-        "color": "#5F6B2E"
+        "color": "#C700C7"
       }
     ],
     "domain": [0, 3],
@@ -481,12 +481,12 @@
       {
         "value": 0,
         "label": "Not burned between 1999-2010 or not open canopy",
-        "color": "#FFEBAF"
+        "color": null
       },
       {
         "value": 1,
         "label": "Burned between 1999-2010 and open canopy",
-        "color": "#FFAA00"
+        "color": "#A64600"
       }
     ],
     "domain": [0, 1],
@@ -502,32 +502,32 @@
       {
         "value": 1,
         "label": "Far below average",
-        "color": "#A5DEE8"
+        "color": "#9C551F"
       },
       {
         "value": 2,
         "label": "Below average",
-        "color": "#7FB9C7"
+        "color": "#BF874B"
       },
       {
         "value": 3,
         "label": "Slightly below average",
-        "color": "#5D94A6"
+        "color": "#E0C080"
       },
       {
         "value": 4,
         "label": "Average",
-        "color": "#427187"
+        "color": "#FFFFBF"
       },
       {
         "value": 5,
         "label": "Slightly above average",
-        "color": "#2A4F67"
+        "color": "#A9C276"
       },
       {
         "value": 6,
         "label": "Above average",
-        "color": "#143547"
+        "color": "#5E8A3A"
       }
     ],
     "domain": [1, 6],
@@ -539,41 +539,41 @@
     "filename": "ResilientTerrestrialSites.tif",
     "label": "Resilient terrestrial sites",
     "values": [
-      { "value": 0, "label": "Developed", "color": "#9B5521" },
+      { "value": 0, "label": "Developed", "color": "#9C9C9C" },
       {
         "value": 1,
         "label": "Final resilience score: Far below average (<-2 SD)",
-        "color": "#BA7F45"
+        "color": "#9C551F"
       },
       {
         "value": 2,
         "label": "Final resilience score: Below average (-1 to -2 SD)",
-        "color": "#D6AD70"
+        "color": "#BF874B"
       },
       {
         "value": 3,
         "label": "Final resilience score: Slightly below average (-0.5 to -1 SD)",
-        "color": "#F2E4A5"
+        "color": "#E0C080"
       },
       {
         "value": 4,
         "label": "Final resilience score: Average (0.5 to -0.5 SD)",
-        "color": "#E1EDB9"
+        "color": "#FFFFBF"
       },
       {
         "value": 5,
         "label": "Final resilience score: Slightly above average (0.5 to 1 SD)",
-        "color": "#A1C7AD"
+        "color": "#A9C276"
       },
       {
         "value": 6,
         "label": "Final resilience score: Above average (1 to 2 SD)",
-        "color": "#65A39E"
+        "color": "#5E8A3A"
       },
       {
         "value": 7,
         "label": "Final resilience score: Far above average (>2 SD)",
-        "color": "#218391"
+        "color": "#205905"
       }
     ],
     "domain": [0, 7],
@@ -589,17 +589,17 @@
       {
         "value": 0,
         "label": "Vulnerable to alteration, with/without nearby jetties/groins",
-        "color": "#FFCCFF"
+        "color": "#FDD0A2"
       },
       {
         "value": 1,
         "label": "Less vulnerable with nearby jetties/groins",
-        "color": "#E675E4"
+        "color": "#FD8D3C"
       },
       {
         "value": 2,
         "label": "Less vulnerable without nearby jetties/groins",
-        "color": "#C700C7"
+        "color": "#D94801"
       }
     ],
     "domain": [0, 2],
@@ -612,28 +612,28 @@
     "filename": "UrbanOpenSpace.tif",
     "label": "Urban open space",
     "values": [
-      { "value": 0, "label": "Existing development", "color": "#EBC2F2" },
+      { "value": 0, "label": "Existing development", "color": "#C3C3C3" },
       {
         "value": 1,
         "label": "Undeveloped area less than 400 m from protected land",
-        "color": "#C194D6"
+        "color": "#ffffcc"
       },
       {
         "value": 2,
         "label": "Undeveloped area 400 - 800 m from protected land",
-        "color": "#9C6CBD"
+        "color": "#c2e699"
       },
       {
         "value": 3,
         "label": "Undeveloped area 800 - 1600 m from protected land",
-        "color": "#7749A3"
+        "color": "#78c679"
       },
       {
         "value": 4,
         "label": "Undeveloped area greater than 1600 m from protected land",
-        "color": "#55268A"
+        "color": "#31a354"
       },
-      { "value": 5, "label": "Protected land", "color": "#350B73" }
+      { "value": 5, "label": "Protected land", "color": "#006837" }
     ],
     "domain": [0, 5],
     "datasetID": "3b34fef5eb794ef6ab3cc7ccda892ec2",
@@ -645,14 +645,14 @@
     "label": "Coastal condition",
     "continuous": true,
     "values": [
-      { "value": 1, "label": "<=2, Poor", "color": "#DAD5FC" },
-      { "value": 2, "label": ">2.0 - 2.4, Fair to poor", "color": "#B797F7" },
-      { "value": 3, "label": ">2.4 - 3.7, Fair", "color": "#A379F4" },
-      { "value": 4, "label": ">3.7 - 4.0, Good to fair", "color": "#8953EE" },
+      { "value": 1, "label": "<=2, Poor", "color": "#C2523C" },
+      { "value": 2, "label": ">2.0 - 2.4, Fair to poor", "color": "#F2B60E" },
+      { "value": 3, "label": ">2.4 - 3.7, Fair", "color": "#77ED00" },
+      { "value": 4, "label": ">3.7 - 4.0, Good to fair", "color": "#1BAA7D" },
       {
         "value": 5,
         "label": ">4, Good condition for index (water quality, sediment quality, and benthic community condition)",
-        "color": "#4F00E4"
+        "color": "#0B2C7A"
       }
     ],
     "domain": [1, 5],
@@ -669,27 +669,27 @@
       {
         "value": 1,
         "label": "Below the 20th percentile of importance for seasonal density of marine bird index species",
-        "color": "#C3FCEB"
+        "color": "#FEF6B5"
       },
       {
         "value": 2,
         "label": "20th-40th percentile of importance",
-        "color": "#48AF8F"
+        "color": "#FECE97"
       },
       {
         "value": 3,
         "label": "40th-60th percentile of importance",
-        "color": "#0D9571"
+        "color": "#FFA679"
       },
       {
         "value": 4,
         "label": "60th-80th percentile of importance",
-        "color": "#005D40"
+        "color": "#F07C7E"
       },
       {
         "value": 5,
         "label": "Above the 80th percentile of importance for seasonal density of marine bird index species",
-        "color": "#00160B"
+        "color": "#E15383"
       }
     ],
     "domain": [0, 100],
@@ -705,27 +705,27 @@
       {
         "value": 1,
         "label": "Below the 20th percentile of importance for seasonal density of marine mammal index species",
-        "color": "#E9C4EA"
+        "color": "#BFD3E6"
       },
       {
         "value": 2,
         "label": "20th - 40th percentile of importance",
-        "color": "#D593EE"
+        "color": "#8C96C6"
       },
       {
         "value": 3,
         "label": "40th - 60th percentile of importance",
-        "color": "#CA7DEF"
+        "color": "#8C6BB1"
       },
       {
         "value": 4,
         "label": "60th - 80th percentile of importance",
-        "color": "#B859F1"
+        "color": "#88419D"
       },
       {
         "value": 5,
         "label": "Above the 80th percentile of importance for seasonal density of marine mammal index species",
-        "color": "#9B03F2"
+        "color": "#6E016B"
       }
     ],
     "domain": [0, 100],
@@ -737,21 +737,21 @@
     "filename": "PotentialHardbottomCondition_30m.img",
     "label": "Potential hardbottom condition",
     "values": [
-      { "value": 0, "label": "Hardbottom not predicted", "color": "#E1E1E1" },
+      { "value": 0, "label": "Hardbottom not predicted", "color": null },
       {
         "value": 1,
         "label": "Hardbottom likely to be stressed by human activities",
-        "color": "#73FFDF"
+        "color": "#90CCB9"
       },
       {
         "value": 2,
         "label": "Hardbottom less likely to be stressed by human activities",
-        "color": "#00A9E6"
+        "color": "#488C94"
       },
       {
         "value": 3,
         "label": "Hardbottom likely to be in best condition due to additional protections",
-        "color": "#002673"
+        "color": "#1B5066"
       }
     ],
     "domain": [0, 3],

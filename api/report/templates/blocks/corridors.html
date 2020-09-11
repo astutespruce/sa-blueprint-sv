@@ -1,7 +1,17 @@
 <section>
     <h2 id="Corridors">Hubs and Corridors</h2>
 
-    <p>Description of hubs and corridors goes here</p>
+    <p>
+        {% if results.corridors[0] or results.corridors[1] %}
+            Inland hubs are large patches of priority Blueprint areas and permanently protected lands. Inland corridors are the shortest paths that connect these hubs through priority Blueprint areas.
+            <br/>
+        {% endif %}
+
+        {% if results.corridors[0] or results.corridors[1] %}
+            Marine hubs are large patches of priority Blueprint areas and open water estuaries. Marine corridors are the shortest paths that connect these hubs through priority Blueprint areas.
+            <br/>
+        {% endif %}
+    </p>
 
     {% if maps.corridors %}
     <div class="map-container">
