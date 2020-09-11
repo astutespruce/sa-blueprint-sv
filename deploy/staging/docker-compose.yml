@@ -27,7 +27,7 @@ services:
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_certs:/root/.caddy
-      - ../../ui/public:/var/www
+      - ../../ui/published:/var/www
 
 volumes:
   caddy_certs:
