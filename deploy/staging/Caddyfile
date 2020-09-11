@@ -1,0 +1,12 @@
+:80 {
+
+    route /services* {
+        header Cache-Control "public, max-age=3600, must-revalidate"
+
+        reverse_proxy mbtileserver:8000
+    }
+
+    root * /var/www
+    file_server
+
+}

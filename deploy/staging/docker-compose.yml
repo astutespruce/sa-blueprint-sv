@@ -1,0 +1,33 @@
+version: "3.6"
+services:
+  mbtileserver:
+    image: consbio/mbtileserver:latest
+    restart: always
+    volumes:
+      - ../../tiles:/tilesets
+
+  renderer:
+    image: consbio/mbgl-renderer:latest
+    restart: always
+    volumes:
+      - ../../tiles:/app/tiles
+
+  # redis:
+  #   image: 'redis:alpine'
+
+  caddy:
+    image: caddy/caddy:2.1.1-alpine
+    depends_on:
+      - "mbtileserver"
+    restart: always
+    ports:
+      # - '8081:80' # DEBUG ONLY
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_certs:/root/.caddy
+      - ../../ui/public:/var/www
+
+volumes:
+  caddy_certs:
