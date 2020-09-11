@@ -1,4 +1,4 @@
-mockuplab.us {
+blueprint.mockuplab.us {
 
     route /services* {
         header Cache-Control "public, max-age=3600, must-revalidate"
