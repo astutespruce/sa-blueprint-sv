@@ -54,6 +54,8 @@ const Header = () => {
                   mr: '0.5rem',
                   width: '2rem',
                   height: '2rem',
+                  border: '1px solid #FFF',
+                  borderRadius: '2rem',
                 }}
               />
             </Link>

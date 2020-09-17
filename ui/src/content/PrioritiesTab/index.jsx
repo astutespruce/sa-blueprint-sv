@@ -37,10 +37,14 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
   }
 
   const corridorChartData = corridors
-    .map((percent, i) => ({
-      value: percent,
-      ...corridorCategories[i],
-    }))
+    .map((percent, i) => {
+      const { label, color } = corridorCategories[i]
+      return {
+        value: percent,
+        label: label.endsWith('Corridors') ? `${label}*` : label,
+        color,
+      }
+    })
     .filter(({ value }) => value > 0)
     .reverse()
 
@@ -102,6 +106,11 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
 
               <PieChartLegend elements={corridorChartData} />
             </Flex>
+            <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
+              *Note: Includes the full extent of corridors. The Blueprint
+              corridors class includes only corridors not already identified as
+              priority.
+            </Text>
           </Box>
         </>
       ) : (
