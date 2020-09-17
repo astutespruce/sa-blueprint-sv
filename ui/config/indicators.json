@@ -272,7 +272,7 @@
     "values": [
       {
         "value": 1,
-        "label": "Currently forested wetland (within forested wetland ecosystem)",
+        "label": "Forested wetland",
         "color": "#606B2D"
       }
     ],
@@ -391,7 +391,7 @@
     "values": [
       {
         "value": 1,
-        "label": "Currently maritime forest",
+        "label": "Maritime forest",
         "color": "#AAD82F"
       }
     ],

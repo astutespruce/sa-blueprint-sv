@@ -1,6 +1,6 @@
 [
-  { "value": 0, "color": "#353535", "label": "Inland Hubs" },
-  { "value": 1, "color": "#828282", "label": "Inland Corridors" },
+  { "value": 0, "color": "#464646", "label": "Inland Hubs" },
+  { "value": 1, "color": "#9B9B9B", "label": "Inland Corridors" },
   { "value": 2, "color": "#454F89", "label": "Marine Hubs" },
   { "value": 3, "color": "#9EBBD7", "label": "Marine Corridors" }
 ]
