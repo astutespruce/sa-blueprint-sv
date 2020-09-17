@@ -21,9 +21,16 @@ on 8/14/2020.
 
 Binned versions of continuous indicators were prepared by USFWS and sent separately.
 
+#### Preprocessing
+
+See `analysis/prep/prepare_indicators.py`.
+
 Greenways and Trails were preprocessed before using, to set 0 values to NODATA.
 This is so that this still appear in lower-resolution overviews created from the
 data (these are derived from linear features).
+
+Migratory fish connectivity values were preprocessed to subtract 1 from all values,
+so that it starts at 0 similar to other indicators.
 
 ### Summary units
 
