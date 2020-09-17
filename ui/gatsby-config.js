@@ -18,6 +18,21 @@ module.exports = {
   },
   plugins: [
     {
+      resolve: `@sentry/gatsby`,
+      options: {
+        dsn: process.env.GATSBY_SENTRY_DSN,
+        beforeSend: (event, { originalException: error }) => {
+          if (error && error.message) {
+            // this error happens when ResizeObserver not able to deliver all observations within a single animation frame
+            if (error.message.match(/ResizeObserver loop limit exceeded/i)) {
+              return null
+            }
+          }
+          return event
+        },
+      },
+    },
+    {
       resolve: `gatsby-plugin-google-gtag`,
       options: {
         trackingIds: [process.env.GATSBY_GOOGLE_ANALYTICS_ID],
