@@ -40,28 +40,28 @@
     "label": "Migratory fish connectivity",
     "values": [
       {
-        "value": 1,
+        "value": 0,
         "label": "Migratory fish connectivity index species not adjacent/not observed",
         "color": null
       },
       {
-        "value": 2,
+        "value": 1,
         "label": "Adjacent to presence of migratory fish connectivity index species",
         "color": "#BBDEFB"
       },
       {
-        "value": 3,
+        "value": 2,
         "label": "Presence of Alabama shad, American shad, blueback herring, or striped bass",
         "color": "#42A5F5"
       },
       {
-        "value": 4,
+        "value": 3,
         "label": "Presence of Gulf or Atlantic sturgeon",
         "color": "#1976D2"
       }
     ],
-    "domain": [1, 4],
-    "goodThreshold": 3,
+    "domain": [0, 3],
+    "goodThreshold": 2,
     "datasetID": "e5491baf54d5408da2ae1c547ca4cb2f",
     "description": "Migratory fish connectivity is an index capturing how far upstream migratory fish have been observed. It also includes adjacent areas where habitat access could be restored through fish passage and hydrological barrier removal efforts. Migratory fish presence reflects uninterrupted connections between freshwater, estuarine, and marine ecosystems. This indicator applies only to the estimated floodplain, which spatially defines areas estimated to be inundated by a 100-year flood, also known as the 1% annual chance flood."
   },
