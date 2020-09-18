@@ -86,6 +86,11 @@ conflicts).
 
 #### Docker container development notes
 
+##### API / Worker
+
+The API and worker share the same docker image for convenience (mostly overlapping dependencies).
+They share a volume mounted at `/tmp/sa-reports` for exchanging user-uploaded files.
+
 To ensure that the dependencies are correctly setup, run:
 
 ```bash
@@ -116,4 +121,10 @@ Then test that `gunicorn` starts correctly:
 
 ```bash
 gunicorn -k uvicorn.workers.UvicornWorker --name uvicorn api.api:app
+```
+
+Then test that `arq` starts correctly (depends on `redis` running):
+
+```bash
+arq api.worker.WorkerSettings
 ```

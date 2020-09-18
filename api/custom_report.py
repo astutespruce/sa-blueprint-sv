@@ -35,10 +35,7 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
 
     df = read_dataframe(path, layer=layer)
 
-    geometry = df.geometry
-    # Not yet available on ubuntu 18.04
-    if pg.geos_version >= (3, 8, 0):
-        geometry = pg.make_valid(geometry)
+    geometry = pg.make_valid(df.geometry.values.data)
 
     await set_progress(ctx["job_id"], 5)
 

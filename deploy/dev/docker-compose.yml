@@ -1,5 +1,9 @@
-version: '3.6'
+version: "3.6"
 services:
+  redis:
+    image: "redis:alpine"
+    restart: always
+
   mbtileserver:
     image: consbio/mbtileserver:latest
     restart: always # dev: unless-stopped
@@ -17,36 +21,43 @@ services:
       context: ../..
       dockerfile: docker/api/Dockerfile
     restart: always
+    depends_on:
+      - redis
     env_file:
       - .env
     command:
       [
-        '/usr/local/bin/gunicorn',
-        '-k',
-        'uvicorn.workers.UvicornWorker',
-        '--name',
-        'uvicorn',
-        '-b',
-        ':5000',
-        'api.api:app',
+        "/usr/local/bin/gunicorn",
+        "-k",
+        "uvicorn.workers.UvicornWorker",
+        "--name",
+        "uvicorn",
+        "-b",
+        ":5000",
+        "api.api:app",
       ]
     volumes:
+      - user_upload:/tmp/sa-reports
       - ../../data:/home/app/data # TODO: this can originate from location in staging config
       - ../../api:/home/app/api # main API
       - ../../analysis:/home/app/analysis # needed for analysis utils
       - ../../constants:/home/app/constants # needed for JSON files for blueprint, indicators
     ports:
-      - '5000:5000'
+      - "5000:5000"
 
   worker:
     build:
       context: ../..
       dockerfile: docker/api/Dockerfile
     restart: always
+    depends_on:
+      - redis
+      - renderer
     env_file:
       - .env
-    command: ['/usr/local/bin/arq', 'api.worker.WorkerSettings']
+    # command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
     volumes:
+      - user_upload:/tmp/sa-reports
       - ../../data:/home/app/data # TODO: this can originate from location in staging config
       - ../../api:/home/app/api # main API
       - ../../analysis:/home/app/analysis # needed for analysis utils
@@ -54,17 +65,15 @@ services:
       - ../../examples:/home/app/examples # DEBUG ONLY
       - ../../tests:/home/app/tests # DEBUG ONLY
 
-  redis:
-    image: 'redis:alpine'
-    restart: always
-
   caddy:
     image: caddy/caddy:2.1.1-alpine
     depends_on:
-      - 'mbtileserver'
+      - mbtileserver
+      - api
+      - worker
     restart: always
     ports:
-      - '8080:80'
+      - "8080:80"
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_certs:/root/.caddy
@@ -72,3 +81,4 @@ services:
 
 volumes:
   caddy_certs:
+  user_upload:
