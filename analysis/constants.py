@@ -17,7 +17,7 @@ M2_ACRES = 0.000247105
 M_MILES = 0.000621371
 
 
-json_dir = Path("ui/config")
+json_dir = Path("constants")
 
 
 # indexed by BP value

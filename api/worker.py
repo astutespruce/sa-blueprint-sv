@@ -12,6 +12,7 @@ from api.settings import (
     FILE_RETENTION,
     SENTRY_DSN,
     LOGGING_LEVEL,
+    REDIS,
 )
 
 
@@ -39,6 +40,7 @@ async def cleanup_files(ctx):
 
 
 class WorkerSettings:
+    redis_settings = REDIS
     job_timeout = JOB_TIMEOUT
     # run cleanup every 60 minutes
     cron_jobs = [cron(cleanup_files, run_at_startup=True, minute=0, second=0)]

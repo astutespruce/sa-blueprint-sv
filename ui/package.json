@@ -69,7 +69,7 @@
     "serve": "gatsby serve",
     "clean": "gatsby clean",
     "predeploy": "gatsby clean && gatsby build",
-    "deploy": "rm -rf ./published && cp -r ./public/* ./published"
+    "deploy": "mkdir -p published && rm -rf ./published/* && cp -r ./public/* ./published"
   },
   "repository": {
     "type": "git",

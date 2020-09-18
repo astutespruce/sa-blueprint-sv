@@ -8,8 +8,8 @@ Use case: user uploads shapefile (AOI) representing a small area, this generates
 
 To make custom report requests using HTTPie:
 
-```
-http -f POST :5000/api/reports/custom/ name="<area name>" token=="<token from .env>" file@<filename>.zip
+```bash
+http -f POST :5000/api/reports/custom token=="<token from .env>" name="<area name>" file@<filename>.zip
 ```
 
 This creates a background job and returns:
@@ -23,13 +23,13 @@ This creates a background job and returns:
 To query job status:
 
 ```
-http :5000/reports/status/<job_id>
+http :5000/api/reports/status/<job_id>
 ```
 
 To download PDF from a successful job:
 
 ```
-http :5000/reports/results/<job_id>
+http :5000/api/reports/results/<job_id>
 ```
 
 This sets the `Content-Type` header to attachment and uses the passed-in name

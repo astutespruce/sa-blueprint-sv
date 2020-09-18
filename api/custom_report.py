@@ -8,7 +8,7 @@ from pathlib import Path
 import tempfile
 
 import numpy as np
-from pyogrio.geopandas import read_dataframe
+from pyogrio import read_dataframe
 import pygeos as pg
 
 from api.errors import DataError
@@ -18,8 +18,8 @@ from api.settings import LOGGING_LEVEL, TEMP_DIR
 from api.stats import CustomArea
 from api.progress import set_progress
 
-from util.pygeos_util import to_crs
-from constants import DATA_CRS, GEO_CRS
+from analysis.pygeos_util import to_crs
+from analysis.constants import DATA_CRS, GEO_CRS
 
 MAX_DIM = 5  # degrees
 

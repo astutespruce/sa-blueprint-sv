@@ -56,8 +56,8 @@ module.exports = {
     {
       resolve: `gatsby-source-filesystem`,
       options: {
-        name: `config`,
-        path: `${__dirname}/config`,
+        name: `constants`,
+        path: `${__dirname}/../constants`,
       },
     },
     {
