@@ -11,8 +11,9 @@ def poll_until_done(job_id, current=0, max=100):
     r = httpx.get(
         f"http://localhost:5000/api/reports/status/{job_id}?token={API_TOKEN}"
     )
+    r.raise_for_status()
     json = r.json()
-    status = json["status"]
+    status = json.get("status")
     progress = json.get("progress")
 
     if status == "success":
@@ -42,7 +43,13 @@ def test_upload_file():
         data={"name": "foo"},
         files=files,
     )
-    job_id = r.json()["job"]
+    r.raise_for_status()
+
+    json = r.json()
+    job_id = json.get("job")
+
+    if job_id is None:
+        raise Exception(json)
 
     poll_until_done(job_id)
 
@@ -51,7 +58,18 @@ def test_huc12_report(huc12_id):
     r = httpx.post(
         f"http://localhost:5000/api/reports/huc12/{huc12_id}?token={API_TOKEN}"
     )
-    job_id = r.json()["job"]
+
+    r.raise_for_status()
+
+    json = r.json()
+
+    if not json:
+        raise Exception(r.status)
+
+    job_id = json.get("job")
+
+    if job_id is None:
+        raise Exception(json)
 
     poll_until_done(job_id)
 

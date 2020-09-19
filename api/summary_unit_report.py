@@ -25,7 +25,7 @@ async def create_summary_unit_report(ctx, unit_type, unit_id):
     ----------
     ctx : job context
     unit_type : str
-        "huc12" or "marine_blocks"
+        one of "huc12", "marine_blocks"
     unit_id : str
     """
 
@@ -35,7 +35,12 @@ async def create_summary_unit_report(ctx, unit_type, unit_id):
     units = SummaryUnits(unit_type)
     await set_progress(ctx["job_id"], 5)
 
-    # try:
+    # validate that unit exists
+    if not id in units.units.index:
+        raise DataError(
+            "Unit id is not valid (not an existing subwatershed or marine lease block ID)"
+        )
+
     results = units.get_results(unit_id)
     await set_progress(ctx["job_id"], 50)
 

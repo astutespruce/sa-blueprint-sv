@@ -181,14 +181,32 @@ async def custom_report_endpoint(
         await redis.wait_closed()
 
 
-@app.post("/api/reports/huc12/{huc12_id}")
-async def huc12_report_endpoint(huc12_id: str, token: APIKey = Depends(get_token)):
-    log.error(f"Generate huc12 report {huc12_id}")
+@app.post("/api/reports/huc12/{unit_id}")
+async def huc12_report_endpoint(unit_id: str, token: APIKey = Depends(get_token)):
 
-    ### Create report task
     try:
         redis = await arq.create_pool(REDIS)
-        job = await redis.enqueue_job("create_summary_unit_report", "huc12", huc12_id)
+        job = await redis.enqueue_job("create_summary_unit_report", "huc12", unit_id)
+        return {"job": job.job_id}
+
+    except Exception as ex:
+        log.error(f"Error creating background task, is Redis offline?  {ex}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+    finally:
+        redis.close()
+        await redis.wait_closed()
+
+
+@app.post("/api/reports/marine_blocks/{unit_id}")
+async def marine_blocks_report_endpoint(
+    unit_id: str, token: APIKey = Depends(get_token)
+):
+    try:
+        redis = await arq.create_pool(REDIS)
+        job = await redis.enqueue_job(
+            "create_summary_unit_report", "marine_blocks", unit_id
+        )
         return {"job": job.job_id}
 
     except Exception as ex:
@@ -232,12 +250,9 @@ async def job_status_endpoint(job_id: str):
         if status != JobStatus.complete:
             progress = await get_progress(job_id)
 
-            log.error("After wait closed")
-
             return {"status": status, "progress": progress}
 
         info = await job.result_info()
-        log.error("Waited for result info")
 
         if info.success:
             return {"status": "success", "result": f"/api/reports/results/{job_id}"}

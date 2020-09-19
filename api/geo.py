@@ -42,7 +42,7 @@ def get_dataset(zip):
     Validates rules:
     - There must be only one data source (.shp or .gdb) in the zip file.
     - There must be only one data layer in that data source.
-    - The data source must contain the required files (.dbf and .prj for shapefile)
+    - The data source must contain the required files (.prj for shapefile; .dbf is not used so not required)
 
     Parameters
     ----------
@@ -73,13 +73,10 @@ def get_dataset(zip):
     filename = geo_files[0]
 
     if filename.endswith(".shp"):
-        if not (
-            filename.replace(".shp", ".dbf") in files
-            and filename.replace(".shp", ".prj") in files
-        ):
-            log.error(f"Upload zip file contains .shp but not .dbf or .prj")
+        if not (filename.replace(".shp", ".prj") in files):
+            log.error(f"Upload zip file contains .shp but not .prj")
 
-            raise ValueError("zip file must include .shp, .dbf, .prj files")
+            raise ValueError("zip file must include .shp and .prj files")
 
     # Validate that dataset is a polygon and has only a single layer
     layers = pio.list_layers(f"/vsizip/{zip.fp.name}/{filename}")
