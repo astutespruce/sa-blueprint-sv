@@ -34,6 +34,7 @@ from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from api.errors import DataError
 from api.geo import get_dataset
 from api.custom_report import create_custom_report
+from api.summary_unit_report import create_summary_unit_report
 from api.settings import (
     LOGGING_LEVEL,
     REDIS,
@@ -169,6 +170,25 @@ async def custom_report_endpoint(
         job = await redis.enqueue_job(
             "create_custom_report", filename, dataset, layer, name=name
         )
+        return {"job": job.job_id}
+
+    except Exception as ex:
+        log.error(f"Error creating background task, is Redis offline?  {ex}")
+        raise HTTPException(status_code=500, detail="Internal server error")
+
+    finally:
+        redis.close()
+        await redis.wait_closed()
+
+
+@app.post("/api/reports/huc12/{huc12_id}")
+async def huc12_report_endpoint(huc12_id: str, token: APIKey = Depends(get_token)):
+    log.error(f"Generate huc12 report {huc12_id}")
+
+    ### Create report task
+    try:
+        redis = await arq.create_pool(REDIS)
+        job = await redis.enqueue_job("create_summary_unit_report", "huc12", huc12_id)
         return {"job": job.job_id}
 
     except Exception as ex:

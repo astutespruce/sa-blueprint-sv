@@ -6,6 +6,7 @@ from arq import cron
 import sentry_sdk
 
 from api.custom_report import create_custom_report
+from api.summary_unit_report import create_summary_unit_report
 from api.settings import (
     TEMP_DIR,
     JOB_TIMEOUT,
@@ -44,4 +45,4 @@ class WorkerSettings:
     job_timeout = JOB_TIMEOUT
     # run cleanup every 60 minutes
     cron_jobs = [cron(cleanup_files, run_at_startup=True, minute=0, second=0)]
-    functions = [create_custom_report]
+    functions = [create_custom_report, create_summary_unit_report]

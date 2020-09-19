@@ -35,12 +35,30 @@ def poll_until_done(job_id, current=0, max=100):
     poll_until_done(job_id, current=current, max=max)
 
 
-files = {"file": open("examples/api/Razor.zip", "rb")}
-r = httpx.post(
-    f"http://localhost:5000/api/reports/custom?token={API_TOKEN}",
-    data={"name": "foo"},
-    files=files,
-)
-job_id = r.json()["job"]
+def test_upload_file():
+    files = {"file": open("examples/api/Razor.zip", "rb")}
+    r = httpx.post(
+        f"http://localhost:5000/api/reports/custom?token={API_TOKEN}",
+        data={"name": "foo"},
+        files=files,
+    )
+    job_id = r.json()["job"]
 
-poll_until_done(job_id)
+    poll_until_done(job_id)
+
+
+def test_huc12_report(huc12_id):
+    r = httpx.post(
+        f"http://localhost:5000/api/reports/huc12/{huc12_id}?token={API_TOKEN}"
+    )
+    job_id = r.json()["job"]
+
+    poll_until_done(job_id)
+
+
+if __name__ == "__main__":
+    # test_upload_file()
+    test_huc12_report("0")
+
+    # test_huc12_report("030602040601")
+
