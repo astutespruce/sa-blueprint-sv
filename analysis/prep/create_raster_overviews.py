@@ -20,7 +20,7 @@ factors = [2, 4, 8, 16, 32]
 
 src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
-blueprint_filename = src_dir / "Blueprint2020.tif"
+blueprint_filename = src_dir / "blueprint2020.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_dir = src_dir / "threats/urban"
 slr_dir = src_dir / "threats/slr"
