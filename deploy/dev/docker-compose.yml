@@ -1,12 +1,12 @@
-version: "3.6"
+version: '3.6'
 services:
   redis:
-    image: "redis:alpine"
+    image: 'redis:alpine'
     restart: always
 
   mbtileserver:
     image: consbio/mbtileserver:latest
-    restart: always # dev: unless-stopped
+    restart: unless-stopped
     volumes:
       - ../../tiles:/tilesets
 
@@ -27,14 +27,19 @@ services:
       - .env
     command:
       [
-        "/usr/local/bin/gunicorn",
-        "-k",
-        "uvicorn.workers.UvicornWorker",
-        "--name",
-        "uvicorn",
-        "-b",
-        ":5000",
-        "api.api:app",
+        '/usr/local/bin/gunicorn',
+        '-k',
+        'uvicorn.workers.UvicornWorker',
+        '--name',
+        'uvicorn',
+        '--loop',
+        'uvloop',
+        '-b',
+        ':5000',
+        '--capture-output',
+        '--log-level',
+        'DEBUG',
+        'api.api:app',
       ]
     volumes:
       - user_upload:/tmp/sa-reports
@@ -43,7 +48,7 @@ services:
       - ../../analysis:/home/app/analysis # needed for analysis utils
       - ../../constants:/home/app/constants # needed for JSON files for blueprint, indicators
     ports:
-      - "5000:5000"
+      - '5000:5000'
 
   worker:
     build:
@@ -55,7 +60,7 @@ services:
       - renderer
     env_file:
       - .env
-    # command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+    command: ['/usr/local/bin/arq', 'api.worker.WorkerSettings']
     volumes:
       - user_upload:/tmp/sa-reports
       - ../../data:/home/app/data # TODO: this can originate from location in staging config
@@ -73,7 +78,7 @@ services:
       - worker
     restart: always
     ports:
-      - "8080:80"
+      - '8080:80'
     volumes:
       - ./Caddyfile:/etc/caddy/Caddyfile
       - caddy_certs:/root/.caddy

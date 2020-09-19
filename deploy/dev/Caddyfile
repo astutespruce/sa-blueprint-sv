@@ -10,8 +10,7 @@
   }
 
   route /api* {
-      # header Cache-Control "public, max-age=3600, must-revalidate"
-      reverse_proxy api:8000
+      reverse_proxy api:5000
   }
 
   root * /var/www

@@ -137,7 +137,7 @@ def create_report(maps, results):
         legends["protection"] = list(PROTECTION.values())
 
     context = {
-        "date": date.today().strftime("%m/%d/%y"),
+        "date": date.today().strftime("%m/%d/%Y"),
         "title": title,
         "subtitle": subtitle,
         "url": "https://blueprint.southatlanticlcc.org/",

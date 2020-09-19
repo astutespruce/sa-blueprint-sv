@@ -45,7 +45,7 @@ from api.settings import (
 from api.progress import get_progress
 
 
-log = logging.getLogger(__name__)
+log = logging.getLogger("api")
 log.setLevel(LOGGING_LEVEL)
 
 ### Create the main API app
@@ -169,12 +169,15 @@ async def custom_report_endpoint(
         job = await redis.enqueue_job(
             "create_custom_report", filename, dataset, layer, name=name
         )
+        return {"job": job.job_id}
 
     except Exception as ex:
         log.error(f"Error creating background task, is Redis offline?  {ex}")
         raise HTTPException(status_code=500, detail="Internal server error")
 
-    return {"job": job.job_id}
+    finally:
+        redis.close()
+        await redis.wait_closed()
 
 
 @app.get("/api/reports/status/{job_id}")
@@ -196,58 +199,77 @@ async def job_status_endpoint(job_id: str):
     JSON
         {"status": "...", "progress": 0-100, "result": "...only if complete...", "detail": "...only if failed..."}
     """
+
     redis = await arq.create_pool(REDIS)
-    job = Job(job_id, redis=redis)
-    status = await job.status()
-
-    if status == JobStatus.not_found:
-        raise HTTPException(status_code=404, detail="Job not found")
-
-    if status != JobStatus.complete:
-        progress = await get_progress(job_id)
-        return {"status": status, "progress": progress}
-
-    info = await job.result_info()
-
-    if info.success:
-        return {"status": "success", "result": f"/api/reports/results/{job_id}"}
-
-    status = "failed"
 
     try:
-        # this re-raises the underlying exception raised in the worker
-        await job.result()
+        job = Job(job_id, redis=redis)
+        status = await job.status()
 
-    except DataError as ex:
-        message = str(ex)
+        if status == JobStatus.not_found:
+            raise HTTPException(status_code=404, detail="Job not found")
 
-    # TODO: other specific exceptions
+        if status != JobStatus.complete:
+            progress = await get_progress(job_id)
 
-    except Exception as ex:
-        log.error(ex)
-        message = "Internal server error"
-        raise HTTPException(status_code=500, detail="Internal server error")
+            log.error("After wait closed")
 
-    return {"status": status, "detail": message}
+            return {"status": status, "progress": progress}
+
+        info = await job.result_info()
+        log.error("Waited for result info")
+
+        if info.success:
+            return {"status": "success", "result": f"/api/reports/results/{job_id}"}
+
+        status = "failed"
+
+        try:
+            # this re-raises the underlying exception raised in the worker
+            await job.result()
+
+        except DataError as ex:
+            message = str(ex)
+
+        # TODO: other specific exceptions
+
+        except Exception as ex:
+            log.error(ex)
+            message = "Internal server error"
+            raise HTTPException(status_code=500, detail="Internal server error")
+
+        return {"status": status, "detail": message}
+
+    finally:
+        redis.close()
+        await redis.wait_closed()
 
 
 @app.get("/api/reports/results/{job_id}")
 async def report_pdf_endpoint(job_id: str):
     redis = await arq.create_pool(REDIS)
-    job = Job(job_id, redis=redis)
-    status = await job.status()
 
-    if status == JobStatus.not_found:
-        raise HTTPException(status_code=404, detail="Job not found")
+    try:
+        job = Job(job_id, redis=redis)
+        status = await job.status()
 
-    if status != JobStatus.complete:
-        raise HTTPException(status_code=400, detail="Job not complete")
+        if status == JobStatus.not_found:
+            raise HTTPException(status_code=404, detail="Job not found")
 
-    info = await job.result_info()
-    if not info.success:
-        raise HTTPException(status_code=400, detail="Job failed, cannot return results")
+        if status != JobStatus.complete:
+            raise HTTPException(status_code=400, detail="Job not complete")
 
-    path = info.result
-    name = info.kwargs.get("name", None) or "Blueprint Summary Report"
+        info = await job.result_info()
+        if not info.success:
+            raise HTTPException(
+                status_code=400, detail="Job failed, cannot return results"
+            )
 
-    return FileResponse(path, filename=f"{name}.pdf", media_type="application/pdf")
+        path = info.result
+        name = info.kwargs.get("name", None) or "Blueprint Summary Report"
+
+        return FileResponse(path, filename=f"{name}.pdf", media_type="application/pdf")
+
+    finally:
+        redis.close()
+        await redis.wait_closed()

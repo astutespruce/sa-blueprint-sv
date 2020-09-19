@@ -29,5 +29,5 @@ arq api.worker.WorkerSettings --watch ./api
 To start the API in development mode:
 
 ```
-uvicorn api:app --reload --port 5000
+uvicorn api.api:app --reload --port 5000
 ```

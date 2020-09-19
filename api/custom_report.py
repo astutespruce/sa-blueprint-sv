@@ -29,6 +29,31 @@ log.setLevel(LOGGING_LEVEL)
 
 
 async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
+    """Create a Blueprint report for a user-uploaded GIS file contained in a zip.
+    Zip must contain either a shapefile or a file geodatabase.
+
+    Parameters
+    ----------
+    ctx : job context
+    zip_filename : str
+        full path to zip filename
+    dataset : str
+        full path to dataset within zip file
+    layer : str
+        name of layer within dataset
+    name : str, optional (default: "")
+        Name of area of interest (included in output report)
+
+    Returns
+    -------
+    str
+        path to output file
+
+    Raises
+    ------
+    DataError
+        Raised if bounds are too large or if area of interest doesn't overalap SA region
+    """
     await set_progress(ctx["job_id"], 0)
 
     path = f"/vsizip/{zip_filename}/{dataset}"
