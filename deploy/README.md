@@ -33,6 +33,17 @@ Everything happens in the `/home/app` workspace (create it).
 
 Clone `sa-blueprint-sv` (this repo) into `~/app/sa-blueprint-sv`.
 
+Make root directories:
+
+```bash
+sudo mkdir /var/www
+sudo chown -R ubuntu:ubuntu /var/www
+sudo mkdir /data
+sudo chown ubuntu:ubuntu /data
+sudo mkdir /tiles
+sudo chown ubuntu:ubuntu /tiles
+```
+
 ## Inputs
 
 Tiles and data files are prepared locally and uploaded for deployment.
@@ -40,15 +51,6 @@ Tiles and data files are prepared locally and uploaded for deployment.
 Copy contents of local `tiles` directory to `/tiles`.
 
 Copy `inputs` and `results` directories to `/data`.
-
-## Static website folder
-
-(clear it out if it exists)
-
-```bash
-sudo mkdir /var/www
-sudo chown -R ubuntu:ubuntu /var/www
-```
 
 ## User interface
 
