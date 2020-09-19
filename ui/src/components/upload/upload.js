@@ -5,7 +5,7 @@ import config from '../../../gatsby-config'
 const { apiToken } = config.siteMetadata
 let { apiHost } = config.siteMetadata
 
-const pollInterval = 500 // milliseconds; 1 second
+const pollInterval = 1000 // milliseconds; 1 second
 const jobTimeout = 600000 // milliseconds; 10 minutes
 
 if (hasWindow && !apiHost) {

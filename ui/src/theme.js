@@ -95,6 +95,14 @@ export default {
       color: 'grey.5',
       '&:hover': { color: 'grey.9' },
     },
+    alertClose: {
+      cursor: 'pointer',
+      outline: 'none',
+      background: 'none',
+      border: '1px solid',
+      borderRadius: '1rem',
+      color: '#FFF',
+    },
     mobileHeaderClose: {
       cursor: 'pointer',
       outline: 'none',
@@ -221,8 +229,8 @@ export default {
     },
     progress: {
       color: 'primary',
-      bg: 'grey.2',
-      height: '0.5rem',
+      bg: 'grey.1',
+      height: '1rem',
       percent: {
         color: 'primary',
         bg: 'grey.2',

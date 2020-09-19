@@ -82,5 +82,11 @@ module.exports = {
         display: `minimal-ui`,
       },
     },
+    {
+      resolve: 'gatsby-plugin-robots-txt',
+      options: {
+        policy: [{ userAgent: '*', disallow: ['/services', '/api'] }],
+      },
+    },
   ],
 }

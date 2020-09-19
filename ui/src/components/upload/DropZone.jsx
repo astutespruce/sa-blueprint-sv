@@ -20,13 +20,19 @@ const DropZone = ({ onDrop }) => {
         if (rejectedFiles.length > 1) {
           alert(
             `Multiple files not allowed: ${rejectedFiles
-              .map((d) => d.name)
+              .map(({ file: { name } }) => name)
               .join(', ')}`
           )
           return
         }
 
-        const { name, size } = rejectedFiles[0]
+        const {
+          file: { name },
+          size,
+        } = rejectedFiles[0]
+
+        console.log('filename is', rejectedFiles[0])
+
         const mb = size / 1e6
         if (mb >= MAXSIZE_MB) {
           alert(

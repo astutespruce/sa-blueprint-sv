@@ -1,8 +1,6 @@
 import React, { useState, useCallback } from 'react'
 import {
-  Alert,
   Box,
-  Close,
   Container,
   Divider,
   Heading,
@@ -11,18 +9,12 @@ import {
   Progress,
   Text,
 } from 'theme-ui'
-import {
-  ExclamationTriangle,
-  Download,
-  CheckCircle,
-} from '@emotion-icons/fa-solid'
+import { Download, CheckCircle } from '@emotion-icons/fa-solid'
 
 import { captureException } from 'util/log'
 import { uploadFile } from './upload'
 import UploadForm from './UploadForm'
-import config from '../../../gatsby-config'
-
-const { contactEmail } = config.siteMetadata
+import UploadError from './UploadError'
 
 const UploadContainer = () => {
   const [{ reportURL, progress, error, inProgress }, setState] = useState({
@@ -88,9 +80,9 @@ const UploadContainer = () => {
     }
   }, [])
 
-  const handleClearError = () => {
+  const handleClearError = useCallback(() => {
     setState((prevState) => ({ ...prevState, error: null }))
-  }
+  }, [])
 
   return (
     <Container sx={{ py: '2rem' }}>
@@ -128,45 +120,17 @@ const UploadContainer = () => {
           <Heading as="h2" sx={{ mb: '0.5rem' }}>
             Creating report...
           </Heading>
+
           <Flex sx={{ alignItems: 'center' }}>
-            <Progress variant="progress" max={100} value={progress} />
+            <Progress variant="styles.progress" max={100} value={progress} />
             <Text sx={{ ml: '1rem' }}>{progress}%</Text>
           </Flex>
         </>
       ) : (
         <>
-          {error != null && (
-            <Alert variant="error" sx={{ mt: '2rem', mb: '4rem', py: '1rem' }}>
-              <ExclamationTriangle
-                size="2rem"
-                style={{
-                  margin: '0 1rem 0 0',
-                }}
-              />
-              <Box>
-                Uh oh! There was an error!
-                <br />
-                {error ? (
-                  `The server says: ${error}`
-                ) : (
-                  <>
-                    <Text as="span">
-                      Please try again. If that does not work, try a different
-                      file or
-                    </Text>{' '}
-                    <Link
-                      sx={{ color: '#FFF' }}
-                      href={`mailto:${contactEmail}`}
-                    >
-                      Contact Us
-                    </Link>
-                    .
-                  </>
-                )}
-              </Box>
-              <Close ml="auto" mr={-2} onClick={handleClearError} />
-            </Alert>
-          )}
+          {error != null ? (
+            <UploadError error={error} handleClearError={handleClearError} />
+          ) : null}
 
           <UploadForm
             onFileChange={handleClearError}
