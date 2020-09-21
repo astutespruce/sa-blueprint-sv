@@ -59,12 +59,12 @@ async def get_aoi_map_image(geometry, center, zoom, width, height):
         async with httpx.AsyncClient() as client:
             r = await client.post(MBGL_SERVER_URL, json=params)
 
-        if r.status_code != 200:
-            log.error(f"Error generating AOI image: {r.text[:255]}")
-            return None
+            if r.status_code != 200:
+                log.error(f"Error generating AOI image: {r.text[:255]}")
+                return None
 
-        return Image.open(BytesIO(r.content))
+            return Image.open(BytesIO(r.content))
 
     except Exception as ex:
-        log.error(f"Error generating AOI image: {ex}")
+        log.error(f"Unhandled exception generating AOI image: {ex}")
         return None

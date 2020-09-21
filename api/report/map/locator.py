@@ -140,12 +140,12 @@ async def get_locator_map_image(longitude, latitude, bounds, geometry=None):
         async with httpx.AsyncClient() as client:
             r = await client.post(MBGL_SERVER_URL, json=params)
 
-        if r.status_code != 200:
-            log.error(f"Error generating locator image: {r.text[:255]}")
-            return None
+            if r.status_code != 200:
+                log.error(f"Error generating locator image: {r.text[:255]}")
+                return None
 
-        return Image.open(BytesIO(r.content))
+            return Image.open(BytesIO(r.content))
 
     except Exception as ex:
-        log.error(f"Error generating locator image: {ex}")
+        log.error(f"Unhandled exception generating locator image: {ex}")
         return None

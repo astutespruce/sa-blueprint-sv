@@ -40,8 +40,6 @@ const MapContainer = () => {
 
   const { selectedUnit, deselectUnit } = useSelectedUnit()
 
-  console.log('selectedUnit', selectedUnit)
-
   const { location } = useSearch()
 
   const contentNode = useRef(null)
