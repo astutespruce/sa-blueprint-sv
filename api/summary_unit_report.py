@@ -36,7 +36,7 @@ async def create_summary_unit_report(ctx, unit_type, unit_id):
     await set_progress(ctx["job_id"], 5)
 
     # validate that unit exists
-    if not id in units.units.index:
+    if not unit_id in units.units.index:
         raise DataError(
             "Unit id is not valid (not an existing subwatershed or marine lease block ID)"
         )

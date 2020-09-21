@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Alert, Close, Box, Text } from 'theme-ui'
 import { ExclamationTriangle } from '@emotion-icons/fa-solid'
 
-import { Link } from 'components/link'
+import { OutboundLink } from 'components/link'
 import config from '../../../gatsby-config'
 
 const { contactEmail } = config.siteMetadata
@@ -27,9 +27,12 @@ const UploadError = ({ error, handleClearError }) => {
             <Text as="span">
               Please try again. If that does not work, try a different file or
             </Text>{' '}
-            <Link sx={{ color: '#FFF' }} href={`mailto:${contactEmail}`}>
+            <OutboundLink
+              sx={{ color: '#FFF' }}
+              href={`mailto:${contactEmail}`}
+            >
               Contact Us
-            </Link>
+            </OutboundLink>
             .
           </>
         )}

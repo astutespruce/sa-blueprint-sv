@@ -14,7 +14,7 @@ if (hasWindow && !apiHost) {
 
 const API = `${apiHost}/api/reports`
 
-const uploadFile = async (file, name, onProgress) => {
+export const uploadFile = async (file, name, onProgress) => {
   // NOTE: both file and name are required by API
   const formData = new FormData()
   formData.append('file', file)
@@ -38,9 +38,46 @@ const uploadFile = async (file, name, onProgress) => {
     return { error: detail }
   }
 
-  if (response.status != 200) {
+  if (response.status !== 200) {
     console.error('Bad response', json)
 
+    captureException('Bad upload response', json)
+
+    throw new Error(response.statusText)
+  }
+
+  const result = await pollJob(job, onProgress)
+  return result
+}
+
+export const createSummaryUnitReport = async (id, type, onProgress) => {
+  let unitType = null
+
+  if (type === 'subwatershed') {
+    unitType = 'huc12'
+  } else if (type === 'marine lease block') {
+    unitType = 'marine_blocks'
+  }
+
+  const response = await fetch(`${API}/${unitType}/${id}?token=${apiToken}`, {
+    method: 'POST',
+  })
+
+  const json = await response.json()
+  const { job, detail } = json
+
+  if (response.status === 400) {
+    // indicates error with user request, show error to user
+
+    // just for logging
+    console.error('Bad create summary report request', json)
+    captureException('Bad create summary report request', json)
+
+    return { error: detail }
+  }
+
+  if (response.status !== 200) {
+    console.error('Bad response', json)
     captureException('Bad upload response', json)
 
     throw new Error(response.statusText)
@@ -96,5 +133,3 @@ const pollJob = async (jobId, onProgress) => {
       'timeout while creating report.  Your area of interest may be too big.',
   }
 }
-
-export { uploadFile }

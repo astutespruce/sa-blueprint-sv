@@ -76,7 +76,8 @@ def test_huc12_report(huc12_id):
 
 if __name__ == "__main__":
     # test_upload_file()
-    test_huc12_report("0")
 
-    # test_huc12_report("030602040601")
+    # test_huc12_report("0")
+
+    test_huc12_report("030602040601")
 

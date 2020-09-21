@@ -29,7 +29,6 @@ const Tabs = ({ tabs, activeTab, variant, activeVariant, onChange }) => {
       columns={tabs.length}
       sx={{
         alignItems: 'center',
-        justifyContent: 'space-evenly',
         fontSize: ['10px', 0, 1],
       }}
     >

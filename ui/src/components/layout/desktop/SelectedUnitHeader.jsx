@@ -12,7 +12,7 @@ const SelectedUnitHeader = ({ name, acres, onClose }) => {
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         p: '1rem',
-        minHeight: '7rem',
+        minHeight: '6rem',
       }}
     >
       <Box sx={{ mr: '1rem' }}>
@@ -20,8 +20,6 @@ const SelectedUnitHeader = ({ name, acres, onClose }) => {
         <Text sx={{ color: 'grey.6', fontSize: [0, 1] }}>
           {formatNumber(acres)} acres
         </Text>
-
-        {/* TODO: download report link */}
       </Box>
 
       <Button

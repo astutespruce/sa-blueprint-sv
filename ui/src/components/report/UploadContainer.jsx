@@ -12,7 +12,7 @@ import {
 import { Download, CheckCircle } from '@emotion-icons/fa-solid'
 
 import { captureException } from 'util/log'
-import { uploadFile } from './upload'
+import { uploadFile } from './api'
 import UploadForm from './UploadForm'
 import UploadError from './UploadError'
 
@@ -101,7 +101,7 @@ const UploadContainer = () => {
             Your report is now complete. It should download automatically.
             <br />
             <br />
-            You can also click the button below to download your report.
+            You can also click the link below to download your report.
           </Text>
 
           <Link href={reportURL} target="_blank">

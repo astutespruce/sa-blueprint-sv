@@ -4,7 +4,7 @@ import { graphql } from 'gatsby'
 
 import { Layout } from 'components/layout'
 import { BannerImage } from 'components/image'
-import { UploadContainer } from 'components/upload'
+import { UploadContainer } from 'components/report'
 
 const CustomReportPage = ({ data: { headerImage } }) => (
   <Layout title="Create a Custom Blueprint Report">
