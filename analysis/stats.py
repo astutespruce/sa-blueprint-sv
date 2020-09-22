@@ -1,9 +1,12 @@
+import math
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
 import rasterio
-from rasterio.mask import raster_geometry_mask
+from rasterio.features import bounds
+from rasterio.mask import raster_geometry_mask, geometry_mask
+from rasterio.windows import Window
 
 from analysis.constants import (
     BLUEPRINT,
@@ -24,7 +27,37 @@ urban_dir = src_dir / "threats/urban"
 slr_dir = src_dir / "threats/slr"
 
 
-def extract_count_in_geometry(filename, geometry_mask, window, bins):
+def boundless_raster_geometry_mask(dataset, shapes, bounds, all_touched=True):
+    """Alternative to rasterio.mask::raster_geometry_mask that allows boundless
+    reads from raster data sources.
+
+    Parameters
+    ----------
+    dataset : open rasterio dataset
+    shapes : list-like of geometry objects that provide __geo_interface__
+    bounds : list-like of [xmin, ymin, xmax, ymax]
+    all_touched : bool, optional (default: True)
+    """
+
+    # Calculate outer window that contains bounds
+    window = dataset.window(
+        *bounds
+    )  # .round_offsets(op="floor").round_lengths(op="ceil")
+    window_floored = window.round_offsets(op="floor", pixel_precision=3)
+    w = math.ceil(window.width + window.col_off - window_floored.col_off)
+    h = math.ceil(window.height + window.row_off - window_floored.row_off)
+    window = Window(window_floored.col_off, window_floored.row_off, w, h)
+
+    transform = dataset.window_transform(window)
+    out_shape = (int(window.height), int(window.width))
+    mask = geometry_mask(
+        shapes, transform=transform, out_shape=out_shape, all_touched=all_touched
+    )
+
+    return mask, transform, window
+
+
+def extract_count_in_geometry(filename, geometry_mask, window, bins, boundless=False):
     """Apply the geometry mask to values read from filename, and generate a list
     of pixel counts for each bin in bins.
 
@@ -39,6 +72,9 @@ def extract_count_in_geometry(filename, geometry_mask, window, bins):
     bins : list-like
         List-like of values ranging from 0 to max value (not sparse!).
         Counts will be generated that correspond to this list of bins.
+    boundless : bool (default: False)
+        If True, will use boundless reads of the data.  This must be used
+        if the window extends beyond the extent of the dataset.
 
     Returns
     -------
@@ -47,7 +83,7 @@ def extract_count_in_geometry(filename, geometry_mask, window, bins):
     """
 
     with rasterio.open(filename) as src:
-        data = src.read(1, window=window)
+        data = src.read(1, window=window, boundless=boundless)
         nodata = src.nodatavals[0]
 
     mask = (data == nodata) | geometry_mask
@@ -59,7 +95,7 @@ def extract_count_in_geometry(filename, geometry_mask, window, bins):
     return np.bincount(values, minlength=len(bins)).astype("uint32")
 
 
-def extract_zonal_mean(filename, geometry_mask, window):
+def extract_zonal_mean(filename, geometry_mask, window, boundless=False):
     """Apply the geometry mask to values read from filename and calculate
     the mean within that area.
 
@@ -71,7 +107,9 @@ def extract_zonal_mean(filename, geometry_mask, window):
         True for all pixels outside geometry, False inside.
     window : rasterio.windows.Window
         Window that defines the footprint of the geometry_mask within the raster.
-
+    boundless : bool (default: False)
+        If True, will use boundless reads of the data.  This must be used
+        if the window extends beyond the extent of the dataset.
     Returns
     -------
     float
@@ -79,7 +117,7 @@ def extract_zonal_mean(filename, geometry_mask, window):
     """
 
     with rasterio.open(filename) as src:
-        data = src.read(1, window=window)
+        data = src.read(1, window=window, boundless=boundless)
         nodata = src.nodatavals[0]
 
     mask = (data == nodata) | geometry_mask
@@ -131,7 +169,9 @@ def detect_indicators(geometries, indicators):
     return indicators_with_data
 
 
-def extract_blueprint_indicator_area(geometries, inland=True, zonal_means=False):
+def extract_blueprint_indicator_area(
+    geometries, bounds, inland=True, zonal_means=False
+):
     """Calculate the area of overlap between geometries and Blueprint, indicators,
     and corridors.
 
@@ -140,6 +180,7 @@ def extract_blueprint_indicator_area(geometries, inland=True, zonal_means=False)
     Parameters
     ----------
     geometries : list-like of geometry objects that provide __geo_interface__
+    bounds : list-like of [xmin, ymin, xmax, ymax]
     inland : bool (default False)
         if False will use only marine indicators
     zonal_means : bool (default False)
@@ -160,8 +201,8 @@ def extract_blueprint_indicator_area(geometries, inland=True, zonal_means=False)
     # create mask and window
     with rasterio.open(blueprint_filename) as src:
         try:
-            geometry_mask, transform, window = raster_geometry_mask(
-                src, geometries, crop=True, all_touched=True
+            geometry_mask, transform, window = boundless_raster_geometry_mask(
+                src, geometries, bounds, all_touched=True
             )
 
         except ValueError:
@@ -171,7 +212,11 @@ def extract_blueprint_indicator_area(geometries, inland=True, zonal_means=False)
         cellsize = src.res[0] * src.res[1] * M2_ACRES
 
     results["counts"]["shape_mask"] = (
-        ((~geometry_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
+        ((~geometry_mask).sum() * cellsize)
+        .round(ACRES_PRECISION)
+        .astype("float32")
+        .round(ACRES_PRECISION)
+        .astype("float32")
     )
 
     # Does not overlap Blueprint extent, return
@@ -179,7 +224,11 @@ def extract_blueprint_indicator_area(geometries, inland=True, zonal_means=False)
         return None
 
     blueprint_counts = extract_count_in_geometry(
-        blueprint_filename, geometry_mask, window, np.arange(len(BLUEPRINT))
+        blueprint_filename,
+        geometry_mask,
+        window,
+        np.arange(len(BLUEPRINT)),
+        boundless=True,
     )
     results["counts"]["blueprint"] = (
         (blueprint_counts * cellsize).round(ACRES_PRECISION).astype("float32")
@@ -187,7 +236,11 @@ def extract_blueprint_indicator_area(geometries, inland=True, zonal_means=False)
     blueprint_total = blueprint_counts.sum()
 
     corridor_counts = extract_count_in_geometry(
-        corridors_filename, geometry_mask, window, np.arange(len(CORRIDORS))
+        corridors_filename,
+        geometry_mask,
+        window,
+        np.arange(len(CORRIDORS)),
+        boundless=True,
     )
     results["counts"]["corridors"] = (
         (corridor_counts * cellsize).round(ACRES_PRECISION).astype("float32")
@@ -211,7 +264,9 @@ def extract_blueprint_indicator_area(geometries, inland=True, zonal_means=False)
 
         values = [e["value"] for e in indicator["values"]]
         bins = np.arange(0, max(values) + 1)
-        counts = extract_count_in_geometry(filename, geometry_mask, window, bins)
+        counts = extract_count_in_geometry(
+            filename, geometry_mask, window, bins, boundless=True
+        )
 
         # Some indicators exclude 0 values, their counts need to be zeroed out here
         min_value = min(values)
@@ -226,14 +281,16 @@ def extract_blueprint_indicator_area(geometries, inland=True, zonal_means=False)
             continuous_filename = continuous_indicator_dir / indicator[
                 "filename"
             ].replace("_Binned", "")
-            mean = extract_zonal_mean(continuous_filename, geometry_mask, window)
+            mean = extract_zonal_mean(
+                continuous_filename, geometry_mask, window, boundless=True
+            )
             if mean is not None:
                 results["means"][id] = mean
 
     return results
 
 
-def extract_urbanization_area(geometries):
+def extract_urbanization_area(geometries, bounds):
     """Calculate the area of overlap between geometries and urbanization
     for each decade from 2020 to 2100.
 
@@ -244,6 +301,7 @@ def extract_urbanization_area(geometries):
     Parameters
     ----------
     geometries : list-like of geometry objects that provide __geo_interface__
+    bounds : list-like of [xmin, ymin, xmax, ymax]
 
     Returns
     -------
@@ -256,8 +314,8 @@ def extract_urbanization_area(geometries):
     # create mask and window
     with rasterio.open(urban_dir / "urb_indexed_2020.tif") as src:
         try:
-            geometry_mask, transform, window = raster_geometry_mask(
-                src, geometries, crop=True, all_touched=True
+            geometry_mask, transform, window = boundless_raster_geometry_mask(
+                src, geometries, bounds, all_touched=True
             )
 
         except ValueError:
@@ -304,7 +362,9 @@ def extract_urbanization_area(geometries):
 
     for year in URBAN_YEARS:
         filename = urban_dir / f"urb_indexed_{year}.tif"
-        counts = extract_count_in_geometry(filename, geometry_mask, window, bins)
+        counts = extract_count_in_geometry(
+            filename, geometry_mask, window, bins, boundless=True
+        )
 
         if year == 2020:
             # extract area already urban (in index 1)
@@ -322,7 +382,7 @@ def extract_urbanization_area(geometries):
     return results
 
 
-def extract_slr_area(geometries):
+def extract_slr_area(geometries, bounds):
     """Calculate the area of overlap between geometries and each level of SLR
     between 0 (currently inundated) and 6 meters.
 
@@ -337,6 +397,7 @@ def extract_slr_area(geometries):
     ----------
     geometries : list-like of geometry objects that provide __geo_interface__
         Should be limited to features that intersect with bounds of SLR datasets
+    bounds : list-like of [xmin, ymin, xmax, ymax]
 
     Returns
     -------
@@ -351,8 +412,8 @@ def extract_slr_area(geometries):
     # create mask and window
     with rasterio.open(vrt) as src:
         try:
-            geometry_mask, transform, window = raster_geometry_mask(
-                src, geometries, crop=True, all_touched=True
+            geometry_mask, transform, window = boundless_raster_geometry_mask(
+                src, geometries, bounds, all_touched=True
             )
 
         except ValueError:
@@ -374,7 +435,9 @@ def extract_slr_area(geometries):
         return None
 
     bins = np.arange(7)
-    counts = extract_count_in_geometry(vrt, geometry_mask, window, bins=bins)
+    counts = extract_count_in_geometry(
+        vrt, geometry_mask, window, bins=bins, boundless=True
+    )
 
     # accumulate values
     for bin in bins[1:]:

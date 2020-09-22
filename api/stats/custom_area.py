@@ -18,7 +18,6 @@ from analysis.constants import (
     M2_ACRES,
 )
 from analysis.stats import (
-    extract_count_in_geometry,
     extract_blueprint_indicator_area,
     extract_urbanization_area,
     extract_slr_area,
@@ -56,7 +55,9 @@ class CustomArea(object):
         self.name = name
 
     def get_blueprint(self):
-        blueprint = extract_blueprint_indicator_area(self.shapes)
+        blueprint = extract_blueprint_indicator_area(
+            self.shapes, bounds=pg.total_bounds(self.shapes)
+        )
 
         if blueprint is None:
             return None
@@ -106,7 +107,9 @@ class CustomArea(object):
         return results
 
     def get_urban(self):
-        urban_results = extract_urbanization_area(self.shapes)
+        urban_results = extract_urbanization_area(
+            self.shapes, bounds=pg.total_bounds(geometry)
+        )
 
         if urban_results is None or urban_results["shape_mask"] == 0:
             return None
@@ -126,7 +129,9 @@ class CustomArea(object):
         if not len(idx):
             return None
 
-        slr_results = extract_slr_area(self.shapes.take(idx.index.unique()))
+        slr_results = extract_slr_area(
+            self.shapes.take(idx.index.unique()), bounds=pg.total_bounds(geometry)
+        )
         if slr_results is None or slr_results["shape_mask"] == 0:
             return None
 

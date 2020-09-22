@@ -76,6 +76,8 @@ const MapContainer = () => {
 
   useEffect(() => {
     hasSelectedUnitRef.current = selectedUnit !== null
+
+    console.log('selectedUnit', selectedUnit)
   }, [selectedUnit])
 
   useLayoutEffect(() => {

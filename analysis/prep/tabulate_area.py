@@ -28,7 +28,6 @@ from analysis.constants import (
     M2_ACRES,
 )
 from analysis.stats import (
-    extract_count_in_geometry,
     extract_blueprint_indicator_area,
     extract_urbanization_area,
     extract_slr_area,
@@ -76,7 +75,9 @@ index = []
 for huc12, geometry in Bar(
     "Calculating Blueprint and Indicator counts for HUC12", max=len(geometries)
 ).iter(geometries.iteritems()):
-    zone_results = extract_blueprint_indicator_area([to_dict(geometry)], inland=True)
+    zone_results = extract_blueprint_indicator_area(
+        [to_dict(geometry)], bounds=pg.total_bounds(geometry), inland=True
+    )
     if zone_results is None:
         continue
 
@@ -112,7 +113,9 @@ results = []
 for huc12, geometry in Bar(
     "Calculating Urbanization counts for HUC12", max=len(geometries)
 ).iter(geometries.iteritems()):
-    zone_results = extract_urbanization_area([to_dict(geometry)])
+    zone_results = extract_urbanization_area(
+        [to_dict(geometry)], bounds=pg.total_bounds(geometry)
+    )
     if zone_results is None:
         continue
 
@@ -144,7 +147,9 @@ index = []
 for huc12, geometry in Bar(
     "Calculating SLR counts for HUC12", max=len(slr_geometries)
 ).iter(slr_geometries.iteritems()):
-    zone_results = extract_slr_area([to_dict(geometry)])
+    zone_results = extract_slr_area(
+        [to_dict(geometry)], bounds=pg.total_bounds(geometry)
+    )
     if zone_results is None:
         continue
 
@@ -262,7 +267,10 @@ for id, geometry in Bar(
     "Calculating Blueprint and Indicator counts for marine blocks", max=len(geometries)
 ).iter(geometries.iteritems()):
     zone_results = extract_blueprint_indicator_area(
-        [to_dict(geometry)], inland=False, zonal_means=True
+        [to_dict(geometry)],
+        bounds=pg.total_bounds(geometry),
+        inland=False,
+        zonal_means=True,
     )
     if zone_results is None:
         continue
