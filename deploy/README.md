@@ -58,6 +58,8 @@ The user interface is built as a static website using GatsbyJS.
 
 ### Temporary
 
+TODO: use NodeJS 12
+
 #### Install nodejs 10
 
 ```

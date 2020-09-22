@@ -66,5 +66,6 @@ async def get_aoi_map_image(geometry, center, zoom, width, height):
             return Image.open(BytesIO(r.content))
 
     except Exception as ex:
-        log.error(f"Unhandled exception generating AOI image: {ex}")
+        log.error("Unhandled exception generating AOI image")
+        log.error(ex)
         return None

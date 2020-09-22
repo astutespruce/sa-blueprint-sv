@@ -79,5 +79,6 @@ async def get_ownership_map_image(center, zoom, width, height):
         return Image.open(BytesIO(r.content))
 
     except Exception as ex:
-        log.error(f"Error generating ownership image: {ex}")
+        log.error("Error generating ownership image")
+        log.error(ex)
         return None

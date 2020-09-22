@@ -27,7 +27,7 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
   const blueprintTotal = sum(blueprint)
   let remainder = 0
 
-  if (blueprintTotal < 100) {
+  if (blueprintTotal <= 99) {
     remainder = 100 - blueprintTotal
     blueprintChartData.push({
       value: remainder,
@@ -58,7 +58,7 @@ const PrioritiesTab = ({ blueprint, corridors }) => {
     })
   }
 
-  if (remainder > 0) {
+  if (remainder >= 1) {
     corridorChartData.push({
       value: remainder,
       color: '#EEE',

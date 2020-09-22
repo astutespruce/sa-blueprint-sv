@@ -74,5 +74,6 @@ async def get_summary_unit_map_image(id, center, zoom, width, height):
             return Image.open(BytesIO(r.content))
 
     except Exception as ex:
-        log.error(f"Unhandled exception generating summary unit image: {ex}")
+        log.error("Unhandled exception generating summary unit image")
+        log.error(ex)
         return None

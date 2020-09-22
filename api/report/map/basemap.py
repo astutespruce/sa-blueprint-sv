@@ -62,5 +62,6 @@ async def get_basemap_image(center, zoom, width, height):
         return Image.open(BytesIO(r.content))
 
     except Exception as ex:
-        log.error(f"Error generating basemap image: {ex}")
+        log.error(f"Unhandled exception generating basemap image")
+        log.error(ex)
         return None
