@@ -219,7 +219,8 @@ def extract_blueprint_indicator_area(
         .astype("float32")
     )
 
-    # Does not overlap Blueprint extent, return
+    # Nothing in shape mask, return None
+    # NOTE: this does not detect that area is completely outside SA area
     if results["counts"]["shape_mask"] == 0:
         return None
 

@@ -25,12 +25,14 @@ from analysis.stats import (
 
 
 data_dir = Path("data/inputs")
+boundary_filename = data_dir / "boundaries/sa_boundary.feather"
 county_filename = data_dir / "boundaries/counties.feather"
 parca_filename = data_dir / "boundaries/parca.feather"
 ownership_filename = data_dir / "boundaries/ownership.feather"
 slr_bounds_filename = data_dir / "threats/slr/slr_bounds.feather"
 
 # Load targets into memory for faster calculations below
+sa_bnd = gp.read_feather(boundary_filename)
 counties = gp.read_feather(county_filename)[["geometry", "FIPS", "state", "county"]]
 parca = gp.read_feather(parca_filename)
 ownership = gp.read_feather(ownership_filename)
@@ -56,7 +58,7 @@ class CustomArea(object):
 
     def get_blueprint(self):
         blueprint = extract_blueprint_indicator_area(
-            self.shapes, bounds=pg.total_bounds(self.shapes)
+            self.shapes, bounds=pg.total_bounds(self.geometry)
         )
 
         if blueprint is None:
@@ -108,7 +110,7 @@ class CustomArea(object):
 
     def get_urban(self):
         urban_results = extract_urbanization_area(
-            self.shapes, bounds=pg.total_bounds(geometry)
+            self.shapes, bounds=pg.total_bounds(self.geometry)
         )
 
         if urban_results is None or urban_results["shape_mask"] == 0:
@@ -128,9 +130,10 @@ class CustomArea(object):
         idx = sjoin_geometry(self.geometry, slr_bounds.values.data, how="inner")
         if not len(idx):
             return None
+        idx = idx.index.unique()
 
         slr_results = extract_slr_area(
-            self.shapes.take(idx.index.unique()), bounds=pg.total_bounds(geometry)
+            self.shapes.take(idx), bounds=pg.total_bounds(self.geometry.take(idx))
         )
         if slr_results is None or slr_results["shape_mask"] == 0:
             return None
@@ -243,6 +246,11 @@ class CustomArea(object):
         return results
 
     def get_results(self):
+
+        # if area of interest does not intersect SA boundary, there will be no results
+        if not pg.intersects(self.geometry, sa_bnd.geometry.values.data).max():
+            return None
+
         results = {
             "type": "",
             "acres": pg.area(self.geometry).sum() * M2_ACRES,

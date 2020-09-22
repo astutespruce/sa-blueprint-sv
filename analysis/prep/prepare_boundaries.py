@@ -31,6 +31,10 @@ bnd = pg.union_all(pg.make_valid(sa_df.geometry.values.data))
 bnd_geo = pg.union_all(pg.make_valid(sa_df.to_crs(GEO_CRS).geometry.values.data))
 mask = pg.normalize(pg.difference(world, bnd_geo))
 
+gp.GeoDataFrame(geometry=[bnd], crs=DATA_CRS).to_feather(
+    out_dir / "sa_boundary.feather"
+)
+
 
 write_dataframe(
     gp.GeoDataFrame({"geometry": bnd_geo}, index=[0], crs=GEO_CRS),
