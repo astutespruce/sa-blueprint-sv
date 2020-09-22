@@ -34,3 +34,11 @@ http :5000/api/reports/results/<job_id>
 
 This sets the `Content-Type` header to attachment and uses the passed-in name
 for the filename.
+
+To list queued and completed jobs:
+
+```
+http :5000/admin/jobs/status -a admin
+```
+
+Username is admin, password is `API_SECRET` in `.env`

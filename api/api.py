@@ -6,6 +6,7 @@ TODO:
 import logging
 from pathlib import Path
 import os
+from secrets import compare_digest
 import shutil
 import tempfile
 from typing import Optional
@@ -17,6 +18,7 @@ from arq.jobs import Job, JobStatus
 from fastapi import (
     FastAPI,
     File,
+    Header,
     UploadFile,
     Form,
     HTTPException,
@@ -25,7 +27,8 @@ from fastapi import (
     BackgroundTasks,
 )
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security.api_key import APIKeyQuery, APIKeyCookie, APIKeyHeader, APIKey
+from fastapi.security import HTTPBasic, HTTPBasicCredentials
+from fastapi.security.api_key import APIKeyQuery, APIKey
 from fastapi.requests import Request
 from fastapi.responses import Response, FileResponse
 import sentry_sdk
@@ -39,6 +42,7 @@ from api.settings import (
     LOGGING_LEVEL,
     REDIS,
     API_TOKEN,
+    API_SECRET,
     TEMP_DIR,
     ALLOWED_ORIGINS,
     SENTRY_DSN,
@@ -58,6 +62,7 @@ if SENTRY_DSN:
     app.add_middleware(SentryAsgiMiddleware)
 
 
+@app.middleware("http")
 async def catch_exceptions_middleware(request: Request, call_next):
     """Middleware that wraps HTTP requests and catches exceptions.
 
@@ -79,9 +84,6 @@ async def catch_exceptions_middleware(request: Request, call_next):
         return Response("Internal server error", status_code=500)
 
 
-app.middleware("http")(catch_exceptions_middleware)
-
-
 ### Enable CORS
 app.add_middleware(
     CORSMiddleware,
@@ -93,7 +95,7 @@ app.add_middleware(
 )
 
 
-def get_token(token: str = Security(APIKeyQuery(name="token", auto_error=False))):
+def get_token(token: str = Security(APIKeyQuery(name="token", auto_error=True))):
     """Get token from query parameters and test against known TOKEN.
 
     Parameters
@@ -308,3 +310,46 @@ async def report_pdf_endpoint(job_id: str):
     finally:
         redis.close()
         await redis.wait_closed()
+
+
+security = HTTPBasic()
+
+
+@app.get("/admin/jobs/status")
+async def get_jobs(credentials: HTTPBasicCredentials = Depends(security)):
+    """Return summary information about queued and completed jobs"""
+
+    correct_username = compare_digest(credentials.username, "admin")
+    correct_password = compare_digest(credentials.password, API_SECRET)
+    if not (correct_username and correct_password):
+        raise HTTPException(
+            status_code=401,
+            detail="Invalid credentials",
+            headers={"WWW-Authenticate": "Basic"},
+        )
+
+    redis = await arq.create_pool(REDIS)
+
+    try:
+        queued = [
+            {"job": job.function, "args": job.args, "start": job.enqueue_time}
+            for job in await redis.queued_jobs()
+        ]
+
+        results = [
+            {
+                "job": job.function,
+                "args": job.args,
+                "start": job.enqueue_time,
+                "success": job.success,
+                "elapsed": job.finish_time - job.enqueue_time,
+            }
+            for job in await redis.all_job_results()
+        ]
+
+        return {"queued": queued, "completed": results}
+
+    finally:
+        redis.close()
+        await redis.wait_closed()
+
