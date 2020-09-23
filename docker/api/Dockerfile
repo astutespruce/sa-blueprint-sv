@@ -7,9 +7,15 @@ RUN apt-get update && apt-get install -y \
     libgeos-dev \
     libcairo2 \
     libcairo-gobject2 \
-    libpango1.0 \
-    fonts-lato
+    libpango1.0
 
+# Install fonts
+RUN mkdir /usr/share/fonts/google && \
+    curl https://fonts.google.com/download?family=Montserrat --output /tmp/Montserrat.zip && \
+    unzip /tmp/Montserrat.zip -d /usr/share/fonts/google && \
+    curl https://fonts.google.com/download?family=Lora --output /tmp/Lora.zip && \
+    unzip -o /tmp/Lora.zip -d /usr/share/fonts/google && \
+    fc-cache -fv
 
 RUN useradd --create-home app
 WORKDIR /home/app

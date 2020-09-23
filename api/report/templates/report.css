@@ -2,7 +2,7 @@
 
 body {
   line-height: 1.4;
-  font-family: Lato, Helvetica, sans-serif;
+  font-family: Lora, sans-serif;
 }
 
 @page {
@@ -85,6 +85,14 @@ footer {
   content: target-counter(attr(href), page);
 }
 
+h1,
+h2,
+h3,
+h4,
+h5 {
+  font-family: Montserrat, sans-serif;
+}
+
 h1 {
   font-size: 22pt;
   line-height: 1.2;
@@ -125,7 +133,7 @@ table thead th {
   text-align: center;
   background: #eeeeee;
   border-top: 1px solid #aaaaaa;
-  border-left: 1px solid #aaaaaa;
+  border-left: 1px solid hsl(0, 0%, 67%);
   border-right: 1px solid #aaaaaa;
   border-bottom: 2px solid #333;
   padding: 2pt 8pt;
@@ -227,6 +235,7 @@ table tr.above-threshold td {
 }
 
 .caption {
+  font-family: Montserrat, sans-serif;
   font-size: 10pt;
   font-weight: bold;
 }
@@ -417,6 +426,7 @@ table tr.above-threshold td {
 
 .ecosystem-header,
 .indicator-header {
+  font-family: Montserrat, sans-serif;
   margin-top: -20pt;
   margin-bottom: 12pt;
   padding: 6pt 12pt;
@@ -464,7 +474,7 @@ img.logo {
 }
 
 .cover-footer {
-  margin-top: 24pt;
+  margin-top: 18pt;
   width: 100%;
 }
 
