@@ -65,7 +65,7 @@ css_template = env.get_template("report.css")
 def create_report(maps, results):
     title = "South Atlantic Conservation Blueprint Summary"
     subtitle = ""
-    if "name" in results:
+    if "name" in results and results["name"] is not None:
         subtitle = f"for {results['name']}"
         if "type" in results:
             subtitle += " " + results["type"]
