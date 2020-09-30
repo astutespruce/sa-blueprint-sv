@@ -142,19 +142,34 @@ def save_file(file: UploadFile) -> Path:
     return Path(name)
 
 
+def validate_file_type(file):
+    if not (
+        file.content_type
+        in {
+            "application/zip",
+            "application/x-zip-compressed",
+            "application/x-compressed",
+            "multipart/x-zip",
+        }
+        or str(file.filename.lower()).endswith(".zip")
+    ):
+        log.error(
+            f"{file.filename} has invalid upload content type: {file.content_type}"
+        )
+
+        raise HTTPException(
+            status_code=400,
+            detail="file must be a zip file containing shapefile or file geodatabase",
+        )
+
+
 @app.post("/api/reports/custom")
 async def custom_report_endpoint(
     file: UploadFile = File(...),
     name: Optional[str] = Form(None),
     token: APIKey = Depends(get_token),
 ):
-    if file.content_type != "application/zip":
-        log.error(f"Invalid upload content type: {file.content_type}")
-
-        raise HTTPException(
-            status_code=400,
-            detail="file must be a zip file containing shapefile or file geodatabase",
-        )
+    validate_file_type(file)
 
     filename = save_file(file)
     log.debug(f"upload saved to: {filename}")
