@@ -6,10 +6,10 @@ module.exports = {
   siteMetadata: {
     siteUrl: process.env.SITE_URL || `https://blueprint.southatlanticlcc.org`,
     title: `South Atlantic Conservation Blueprint 2020`,
-    description: `Provides custom reports for user-defined areas of interest`,
+    description: `Provides user interface to explore the South Atlantic Conservation Blueprint and custom reports for user-defined areas of interest`,
     author: `South Atlantic Conservation Blueprint`,
     contactEmail: `hilary_morris@fws.gov`,
-    contactPhone: `19197070252`,
+    contactPhone: `9197070252`,
     apiToken: process.env.GATSBY_API_TOKEN,
     apiHost: process.env.GATSBY_API_HOST,
     tileHost: process.env.GATSBY_TILE_HOST,
@@ -18,21 +18,6 @@ module.exports = {
     mapboxToken: process.env.GATSBY_MAPBOX_API_TOKEN,
   },
   plugins: [
-    {
-      resolve: `@sentry/gatsby`,
-      options: {
-        dsn: process.env.GATSBY_SENTRY_DSN,
-        beforeSend: (event, { originalException: error }) => {
-          if (error && error.message) {
-            // this error happens when ResizeObserver not able to deliver all observations within a single animation frame
-            if (error.message.match(/ResizeObserver loop limit exceeded/i)) {
-              return null
-            }
-          }
-          return event
-        },
-      },
-    },
     {
       resolve: `gatsby-plugin-google-gtag`,
       options: {

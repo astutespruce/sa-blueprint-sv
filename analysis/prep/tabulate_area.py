@@ -76,7 +76,10 @@ for huc12, geometry in Bar(
     "Calculating Blueprint and Indicator counts for HUC12", max=len(geometries)
 ).iter(geometries.iteritems()):
     zone_results = extract_blueprint_indicator_area(
-        [to_dict(geometry)], bounds=pg.total_bounds(geometry), inland=True
+        [to_dict(geometry)],
+        bounds=pg.total_bounds(geometry),
+        inland=True,
+        zonal_means=True,
     )
     if zone_results is None:
         continue
@@ -92,7 +95,7 @@ mean_df.columns = [f"{c}_avg" for c in mean_df.columns]
 results = count_df[["shape_mask"]].copy()
 results.index.name = "id"
 
-### Export the Blueprint and each indicator to a separate file
+### Export the Blueprint, corridors, and indicators
 # each column is an array of counts for each
 for col in count_df.columns.difference(["shape_mask"]):
     s = count_df[col].apply(pd.Series).fillna(0)

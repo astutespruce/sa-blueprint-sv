@@ -60,7 +60,8 @@ const DropZone = ({ onDrop }) => {
     isDragReject,
   } = useDropzone({
     onDrop: handleDrop,
-    accept: 'application/zip',
+    accept:
+      'application/zip,application/x-zip-compressed,application/x-compressed,multipart/x-zip,.zip',
     maxSize: MAXSIZE_MB * 1e6,
     multiple: false,
   })

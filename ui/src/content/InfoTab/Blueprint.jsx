@@ -23,7 +23,6 @@ const Blueprint = () => {
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
-              //   mb: "0.5rem",
             }}
           >
             <Flex

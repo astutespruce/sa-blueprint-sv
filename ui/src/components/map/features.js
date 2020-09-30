@@ -93,5 +93,7 @@ export const unpackFeatureData = (properties) => {
     })
   }
 
+  console.log('transformed feature data', values)
+
   return values
 }

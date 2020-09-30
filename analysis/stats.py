@@ -40,9 +40,7 @@ def boundless_raster_geometry_mask(dataset, shapes, bounds, all_touched=True):
     """
 
     # Calculate outer window that contains bounds
-    window = dataset.window(
-        *bounds
-    )  # .round_offsets(op="floor").round_lengths(op="ceil")
+    window = dataset.window(*bounds)
     window_floored = window.round_offsets(op="floor", pixel_precision=3)
     w = math.ceil(window.width + window.col_off - window_floored.col_off)
     h = math.ceil(window.height + window.row_off - window_floored.row_off)
@@ -175,7 +173,7 @@ def extract_blueprint_indicator_area(
     """Calculate the area of overlap between geometries and Blueprint, indicators,
     and corridors.
 
-    NOTE: Blueprint, indicators, and corridors are on the same 200m grid.
+    NOTE: Blueprint, indicators, and corridors are on the same 30m grid.
 
     Parameters
     ----------
@@ -201,7 +199,7 @@ def extract_blueprint_indicator_area(
     # create mask and window
     with rasterio.open(blueprint_filename) as src:
         try:
-            geometry_mask, transform, window = boundless_raster_geometry_mask(
+            shape_mask, transform, window = boundless_raster_geometry_mask(
                 src, geometries, bounds, all_touched=True
             )
 
@@ -212,7 +210,7 @@ def extract_blueprint_indicator_area(
         cellsize = src.res[0] * src.res[1] * M2_ACRES
 
     results["counts"]["shape_mask"] = (
-        ((~geometry_mask).sum() * cellsize)
+        ((~shape_mask).sum() * cellsize)
         .round(ACRES_PRECISION)
         .astype("float32")
         .round(ACRES_PRECISION)
@@ -226,7 +224,7 @@ def extract_blueprint_indicator_area(
 
     blueprint_counts = extract_count_in_geometry(
         blueprint_filename,
-        geometry_mask,
+        shape_mask,
         window,
         np.arange(len(BLUEPRINT)),
         boundless=True,
@@ -238,7 +236,7 @@ def extract_blueprint_indicator_area(
 
     corridor_counts = extract_count_in_geometry(
         corridors_filename,
-        geometry_mask,
+        shape_mask,
         window,
         np.arange(len(CORRIDORS)),
         boundless=True,
@@ -266,7 +264,7 @@ def extract_blueprint_indicator_area(
         values = [e["value"] for e in indicator["values"]]
         bins = np.arange(0, max(values) + 1)
         counts = extract_count_in_geometry(
-            filename, geometry_mask, window, bins, boundless=True
+            filename, shape_mask, window, bins, boundless=True
         )
 
         # Some indicators exclude 0 values, their counts need to be zeroed out here
@@ -283,7 +281,7 @@ def extract_blueprint_indicator_area(
                 "filename"
             ].replace("_Binned", "")
             mean = extract_zonal_mean(
-                continuous_filename, geometry_mask, window, boundless=True
+                continuous_filename, shape_mask, window, boundless=True
             )
             if mean is not None:
                 results["means"][id] = mean
@@ -315,7 +313,7 @@ def extract_urbanization_area(geometries, bounds):
     # create mask and window
     with rasterio.open(urban_dir / "urb_indexed_2020.tif") as src:
         try:
-            geometry_mask, transform, window = boundless_raster_geometry_mask(
+            shape_mask, transform, window = boundless_raster_geometry_mask(
                 src, geometries, bounds, all_touched=True
             )
 
@@ -326,7 +324,7 @@ def extract_urbanization_area(geometries, bounds):
         cellsize = src.res[0] * src.res[1] * M2_ACRES
 
     results["shape_mask"] = (
-        ((~geometry_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
+        ((~shape_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
     )
 
     if results["shape_mask"] == 0:
@@ -364,7 +362,7 @@ def extract_urbanization_area(geometries, bounds):
     for year in URBAN_YEARS:
         filename = urban_dir / f"urb_indexed_{year}.tif"
         counts = extract_count_in_geometry(
-            filename, geometry_mask, window, bins, boundless=True
+            filename, shape_mask, window, bins, boundless=True
         )
 
         if year == 2020:
@@ -413,7 +411,7 @@ def extract_slr_area(geometries, bounds):
     # create mask and window
     with rasterio.open(vrt) as src:
         try:
-            geometry_mask, transform, window = boundless_raster_geometry_mask(
+            shape_mask, transform, window = boundless_raster_geometry_mask(
                 src, geometries, bounds, all_touched=True
             )
 
@@ -425,11 +423,11 @@ def extract_slr_area(geometries, bounds):
 
         data = src.read(1, window=window)
         nodata = src.nodatavals[0]
-        mask = (data == nodata) | geometry_mask
+        mask = (data == nodata) | shape_mask
         data = np.where(mask, nodata, data)
 
     results["shape_mask"] = (
-        ((~geometry_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
+        ((~shape_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
     )
 
     if results["shape_mask"] == 0:
@@ -437,7 +435,7 @@ def extract_slr_area(geometries, bounds):
 
     bins = np.arange(7)
     counts = extract_count_in_geometry(
-        vrt, geometry_mask, window, bins=bins, boundless=True
+        vrt, shape_mask, window, bins=bins, boundless=True
     )
 
     # accumulate values

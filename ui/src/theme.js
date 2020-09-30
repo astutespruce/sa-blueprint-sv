@@ -36,8 +36,8 @@ export default {
   },
 
   fonts: {
-    body: 'Verdana, Geneva, sans-serif',
-    heading: 'Verdana, Geneva, sans-serif',
+    body: 'Verdana, Georgia, sans-serif',
+    heading: 'Verdana, Georgia, sans-serif',
   },
   fontSizes: [12, 14, 16, 18, 24, 32, 48, 64, 72],
   fontWeights: {
@@ -186,7 +186,7 @@ export default {
       },
       p: {
         fontSize: 2,
-        color: 'grey.8',
+        color: 'grey.9',
       },
       ul: {
         margin: 0,

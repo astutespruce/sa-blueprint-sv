@@ -1,22 +1,10 @@
-import React, { useState } from 'react'
-import { Box, Button, Flex, Text } from 'theme-ui'
-import { Play } from '@emotion-icons/fa-solid'
-import YouTube from 'react-youtube'
+import React from 'react'
+import { Box } from 'theme-ui'
 
 import { OutboundLink } from 'components/link'
 import { Modal } from 'components/modal'
 
 const Intro = () => {
-  const [videoOpen, setVideoOpen] = useState(false)
-
-  const openVideo = () => {
-    setVideoOpen(() => true)
-  }
-
-  const closeVideo = () => {
-    setVideoOpen(() => false)
-  }
-
   return (
     <>
       <Box as="section">
@@ -60,16 +48,6 @@ const Intro = () => {
           (CPA).
         </p>
 
-        {/* <Flex sx={{ justifyContent: 'center' }}>
-          <Button
-            onClick={openVideo}
-            sx={{ display: 'flex', alignItems: 'center' }}
-          >
-            <Play size="1em" style={{ marginRight: '0.5em' }} />
-            <Text>Overview Video</Text>
-          </Button>
-        </Flex> */}
-
         <p>
           This <b>Simple Viewer</b> summarizes the Blueprint priorities and
           supporting information within subwatersheds and marine lease blocks as
@@ -77,19 +55,6 @@ const Intro = () => {
           Blueprint priorities.
         </p>
       </Box>
-
-      {videoOpen && (
-        <Modal
-          title="Blueprint Simple Viewer - Overview Video"
-          width="840px"
-          onClose={closeVideo}
-        >
-          <YouTube
-            videoId="wSPbCiCTQOM"
-            opts={{ height: '464', width: '100%' }}
-          />
-        </Modal>
-      )}
     </>
   )
 }
