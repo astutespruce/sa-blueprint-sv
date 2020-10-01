@@ -1,4 +1,5 @@
 import math
+import os
 
 import numpy as np
 from PIL import Image
@@ -114,7 +115,9 @@ def extract_data_for_map(src, bounds, scale, map_width, map_height):
     window_transform *= scaling
 
     # if DEBUG:
-    #     write_raster("/tmp/pre-warp.tif", data, window_transform, src.crs, nodata)
+    #     filename = os.path.splitext(os.path.split(src.name)[-1])[0]
+    #     filename = f"/tmp/{filename}-pre-warp.tif"
+    #     write_raster(filename, data, window_transform, src.crs, nodata)
 
     # convert data before reproject
     if nodata != src.nodata:
@@ -181,9 +184,9 @@ def extract_data_for_map(src, bounds, scale, map_width, map_height):
     )
 
     # if DEBUG:
-    #     write_raster(
-    #         "/tmp/warped-clipped.tif", clipped, final_transform, MAP_CRS, nodata
-    #     )
+    #     filename = os.path.splitext(os.path.split(src.name)[-1])[0]
+    #     filename = f"/tmp/{filename}-warped-clipped.tif"
+    #     write_raster(filename, clipped, final_transform, MAP_CRS, nodata)
 
     # TEMP: Strip nodata values back out
     if nodata != src.nodata:

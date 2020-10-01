@@ -26,11 +26,10 @@ pygeos = "*"
 pyogrio = {editable = true,path = "./../pyogrio"}
 python-dotenv = "*"
 python-multipart = "*"
-rasterio = "*"
+rasterio = "==1.1.7"
 sentry-sdk = "*"
 uvicorn = "*"
 weasyprint = "*"
-
 
 [requires]
 python_version = "3.8"

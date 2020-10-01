@@ -1,4 +1,5 @@
-FROM osgeo/gdal:ubuntu-small-3.1.3
+# TODO: pin to 3.1.4 once available
+FROM osgeo/gdal:ubuntu-small-latest
 
 RUN apt-get update && apt-get install -y \
     git \

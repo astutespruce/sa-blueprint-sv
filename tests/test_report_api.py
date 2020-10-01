@@ -1,16 +1,24 @@
+from pathlib import Path
+import os
 import time
 import httpx
 from api.settings import API_TOKEN
 
 # this assumes API server is running at :5000 and that worker is also running
 
-DELAY = 1  # seconds
+DELAY = 2  # seconds
+
+# API_URL = "http://localhost:5000/api"
+API_URL = "http://localhost:8080"
+
+OUT_DIR = Path("/tmp/api")
+
+if not OUT_DIR.exists():
+    os.makedirs(OUT_DIR)
 
 
 def poll_until_done(job_id, current=0, max=100):
-    r = httpx.get(
-        f"http://localhost:5000/api/reports/status/{job_id}?token={API_TOKEN}"
-    )
+    r = httpx.get(f"{API_URL}/api/reports/status/{job_id}?token={API_TOKEN}")
     r.raise_for_status()
     json = r.json()
     status = json.get("status")
@@ -18,6 +26,7 @@ def poll_until_done(job_id, current=0, max=100):
 
     if status == "success":
         print(f"Results at: {json['result']}")
+        download_file(json["result"])
         return
 
     if status == "failed":
@@ -36,10 +45,19 @@ def poll_until_done(job_id, current=0, max=100):
     poll_until_done(job_id, current=current, max=max)
 
 
-def test_upload_file():
-    files = {"file": open("examples/api/Razor.zip", "rb")}
+def download_file(url):
+    filename = OUT_DIR / "test_report.pdf"
+    print(f"Downloading report to {filename}")
+    r = httpx.get(f"{API_URL}{url}")
+
+    with open(filename, "wb") as out:
+        out.write(r.read())
+
+
+def test_upload_file(filename):
+    files = {"file": open(filename, "rb")}
     r = httpx.post(
-        f"http://localhost:5000/api/reports/custom?token={API_TOKEN}",
+        f"{API_URL}/api/reports/custom?token={API_TOKEN}",
         data={"name": "foo"},
         files=files,
     )
@@ -55,9 +73,7 @@ def test_upload_file():
 
 
 def test_huc12_report(huc12_id):
-    r = httpx.post(
-        f"http://localhost:5000/api/reports/huc12/{huc12_id}?token={API_TOKEN}"
-    )
+    r = httpx.post(f"{API_URL}/api/reports/huc12/{huc12_id}?token={API_TOKEN}")
 
     r.raise_for_status()
 
@@ -75,9 +91,11 @@ def test_huc12_report(huc12_id):
 
 
 if __name__ == "__main__":
-    # test_upload_file()
+    # test_upload_file("examples/api/Razor.zip")
+    test_upload_file("examples/api/OCMU_SRS_StudyArea.zip")
+    # test_upload_file("examples/api/Groton.zip")
 
     # test_huc12_report("0")
 
-    test_huc12_report("030602040601")
+    # test_huc12_report("030602040601")
 

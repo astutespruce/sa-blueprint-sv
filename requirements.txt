@@ -5,7 +5,7 @@ Cython==0.29.21
 
 # binary deps that use GDAL or GEOS (must be installed first)
 Fiona==1.8.17 --no-binary fiona
-rasterio==1.1.6 --no-binary rasterio
+rasterio==1.1.7 --no-binary rasterio
 Shapely==1.7.0 --no-binary shapely
 pygeos==0.8 --no-binary pygeos
 
