@@ -22,7 +22,7 @@ services:
       ]
     volumes:
       - user_upload:/tmp/sa-reports
-      - /data:/home/app/data
+      - /data/sa:/home/app/data
       - ../../api:/home/app/api # main API
       - ../../analysis:/home/app/analysis # needed for analysis utils
       - ../../constants:/home/app/constants # needed for JSON files for blueprint, indicators
@@ -61,5 +61,4 @@ networks:
     name: shared
 
 volumes:
-  caddy_certs:
   user_upload:

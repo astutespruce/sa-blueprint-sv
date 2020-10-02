@@ -1,4 +1,4 @@
-blueprint.mockuplab.us {
+sablueprint.mockuplab.us {
   log {
     level ERROR
   }
@@ -27,7 +27,7 @@ blueprint.mockuplab.us {
   }
 }
 
-seblueprint.mockuplab.us {
+southeast.blueprint.mockuplab.us {
   log {
     level ERROR
   }
