@@ -11,16 +11,16 @@ Create an T3.tiny EC2 instance with 100GB volume.
 Create and attach 25 GB volume.
 
 ```
-sudo mkfs -t ext4 /dev/xvdf
+sudo mkfs -t ext4 /dev/nvme1n1
 sudo mkdir /data
 sudo chown -R ubuntu:ubuntu /data
-sudo mount /dev/xvdf /data/
+sudo mount /dev/nvme1n1 /data/
 ```
 
 Add to `/etc/fstab`:
 
 ```
-/dev/xvdf       /data   ext4    defaults,nofail
+/dev/nvme1n1       /data   ext4    defaults,nofail
 ```
 
 ### Allocate swap space
@@ -58,15 +58,11 @@ see `shared/README.md`
 
 The user interface is built as a static website using GatsbyJS.
 
-### Temporary
-
-TODO: use NodeJS 12
-
-#### Install nodejs 10
+#### Install nodejs 12
 
 ```
 cd ~
-curl -sL https://deb.nodesource.com/setup_10.x -o nodesource_setup.sh
+curl -sL https://deb.nodesource.com/setup_12.x -o nodesource_setup.sh
 sudo chmod 777 nodesource_setup.sh && sudo ./nodesource_setup.sh
 sudo apt-get install -y nodejs
 ```

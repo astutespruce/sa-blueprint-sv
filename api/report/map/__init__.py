@@ -25,7 +25,7 @@ from analysis.constants import (
 
 
 WIDTH = 740
-HEIGHT = 460
+HEIGHT = 440
 PADDING = 5
 THREADS = 6
 

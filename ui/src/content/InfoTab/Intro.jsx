@@ -2,7 +2,6 @@ import React from 'react'
 import { Box } from 'theme-ui'
 
 import { OutboundLink } from 'components/link'
-import { Modal } from 'components/modal'
 
 const Intro = () => {
   return (
@@ -15,17 +14,17 @@ const Intro = () => {
           region.
           <br />
           <br />
-          Blueprint 2020, released in August 2020, is a totally data-driven plan
-          based on terrestrial, freshwater, marine, and cross-ecosystem
-          indicators. It uses the current condition of those indicators to
-          prioritize the most important areas for natural and cultural resources
-          across the South Atlantic geography. Through a connectivity analysis,
-          the Blueprint also identifies corridors that link coastal and inland
-          areas and span climate gradients. The Blueprint reflects extensive
-          feedback from the broader cooperative community, with more than 700
-          people from over 200 different organizations actively participating in
-          its development so far. The Blueprint integrates with neighboring
-          priorities in a Southeast-wide plan as part of the{' '}
+          The South Atlantic Blueprint is a data-driven plan based on
+          terrestrial, freshwater, marine, and cross-ecosystem indicators. It
+          uses the current condition of those indicators to prioritize the most
+          important areas for natural and cultural resources across the South
+          Atlantic geography. Through a connectivity analysis, the Blueprint
+          also identifies corridors that link coastal and inland areas and span
+          climate gradients. The Blueprint reflects extensive feedback from the
+          broader cooperative community, with more than 700 people from over 200
+          different organizations actively participating in its development so
+          far. The Blueprint integrates with neighboring priorities in a
+          Southeast-wide plan as part of the{' '}
           <OutboundLink to="http://secassoutheast.org/">
             Southeast Conservation Adaptation Strategy
           </OutboundLink>
