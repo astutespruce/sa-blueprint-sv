@@ -35,3 +35,5 @@ RUN pip3 install -e git+https://github.com/brendan-ward/pyogrio.git@0a78012764c4
 
 # have to do this last as it doesn't have sufficient privileges for running pip install
 # USER app
+
+ENV PYTHONPATH="${PYTHONPATH}:/home/app"

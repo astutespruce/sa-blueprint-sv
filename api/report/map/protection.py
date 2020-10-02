@@ -22,7 +22,11 @@ color_expr = (
 STYLE = {
     "version": 8,
     "sources": {
-        "ownership": {"type": "vector", "url": "mbtiles://ownership", "tileSize": 256}
+        "ownership": {
+            "type": "vector",
+            "url": "mbtiles://sa_ownership",
+            "tileSize": 256,
+        }
     },
     "layers": [
         {

@@ -27,6 +27,3 @@ python-multipart==0.0.5
 sentry-sdk==0.17.6
 uvicorn==0.11.8
 WeasyPrint==51
-
-# local environment
--e .

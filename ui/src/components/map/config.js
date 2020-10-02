@@ -6,9 +6,6 @@ const { tileHost } = siteMetadata
 
 export const config = {
   bounds: [-85.89816168, 28.98417231, -71.28723327, 37.45871183],
-  // FIXME: temp for testing
-  // bounds: [-81.392, 31.5566, -80.3124, 32.509],
-  // maxBounds: [-92, 10, -62, 50],
   maxBounds: [-115, 10, -30, 50],
   minZoom: 4,
   maxZoom: 16,
@@ -21,14 +18,14 @@ export const sources = {
     minzoom: 0,
     maxzoom: 15,
     bounds: [-86.470357, 27.546173, -70.816397, 38.932193],
-    tiles: [`${tileHost}/services/sa/blueprint_2020/tiles/{z}/{x}/{y}.png`],
+    tiles: [`${tileHost}/services/sa_blueprint_2020/tiles/{z}/{x}/{y}.png`],
   },
   mapUnits: {
     type: 'vector',
     minzoom: 8,
     maxzoom: 14,
     bounds: [-86.470357, 27.546173, -70.816397, 38.932193],
-    tiles: [`${tileHost}/services/sa/map_units/tiles/{z}/{x}/{y}.pbf`],
+    tiles: [`${tileHost}/services/sa_map_units/tiles/{z}/{x}/{y}.pbf`],
     // note: can use promoteId: 'id' to promote feature properties ID to feature ID
     promoteId: 'id',
   },

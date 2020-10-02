@@ -31,8 +31,8 @@ services:
     image: caddy/caddy:2.1.1-alpine
     depends_on:
       - mbtileserver
-      - api
-      - worker
+      # - api
+      # - worker
     restart: always
     ports:
       - '80:80'

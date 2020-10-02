@@ -5,7 +5,7 @@ services:
       context: ../..
       dockerfile: docker/api/Dockerfile
     restart: always
-    depends_on:
+    external_links:
       - redis
     env_file:
       - .env
@@ -38,7 +38,7 @@ services:
       context: ../..
       dockerfile: docker/api/Dockerfile
     restart: always
-    depends_on:
+    external_links:
       - redis
       - renderer
     env_file:

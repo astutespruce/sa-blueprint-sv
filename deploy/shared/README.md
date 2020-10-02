@@ -19,14 +19,12 @@ mkdir /var/www/se
 mkdir /data/sa
 mkdir /data/se
 mkdir /data/tiles
-mkdir /data/tiles/sa
-mkdir /data/tiles/se
 ```
 
 ## Inputs
 
 Tiles and data files are prepared locally and uploaded for deployment.
 
-Copy contents of local `tiles` directory to appropriate folder under `/data/tiles`.
+Copy contents of local `tiles` directory to `/data/tiles`.
 
-Copy `inputs` and `results` directories to appropriate folder under `/data`.
+Copy `inputs` and `results` directories to `/data`.

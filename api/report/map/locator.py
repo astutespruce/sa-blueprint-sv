@@ -29,7 +29,7 @@ LOCATOR_STYLE = {
             "tileSize": 256,
         },
         "states": {"type": "vector", "url": "mbtiles://states"},
-        "map_units": {"type": "vector", "url": "mbtiles://map_units"},
+        "map_units": {"type": "vector", "url": "mbtiles://sa_map_units"},
     },
     "layers": [
         {"id": "basemap", "type": "raster", "source": "basemap"},

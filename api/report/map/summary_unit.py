@@ -12,7 +12,7 @@ log = logging.getLogger(__name__)
 
 STYLE = {
     "version": 8,
-    "sources": {"map_units": {"type": "vector", "url": "mbtiles://map_units"}},
+    "sources": {"map_units": {"type": "vector", "url": "mbtiles://sa/map_units"}},
     "layers": [
         {
             "id": "mask",
