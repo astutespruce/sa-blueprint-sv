@@ -12,7 +12,7 @@ const SelectedUnitHeader = ({ name, acres, onClose }) => {
         justifyContent: 'space-between',
         alignItems: 'flex-start',
         p: '1rem',
-        minHeight: '6rem',
+        minHeight: '7rem',
       }}
     >
       <Box sx={{ mr: '1rem' }}>

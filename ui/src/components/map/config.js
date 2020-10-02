@@ -11,7 +11,7 @@ export const config = {
   // maxBounds: [-92, 10, -62, 50],
   maxBounds: [-115, 10, -30, 50],
   minZoom: 4,
-  maxZoom: 24,
+  maxZoom: 16,
 }
 
 export const sources = {
@@ -21,14 +21,14 @@ export const sources = {
     minzoom: 0,
     maxzoom: 15,
     bounds: [-86.470357, 27.546173, -70.816397, 38.932193],
-    tiles: [`${tileHost}/services/blueprint_2020/tiles/{z}/{x}/{y}.png`],
+    tiles: [`${tileHost}/services/sa/blueprint_2020/tiles/{z}/{x}/{y}.png`],
   },
   mapUnits: {
     type: 'vector',
     minzoom: 8,
     maxzoom: 14,
     bounds: [-86.470357, 27.546173, -70.816397, 38.932193],
-    tiles: [`${tileHost}/services/map_units/tiles/{z}/{x}/{y}.pbf`],
+    tiles: [`${tileHost}/services/sa/map_units/tiles/{z}/{x}/{y}.pbf`],
     // note: can use promoteId: 'id' to promote feature properties ID to feature ID
     promoteId: 'id',
   },
@@ -45,13 +45,7 @@ export const layers = [
     minzoom: 0,
     maxzoom: 21,
     paint: {
-      'raster-opacity': {
-        stops: [
-          [4, 0.4],
-          [10, 0.4],
-          [12, 0.25],
-        ],
-      },
+      'raster-opacity': 0.6,
     },
     before: beforeLayer,
   },

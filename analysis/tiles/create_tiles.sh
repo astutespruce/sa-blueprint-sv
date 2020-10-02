@@ -1,7 +1,7 @@
 #!/bin/bash
 
 TMPDIR="/tmp"
-TILEDIR="tiles"
+TILEDIR="tiles/sa"
 TILEINPUTS="data/for_tiles"
 
 # Create tiles from summary units

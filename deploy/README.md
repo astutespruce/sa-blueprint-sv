@@ -1,9 +1,34 @@
 # South Atlantic Simple Viewer Deployment
 
-Allocate 2 GB SWAP (more on larger volume):
+Note: the staging server is shared with `southeast-blueprint` project; see `deploy/shared` for that config in addition to details below.
+
+### Next time
+
+Create an T3.tiny EC2 instance with 100GB volume.
+
+### Temporary: add more space
+
+Create and attach 25 GB volume.
 
 ```
-sudo fallocate -l 2G /swapfile
+sudo mkfs -t ext4 /dev/xvdf
+sudo mkdir /data
+sudo chown -R ubuntu:ubuntu /data
+sudo mount /dev/xvdf /data/
+```
+
+Add to `/etc/fstab`:
+
+```
+/dev/xvdf       /data   ext4    defaults,nofail
+```
+
+### Allocate swap space
+
+Allocate 4 GB SWAP:
+
+```
+sudo fallocate -l 4G /swapfile
 sudo chmod 600 /swapfile
 sudo mkswap /swapfile
 sudo swapon /swapfile
@@ -27,30 +52,7 @@ Install docker-compose according to [docs](https://docs.docker.com/compose/insta
 
 ## Workspace
 
-Everything is run as `ubuntu` user .
-
-Everything happens in the `/home/app` workspace (create it).
-
-Clone `sa-blueprint-sv` (this repo) into `~/app/sa-blueprint-sv`.
-
-Make root directories:
-
-```bash
-sudo mkdir /var/www
-sudo chown -R ubuntu:ubuntu /var/www
-sudo mkdir /data
-sudo chown ubuntu:ubuntu /data
-sudo mkdir /tiles
-sudo chown ubuntu:ubuntu /tiles
-```
-
-## Inputs
-
-Tiles and data files are prepared locally and uploaded for deployment.
-
-Copy contents of local `tiles` directory to `/tiles`.
-
-Copy `inputs` and `results` directories to `/data`.
+see `shared/README.md`
 
 ## User interface
 

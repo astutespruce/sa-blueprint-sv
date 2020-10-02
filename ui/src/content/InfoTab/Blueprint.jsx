@@ -17,7 +17,14 @@ const Blueprint = () => {
       </Heading>
 
       {priorities.map(({ color, label, labelColor, description, percent }) => (
-        <Box key={label}>
+        <Box
+          key={label}
+          sx={{
+            '&:not(:first-of-type)': {
+              mt: '2rem',
+            },
+          }}
+        >
           <Box
             sx={{
               justifyContent: 'space-between',
@@ -54,24 +61,9 @@ const Blueprint = () => {
                 {label}
               </Text>
             </Flex>
-            {/* <Text
-              as="div"
-              sx={{
-                fontSize: 0,
-                color: "grey.8",
-                // textAlign: ["left", "left", "right"],
-                // ml: ["2rem", "2rem", 0],
-                ml: "2rem",
-              }}
-            >
-              {percent}% of South Atlantic
-            </Text> */}
           </Box>
 
-          <Text
-            as="p"
-            sx={{ fontSize: [2, 1, 2], mb: '2rem', ml: '3rem', mt: '-0.5rem' }}
-          >
+          <Text as="p" sx={{ fontSize: [2, 1, 2], ml: '3rem', mt: '-0.5rem' }}>
             {description}
           </Text>
         </Box>

@@ -1,0 +1,56 @@
+version: '3.6'
+services:
+  redis:
+    image: 'redis:alpine'
+    logging:
+      driver: journald
+    networks:
+      - shared
+
+  mbtileserver:
+    image: consbio/mbtileserver:latest
+    restart: always
+    volumes:
+      - /tiles:/tilesets
+    logging:
+      driver: journald
+    networks:
+      - shared
+
+  renderer:
+    image: consbio/mbgl-renderer:latest
+    restart: always
+    volumes:
+      - /tiles:/app/tiles
+    logging:
+      driver: journald
+    networks:
+      - shared
+
+  caddy:
+    image: caddy/caddy:2.1.1-alpine
+    depends_on:
+      - mbtileserver
+      - api
+      - worker
+    restart: always
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - caddy_certs:/root/.caddy
+      - /var/www:/var/www
+    logging:
+      driver: journald
+    networks:
+      - shared
+
+networks:
+  shared:
+    driver: bridge
+    name: shared
+
+volumes:
+  caddy_certs:
+  user_upload:

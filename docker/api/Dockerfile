@@ -22,7 +22,6 @@ RUN useradd --create-home app
 WORKDIR /home/app
 
 COPY ./requirements.txt /tmp/requirements.txt
-COPY ./setup.py /home/app
 
 RUN pip3 install -r /tmp/requirements.txt
 

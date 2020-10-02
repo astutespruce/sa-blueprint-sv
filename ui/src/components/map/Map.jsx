@@ -30,7 +30,7 @@ const mapWidgetCSS = {
   '.mapboxgl-ctrl-zoom-in, .mapboxgl-ctrl-zoom-out, .mapboxgl-ctrl-compass': {
     display: ['none', 'inherit'],
   },
-  'mapboxgl-canvas': {
+  '.mapboxgl-canvas': {
     outline: 'none',
   },
 }
