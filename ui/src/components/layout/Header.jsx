@@ -49,7 +49,7 @@ const Header = () => {
             >
               <Image
                 src={LogoURL}
-                alt="South Atlantic Conservation Blueprint 2020 - logo"
+                alt="South Atlantic Conservation Blueprint - logo"
                 sx={{
                   mr: '0.5rem',
                   width: '2rem',
@@ -101,7 +101,7 @@ const Header = () => {
                     flexBasis: ['100%', 'unset'],
                   }}
                 >
-                  Conservation Blueprint 2020
+                  Conservation Blueprint
                 </Heading>
                 <Heading
                   as="h1"
