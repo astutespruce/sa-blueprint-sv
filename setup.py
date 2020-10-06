@@ -2,7 +2,7 @@ import os
 from setuptools import setup
 
 
-description = "South Atlantic Blueprint 2020 Simple Viewer and Custom Reporting"
+description = "South Atlantic Blueprint Simple Viewer and Custom Reporting"
 
 if os.path.exists("README.md"):
     long_description = open("README.md").read()
@@ -10,7 +10,7 @@ else:
     long_description = description
 
 setup(
-    name="South Atlantic Blueprint 2020 Simple Viewer",
+    name="South Atlantic Blueprint Simple Viewer",
     version="0.5.0",
     url="https://github.com/astutespruce/sa-blueprint-sv",
     license="MIT",

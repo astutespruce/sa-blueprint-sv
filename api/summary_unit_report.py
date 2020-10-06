@@ -44,7 +44,8 @@ async def create_summary_unit_report(ctx, unit_type, unit_id):
     results = units.get_results(unit_id)
     await set_progress(ctx["job_id"], 50)
 
-    has_urban = "urban" in results
+    # only include urban up to 2060
+    has_urban = "proj_urban" in results and results["proj_urban"][4] > 0
     has_slr = "slr" in results
     has_ownership = "ownership" in results
     has_protection = "protection" in results

@@ -189,7 +189,8 @@ class SummaryUnits(object):
             pass
 
         try:
-            urban = self.urban.loc[id]
+            # only keep through 2060
+            urban = self.urban.loc[id][:7]
             if urban[1:].max():
                 results["urban_acres"] = urban.shape_mask
                 results["urban"] = urban[1]

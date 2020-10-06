@@ -5,7 +5,7 @@ require('dotenv').config({
 module.exports = {
   siteMetadata: {
     siteUrl: process.env.SITE_URL || `https://blueprint.southatlanticlcc.org`,
-    title: `South Atlantic Conservation Blueprint 2020`,
+    title: `South Atlantic Conservation Blueprint`,
     description: `Provides user interface to explore the South Atlantic Conservation Blueprint and custom reports for user-defined areas of interest`,
     author: `South Atlantic Conservation Blueprint`,
     contactEmail: `hilary_morris@fws.gov`,
@@ -59,8 +59,8 @@ module.exports = {
     {
       resolve: `gatsby-plugin-manifest`,
       options: {
-        name: `South Atlantic Conservation Blueprint 2020`,
-        short_name: `Blueprint 2020`,
+        name: `South Atlantic Conservation Blueprint`,
+        short_name: `SA Conservation Blueprint`,
         icon: 'src/images/logo.svg',
         start_url: `/`,
         background_color: `#0892d0`,

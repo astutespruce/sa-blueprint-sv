@@ -116,7 +116,8 @@ class CustomArea(object):
         if urban_results is None or urban_results["shape_mask"] == 0:
             return None
 
-        proj_urban = [urban_results[year] for year in URBAN_YEARS]
+        # only keep through 2060
+        proj_urban = [urban_results[year] for year in URBAN_YEARS[:5]]
         if not sum(proj_urban):
             return None
 
