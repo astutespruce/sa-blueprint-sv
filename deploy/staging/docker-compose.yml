@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 services:
   sa-api:
     build:
@@ -11,14 +11,14 @@ services:
       - .env
     command:
       [
-        '/usr/local/bin/gunicorn',
-        '-k',
-        'uvicorn.workers.UvicornWorker',
-        '--name',
-        'uvicorn',
-        '-b',
-        ':5000',
-        'api.api:app',
+        "/usr/local/bin/gunicorn",
+        "-k",
+        "uvicorn.workers.UvicornWorker",
+        "--name",
+        "uvicorn",
+        "-b",
+        ":5000",
+        "api.api:app",
       ]
     volumes:
       - user_upload:/tmp/sa-reports
@@ -26,8 +26,6 @@ services:
       - ../../api:/home/app/api # main API
       - ../../analysis:/home/app/analysis # needed for analysis utils
       - ../../constants:/home/app/constants # needed for JSON files for blueprint, indicators
-    ports:
-      - '5000:5000'
     logging:
       driver: journald
     networks:
@@ -43,7 +41,7 @@ services:
       - renderer
     env_file:
       - .env
-    command: ['/usr/local/bin/arq', 'api.worker.WorkerSettings']
+    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
     volumes:
       - user_upload:/tmp/sa-reports
       - /data/sa:/home/app/data

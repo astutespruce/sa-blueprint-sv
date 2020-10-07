@@ -31,13 +31,6 @@ parca_filename = data_dir / "boundaries/parca.feather"
 ownership_filename = data_dir / "boundaries/ownership.feather"
 slr_bounds_filename = data_dir / "threats/slr/slr_bounds.feather"
 
-# Load targets into memory for faster calculations below
-sa_bnd = gp.read_feather(boundary_filename)
-counties = gp.read_feather(county_filename)[["geometry", "FIPS", "state", "county"]]
-parca = gp.read_feather(parca_filename)
-ownership = gp.read_feather(ownership_filename)
-slr_bounds = gp.read_feather(slr_bounds_filename).geometry
-
 
 class CustomArea(object):
     def __init__(self, geometry, crs, name):
@@ -128,6 +121,7 @@ class CustomArea(object):
         }
 
     def get_slr(self):
+        slr_bounds = gp.read_feather(slr_bounds_filename).geometry
         idx = sjoin_geometry(self.geometry, slr_bounds.values.data, how="inner")
         if not len(idx):
             return None
@@ -146,6 +140,10 @@ class CustomArea(object):
         return {"slr_acres": slr_results["shape_mask"], "slr": slr}
 
     def get_counties(self):
+        counties = gp.read_feather(county_filename)[
+            ["geometry", "FIPS", "state", "county"]
+        ]
+
         df = (
             sjoin(pd.DataFrame({"geometry": self.geometry}), counties)[
                 ["FIPS", "state", "county"]
@@ -160,6 +158,7 @@ class CustomArea(object):
         return {"counties": df.to_dict(orient="records")}
 
     def get_parca(self):
+        parca = gp.read_feather(parca_filename)
         df = intersection(pd.DataFrame({"geometry": self.geometry}), parca)
 
         if not len(df):
@@ -185,6 +184,7 @@ class CustomArea(object):
         }
 
     def get_ownership(self):
+        ownership = gp.read_feather(ownership_filename)
         df = intersection(pd.DataFrame({"geometry": self.geometry}), ownership)
 
         if not len(df):
@@ -247,6 +247,7 @@ class CustomArea(object):
         return results
 
     def get_results(self):
+        sa_bnd = gp.read_feather(boundary_filename)
 
         # if area of interest does not intersect SA boundary, there will be no results
         if not pg.intersects(self.geometry, sa_bnd.geometry.values.data).max():
