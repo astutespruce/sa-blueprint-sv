@@ -15,6 +15,7 @@ from api.settings import (
     LOGGING_LEVEL,
     REDIS,
     REDIS_QUEUE,
+    MAX_JOBS,
 )
 
 
@@ -44,6 +45,7 @@ async def cleanup_files(ctx):
 class WorkerSettings:
     redis_settings = REDIS
     job_timeout = JOB_TIMEOUT
+    max_jobs = MAX_JOBS
     queue_name = REDIS_QUEUE
     # run cleanup every 60 minutes
     cron_jobs = [cron(cleanup_files, run_at_startup=True, minute=0, second=0)]

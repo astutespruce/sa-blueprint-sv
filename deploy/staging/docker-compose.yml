@@ -17,6 +17,8 @@ services:
         "uvicorn",
         "--workers",
         "1", # TODO: make this higher on production
+        --preload,
+        "True",
         "-b",
         ":5000",
         "api.api:app",
