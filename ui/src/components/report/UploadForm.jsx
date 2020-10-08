@@ -40,7 +40,11 @@ const UploadForm = ({ onFileChange, onCreateReport, onSubmitUserInfo }) => {
       const { areaName, file: fileProp, ...userInfo } = values
 
       onCreateReport(fileProp, areaName)
-      onSubmitUserInfo(userInfo)
+
+      // only submit user info if it is non-empty
+      if (Object.values(userInfo).filter((v) => v).length > 0) {
+        onSubmitUserInfo(userInfo)
+      }
     },
     [onCreateReport, onSubmitUserInfo]
   )
