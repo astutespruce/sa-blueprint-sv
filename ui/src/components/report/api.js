@@ -2,7 +2,14 @@ import { hasWindow, saveToStorage, encodeParams } from 'util/dom'
 import { captureException } from 'util/log'
 import config from '../../../gatsby-config'
 
-const { apiToken } = config.siteMetadata
+const {
+  apiToken,
+  msFormURL,
+  msFormEmail,
+  msFormName,
+  msFormOrg,
+  msFormUse,
+} = config.siteMetadata
 let { apiHost } = config.siteMetadata
 
 const pollInterval = 1000 // milliseconds; 1 second
@@ -138,9 +145,12 @@ export const submitUserInfo = async (userInfo) => {
   const { userEmail, userName, userOrg, userUse } = userInfo
   console.log('submit user info', userEmail, userName, userOrg, userUse)
 
-  const formURL = `https://forms.office.com/formapi/api/0693b5ba-4b18-4d7b-9341-f32f400a5494/users/765228b1-d0d0-4438-812e-51cbb57819f1/forms('urWTBhhLe02TQfMvQApUlLEoUnbQ0DhEgS5Ry7V4GfFURFMxWkczNDM4NkFPNloySTBHMjhXVVZIWC4u')/responses`
+  // mapping of form fields to form field IDs in MS form
   const questionIds = {
-    userEmail: 'r792746f558e844148724fa5fcfec95fc',
+    userEmail: msFormEmail, // 'r792746f558e844148724fa5fcfec95fc',
+    userName: msFormName,
+    userOrg: msFormOrg,
+    userUse: msFormUse,
   }
 
   const answers = Object.entries(questionIds).map(([field, questionId]) => ({
@@ -150,7 +160,7 @@ export const submitUserInfo = async (userInfo) => {
 
   try {
     // in no-cors mode, we can submit but not receive content
-    await fetch(formURL, {
+    await fetch(msFormURL, {
       method: 'POST',
       mode: 'no-cors',
       headers: {
