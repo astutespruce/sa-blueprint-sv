@@ -9,6 +9,8 @@ const {
   msFormName,
   msFormOrg,
   msFormUse,
+  msFormAreaName,
+  msFormFileName,
 } = config.siteMetadata
 let { apiHost } = config.siteMetadata
 
@@ -142,15 +144,25 @@ const pollJob = async (jobId, onProgress) => {
 }
 
 export const submitUserInfo = async (userInfo) => {
-  const { userEmail, userName, userOrg, userUse } = userInfo
-  console.log('submit user info', userEmail, userName, userOrg, userUse)
+  const { userEmail, userName, userOrg, userUse, areaName, fileName } = userInfo
+  console.log(
+    'submit user info',
+    userEmail,
+    userName,
+    userOrg,
+    userUse,
+    areaName,
+    fileName
+  )
 
   // mapping of form fields to form field IDs in MS form
   const questionIds = {
-    userEmail: msFormEmail, // 'r792746f558e844148724fa5fcfec95fc',
+    userEmail: msFormEmail,
     userName: msFormName,
     userOrg: msFormOrg,
     userUse: msFormUse,
+    areaName: msFormAreaName,
+    fileName: msFormFileName,
   }
 
   const answers = Object.entries(questionIds).map(([field, questionId]) => ({
@@ -169,7 +181,12 @@ export const submitUserInfo = async (userInfo) => {
       body: encodeParams({ answers: JSON.stringify(answers) }),
     })
 
-    saveToStorage('reportForm', userInfo)
+    saveToStorage('reportForm', {
+      userEmail,
+      userName,
+      userOrg,
+      userUse,
+    })
   } catch (ex) {
     console.error('Could not submit user info to MS Form', userInfo)
   }

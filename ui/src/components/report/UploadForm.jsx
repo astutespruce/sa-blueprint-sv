@@ -43,7 +43,7 @@ const UploadForm = ({ onFileChange, onCreateReport, onSubmitUserInfo }) => {
 
       // only submit user info if it is non-empty
       if (Object.values(userInfo).filter((v) => v).length > 0) {
-        onSubmitUserInfo(userInfo)
+        onSubmitUserInfo({ ...userInfo, areaName, fileName: fileProp.name })
       }
     },
     [onCreateReport, onSubmitUserInfo]
@@ -103,7 +103,6 @@ const UploadForm = ({ onFileChange, onCreateReport, onSubmitUserInfo }) => {
           </div>
         </Flex>
 
-        {/* {file === null && <DropZone name="file" />} */}
         <Box sx={{ display: file ? 'none' : 'block' }}>
           <DropZone name="file" />
         </Box>

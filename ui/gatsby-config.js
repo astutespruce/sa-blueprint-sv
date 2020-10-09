@@ -21,6 +21,8 @@ module.exports = {
     msFormName: process.env.GATSBY_MS_FORM_NAME,
     msFormOrg: process.env.GATSBY_MS_FORM_ORG,
     msFormUse: process.env.GATSBY_MS_FORM_USE,
+    msFormAreaName: process.env.GATSBY_MS_FORM_AREANAME,
+    msFormFileName: process.env.GATSBY_MS_FORM_FILENAME,
   },
   plugins: [
     {
