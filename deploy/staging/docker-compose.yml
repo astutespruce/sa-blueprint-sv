@@ -1,4 +1,4 @@
-version: "3.6"
+version: '3.6'
 services:
   sa-api:
     build:
@@ -10,18 +10,16 @@ services:
     env_file:
       - .env
     command: [
-        "/usr/local/bin/gunicorn",
-        "-k",
-        "uvicorn.workers.UvicornWorker",
-        "--name",
-        "uvicorn",
-        "--workers",
-        "1", # TODO: make this higher on production
-        --preload,
-        "True",
-        "-b",
-        ":5000",
-        "api.api:app",
+        '/usr/local/bin/gunicorn',
+        '-k',
+        'uvicorn.workers.UvicornWorker',
+        '--name',
+        'uvicorn',
+        '--workers',
+        '1', # TODO: make this higher on production
+        '-b',
+        ':5000',
+        'api.api:app',
       ]
     volumes:
       - user_upload:/tmp/sa-reports
@@ -44,7 +42,7 @@ services:
       - renderer
     env_file:
       - .env
-    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
+    command: ['/usr/local/bin/arq', 'api.worker.WorkerSettings']
     volumes:
       - user_upload:/tmp/sa-reports
       - /data/sa:/home/app/data
