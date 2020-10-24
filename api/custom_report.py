@@ -67,14 +67,12 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
     # dissolve
     geometry = np.asarray([pg.union_all(geometry)])
 
-    geo_geometry = to_crs(geometry, df.crs, GEO_CRS)
-    bounds = pg.total_bounds(geo_geometry)
-
-    if (bounds[2] - bounds[0]) > MAX_DIM or (bounds[3] - bounds[1]) > MAX_DIM:
-        raise DataError(
-            "bounds of area of interest are too large.  "
-            "Bounds must be < 10 degrees latitude or longitude on edge."
-        )
+    # estimate area
+    extent_area = (
+        pg.area(pg.box(*pg.total_bounds(to_crs(geometry, df.crs, DATA_CRS)))) * M2_ACRES
+    )
+    if extent_area >= 2e6:
+        raise DataError("Area of interest is too large, it must be < 2 million acres.")
 
     await set_progress(ctx["job_id"], 10)
 
