@@ -70,15 +70,11 @@ keep_ix.sort()
 
 huc12 = huc12.iloc[keep_ix].copy()
 
+huc12_wgs84 = huc12.to_crs(GEO_CRS)
+huc12 = huc12.join(huc12_wgs84.bounds)
 
-# Save in EPSG:5070 for analysis
 huc12.to_feather(analysis_dir / "huc12.feather")
 write_dataframe(huc12, bnd_dir / "huc12.gpkg", driver="GPKG")
-
-
-# project to WGS84 for report maps
-huc12_wgs84 = huc12.to_crs(GEO_CRS)
-huc12_wgs84.to_feather(analysis_dir / "huc12_wgs84.feather")
 
 
 ### Marine units (already in EPSG:5070)
@@ -99,13 +95,11 @@ marine["acres"] = (
     (pg.area(marine.geometry.values.data) * M2_ACRES).round().astype("uint")
 )
 
-# Save in EPSG:5070 for analysis
+marine_wgs84 = marine.to_crs(GEO_CRS)
+marine = marine.join(marine_wgs84.bounds)
+
 marine.to_feather(analysis_dir / "marine_blocks.feather")
 write_dataframe(marine, bnd_dir / "marine_blocks.gpkg", driver="GPKG")
-
-# project to WGS84 for report maps
-marine_wgs84 = marine.to_crs(GEO_CRS)
-marine_wgs84.to_feather(analysis_dir / "marine_blocks_wgs84.feather")
 
 
 ### Merge HUC12 and marine into single units file and export for creating tiles

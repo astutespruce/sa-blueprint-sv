@@ -27,8 +27,9 @@ class SummaryUnits(object):
 
         working_dir = results_dir / unit_type
 
-        self.units = gp.read_feather(
-            input_dir / "summary_units" / f"{unit_type}_wgs84.feather"
+        self.units = pd.read_feather(
+            input_dir / "summary_units" / f"{unit_type}.feather",
+            columns=["id", "name", "acres", "minx", "miny", "maxx", "maxy"],
         ).set_index("id")
 
         self.blueprint = pd.read_feather(working_dir / "blueprint.feather").set_index(
@@ -57,8 +58,8 @@ class SummaryUnits(object):
             raise ValueError("ID not in units index")
 
         unit = self.units.loc[id]
-        results = unit[unit.index.difference(["geometry"])].to_dict()
-        results["bounds"] = pg.bounds(pg.from_shapely(unit.geometry)).tolist()
+        results = unit[["name", "acres"]].to_dict()
+        results["bounds"] = unit[["minx", "miny", "maxx", "maxy"]].tolist()
         results["type"] = (
             "subwatershed" if self.unit_type == "huc12" else "marine lease block"
         )
