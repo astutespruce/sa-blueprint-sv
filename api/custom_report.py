@@ -19,7 +19,7 @@ from api.stats import CustomArea
 from api.progress import set_progress
 
 from analysis.pygeos_util import to_crs
-from analysis.constants import DATA_CRS, GEO_CRS
+from analysis.constants import DATA_CRS, GEO_CRS, M2_ACRES
 
 MAX_DIM = 5  # degrees
 
