@@ -67,6 +67,9 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
     # dissolve
     geometry = np.asarray([pg.union_all(geometry)])
 
+    geo_geometry = to_crs(geometry, df.crs, GEO_CRS)
+    bounds = pg.total_bounds(geo_geometry)
+
     # estimate area
     extent_area = (
         pg.area(pg.box(*pg.total_bounds(to_crs(geometry, df.crs, DATA_CRS)))) * M2_ACRES
