@@ -329,7 +329,9 @@ async def report_pdf_endpoint(job_id: str):
             )
 
         path = info.result
-        name = info.kwargs.get("name", None) or "Blueprint Summary Report"
+        name = (
+            info.kwargs.get("name", None) or "South Atlantic Blueprint Summary Report"
+        )
 
         return FileResponse(path, filename=f"{name}.pdf", media_type="application/pdf")
 
