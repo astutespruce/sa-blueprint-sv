@@ -39,11 +39,50 @@ slr_filename = src_dir / "threats/slr/slr.vrt"
 
 
 async def render_mbgl_maps(**kwargs):
+    """Asynchronously render MBGL maps based on number of MAP_RENDER_THREADS
+
+    Returns
+    -------
+    dict, dict
+        tuple of (maps, errors) keyed by map ID
+    """
     results = await asyncio.gather(*kwargs.values())
-    return {key: result for key, result in zip(kwargs.keys(), results)}
+    results = zip(kwargs.keys(), results)
+
+    maps = {}
+    errors = {}
+    for key, (map, error) in results:
+        maps[key] = map
+        if error is not None:
+            errors[key] = error
+
+    return maps, errors
 
 
 def render_raster_map(bounds, scale, basemap_image, aoi_image, id, path, colors):
+    """Render raster dataset map based on bounds.  Merge this over basemap image
+    and under aoi_image.
+
+    Parameters
+    ----------
+    bounds : list-like of [xmin, ymin, xmax, ymax]
+        bounds of map
+    scale : dict
+        map scale info
+    basemap_image : Image object
+    aoi_image : Image object
+    id : str
+        map ID
+    path : str
+        path to raster dataset
+    colors : list-like of colors
+        colors to render map image based on values in raster
+
+    Returns
+    -------
+    id, Image object
+        Image object is None if it could not be rendered or does not overlap bounds
+    """
     raster_img = render_raster(path, bounds, scale, WIDTH, HEIGHT, colors)
 
     map_image = None
@@ -57,6 +96,27 @@ def render_raster_map(bounds, scale, basemap_image, aoi_image, id, path, colors)
 async def render_raster_maps(
     bounds, scale, basemap_image, aoi_image, indicators, urban, slr
 ):
+    """Asynchronously render Raster maps.
+
+    Parameters
+    ----------
+    bounds : list-like of [xmin, ymin, xmax, ymax]
+        bounds of map
+    scale : dict
+        map scale info
+    basemap_image : Image object
+    aoi_image : Image object
+    indicators : list-like of indicator IDs
+    urban : bool (default False)
+        if True, will render urban map
+    slr : bool (default False)
+        if True, will render SLR map
+
+    Returns
+    -------
+    dict, dict
+        tuple of (maps, errors) keyed by map ID
+    """
     executor = ThreadPoolExecutor(max_workers=MAP_RENDER_THREADS)
     loop = asyncio.get_event_loop()
 
@@ -99,7 +159,10 @@ async def render_raster_maps(
     results = [t.result() for t in completed]
     maps = {k: v for k, v in results if v is not None}
 
-    return maps
+    # TODO: capture and return errors
+    errors = {}
+
+    return maps, errors
 
 
 async def render_maps(
@@ -141,6 +204,7 @@ async def render_maps(
     """
 
     maps = {}
+    errors = {}
 
     bounds = pad_bounds(bounds, PADDING)
     center = get_center(bounds)
@@ -168,7 +232,8 @@ async def render_maps(
     if protection:
         tasks["protection"] = get_protection_map_image(center, zoom, WIDTH, HEIGHT)
 
-    mbgl_maps = await render_mbgl_maps(**tasks)
+    mbgl_maps, mbgl_map_errors = await render_mbgl_maps(**tasks)
+    errors.update(mbgl_map_errors)
 
     maps["locator"] = to_base64(mbgl_maps["locator"])
     basemap_image = mbgl_maps.get("basemap", None)
@@ -186,21 +251,12 @@ async def render_maps(
             merge_maps([basemap_image, mbgl_maps["protection"], aoi_image])
         )
 
-    if basemap_image is None:
-        # no point in generating other maps, since people won't be able to see where they are
-        return dict(), None
-
-    # make sure that images are fully loaded before sending to other threads
-    basemap_image.load()
-
-    if aoi_image is not None:
-        aoi_image.load()
-
     # Use background threads for rendering rasters
-    raster_maps = await render_raster_maps(
+    raster_maps, raster_map_errors = await render_raster_maps(
         bounds, scale, basemap_image, aoi_image, indicators or [], urban, slr
     )
 
     maps.update(raster_maps)
+    errors.update(raster_map_errors)
 
-    return maps, scale
+    return maps, scale, errors

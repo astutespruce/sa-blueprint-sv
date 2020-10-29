@@ -8,8 +8,8 @@ from api.settings import API_TOKEN
 
 DELAY = 2  # seconds
 
-# API_URL = "http://localhost:5000/api"
-API_URL = "http://localhost:8080"
+API_URL = "http://localhost:5000"
+# API_URL = "http://localhost:8080"
 
 OUT_DIR = Path("/tmp/api")
 
@@ -19,13 +19,19 @@ if not OUT_DIR.exists():
 
 def poll_until_done(job_id, current=0, max=100):
     r = httpx.get(f"{API_URL}/api/reports/status/{job_id}?token={API_TOKEN}")
-    r.raise_for_status()
+
+    if r.status_code != 200:
+        raise Exception(f"Error processing request (HTTP {r.status_code}): {r.text}")
+
     json = r.json()
     status = json.get("status")
     progress = json.get("progress")
+    message = json.get("message")
+    errors = json.get("errors")
 
     if status == "success":
         print(f"Results at: {json['result']}")
+        print(f"Job errors: {json['errors']}")
         download_file(json["result"])
         return
 
@@ -33,7 +39,7 @@ def poll_until_done(job_id, current=0, max=100):
         print(f"Failed: {json['detail']}")
         return
 
-    print(f"Progress: {progress}")
+    print(f"Progress: {progress}, message: {message}, errors: {errors}")
 
     current += 1
     if current == max:
@@ -61,7 +67,8 @@ def test_upload_file(filename):
         data={"name": "foo"},
         files=files,
     )
-    r.raise_for_status()
+    if r.status_code != 200:
+        raise Exception(f"Error processing request (HTTP {r.status_code}): {r.text}")
 
     json = r.json()
     job_id = json.get("job")
@@ -75,7 +82,8 @@ def test_upload_file(filename):
 def test_huc12_report(huc12_id):
     r = httpx.post(f"{API_URL}/api/reports/huc12/{huc12_id}?token={API_TOKEN}")
 
-    r.raise_for_status()
+    if r.status_code != 200:
+        raise Exception(f"Error processing request (HTTP {r.status_code}): {r.text}")
 
     json = r.json()
 
@@ -91,8 +99,9 @@ def test_huc12_report(huc12_id):
 
 
 if __name__ == "__main__":
-    # test_upload_file("examples/api/Razor.zip")
-    test_upload_file("examples/api/OCMU_SRS_StudyArea.zip")
+    test_upload_file("examples/api/Razor.zip")
+    # test_upload_file("examples/api/OCMU_SRS_StudyArea.zip")
+    # test_upload_file("examples/api/tmpkv0d98lv.zip")
     # test_upload_file("examples/api/Groton.zip")
 
     # test_huc12_report("0")

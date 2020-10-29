@@ -23,8 +23,9 @@ from api.stats import SummaryUnits, CustomArea
 
 
 # aoi_names = ["Fort_Mill_townlimits"]
-aoi_names = ["Enviva_Hamlet_80_mile_sourcing_radius"]
-# aoi_names = ["Razor", "Groton_all"]
+# aoi_names = ["Enviva_Hamlet_80_mile_sourcing_radius"]
+aoi_names = ["Razor"]
+# aoi_names = ["Groton_all"]
 # aoi_names = ["ACF_area"]
 # aoi_names = ["NC"]
 # aoi_names = ["SA_boundary"]
@@ -52,7 +53,8 @@ for aoi_name in aoi_names:
     geometry = to_crs(geometry, df.crs, GEO_CRS)
     bounds = pg.total_bounds(geometry)
 
-    has_urban = "urban" in results
+    # only include urban up to 2060
+    has_urban = "proj_urban" in results and results["proj_urban"][4] > 0
     has_slr = "slr" in results
     has_ownership = "ownership" in results
     has_protection = "protection" in results
@@ -69,7 +71,10 @@ for aoi_name in aoi_names:
         protection=has_protection,
     )
 
-    maps, scale = asyncio.run(task)
+    maps, scale, errors = asyncio.run(task)
+
+    if errors:
+        print("Errors", errors)
 
     for name, data in maps.items():
         if data is not None:
@@ -83,14 +88,14 @@ for aoi_name in aoi_names:
 ### Write maps for a summary unit
 
 ids = {
-    "huc12": [
-        # "030602040601",
-        # "030601030510",
-        # "031501040301",
-        # "030102020505",
-        # "031101010504",
-    ],
-    # "marine_blocks": ["NI18-07-6210"]
+    # "huc12": [
+    #     "030602040601",
+    #     "030601030510",
+    #     "031501040301",
+    #     "030102020505",
+    #     "031101010504",
+    # ],
+    # "marine_blocks": ["NI18-07-6210"],
 }
 
 
@@ -102,7 +107,8 @@ for summary_type in ids:
 
         results = units.get_results(id)
 
-        has_urban = "urban" in results
+        # only include urban up to 2060
+        has_urban = "proj_urban" in results and results["proj_urban"][4] > 0
         has_slr = "slr" in results
         has_ownership = "ownership" in results
         has_protection = "protection" in results
@@ -121,7 +127,10 @@ for summary_type in ids:
             protection=has_protection,
         )
 
-        maps, scale = asyncio.run(task)
+        maps, scale, errors = asyncio.run(task)
+
+        if errors:
+            print("Errors", errors)
 
         for name, data in maps.items():
             if data is not None:

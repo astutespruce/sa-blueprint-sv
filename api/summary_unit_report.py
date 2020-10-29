@@ -29,11 +29,12 @@ async def create_summary_unit_report(ctx, unit_type, unit_id):
     unit_id : str
     """
 
-    await set_progress(ctx["job_id"], 0)
+    errors = []
 
-    # TODO: move this to loading in memory at startup?
+    await set_progress(ctx["job_id"], 0, "Loading data")
+
     units = SummaryUnits(unit_type)
-    await set_progress(ctx["job_id"], 5)
+    await set_progress(ctx["job_id"], 5, "Calculating results")
 
     # validate that unit exists
     if not unit_id in units.units.index:
@@ -42,7 +43,7 @@ async def create_summary_unit_report(ctx, unit_type, unit_id):
         )
 
     results = units.get_results(unit_id)
-    await set_progress(ctx["job_id"], 50)
+    await set_progress(ctx["job_id"], 50, "Creating maps (this might take a while)")
 
     # only include urban up to 2060
     has_urban = "proj_urban" in results and results["proj_urban"][4] > 0
@@ -50,7 +51,7 @@ async def create_summary_unit_report(ctx, unit_type, unit_id):
     has_ownership = "ownership" in results
     has_protection = "protection" in results
 
-    maps, scale = await render_maps(
+    maps, scale, map_errors = await render_maps(
         results["bounds"],
         summary_unit_id=unit_id,
         indicators=results["indicators"],
@@ -60,20 +61,33 @@ async def create_summary_unit_report(ctx, unit_type, unit_id):
         protection=has_protection,
     )
 
-    await set_progress(ctx["job_id"], 75)
+    if map_errors:
+        log.error(f"Map rendering errors: {map_errors}")
+        if "basemap" in map_errors:
+            errors.append("Error creating basemap for all maps")
+
+        if "aoi" in map_errors:
+            errors.append("Error rendering area of interest on maps")
+
+        if set(map_errors.keys()).difference(["basemap", "aoi"]):
+            errors.append("Error creating one or more maps")
+
+    await set_progress(
+        ctx["job_id"], 75, "Creating PDF (this might take a while)", errors=errors
+    )
 
     results["scale"] = scale
 
     pdf = create_report(maps=maps, results=results)
 
-    await set_progress(ctx["job_id"], 95)
+    await set_progress(ctx["job_id"], 95, "Nearly done", errors=errors)
 
     fp, name = tempfile.mkstemp(suffix=".pdf", dir=TEMP_DIR)
     with open(fp, "wb") as out:
         out.write(pdf)
 
-    await set_progress(ctx["job_id"], 100)
+    await set_progress(ctx["job_id"], 100, "All done!", errors=errors)
 
     log.debug(f"Created PDF at: {name}")
 
-    return name
+    return name, errors

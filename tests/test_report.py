@@ -54,19 +54,31 @@ def read_cache(path):
 
 ### Create reports for an AOI
 aois = [
+    {"name": "Pied_LowerBroad", "path": "Pied_LowerBroad"},
+    # {"name": "Pied_Saluda", "path": "Pied_Saluda"},
+    # {"name": "UCP: Lower Pee Dee", "path": "UCP_LowerPeeDee"},
+    # {"name": "LCP: Broad", "path": "LCP_Broad"},
+    # {"name": "LCP: Black River", "path": "LCP_BlackRiver"},
+    # {
+    #     "name": "Congaree Creek Assemblage tracts",
+    #     "path": "CongareeCreekAssemblageTracts",
+    # },
+    # {"name": "Alderman-Shaw tract", "path": "Alderman-ShawTract"},
+    # {"name": "Town of Van Wyck planning area", "path": "Planning_Area"},
+    # {"name": "Gainesville area", "path": "POLYGON"},
     # {"name": "Rasor Forest Legacy Tract", "path": "Razor"},
     # {"name": "Groton Plantation", "path": "Groton_all"},
-    {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
+    # {"name": "Fort Mill Town Limits", "path": "Fort_Mill_townlimits"},
     # {"name": "FY18 LWCF Tract", "path": "FY18_LWCF_Tract"},
-    # # TODO: handle correctly
-    # {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},
-    # # Big areas:
-    # {"name": "ACF", "path": "ACF_area"}, # 400s
+    # # # TODO: handle correctly
+    # # {"name": "Green River Proposed Boundary", "path": "GreenRiver_ProposedBoundary"},
+    # # # Big areas:
+    # {"name": "ACF", "path": "ACF_area"},  # 140s
     # {
     #     "name": "80-mile sourcing radius for Enviva’s Hamlet, NC plant",
     #     "path": "Enviva_Hamlet_80_mile_sourcing_radius",
-    # }, # 112s
-    # {"name": "North Carolina", "path": "NC"}, # 600s
+    # },  # 112s
+    # {"name": "North Carolina", "path": "NC"},  # 330s
     # {"name": "South Atlantic Region", "path": "SA_boundary"},
 ]
 
@@ -107,7 +119,8 @@ for aoi in aois:
         geometry = to_crs(geometry, df.crs, GEO_CRS)
         bounds = pg.total_bounds(geometry)
 
-        has_urban = "urban" in results
+        # only include urban up to 2060
+        has_urban = "proj_urban" in results and results["proj_urban"][4] > 0
         has_slr = "slr" in results
         has_ownership = "ownership" in results
         has_protection = "protection" in results
@@ -122,7 +135,10 @@ for aoi in aois:
             protection=has_protection,
         )
 
-        maps, scale = asyncio.run(task)
+        maps, scale, errors = asyncio.run(task)
+
+        if errors:
+            print("Errors", errors)
 
         if CACHE_MAPS:
             write_cache(maps, scale, cache_dir)
@@ -140,15 +156,19 @@ for aoi in aois:
 ### Create reports for summary units
 ids = {
     "huc12": [
-        "030602040601",
-        # "030601030510",
-        # "031501040301",
-        # "030102020505",
-        # "030203020403",
-        # "030203020404",
-        # "030203020405"
+        "031501060512",  # partial overlap with SA raster inputs
+        # "030300050503",  # multiple PARCA
+        #     # "030602040101",
+        #     # "030802010501",  # THIS ONE  # partial overlap with Blueprint
+        #     # "030602040601",
+        #     #     "030601030510",
+        #     # "031501040301",
+        #     #     "030102020505",
+        #     #     "030203020403",
+        #     #     "030203020404",
+        #     #     "030203020405",
     ],
-    # "marine_blocks": ["NI18-07-6210"],
+    "marine_blocks": ["NI18-07-6210"],
 }
 
 
@@ -167,7 +187,8 @@ for summary_type in ids:
         # Fetch results
         results = units.get_results(id)
 
-        has_urban = "urban" in results
+        # only include urban up to 2060
+        has_urban = "proj_urban" in results and results["proj_urban"][4] > 0
         has_slr = "slr" in results
         has_ownership = "ownership" in results
         has_protection = "protection" in results
@@ -187,7 +208,10 @@ for summary_type in ids:
                 ownership=has_ownership,
                 protection=has_protection,
             )
-            maps, scale = asyncio.run(task)
+            maps, scale, errors = asyncio.run(task)
+
+            if errors:
+                print("Errors", errors)
 
             if CACHE_MAPS:
                 write_cache(maps, scale, cache_dir)

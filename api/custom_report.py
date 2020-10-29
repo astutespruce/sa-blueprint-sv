@@ -1,7 +1,4 @@
 """Create a custom report for a user-uploaded area of interest.
-
-TODO:
-* wrap in try / except
 """
 import logging
 from pathlib import Path
@@ -51,7 +48,10 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
     DataError
         Raised if bounds are too large or if area of interest doesn't overalap SA region
     """
-    await set_progress(ctx["job_id"], 0)
+
+    errors = []
+
+    await set_progress(ctx["job_id"], 0, "Loading data")
 
     path = f"/vsizip/{zip_filename}/{dataset}"
 
@@ -59,7 +59,7 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
 
     geometry = pg.make_valid(df.geometry.values.data)
 
-    await set_progress(ctx["job_id"], 5)
+    await set_progress(ctx["job_id"], 5, "Preparing area of interest")
 
     # dissolve
     geometry = np.asarray([pg.union_all(geometry)])
@@ -76,7 +76,9 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
             f"The extent of your area of interest is too large ({extent_area:,.0f} acres), it must be < {CUSTOM_REPORT_MAX_ACRES:,.0f} acres."
         )
 
-    await set_progress(ctx["job_id"], 10)
+    await set_progress(
+        ctx["job_id"], 10, "Calculating results (this might take a while)"
+    )
 
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
@@ -94,10 +96,10 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
     has_ownership = "ownership" in results
     has_protection = "protection" in results
 
-    await set_progress(ctx["job_id"], 25)
+    await set_progress(ctx["job_id"], 25, "Creating maps (this might take a while)")
 
     print("Rendering maps...")
-    maps, scale = await render_maps(
+    maps, scale, map_errors = await render_maps(
         bounds,
         geometry=geo_geometry[0],
         indicators=results["indicators"],
@@ -107,20 +109,33 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
         protection=has_protection,
     )
 
-    await set_progress(ctx["job_id"], 75)
+    if map_errors:
+        log.error(f"Map rendering errors: {map_errors}")
+        if "basemap" in map_errors:
+            errors.append("Error creating basemap for all maps")
+
+        if "aoi" in map_errors:
+            errors.append("Error rendering area of interest on maps")
+
+        if set(map_errors.keys()).difference(["basemap", "aoi"]):
+            errors.append("Error creating one or more maps")
+
+    await set_progress(
+        ctx["job_id"], 75, "Creating PDF (this might take a while)", errors=errors
+    )
 
     results["scale"] = scale
 
     pdf = create_report(maps=maps, results=results)
 
-    await set_progress(ctx["job_id"], 95)
+    await set_progress(ctx["job_id"], 95, "Nearly done", errors=errors)
 
     fp, name = tempfile.mkstemp(suffix=".pdf", dir=TEMP_DIR)
     with open(fp, "wb") as out:
         out.write(pdf)
 
-    await set_progress(ctx["job_id"], 100)
+    await set_progress(ctx["job_id"], 100, "All done!", errors=errors)
 
     log.debug(f"Created PDF at: {name}")
 
-    return name
+    return name, errors

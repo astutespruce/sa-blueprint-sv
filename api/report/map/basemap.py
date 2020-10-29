@@ -1,13 +1,4 @@
-from io import BytesIO
-import logging
-
-import httpx
-from PIL import Image
-
-from api.settings import MBGL_SERVER_URL
-
-
-log = logging.getLogger(__name__)
+from .util import render_mbgl_map
 
 
 STYLE = {
@@ -50,18 +41,9 @@ async def get_basemap_image(center, zoom, width, height):
     }
 
     try:
-        async with httpx.AsyncClient() as client:
-            r = await client.post(MBGL_SERVER_URL, json=params)
-
-        if r.status_code != 200:
-            log.error(
-                f"Error generating basemap image, HTTP status not 200: {r.text[:255]}"
-            )
-            return None
-
-        return Image.open(BytesIO(r.content))
+        map = await render_mbgl_map(params)
 
     except Exception as ex:
-        log.error(f"Unhandled exception generating basemap image")
-        log.error(ex)
-        return None
+        return None, f"Error generating basemap image ({type(ex)}): {ex}"
+
+    return map, None
