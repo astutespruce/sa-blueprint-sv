@@ -259,17 +259,11 @@ class CustomArea(object):
             "name": self.name,
         }
 
-        try:
-            blueprint_results = self.get_blueprint()
-            if blueprint_results is None:
-                return None
-
-            results.update(blueprint_results)
-
-        except ValueError:
-            # geometry does not overlap Blueprint.  There are no valid results here,
-            # move along.
+        blueprint_results = self.get_blueprint()
+        if blueprint_results is None:
             return None
+
+        results.update(blueprint_results)
 
         urban_results = self.get_urban()
         if urban_results is not None:
