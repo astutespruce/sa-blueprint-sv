@@ -24,7 +24,7 @@ from analysis.lib.pygeos_util import to_dict
 
 src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
-continuous_indicator_dir = src_dir / "continuous_indicators"
+continuous_indicator_dir = Path("data/continuous_indicators")
 indicators_mask_dir = indicators_dir / "masks"
 blueprint_filename = src_dir / "blueprint2020.tif"
 corridors_filename = src_dir / "corridors.tif"
@@ -71,7 +71,7 @@ def detect_indicators(geometries, indicators):
     return indicators_with_data
 
 
-def extract_by_geometry(geometries, bounds, marine=False):
+def extract_by_geometry(geometries, bounds, marine=False, zonal_means=False):
     """Calculate the area of overlap between geometries and Blueprint,
     corridors, and indicators.
 
@@ -83,6 +83,8 @@ def extract_by_geometry(geometries, bounds, marine=False):
     bounds : list-like of [xmin, ymin, xmax, ymax]
     marine : bool (default False)
         if True will use only marine indicators
+    zonal_means : bool (default False)
+        if True, will calculate zonal means for continuous indicators
 
     Returns
     -------
@@ -170,7 +172,7 @@ def extract_by_geometry(geometries, bounds, marine=False):
             (counts * cellsize).round(ACRES_PRECISION).astype("float32")
         )
 
-        if indicator.get("continuous"):
+        if zonal_means and indicator.get("continuous"):
             continuous_filename = continuous_indicator_dir / indicator[
                 "filename"
             ].replace("_Binned", "")
@@ -183,65 +185,6 @@ def extract_by_geometry(geometries, bounds, marine=False):
     return results
 
 
-def summarize_by_aoi(shapes, bounds, outside_se_acres):
-    """Get results for South Atlantic Conservation Blueprint dataset
-    for a given area of interest.
-
-    Parameters
-    ----------
-    shapes : list-like of geometry objects that provide __geo_interface__
-    bounds : list-like of [xmin, ymin, xmax, ymax]
-    outside_se_acres : float
-        acres of the analysis area that are outside the SE Blueprint region
-
-    Returns
-    -------
-    dict
-        {
-            "priorities": [...],
-            "legend": [...],
-            "analysis_notes": <analysis_notes>,
-            "remainder": <acres outside of input>,
-            "remainder_percent" <percent of total acres outside input>
-        }
-    """
-
-    results = extract_by_geometry(shapes, bounds)
-
-    if results is None:
-        return None
-
-    total_acres = results["shape_mask"]
-    analysis_acres = total_acres - outside_se_acres
-
-    values = pd.DataFrame(INPUTS["sa"]["values"])
-
-    df = values.join(pd.Series(results["sa"], name="acres"))
-    df["percent"] = 100 * np.divide(df.acres, total_acres)
-
-    # sort into correct order
-    df.sort_values(by=["blueprint", "value"], ascending=False, inplace=True)
-
-    priorities = df[["value", "blueprint", "label", "acres", "percent"]].to_dict(
-        orient="records"
-    )
-
-    # don't include Not a priority in legend
-    legend = df[["label", "color"]].iloc[:-1].to_dict(orient="records")
-
-    remainder = max(analysis_acres - df.acres.sum(), 0)
-    remainder = remainder if remainder >= 1 else 0
-
-    return {
-        "priorities": priorities,
-        "legend": legend,
-        "analysis_acres": analysis_acres,
-        "total_acres": total_acres,
-        "remainder": remainder,
-        "remainder_percent": 100 * remainder / total_acres,
-    }
-
-
 def summarize_blueprint_by_geometry(geometries, outfilename, marine=False):
     counts = []
     means = []
@@ -252,7 +195,10 @@ def summarize_blueprint_by_geometry(geometries, outfilename, marine=False):
         max=len(geometries),
     ).iter(geometries.iteritems()):
         zone_results = extract_by_geometry(
-            [to_dict(geometry)], bounds=pg.total_bounds(geometry), marine=marine
+            [to_dict(geometry)],
+            bounds=pg.total_bounds(geometry),
+            marine=marine,
+            zonal_means=True,
         )
 
         if zone_results is None:
