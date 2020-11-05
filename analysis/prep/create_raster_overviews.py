@@ -12,11 +12,8 @@ import rasterio
 from rasterio.enums import Resampling
 from rasterio.vrt import WarpedVRT
 
-from analysis.constants import INDICATORS, URBAN_YEARS
+from analysis.constants import INDICATORS, OVERVIEW_FACTORS
 
-
-# 32 is OK for regional level maps; 16 is more typical for big areas like ACF
-factors = [2, 4, 8, 16, 32]
 
 src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
@@ -29,16 +26,11 @@ slr_dir = src_dir / "threats/slr"
 for filename in [blueprint_filename, corridors_filename]:
     print(f"Processing {filename.name}...")
     with rasterio.open(filename, "r+") as src:
-        src.build_overviews(factors, Resampling.nearest)
-
-for year in URBAN_YEARS:
-    print(f"Processing urban {year}...")
-    with rasterio.open(urban_dir / f"urb_indexed_{year}.tif", "r+") as src:
-        src.build_overviews(factors, Resampling.nearest)
+        src.build_overviews(OVERVIEW_FACTORS, Resampling.nearest)
 
 
 for indicator in INDICATORS:
     print(f"Processing {indicator['id']}...")
 
     with rasterio.open(indicators_dir / indicator["filename"], "r+") as src:
-        src.build_overviews(factors, Resampling.nearest)
+        src.build_overviews(OVERVIEW_FACTORS, Resampling.nearest)

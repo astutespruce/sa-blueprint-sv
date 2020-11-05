@@ -17,7 +17,7 @@ from rasterio.warp import (
 
 
 from analysis.constants import DATA_CRS, MAP_CRS, GEO_CRS, DEBUG
-from analysis.io import write_raster
+from analysis.lib.io import write_raster
 
 
 def hex_to_rgb(color):

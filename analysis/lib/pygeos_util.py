@@ -28,43 +28,6 @@ def to_crs(geometries, src_crs, target_crs):
     return result
 
 
-def to_pygeos(geometries):
-    """Convert GeoPandas geometries to pygeos geometries
-
-    Parameters
-    ----------
-    geometries : GeoSeries
-
-    Returns
-    -------
-    ndarray of pygeos geometries
-    """
-    return pg.from_wkb(geometries.apply(lambda g: g.to_wkb()))
-
-
-def from_pygeos(geometries):
-    """Converts a Series or ndarray of pygeos geometry objects to a GeoSeries.
-
-    Parameters
-    ----------
-    geometries : Series or ndarray of pygeos geometry objects
-
-    Returns
-    -------
-    GeoSeries
-    """
-
-    def load_wkb(wkb):
-        return loads(wkb)
-
-    wkb = pg.to_wkb(geometries)
-
-    if isinstance(geometries, pd.Series):
-        return gp.GeoSeries(wkb.apply(load_wkb))
-
-    return gp.GeoSeries(np.vectorize(load_wkb, otypes=[np.object])(wkb))
-
-
 def sjoin(left, right, predicate="intersects", how="left"):
     """Join data frames on geometry, comparable to geopandas.
 

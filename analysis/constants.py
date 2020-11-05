@@ -15,9 +15,10 @@ ACRES_PRECISION = 1
 M2_ACRES = 0.000247105
 M_MILES = 0.000621371
 
+# 32 is OK for regional level maps; 16 is more typical for big areas like ACF
+OVERVIEW_FACTORS = [2, 4, 8, 16, 32]
 
 json_dir = Path("constants")
-
 
 # indexed by BP value
 BLUEPRINT = json.loads(open(json_dir / "blueprint.json").read())

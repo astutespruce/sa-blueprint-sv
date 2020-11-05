@@ -1,6 +1,6 @@
 from copy import deepcopy
 
-from analysis.pygeos_util import to_dict
+from analysis.lib.pygeos_util import to_dict
 
 from .util import render_mbgl_map
 

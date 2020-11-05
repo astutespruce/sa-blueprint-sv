@@ -5,7 +5,13 @@ import numpy as np
 import pygeos as pg
 import geopandas as gp
 
-from analysis.pygeos_util import to_crs, to_dict, sjoin, sjoin_geometry, intersection
+from analysis.lib.pygeos_util import (
+    to_crs,
+    to_dict,
+    sjoin,
+    sjoin_geometry,
+    intersection,
+)
 from analysis.constants import (
     BLUEPRINT,
     INDICATORS,
@@ -17,10 +23,11 @@ from analysis.constants import (
     PROTECTION,
     M2_ACRES,
 )
-from analysis.stats import (
-    extract_blueprint_indicator_area,
-    extract_urbanization_area,
-    extract_slr_area,
+
+from analysis.lib.stats import (
+    extract_blueprint_by_geometry,
+    extract_urban_by_geometry,
+    extract_slr_by_geometry,
 )
 
 
@@ -45,14 +52,13 @@ class CustomArea(object):
         """
 
         self.geometry = to_crs(geometry, crs, DATA_CRS)
+        self.bounds = pg.total_bounds(self.geometry)
         # wrap geometry as a dict for rasterio
         self.shapes = np.asarray([to_dict(self.geometry[0])])
         self.name = name
 
     def get_blueprint(self):
-        blueprint = extract_blueprint_indicator_area(
-            self.shapes, bounds=pg.total_bounds(self.geometry)
-        )
+        blueprint = extract_blueprint_by_geometry(self.shapes, bounds=self.bounds)
 
         if blueprint is None:
             return None
@@ -102,9 +108,7 @@ class CustomArea(object):
         return results
 
     def get_urban(self):
-        urban_results = extract_urbanization_area(
-            self.shapes, bounds=pg.total_bounds(self.geometry)
-        )
+        urban_results = extract_urban_by_geometry(self.shapes, bounds=self.bounds)
 
         if urban_results is None or urban_results["shape_mask"] == 0:
             return None
@@ -121,21 +125,22 @@ class CustomArea(object):
         }
 
     def get_slr(self):
-        slr_bounds = gp.read_feather(slr_bounds_filename).geometry
-        idx = sjoin_geometry(self.geometry, slr_bounds.values.data, how="inner")
-        if not len(idx):
-            return None
-        idx = idx.index.unique()
+        slr_bounds = gp.read_feather(slr_bounds_filename).geometry.values.data[0]
+        ix = pg.intersects(self.geometry, slr_bounds)
 
-        slr_results = extract_slr_area(
-            self.shapes.take(idx), bounds=pg.total_bounds(self.geometry.take(idx))
+        if not ix.sum():
+            # No overlap
+            return None
+
+        # only extract SLR where there are overlaps
+        slr_results = extract_slr_by_geometry(
+            self.shapes[ix], bounds=pg.total_bounds(self.geometry[ix])
         )
-        if slr_results is None or slr_results["shape_mask"] == 0:
+        # None only if no shape mask
+        if slr_results is None:
             return None
 
         slr = [slr_results[i] for i in range(7)]
-        if not sum(slr):
-            return None
 
         return {"slr_acres": slr_results["shape_mask"], "slr": slr}
 

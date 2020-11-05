@@ -72,7 +72,8 @@ Processed using `util/prepare_boundaries.py`.
 
 NOTE: this is not aligned to the blueprint grid.
 
-Urbanization grids were converted to indexed grids to simplify calculations. See `util/preprocess_grids.py`.
+Urbanization grids were converted to indexed grids to simplify calculations.
+See `analysis/prep/prepare_urban.py`.
 
 ### Sea Level Rise
 
@@ -84,7 +85,8 @@ mosiacking SLR data obtained from NOAA (https://coast.noaa.gov/slrdata/).
 
 These are a series of GeoTIFF files
 for small areas along the coast, with varying footprints and resolution. To use
-here, we constructed a VRT using GDAL, and used the average resolution.
+here, we constructed a VRT using GDAL, and used a resolution of 15 meters for
+easier aggregation in results.
 
 Values are coded 0-6 for the amount of sea level rise that would impact a given
 area. Values are cumulative, so a value of 6 means that the area is also
@@ -93,12 +95,13 @@ inundated by 1-5 meters.
 From within `data/threats/slr` directory:
 
 ```
-gdalbuildvrt -overwrite -resolution lowest slr.vrt *.tif
+gdalbuildvrt -overwrite -resolution user -tr 15 15 slr.vrt *.tif
 ```
 
 To assist with checking if a given area of interest overlaps SLR data, the
-bounds of all SLR files are extracted to a dataset using
-`util/extract_slr_bounds.py`.
+bounds of all SLR files are extracted.
+
+See `analysis/prep/prepare_slr.py`.
 
 ### Priority Amphibian and Reptile Areas (PARCAs)
 

@@ -15,7 +15,7 @@ from api.settings import LOGGING_LEVEL, TEMP_DIR, CUSTOM_REPORT_MAX_ACRES
 from api.stats import CustomArea
 from api.progress import set_progress
 
-from analysis.pygeos_util import to_crs
+from analysis.lib.pygeos_util import to_crs
 from analysis.constants import DATA_CRS, GEO_CRS, M2_ACRES
 
 log = logging.getLogger(__name__)
