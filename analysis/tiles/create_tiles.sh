@@ -10,6 +10,10 @@ echo "Processing states..."
 ogr2ogr -t_srs EPSG:4326 -f GeoJSONSeq -select STATEFP $TMPDIR/states.geojson source_data/boundaries/tl_2019_us_state.shp
 tippecanoe -f -pg -Z 0 -z 5 -o $TILEDIR/states.mbtiles -l states /tmp/states.geojson
 
+# Create tiles from protected areas
+echo "Processing protected areas..."
+tippecanoe -f -pg -P -z 15 -o $TILEDIR/sa_ownership.mbtiles -l "ownership" $TILEINPUTS/ownership.geojson
+
 
 # Create tiles from summary units
 echo "Processing summary units..."
@@ -28,9 +32,6 @@ tippecanoe -f -pg -P -Z 0 -z 8 -ai -o $TMPDIR/sa_boundary.mbtiles -l "boundary" 
 echo "Merging tilesets..."
 tile-join -f -pg -o $TILEDIR/sa_map_units.mbtiles $TMPDIR/sa_mask.mbtiles $TMPDIR/sa_boundary.mbtiles $TMPDIR/unit_atts.mbtiles
 
-# Create tiles from protected areas
-echo "Processing protected areas..."
-tippecanoe -f -pg -P -z 15 -o $TILEDIR/sa_ownership.mbtiles -l "ownership" $TILEINPUTS/ownership.geojson
 
 
 
