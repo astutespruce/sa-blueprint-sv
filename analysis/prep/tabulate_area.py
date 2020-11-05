@@ -63,23 +63,23 @@ print(
 )
 
 
-# #########################################################################
-# ########### Marine Lease Blocks #########################################
-# #########################################################################
-# start = time()
+#########################################################################
+########### Marine Lease Blocks #########################################
+#########################################################################
+start = time()
 
-# out_dir = data_dir / "results/marine_blocks"
-# if not out_dir.exists():
-#     os.makedirs(out_dir)
+out_dir = data_dir / "results/marine_blocks"
+if not out_dir.exists():
+    os.makedirs(out_dir)
 
-# print("Reading marine blocks boundaries")
-# units_df = gp.read_feather(marine_filename, columns=["id", "geometry"]).set_index("id")
+print("Reading marine blocks boundaries")
+units_df = gp.read_feather(marine_filename, columns=["id", "geometry"]).set_index("id")
 
-# geometries = pd.Series(units_df.geometry.values.data, index=units_df.index)
+geometries = pd.Series(units_df.geometry.values.data, index=units_df.index)
 
-# # Summarize Blueprint and input areas
-# summarize_bluprint_by_marine_block(geometries)
+# Summarize Blueprint and input areas
+summarize_bluprint_by_marine_block(geometries)
 
-# print(
-#     "Processed {:,} zones in {:.2f}m".format(len(geometries), (time() - start) / 60.0)
-# )
+print(
+    "Processed {:,} zones in {:.2f}m".format(len(geometries), (time() - start) / 60.0)
+)
