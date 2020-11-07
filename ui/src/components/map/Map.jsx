@@ -7,15 +7,19 @@ import { Crosshairs } from '@emotion-icons/fa-solid'
 import { useSearch } from 'components/search'
 import { useBreakpoints, useSelectedUnit } from 'components/layout'
 
+import { useBlueprintPriorities } from 'components/data'
+
 import { hasWindow } from 'util/dom'
 import { useIsEqualEffect } from 'util/hooks'
-import { getCenterPixel } from './pixels'
+import { indexBy } from 'util/data'
+import { getCenterPixel, rgbaToUint } from './pixels'
 import { getCenterAndZoom } from './util'
 import { config, sources, layers } from './config'
 import { unpackFeatureData } from './features'
 import { Legend } from './legend'
 import ZoomInNote from './ZoomInNote'
 import StyleToggle from './StyleToggle'
+
 import { siteMetadata } from '../../../gatsby-config'
 
 const { mapboxToken } = siteMetadata
@@ -48,6 +52,9 @@ const Map = () => {
   const isMobile = breakpoint === 0
   const { selectedUnit, selectUnit } = useSelectedUnit()
   const { location } = useSearch()
+
+  const { priorities } = useBlueprintPriorities()
+  const blueprintByColor = indexBy(priorities, 'color')
 
   useEffect(() => {
     // if there is no window, we cannot render this component
@@ -107,7 +114,15 @@ const Map = () => {
         // TODO: schedule callback?
       }
 
-      const pixel = getCenterPixel(map, 'blueprint')
+      const rgba = getCenterPixel(map, 'blueprint')
+      const value = rgbaToUint(rgba, 'uint32', 65535)
+      console.log('value', value)
+
+      // to match to hex color:
+      if (value !== null) {
+        const blueprint = blueprintByColor[`#${value.toString(16)}`]
+        console.log('blueprint', blueprint)
+      }
     })
 
     // this gets called after everything is done
