@@ -2,12 +2,14 @@ import React, { useEffect, useRef, useState, memo } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { Box } from 'theme-ui'
+import { Crosshairs } from '@emotion-icons/fa-solid'
 
 import { useSearch } from 'components/search'
 import { useBreakpoints, useSelectedUnit } from 'components/layout'
 
 import { hasWindow } from 'util/dom'
 import { useIsEqualEffect } from 'util/hooks'
+import { getCenterPixel } from './pixels'
 import { getCenterAndZoom } from './util'
 import { config, sources, layers } from './config'
 import { unpackFeatureData } from './features'
@@ -68,6 +70,11 @@ const Map = () => {
       maxZoom,
       maxBounds,
     })
+
+    // FIXME:
+    // map.showPadding = true
+    map.showTileBoundaries = true
+
     mapRef.current = map
     window.map = map // for easier debugging and querying via console
 
@@ -88,6 +95,26 @@ const Map = () => {
 
       // update state once to trigger other components to update with map object
       setIsLoaded(() => true)
+    })
+
+    // TODO: only in pixel mode
+    // TODO: debounce?
+    // TODO: schedule callback if loading tiles
+    // TODO: likely also need to do events on moveend
+    map.on('move', () => {
+      // TODO: only proceed if all sources are loaded
+      if (!map.style.sourceCaches['blueprint'].loaded()) {
+        // TODO: schedule callback?
+      }
+
+      const pixel = getCenterPixel(map, 'blueprint')
+    })
+
+    // this gets called after everything is done
+    map.on('moveend', () => {
+      map.once('idle', () => {
+        const pixel = getCenterPixel(map, 'blueprint')
+      })
     })
 
     map.on('click', 'unit-fill', ({ features }) => {
@@ -200,6 +227,17 @@ const Map = () => {
         sources={sources}
         layers={layers}
         isMobile={isMobile}
+      />
+
+      <Crosshairs
+        style={{
+          position: 'absolute',
+          width: '2rem',
+          height: '2rem',
+          margin: '-1rem 0 0 -1rem',
+          left: '50%',
+          top: '50%',
+        }}
       />
     </Box>
   )
