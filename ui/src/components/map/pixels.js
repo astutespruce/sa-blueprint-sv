@@ -181,3 +181,49 @@ export const exponentialDecoder = (encoding, value) => {
   }
   return values
 }
+
+export const decodeBits = (rgba, encoding) => {
+  if (rgba === null) {
+    return null
+  }
+
+  const { bits: totalBits, layers } = encoding
+
+  // TODO: use alpha values too?
+  const [r, g, b] = rgba
+
+  // convert rgb to uint32
+  const rgbValue = (r << 16) | (g << 8) | b
+
+  // convert to bitArray
+  // reorder to match input order before encoding
+  const bits = Array.from(rgbValue.toString(2).padStart(totalBits, '0'))
+    .map((bit) => parseInt(bit, 10))
+    .reverse()
+
+  // first nbits are flags indicating if given layer is present
+  // if flag is false, layer is nodata
+  const flagBits = bits.slice(0, layers.length)
+  const layerBits = bits.slice(layers.length, bits.length)
+
+  let index = 0
+  return layers.map(({ id, bits: numLayerBits }, i) => {
+    const present = flagBits[i]
+    if (!present) {
+      index += numLayerBits
+      return { id, value: null }
+    }
+
+    const value = parseInt(
+      layerBits.slice(index, index + numLayerBits).join(''),
+      2
+    )
+
+    index += numLayerBits
+
+    return {
+      id,
+      value,
+    }
+  })
+}

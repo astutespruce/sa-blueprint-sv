@@ -1,17 +1,20 @@
+import numpy as np
 import rasterio
 
 
-def write_raster(filename, data, transform, crs, nodata):
+def write_raster(filename, data, transform, crs, nodata, **kwargs):
     """Write data to a GeoTIFF.
 
     Parameters
     ----------
     filename : str
-    data : 2d ndarray
+    data : d ndarray
     transform : rasterio transform object
     crs : rasterio.crs object
     nodata : int
     """
+
+    count = 1 if data.shape == 2 else data.shape[-1]
 
     meta = {
         "driver": "GTiff",
@@ -19,10 +22,19 @@ def write_raster(filename, data, transform, crs, nodata):
         "nodata": nodata,
         "width": data.shape[1],
         "height": data.shape[0],
-        "count": 1,
+        "count": count,
         "crs": crs,
         "transform": transform,
+        "compress": "lzw",
     }
+
+    if kwargs:
+        meta.update(kwargs)
+
     with rasterio.open(filename, "w", **meta) as out:
-        out.write(data, 1)
+        if count == 1:
+            out.write(data, indexes=1)
+        else:
+            # rework from row, col, z to z,row, col
+            out.write(np.rollaxis(data, axis=-1))
 
