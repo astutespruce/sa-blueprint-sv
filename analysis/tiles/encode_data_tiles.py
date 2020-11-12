@@ -38,7 +38,22 @@ groups = [
         "marine_estuarinecondition",
         "marine_mammals",
     ],
-    [],
+    [
+        "land_forestedwetlandextent",
+        "land_greenways",
+        "land_intactcores",
+        "land_lowurbanhistoric",
+        "land_maritimeforestextent",
+        "land_marshextent",
+        "land_marshpatchsize",
+        "land_pinebirds",
+        "land_previouslyburnedhabitat",
+    ],
+    [
+        "land_resilientterrestrialsites",
+        "land_urbanopenspace",
+        "marine_potentialhardbottomcondition",
+    ],
 ]
 
 
@@ -63,7 +78,7 @@ df["nodata"] = df.src.apply(lambda src: int(src.nodata))
 for i, ids in enumerate(groups):
     df.loc[df.index.isin(ids), "group"] = i
 
-# df.group = df.group.astype("uint8")
+df.group = df.group.astype("uint8")
 df[["group", "bits"]].reset_index().to_feather(out_dir / "encoding.feather")
 
 
@@ -85,16 +100,23 @@ for i, group in enumerate(groups):
 
     rows = df.loc[df.index.isin(group)]
     total_bits = rows.bits.sum() + len(rows)
-    print(f"Total bits needed: {total_bits}")
 
-    encoding = {
-        "bits": total_bits,
-        "layers": rows[["bits"]].reset_index().to_dict(orient="records"),
-    }
+    # Find least number of bands that will hold the encoded data
+    if total_bits > 8 and total_bits <= 16:
+        count = 2
+        out = np.zeros(shape=blueprint.shape + (2,), dtype="uint8")
 
-    rgb = np.zeros(shape=blueprint.shape + (3,), dtype="uint8")
+    elif total_bits <= 8:
+        count = 1
+        out = np.zeros(shape=blueprint.shape, dtype="uint8")
 
-    for window in Bar(f"Processing group {i}...", max=len(windows)).iter(windows):
+    else:
+        count = 3
+        out = np.zeros(shape=blueprint.shape + (3,), dtype="uint8")
+
+    for window in Bar(
+        f"Processing group {i} ({total_bits} bits)", max=len(windows)
+    ).iter(windows):
         # nodata_mask = blueprint.read(1, window=window) == int(blueprint.nodata)
 
         masks = []
@@ -133,20 +155,27 @@ for i, group in enumerate(groups):
         # packbits must be in little order to read the whole array properly in JS
         packed = np.squeeze(np.packbits(data_bits, axis=-1, bitorder="little"))
 
-        # There may or may not have all components of rgb, and they are inverse order
-        # read them into out in reverse order
         row_slice, col_slice = window.toslices()
-        for j in range(packed.shape[-1]):
-            rgb[row_slice, col_slice, 2 - j] = packed[:, :, j]
+
+        if count == 1:
+            # only 8 bits needed in output
+            out[row_slice, col_slice] = packed[:, :]
+
+        else:
+            # packed may or may not have all components of rgb,
+            # and they are inverse order.
+            # Read them into out in reverse order
+            for j in range(packed.shape[-1]):
+                out[row_slice, col_slice, (count - 1) - j] = packed[:, :, j]
 
     outfilename = out_dir / f"indicators_{i}.tif"
     write_raster(
         outfilename,
-        rgb,
+        out,
         transform=blueprint.transform,
         crs=blueprint.crs,
-        nodata=255,
-        photometric="RGB",
+        nodata=0,
+        photometric="RGB" if count == 3 else None,
     )
 
     add_overviews(outfilename)
