@@ -12,7 +12,7 @@ import { useBlueprintPriorities } from 'components/data'
 import { hasWindow } from 'util/dom'
 import { useIsEqualEffect } from 'util/hooks'
 import { indexBy } from 'util/data'
-import { getCenterPixel, rgbaToUint } from './pixels'
+import { getCenterPixel, rgbaToUint, decodeBits } from './pixels'
 import { getCenterAndZoom } from './util'
 import { config, sources, layers } from './config'
 import { unpackFeatureData } from './features'
@@ -108,27 +108,50 @@ const Map = () => {
     // TODO: debounce?
     // TODO: schedule callback if loading tiles
     // TODO: likely also need to do events on moveend
-    map.on('move', () => {
-      // TODO: only proceed if all sources are loaded
-      if (!map.style.sourceCaches['blueprint'].loaded()) {
-        // TODO: schedule callback?
-      }
+    // map.on('move', () => {
+    // const indicatorSources = ['indicators0']
+    // const dataSources = ['blueprint'].concat(indicatorSources)
 
-      const rgba = getCenterPixel(map, 'blueprint')
-      const value = rgbaToUint(rgba, 'uint32', 65535)
-      console.log('value', value)
+    // const sourcesLoaded = dataSources.filter((s) =>
+    //   map.style.sourceCaches[s].loaded()
+    // )
+    // if (sourcesLoaded.length < dataSources.length) {
+    //   return
+    // }
 
-      // to match to hex color:
-      if (value !== null) {
-        const blueprint = blueprintByColor[`#${value.toString(16)}`]
-        console.log('blueprint', blueprint)
-      }
-    })
+    // TODO: update
+    // const rgba = getCenterPixel(map, 'blueprint')
+    // const value = rgbaToUint(rgba, 'uint32', 65535)
+    // console.log('value', value)
+
+    // // to match to hex color:
+    // if (value !== null) {
+    //   const blueprint = blueprintByColor[`#${value.toString(16)}`]
+    //   console.log('blueprint', blueprint)
+    // }
+    // })
 
     // this gets called after everything is done
     map.on('moveend', () => {
       map.once('idle', () => {
-        const pixel = getCenterPixel(map, 'blueprint')
+        const indicatorSources = ['indicators0']
+        const results = []
+        indicatorSources.forEach((id) => {
+          const layerResults = decodeBits(
+            getCenterPixel(map, id),
+            map.getSource(id).encoding
+          )
+
+          console.log(id, ': ', layerResults)
+
+          // merge in results for this source
+          if (layerResults !== null) {
+            // filter for non-null layers
+            results.push(...layerResults)
+          }
+        })
+
+        console.log('results', results)
       })
     })
 

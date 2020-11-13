@@ -14,7 +14,7 @@ def write_raster(filename, data, transform, crs, nodata, **kwargs):
     nodata : int
     """
 
-    count = 1 if data.shape == 2 else data.shape[-1]
+    count = 1 if len(data.shape) == 2 else data.shape[-1]
 
     meta = {
         "driver": "GTiff",
