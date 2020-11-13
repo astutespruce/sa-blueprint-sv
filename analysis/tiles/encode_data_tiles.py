@@ -5,8 +5,10 @@ from progress.bar import Bar
 import numpy as np
 import pandas as pd
 import rasterio
+from rasterio.windows import get_data_window
 import geopandas as gp
 import pygeos as pg
+
 
 from analysis.constants import INDICATORS
 from analysis.lib.io import write_raster
@@ -36,10 +38,10 @@ groups = [
     [
         "land_beachbirds",
         "land_resilientcoastalsites",
-        "land_unalteredbeach",
         "marine_birds",
         "marine_estuarinecondition",
         "marine_mammals",
+        "marine_potentialhardbottomcondition",
     ],
     [
         "land_forestedwetlandextent",
@@ -54,7 +56,7 @@ groups = [
         "land_amphibianreptiles",
         "land_resilientterrestrialsites",
         "land_urbanopenspace",
-        "marine_potentialhardbottomcondition",
+        "land_unalteredbeach",
         "land_marshextent",
         "land_previouslyburnedhabitat",
     ],
@@ -87,7 +89,7 @@ for i, ids in enumerate(groups):
 df.group = df.group.astype("uint8")
 df[["group", "bits"]].reset_index().to_feather(out_dir / "encoding.feather")
 
-print("Planned bits per layer")
+print("Planned bits per group")
 print(df.groupby("group").size() + df.groupby("group").bits.sum())
 
 
@@ -104,13 +106,6 @@ tree = pg.STRtree(bounds)
 ix = tree.query(bnd, predicate="intersects")
 ix.sort()
 windows = windows[ix]
-
-
-window_shape = (windows[0].height, windows[0].width)
-
-# create array for filling up to 32 bit
-fill = np.zeros(shape=window_shape, dtype="uint8")
-
 
 for i, group in enumerate(groups):
     rows = df.loc[df.index.isin(group)]
@@ -135,7 +130,7 @@ for i, group in enumerate(groups):
     out = np.zeros(shape=blueprint.shape, dtype=dtype)
 
     # FIXME:
-    windows = windows[40598:40599]
+    # windows = windows[57469:]
 
     for window in Bar(
         f"Processing group {i} ({total_bits} bits)", max=len(windows)
@@ -179,17 +174,22 @@ for i, group in enumerate(groups):
             ..., ::-1
         ]
 
+        window_shape = (window.height, window.width)
+
         # fill remaining bytes up to dtype bytes
+        fill = np.zeros(shape=window_shape, dtype="uint8")
+
         # packed values are in BGR order, invert them
         encoded = np.dstack([packed] + ([fill] * (num_bytes - packed.shape[-1])))
         out[window.toslices()] = encoded.view(dtype).reshape(window_shape)
 
-    # FIXME:
-    transform = blueprint.window_transform(window)
-    out = encoded.view(dtype).reshape(window_shape).copy()
+    # determine the window where data are available, and write out a smaller output
+    print("Calculating data window...")
+    data_window = get_data_window(out, nodata=0)
+    out = out[data_window.toslices()]
+    transform = blueprint.window_transform(data_window)
 
-    # transform = blueprint.transform
-
+    print("Writing GeoTIFF...")
     outfilename = out_dir / f"indicators_{i}.tif"
     write_raster(outfilename, out, transform=transform, crs=blueprint.crs, nodata=0)
 

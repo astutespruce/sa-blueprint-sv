@@ -35,10 +35,9 @@ export const sources = {
   indicators0: {
     type: 'raster',
     tileSize: 128,
-    // FIXME:
-    minzoom: 14,
-    maxzoom: 16,
-    bounds: [-82.327736, 32.571106, -82.281119, 32.610124],
+    minzoom: 10,
+    maxzoom: 12,
+    bounds: [-86.470361, 28.247338, -74.979055, 38.230341],
     tiles: [`${tileHost}/services/sa_indicators_0/tiles/{z}/{x}/{y}.png`],
     encoding: {
       bits: 23,
@@ -52,6 +51,65 @@ export const sources = {
       ],
     },
   },
+  indicators1: {
+    type: 'raster',
+    tileSize: 128,
+    minzoom: 10,
+    maxzoom: 12,
+    bounds: [-85.529559, 27.547354, -70.819089, 38.833195],
+    tiles: [`${tileHost}/services/sa_indicators_1/tiles/{z}/{x}/{y}.png`],
+    encoding: {
+      bits: 23,
+      layers: [
+        { id: 'land_beachbirds', bits: 3 },
+        { id: 'land_resilientcoastalsites', bits: 3 },
+        { id: 'marine_estuarinecondition', bits: 3 },
+        { id: 'marine_birds', bits: 3 },
+        { id: 'marine_mammals', bits: 3 },
+        { id: 'marine_potentialhardbottomcondition', bits: 2 },
+      ],
+    },
+  },
+  indicators2: {
+    type: 'raster',
+    tileSize: 128,
+    minzoom: 10,
+    maxzoom: 12,
+    bounds: [-86.470361, 27.547354, -70.819089, 38.930327],
+    tiles: [`${tileHost}/services/sa_indicators_2/tiles/{z}/{x}/{y}.png`],
+    encoding: {
+      bits: 22,
+      layers: [
+        { id: 'land_forestedwetlandextent', bits: 2 },
+        { id: 'land_greenways', bits: 3 },
+        { id: 'land_intactcores', bits: 2 },
+        { id: 'land_lowurbanhistoric', bits: 2 },
+        { id: 'land_maritimeforestextent', bits: 2 },
+        { id: 'land_marshpatchsize', bits: 2 },
+        { id: 'land_pinebirds', bits: 2 },
+      ],
+    },
+  },
+  indicators3: {
+    type: 'raster',
+    tileSize: 128,
+    minzoom: 10,
+    maxzoom: 12,
+    bounds: [-86.470361, 27.547354, -70.819089, 38.930327],
+    tiles: [`${tileHost}/services/sa_indicators_3/tiles/{z}/{x}/{y}.png`],
+    encoding: {
+      bits: 20,
+      layers: [
+        { id: 'land_amphibianreptiles', bits: 2 },
+        { id: 'land_marshextent', bits: 2 },
+        { id: 'land_previouslyburnedhabitat', bits: 2 },
+        { id: 'land_resilientterrestrialsites', bits: 3 },
+        { id: 'land_unalteredbeach', bits: 2 },
+        { id: 'land_urbanopenspace', bits: 3 },
+      ],
+    },
+  },
+
   mapUnits: {
     type: 'vector',
     minzoom: 8,
@@ -74,7 +132,40 @@ export const layers = [
     minzoom: 0,
     maxzoom: 21,
     paint: {
-      'raster-opacity': 0.8,
+      'raster-opacity': 0.2,
+    },
+    before: beforeLayer,
+  },
+  {
+    id: 'indicators1',
+    source: 'indicators1',
+    type: 'raster',
+    minzoom: 0,
+    maxzoom: 21,
+    paint: {
+      'raster-opacity': 0.2,
+    },
+    before: beforeLayer,
+  },
+  {
+    id: 'indicators2',
+    source: 'indicators2',
+    type: 'raster',
+    minzoom: 0,
+    maxzoom: 21,
+    paint: {
+      'raster-opacity': 0.2,
+    },
+    before: beforeLayer,
+  },
+  {
+    id: 'indicators3',
+    source: 'indicators3',
+    type: 'raster',
+    minzoom: 0,
+    maxzoom: 21,
+    paint: {
+      'raster-opacity': 0.2,
     },
     before: beforeLayer,
   },

@@ -134,7 +134,12 @@ const Map = () => {
     // this gets called after everything is done
     map.on('moveend', () => {
       map.once('idle', () => {
-        const indicatorSources = ['indicators0']
+        const indicatorSources = [
+          'indicators0',
+          'indicators1',
+          'indicators2',
+          'indicators3',
+        ]
         const results = []
         indicatorSources.forEach((id) => {
           const layerResults = decodeBits(

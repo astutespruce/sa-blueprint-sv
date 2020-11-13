@@ -11,21 +11,18 @@ from tilecutter.mbtiles import tif_to_mbtiles
 src_dir = Path("data/for_tiles")
 out_dir = Path("tiles")
 
-# use reduced resolution tiles
+# use reduced resolution tiles, which stretches this to about 1 data pixel per
+# screen pixel
 tile_size = 128
-# min_zoom = 8  # might even be appropriate at level 9 or 10
-# max_zoom = 9  # TODO: maybe 14?
-
-min_zoom = 14
-max_zoom = 16
+min_zoom = 10
+max_zoom = 12  # TODO: maybe 14?
 
 
 df = pd.read_feather(src_dir / "encoding.feather")
 
-
 start = time()
-# FIXME:
-for group in df.group.unique()[:1]:
+
+for group in df.group.unique():
     print(f"Processing group {group}...")
     group_start = time()
 
