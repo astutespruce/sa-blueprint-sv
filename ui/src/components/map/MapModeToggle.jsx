@@ -1,9 +1,43 @@
-import React, { memo, useEffect, useState } from 'react'
+import React, { memo, useEffect, useState, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { Box, Text } from 'theme-ui'
+import { Box, Text, Flex, Button } from 'theme-ui'
+import { ExclamationTriangle } from '@emotion-icons/fa-solid'
 
+import { useMapData } from 'components/data'
+
+const baseCSS = {
+  position: 'absolute',
+  textAlign: 'center',
+  pt: '0.75em',
+  pb: '0.5em',
+  px: '1em',
+  bg: '#FFF',
+  color: 'grey.7',
+  boxShadow: '0 2px 6px #666',
+}
+
+const mobileCSS = {
+  ...baseCSS,
+  fontSize: 0,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  zIndex: 10000,
+}
+
+const desktopCSS = {
+  ...baseCSS,
+  fontSize: 1,
+  left: '12px',
+  top: 0,
+  borderRadius: '0 0 1em 1em',
+}
+
+// Note: zoom is not updated on initial render because map hasn't yet rendered,
+// this assumes zoom is for full extent
 const MapModeToggle = ({ map, isMobile }) => {
   const [zoom, setZoom] = useState(0)
+  const { data: mapData, mapMode, setMapMode } = useMapData()
 
   useEffect(() => {
     if (!map) {
@@ -23,26 +57,68 @@ const MapModeToggle = ({ map, isMobile }) => {
     }
   }, [map])
 
-  if (zoom > 8) return null
+  const handlePixelClick = useCallback(() => {
+    setMapMode('pixel')
+  }, [setMapMode])
+
+  const handleUnitClick = useCallback(() => {
+    setMapMode('unit')
+  }, [setMapMode])
+
+  if (isMobile && mapData !== null) {
+    return null
+  }
+
+  const showZoomNote =
+    (mapMode === 'unit' && zoom < 8) || (mapMode === 'pixel' && zoom < 10)
 
   return (
-    <Box
-      sx={{
-        fontSize: 1,
-        position: 'absolute',
-        top: 0,
-        left: isMobile ? 0 : '54px',
-        right: isMobile ? 0 : '54px',
-        textAlign: 'center',
-        py: '0.25em',
-        px: '1em',
-        bg: '#FFF',
-        color: 'grey.7',
-        borderRadius: isMobile ? null : '0 0 1em 1em',
-        boxShadow: '0 2px 6px #666',
-      }}
-    >
-      <Text sx={{ mx: 'auto' }}>Zoom in to select an area</Text>
+    <Box sx={isMobile ? mobileCSS : desktopCSS}>
+      <Flex
+        sx={{
+          alignItems: 'center',
+          flexWrap: 'wrap',
+          justifyContent: isMobile ? 'center' : null,
+        }}
+      >
+        <Flex
+          sx={{
+            alignItems: 'center',
+          }}
+        >
+          <Text sx={{ mr: '0.5rem' }}>Show:</Text>
+          <Button
+            variant="group"
+            data-state={mapMode === 'pixel' ? 'active' : null}
+            onClick={handlePixelClick}
+          >
+            Pixel data
+          </Button>
+          <Button
+            variant="group"
+            data-state={mapMode === 'unit' ? 'active' : null}
+            onClick={handleUnitClick}
+          >
+            Summary data
+          </Button>
+        </Flex>
+
+        {showZoomNote ? (
+          <Flex
+            sx={{
+              alignItems: 'center',
+              ml: '1rem',
+              color: 'accent',
+              py: '0.5em',
+            }}
+          >
+            <ExclamationTriangle size="1rem" style={{ marginRight: '.5rem' }} />
+            <Text>
+              Zoom in to select {mapMode === 'pixel' ? 'a pixel' : 'an area'}
+            </Text>
+          </Flex>
+        ) : null}
+      </Flex>
     </Box>
   )
 }

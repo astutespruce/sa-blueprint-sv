@@ -2,8 +2,7 @@
 
 const EXTENT = 8192 // from mapbox-gl-js/../extent.js
 
-export const getCenterPixel = (map, layerId) => {
-  const center = map.getCenter()
+export const getPixelValue = (map, point, layerId) => {
   const sourceCache = map.style.sourceCaches[layerId]
 
   if (!sourceCache) {
@@ -14,13 +13,13 @@ export const getCenterPixel = (map, layerId) => {
   const { transform } = sourceCache
 
   const tilesIn = sourceCache.tilesIn(
-    [map.project(center)],
+    [map.project(point)],
     transform.maxPitchScaleFactor(),
     false
   )
 
   if (tilesIn.length === 0) {
-    console.debug(`No tiles in ${layerId} available for map center`)
+    // console.debug(`No tiles in ${layerId} available for point`)
     return null
   }
 
@@ -38,13 +37,13 @@ export const getCenterPixel = (map, layerId) => {
   const { tileSize } = tile
 
   if (!(tile.texture && tile.texture.texture)) {
-    console.debug(`Tile image not yet loaded ${tileID.toString()}`)
+    // console.debug(`Tile image not yet loaded ${tileID.toString()}`)
     return null
   }
 
-  // get scaled tile coordinate for center
+  // get scaled tile coordinate for point
   const { x: scaledX, y: scaledY } = tileID.getTilePoint(
-    transform.locationCoordinate(center)
+    transform.locationCoordinate(point)
   )
 
   // rescale to tile coords
@@ -52,13 +51,13 @@ export const getCenterPixel = (map, layerId) => {
   const tileY = Math.floor((scaledY / EXTENT) * tileSize)
 
   if (tileX < 0 || tileY < 0 || tileX > tileSize || tileY > tileSize) {
-    console.debug(`Outside bounds of tile ${tileID.toString()}`)
+    // console.debug(`Outside bounds of tile ${tileID.toString()}`)
     return null
   }
 
-  console.log(
-    `Extracting data for tile ${tileID.toString()},  coords: x:${tileX}, y:${tileY}`
-  )
+  // console.log(
+  //   `Extracting data for tile ${tileID.toString()},  coords: x:${tileX}, y:${tileY}`
+  // )
 
   const {
     painter: {
@@ -87,7 +86,7 @@ export const getCenterPixel = (map, layerId) => {
   // decode to uint
   const [b, g, r] = pixels
   const value = (r << 16) | (g << 8) | b
-  console.log('pixels', pixels, '==>', value)
+  // console.log('pixels', pixels, '==>', value)
 
   return value
 }

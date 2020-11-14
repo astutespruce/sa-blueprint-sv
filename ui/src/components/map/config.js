@@ -190,7 +190,9 @@ export const layers = [
     source: 'mapUnits',
     'source-layer': 'units',
     type: 'fill',
-
+    layout: {
+      visibility: 'none',
+    },
     paint: {
       'fill-color': '#0892D0',
       'fill-opacity': [
@@ -207,6 +209,9 @@ export const layers = [
     source: 'mapUnits',
     'source-layer': 'units',
     type: 'line',
+    layout: {
+      visibility: 'none',
+    },
     paint: {
       'line-opacity': 1,
       'line-color': theme.colors.blue[7],
