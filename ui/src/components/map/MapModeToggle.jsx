@@ -2,7 +2,7 @@ import React, { memo, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Box, Text } from 'theme-ui'
 
-const ZoomInNote = ({ map, isMobile }) => {
+const MapModeToggle = ({ map, isMobile }) => {
   const [zoom, setZoom] = useState(0)
 
   useEffect(() => {
@@ -47,14 +47,14 @@ const ZoomInNote = ({ map, isMobile }) => {
   )
 }
 
-ZoomInNote.propTypes = {
+MapModeToggle.propTypes = {
   map: PropTypes.object,
   isMobile: PropTypes.bool,
 }
 
-ZoomInNote.defaultProps = {
+MapModeToggle.defaultProps = {
   map: null,
   isMobile: false,
 }
 
-export default memo(ZoomInNote)
+export default memo(MapModeToggle)

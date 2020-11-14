@@ -8,7 +8,9 @@ import React, {
 import { Box, Flex, Text, useThemeUI } from 'theme-ui'
 import { Download } from '@emotion-icons/fa-solid'
 
-import { useBreakpoints, useSelectedUnit } from 'components/layout'
+import { useBreakpoints } from 'components/layout'
+import { useMapData } from 'components/data'
+
 import {
   InfoTab,
   ContactTab,
@@ -38,7 +40,7 @@ const MapContainer = () => {
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
 
-  const { selectedUnit, deselectUnit } = useSelectedUnit()
+  const { data: mapData, unsetData: unsetMapData, mapMode } = useMapData()
 
   const { location } = useSearch()
 
@@ -48,7 +50,7 @@ const MapContainer = () => {
   // NOTE: we use a tab ref that parallels state so we can use in effects below
   // without those changing as tab is changed
   const tabRef = useRef(isMobile ? 'map' : 'info')
-  const hasSelectedUnitRef = useRef(false)
+  const hasMapDataRef = useRef(false)
 
   const [{ tab }, setState] = useState({
     tab: isMobile ? 'map' : 'info',
@@ -75,22 +77,22 @@ const MapContainer = () => {
   }, [])
 
   useEffect(() => {
-    hasSelectedUnitRef.current = selectedUnit !== null
+    hasMapDataRef.current = mapData !== null
 
-    console.log('selectedUnit', selectedUnit)
-  }, [selectedUnit])
+    console.log('selected map data', mapData)
+  }, [mapData])
 
   useLayoutEffect(() => {
     // If selected unit changed from null to unit, or unit to null,
     // we need to update the tabs.
 
     // if no change in selected unit status, return
-    if (hasSelectedUnitRef.current === (selectedUnit !== null)) {
+    if (hasMapDataRef.current === (mapData !== null)) {
       return
     }
 
     let nextTab = tab
-    if (selectedUnit === null) {
+    if (mapData === null) {
       nextTab = tab === 'unit-map' || isMobile ? 'map' : 'info'
     } else if (tab === 'map') {
       nextTab = 'unit-map'
@@ -104,7 +106,7 @@ const MapContainer = () => {
       // scroll content to top
       contentNode.current.scrollTop = 0
     }
-  }, [selectedUnit, tab, isMobile, handleTabChange])
+  }, [mapData, tab, isMobile, handleTabChange])
 
   useEffect(() => {
     // handle window resize from mobile to desktop, so that we show content again
@@ -112,7 +114,7 @@ const MapContainer = () => {
 
     // was mobile, now is desktop, need to show tabs again
     if (!isMobile && tabRef.current === 'map') {
-      const nextTab = hasSelectedUnitRef.current ? 'unit-priorities' : 'info'
+      const nextTab = hasMapDataRef.current ? 'unit-priorities' : 'info'
       handleTabChange(nextTab)
     }
   }, [isMobile, handleTabChange])
@@ -125,7 +127,7 @@ const MapContainer = () => {
   }, [isMobile, location, handleTabChange])
 
   let content = null
-  if (selectedUnit === null) {
+  if (mapData === null) {
     // eslint-disable-next-line default-case
     switch (tab) {
       case 'info': {
@@ -160,7 +162,7 @@ const MapContainer = () => {
       ownership,
       protection,
       counties,
-    } = selectedUnit
+    } = mapData
 
     // eslint-disable-next-line default-case
     switch (tab) {
@@ -260,12 +262,12 @@ const MapContainer = () => {
         >
           {!isMobile && (
             <Box sx={{ flex: '0 0 auto' }}>
-              {selectedUnit !== null && (
+              {mapData !== null && (
                 <>
                   <DesktopSelectedUnitHeader
-                    name={selectedUnit.name}
-                    acres={selectedUnit.acres}
-                    onClose={deselectUnit}
+                    name={mapData.name}
+                    acres={mapData.acres}
+                    onClose={unsetMapData}
                   />
                   <Flex
                     sx={{
@@ -285,9 +287,10 @@ const MapContainer = () => {
                   </Flex>
                 </>
               )}
+
               <DesktopTabs
                 tab={tab}
-                hasSelectedUnit={selectedUnit !== null}
+                hasSelectedUnit={mapData !== null}
                 onChange={handleTabChange}
               />
             </Box>
@@ -318,16 +321,16 @@ const MapContainer = () => {
         >
           <MobileTabs
             tab={tab}
-            hasSelectedUnit={selectedUnit !== null}
+            hasSelectedUnit={mapData !== null}
             onChange={handleTabChange}
           />
         </Box>
       )}
 
-      {isReportModalOpen && selectedUnit !== null ? (
+      {isReportModalOpen && mapData !== null && mapMode === 'unit' ? (
         <DownloadModal
-          id={selectedUnit.id}
-          type={selectedUnit.type}
+          id={mapData.id}
+          type={mapData.type}
           onClose={handleReportModalClose}
         />
       ) : null}

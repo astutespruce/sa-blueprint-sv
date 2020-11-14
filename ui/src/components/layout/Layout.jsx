@@ -4,12 +4,12 @@ import { Box, Flex } from 'theme-ui'
 import { useErrorBoundary } from 'use-error-boundary'
 
 import { Provider as SearchProvider } from 'components/search'
+import { MapDataProvider } from 'components/data'
 import { hasWindow, isUnsupported } from 'util/dom'
 import ErrorMessage from './ErrorMessage'
 import UnsupportedBrowser from './UnsupportedBrowser'
 import SEO from './SEO'
 import Header from './Header'
-import { Provider as SelectedUnitProvider } from './SelectedUnit'
 import { BreakpointProvider } from './Breakpoints'
 import { siteMetadata } from '../../../gatsby-config'
 
@@ -31,7 +31,7 @@ const Layout = ({ children, title, overflowY }) => {
 
   return (
     <BreakpointProvider>
-      <SelectedUnitProvider>
+      <MapDataProvider>
         <SearchProvider>
           <Flex
             sx={{
@@ -54,7 +54,7 @@ const Layout = ({ children, title, overflowY }) => {
             )}
           </Flex>
         </SearchProvider>
-      </SelectedUnitProvider>
+      </MapDataProvider>
     </BreakpointProvider>
   )
 }

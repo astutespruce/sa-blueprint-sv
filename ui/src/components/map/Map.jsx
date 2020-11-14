@@ -1,23 +1,24 @@
-import React, { useEffect, useRef, useState, memo } from 'react'
+import React, { useEffect, useRef, useState, useCallback, memo } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { Box } from 'theme-ui'
 import { Crosshairs } from '@emotion-icons/fa-solid'
 
 import { useSearch } from 'components/search'
-import { useBreakpoints, useSelectedUnit } from 'components/layout'
+import { useBreakpoints } from 'components/layout'
 
-import { useBlueprintPriorities } from 'components/data'
+import { useBlueprintPriorities, useMapData } from 'components/data'
 
 import { hasWindow } from 'util/dom'
 import { useIsEqualEffect } from 'util/hooks'
 import { indexBy } from 'util/data'
-import { getCenterPixel, rgbaToUint, decodeBits } from './pixels'
+import { getCenterPixel, decodeBits } from './pixels'
 import { getCenterAndZoom } from './util'
 import { config, sources, layers } from './config'
 import { unpackFeatureData } from './features'
 import { Legend } from './legend'
-import ZoomInNote from './ZoomInNote'
+import MapModeToggle from './MapModeToggle'
+
 import StyleToggle from './StyleToggle'
 
 import { siteMetadata } from '../../../gatsby-config'
@@ -50,7 +51,7 @@ const Map = () => {
 
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
-  const { selectedUnit, selectUnit } = useSelectedUnit()
+  const { data: mapData, mapMode, setData: setMapData } = useMapData()
   const { location } = useSearch()
 
   const { priorities } = useBlueprintPriorities()
@@ -77,10 +78,6 @@ const Map = () => {
       maxZoom,
       maxBounds,
     })
-
-    // FIXME:
-    // map.showPadding = true
-    map.showTileBoundaries = true
 
     mapRef.current = map
     window.map = map // for easier debugging and querying via console
@@ -168,7 +165,7 @@ const Map = () => {
       // highlight selected
       map.setFilter('unit-outline-highlight', ['==', 'id', properties.id])
 
-      selectUnit(unpackFeatureData(features[0].properties))
+      setMapData(unpackFeatureData(features[0].properties))
     })
 
     // Highlight units on mouseover
@@ -210,7 +207,7 @@ const Map = () => {
     return () => {
       map.remove()
     }
-  }, [isMobile, selectUnit])
+  }, [isMobile, setMapData])
 
   useIsEqualEffect(() => {
     if (!isLoaded) return
@@ -219,10 +216,10 @@ const Map = () => {
     // sometimes map is not fully loaded on hot reload
     if (!map.loaded()) return
 
-    if (selectedUnit === null) {
+    if (mapData === null) {
       map.setFilter('unit-outline-highlight', ['==', 'id', Infinity])
     }
-  }, [selectedUnit, isLoaded])
+  }, [mapData, isLoaded])
 
   useIsEqualEffect(() => {
     if (!isLoaded) return
@@ -245,6 +242,8 @@ const Map = () => {
     }
   }, [location, isLoaded])
 
+  const handleMapModeChange = useCallback(() => {}, [])
+
   // if there is no window, we cannot render this component
   if (!hasWindow) {
     return null
@@ -264,7 +263,13 @@ const Map = () => {
       <div ref={mapNode} style={{ width: '100%', height: '100%' }} />
 
       {!isMobile ? <Legend /> : null}
-      <ZoomInNote map={mapRef.current} isMobile={isMobile} />
+
+      <MapModeToggle
+        map={mapRef.current}
+        isMobile={isMobile}
+        onChange={handleMapModeChange}
+      />
+
       <StyleToggle
         map={mapRef.current}
         sources={sources}
