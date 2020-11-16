@@ -27,6 +27,7 @@ const mobileCSS = {
 
 const desktopCSS = {
   ...baseCSS,
+
   fontSize: 1,
   left: '12px',
   top: 0,

@@ -56,6 +56,7 @@ const Map = () => {
   const [isLoaded, setIsLoaded] = useState(false)
   const highlightIDRef = useRef(null)
   const locationMarkerRef = useRef(null)
+  const pixelMarkerRef = useRef(null)
 
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
@@ -114,57 +115,6 @@ const Map = () => {
       setIsLoaded(() => true)
     })
 
-    // TODO: only in pixel mode
-    // TODO: debounce?
-    // TODO: schedule callback if loading tiles
-    // TODO: likely also need to do events on moveend
-    // map.on('move', () => {
-    // const indicatorSources = ['indicators0']
-    // const dataSources = ['blueprint'].concat(indicatorSources)
-
-    // const sourcesLoaded = dataSources.filter((s) =>
-    //   map.style.sourceCaches[s].loaded()
-    // )
-    // if (sourcesLoaded.length < dataSources.length) {
-    //   return
-    // }
-
-    // TODO: update
-    // const rgba = getCenterPixel(map, 'blueprint')
-    // const value = rgbaToUint(rgba, 'uint32', 65535)
-    // console.log('value', value)
-
-    // // to match to hex color:
-    // if (value !== null) {
-    //   const blueprint = blueprintByColor[`#${value.toString(16)}`]
-    //   console.log('blueprint', blueprint)
-    // }
-    // })
-
-    // this gets called after everything is done
-    // map.on('moveend', () => {
-    //   map.once('idle', () => {
-    //     // TODO: only for mobile mode
-    //     const results = []
-    //     indicatorSources.forEach((id) => {
-    //       const layerResults = decodeBits(
-    //         getPixelValue(map, map.getCenter(), id),
-    //         map.getSource(id).encoding
-    //       )
-
-    //       console.log(id, ': ', layerResults)
-
-    //       // merge in results for this source
-    //       if (layerResults !== null) {
-    //         // filter for non-null layers
-    //         results.push(...layerResults)
-    //       }
-    //     })
-
-    //     console.log('results', results)
-    //   })
-    // })
-
     map.on('click', 'unit-fill', ({ features }) => {
       if (!(features && features.length > 0)) return
 
@@ -211,10 +161,52 @@ const Map = () => {
       }
     })
 
+    // TODO: Not sure if we want to do this.  OK to zoom in higher but not <10
+    // make sure to update pixel values on zoom end in case we get higher resolution
+    // data
+    // map.on('zoomend', () => {
+    //   if (!(isLoaded && mapMode === 'pixel' && mapData !== null)) {
+    //     return
+    //   }
+
+    //   // if map sources are not done loading, schedule a callback
+    //   const dataSources = ['blueprint'].concat(indicatorSources)
+    //   const sourcesLoaded = dataSources.filter(
+    //     (s) => map.style.sourceCaches[s] && map.style.sourceCaches[s].loaded()
+    //   )
+
+    //   const {
+    //     location: { latitude: lat, longitude: lng },
+    //   } = mapData
+    //   if (sourcesLoaded.length < dataSources.length) {
+    //     map.getCanvas().style.cursor = 'wait'
+
+    //     map.once('idle', () => {
+    //       map.getCanvas().style.cursor = 'crosshair'
+    //       extractPixelData({ lng, lat })
+    //     })
+    //   } else {
+    //     extractPixelData({ lng, lat })
+    //   }
+    // })
+
     map.on('click', ({ lngLat: point }) => {
       console.log('click', mapModeRef.current, point)
 
-      if (mapMode !== 'pixel') {
+      // TODO: make sure zoom is sufficient
+      if (!(isLoaded && mapModeRef.current === 'pixel')) {
+        console.log(
+          'not loaded or right mode, return',
+          isLoaded,
+          mapModeRef.current
+        )
+        return
+      }
+
+      if (map.getZoom() < 10) {
+        // user clicked but not at right zoom
+        console.log('map zoom below thresh', map.getZoom())
+        setMapData(null)
         return
       }
 
@@ -287,6 +279,28 @@ const Map = () => {
     if (mapData === null) {
       map.setFilter('unit-outline-highlight', ['==', 'id', Infinity])
     }
+
+    if (mapMode === 'pixel') {
+      if (mapData === null) {
+        if (pixelMarkerRef.current !== null) {
+          pixelMarkerRef.current.remove()
+          pixelMarkerRef.current = null
+        }
+      } else {
+        const {
+          location: { latitude, longitude },
+        } = mapData
+        if (pixelMarkerRef.current === null) {
+          pixelMarkerRef.current = new mapboxgl.Marker({
+            color: '#000',
+          })
+            .setLngLat([longitude, latitude])
+            .addTo(map)
+        } else {
+          pixelMarkerRef.current.setLngLat([longitude, latitude])
+        }
+      }
+    }
   }, [mapData, isLoaded])
 
   useIsEqualEffect(() => {
@@ -310,42 +324,50 @@ const Map = () => {
     }
   }, [location, isLoaded])
 
-  const handleMapModeChange = useCallback(() => {}, [])
+  const extractPixelData = useCallback(
+    (point) => {
+      const { current: map } = mapRef
+      const { lng: longitude, lat: latitude } = point
 
-  const extractPixelData = useCallback((point) => {
-    const { current: map } = mapRef
+      const blueprintValue = getPixelValue(map, point, 'blueprint')
 
-    const blueprintValue = getPixelValue(map, point, 'blueprint')
+      const blueprint =
+        blueprintValue !== null
+          ? blueprintByColor[`#${blueprintValue.toString(16)}`]
+          : null
+      console.log('blueprint', blueprint)
 
-    const blueprint =
-      blueprintValue !== null
-        ? blueprintByColor[`#${blueprintValue.toString(16)}`]
-        : null
-    console.log('blueprint', blueprint)
+      const results = [
+        {
+          id: 'blueprint',
+          value: blueprintValue,
+        },
+      ]
+      indicatorSources.forEach((id) => {
+        const layerResults = decodeBits(
+          getPixelValue(map, point, id),
+          map.getSource(id).encoding
+        )
 
-    const results = [
-      {
-        id: 'blueprint',
-        value: blueprintValue,
-      },
-    ]
-    indicatorSources.forEach((id) => {
-      const layerResults = decodeBits(
-        getPixelValue(map, point, id),
-        map.getSource(id).encoding
-      )
+        // merge in results for this source
+        if (layerResults !== null) {
+          // filter for non-null layers
+          results.push(...layerResults)
+        }
+      })
 
-      // merge in results for this source
-      if (layerResults !== null) {
-        // filter for non-null layers
-        results.push(...layerResults)
-      }
-    })
+      setMapData({
+        type: 'pixel',
+        location: { latitude, longitude },
+        zoom: map.getZoom(),
+      })
 
-    console.log('results', results)
+      console.log('results', results)
 
-    // TODO: call callback to load data
-  }, [])
+      // TODO: call callback to load data
+    },
+    [blueprintByColor, setMapData]
+  )
 
   // if there is no window, we cannot render this component
   if (!hasWindow) {
@@ -367,28 +389,13 @@ const Map = () => {
 
       {!isMobile ? <Legend /> : null}
 
-      <MapModeToggle
-        map={mapRef.current}
-        isMobile={isMobile}
-        onChange={handleMapModeChange}
-      />
+      <MapModeToggle map={mapRef.current} isMobile={isMobile} />
 
       <StyleToggle
         map={mapRef.current}
         sources={sources}
         layers={layers}
         isMobile={isMobile}
-      />
-
-      <Crosshairs
-        style={{
-          position: 'absolute',
-          width: '2rem',
-          height: '2rem',
-          margin: '-1rem 0 0 -1rem',
-          left: '50%',
-          top: '50%',
-        }}
       />
     </Box>
   )

@@ -5,8 +5,7 @@ import React, {
   useEffect,
   useLayoutEffect,
 } from 'react'
-import { Box, Flex, Text, useThemeUI } from 'theme-ui'
-import { Download } from '@emotion-icons/fa-solid'
+import { Box, Flex, useThemeUI } from 'theme-ui'
 
 import { useBreakpoints } from 'components/layout'
 import { useMapData } from 'components/data'
@@ -21,12 +20,8 @@ import {
   PartnersTab,
 } from 'content'
 import { Tabs as MobileTabs } from 'components/layout/mobile'
-import {
-  SelectedUnitHeader as DesktopSelectedUnitHeader,
-  Tabs as DesktopTabs,
-} from 'components/layout/desktop'
+import { SidebarHeader, Tabs as DesktopTabs } from 'components/layout/desktop'
 
-import { DownloadModal } from 'components/report'
 import { useSearch } from 'components/search'
 import { hasWindow } from 'util/dom'
 
@@ -40,7 +35,7 @@ const MapContainer = () => {
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
 
-  const { data: mapData, unsetData: unsetMapData, mapMode } = useMapData()
+  const { data: mapData, unsetData: unsetMapData } = useMapData()
 
   const { location } = useSearch()
 
@@ -64,16 +59,6 @@ const MapContainer = () => {
     }))
     // scroll content to top
     contentNode.current.scrollTop = 0
-  }, [])
-
-  const [isReportModalOpen, setIsReportModalOpen] = useState(false)
-
-  const handleReportModalClose = useCallback(() => {
-    setIsReportModalOpen(() => false)
-  }, [])
-
-  const handleReportModalOpen = useCallback(() => {
-    setIsReportModalOpen(() => true)
   }, [])
 
   useEffect(() => {
@@ -263,29 +248,7 @@ const MapContainer = () => {
           {!isMobile && (
             <Box sx={{ flex: '0 0 auto' }}>
               {mapData !== null && (
-                <>
-                  <DesktopSelectedUnitHeader
-                    name={mapData.name}
-                    acres={mapData.acres}
-                    onClose={unsetMapData}
-                  />
-                  <Flex
-                    sx={{
-                      px: '1rem',
-                      pb: '0.5rem',
-                      alignItems: 'center',
-                      color: 'primary',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        textDecoration: 'underline',
-                      },
-                    }}
-                    onClick={handleReportModalOpen}
-                  >
-                    <Download size="1rem" style={{ marginRight: '0.5rem' }} />
-                    <Text>Create summary report</Text>
-                  </Flex>
-                </>
+                <SidebarHeader {...mapData} onClose={unsetMapData} />
               )}
 
               <DesktopTabs
@@ -326,14 +289,6 @@ const MapContainer = () => {
           />
         </Box>
       )}
-
-      {isReportModalOpen && mapData !== null && mapMode === 'unit' ? (
-        <DownloadModal
-          id={mapData.id}
-          type={mapData.type}
-          onClose={handleReportModalClose}
-        />
-      ) : null}
     </Flex>
   )
 }

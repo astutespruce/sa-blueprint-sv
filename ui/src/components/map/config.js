@@ -132,7 +132,7 @@ export const layers = [
     minzoom: 0,
     maxzoom: 21,
     paint: {
-      'raster-opacity': 0.2,
+      'raster-opacity': 0,
     },
     before: beforeLayer,
   },
@@ -143,7 +143,7 @@ export const layers = [
     minzoom: 0,
     maxzoom: 21,
     paint: {
-      'raster-opacity': 0.2,
+      'raster-opacity': 0,
     },
     before: beforeLayer,
   },
@@ -154,7 +154,7 @@ export const layers = [
     minzoom: 0,
     maxzoom: 21,
     paint: {
-      'raster-opacity': 0.2,
+      'raster-opacity': 0,
     },
     before: beforeLayer,
   },
@@ -165,7 +165,7 @@ export const layers = [
     minzoom: 0,
     maxzoom: 21,
     paint: {
-      'raster-opacity': 0.2,
+      'raster-opacity': 0,
     },
     before: beforeLayer,
   },
@@ -176,10 +176,6 @@ export const layers = [
     type: 'raster',
     minzoom: 0,
     maxzoom: 21,
-    // FIXME:
-    layout: {
-      visibility: 'none',
-    },
     paint: {
       'raster-opacity': 0.6,
     },
