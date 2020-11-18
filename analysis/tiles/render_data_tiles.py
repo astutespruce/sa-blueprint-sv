@@ -11,10 +11,9 @@ from tilecutter.mbtiles import tif_to_mbtiles
 src_dir = Path("data/for_tiles")
 out_dir = Path("tiles")
 
-# use reduced resolution tiles, which stretches this to about 1 data pixel per
-# screen pixel
+
 tile_size = 128
-min_zoom = 10
+min_zoom = 8
 max_zoom = 12  # TODO: maybe 14?
 
 

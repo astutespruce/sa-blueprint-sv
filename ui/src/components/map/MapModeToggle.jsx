@@ -22,7 +22,7 @@ const mobileCSS = {
   left: 0,
   right: 0,
   bottom: 0,
-  zIndex: 10000,
+  zIndex: 1000,
 }
 
 const desktopCSS = {
@@ -70,8 +70,7 @@ const MapModeToggle = ({ map, isMobile }) => {
     return null
   }
 
-  const showZoomNote =
-    (mapMode === 'unit' && zoom < 8) || (mapMode === 'pixel' && zoom < 10)
+  const showZoomNote = zoom < 8
 
   return (
     <Box sx={isMobile ? mobileCSS : desktopCSS}>

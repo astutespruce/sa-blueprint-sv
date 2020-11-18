@@ -10,15 +10,15 @@ import { Box, Flex, useThemeUI } from 'theme-ui'
 import { useBreakpoints } from 'components/layout'
 import { useMapData } from 'components/data'
 
-import {
-  InfoTab,
-  ContactTab,
-  FindLocationTab,
-  PrioritiesTab,
-  IndicatorsTab,
-  ThreatsTab,
-  PartnersTab,
-} from 'content'
+// import {
+//   InfoTab,
+//   ContactTab,
+//   FindLocationTab,
+//   PrioritiesTab,
+//   IndicatorsTab,
+//   ThreatsTab,
+//   PartnersTab,
+// } from 'content'
 import { Tabs as MobileTabs } from 'components/layout/mobile'
 import { SidebarHeader, Tabs as DesktopTabs } from 'components/layout/desktop'
 
@@ -26,6 +26,7 @@ import { useSearch } from 'components/search'
 import { hasWindow } from 'util/dom'
 
 import Map from './Map'
+import TabContent from './TabContent'
 
 const MapContainer = () => {
   const {
@@ -35,7 +36,7 @@ const MapContainer = () => {
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
 
-  const { data: mapData, unsetData: unsetMapData } = useMapData()
+  const { data: mapData, unsetData: unsetMapData, mapMode } = useMapData()
 
   const { location } = useSearch()
 
@@ -78,11 +79,11 @@ const MapContainer = () => {
 
     let nextTab = tab
     if (mapData === null) {
-      nextTab = tab === 'unit-map' || isMobile ? 'map' : 'info'
+      nextTab = tab === 'mobile-selected-map' || isMobile ? 'map' : 'info'
     } else if (tab === 'map') {
-      nextTab = 'unit-map'
-    } else if (!tab.startsWith('unit-')) {
-      nextTab = 'unit-priorities'
+      nextTab = 'mobile-selected-map'
+    } else if (!tab.startsWith('selected-')) {
+      nextTab = 'selected-priorities'
     }
 
     if (nextTab !== tab) {
@@ -99,7 +100,7 @@ const MapContainer = () => {
 
     // was mobile, now is desktop, need to show tabs again
     if (!isMobile && tabRef.current === 'map') {
-      const nextTab = hasMapDataRef.current ? 'unit-priorities' : 'info'
+      const nextTab = hasMapDataRef.current ? 'selected-priorities' : 'info'
       handleTabChange(nextTab)
     }
   }, [isMobile, handleTabChange])
@@ -114,86 +115,85 @@ const MapContainer = () => {
   let content = null
   if (mapData === null) {
     // eslint-disable-next-line default-case
-    switch (tab) {
-      case 'info': {
-        content = <InfoTab />
-        break
-      }
-      case 'map': {
-        // don't show anything
-        content = null
-        break
-      }
-      case 'find': {
-        content = <FindLocationTab />
-        break
-      }
-      case 'contact': {
-        content = <ContactTab />
-        break
-      }
-    }
+    // switch (tab) {
+    //   case 'info': {
+    //     content = <InfoTab />
+    //     break
+    //   }
+    //   case 'map': {
+    //     // don't show anything
+    //     content = null
+    //     break
+    //   }
+    //   case 'find': {
+    //     content = <FindLocationTab />
+    //     break
+    //   }
+    //   case 'contact': {
+    //     content = <ContactTab />
+    //     break
+    //   }
+    // }
   } else {
-    const {
-      type: unitType,
-      acres: unitAcres,
-      blueprint,
-      blueprint_total: blueprintAcres,
-      shape_mask: analysisAcres,
-      corridors,
-      indicators,
-      slr,
-      urban,
-      ownership,
-      protection,
-      counties,
-    } = mapData
-
-    // eslint-disable-next-line default-case
-    switch (tab) {
-      case 'unit-map': {
-        // don't show anything
-        content = null
-        break
-      }
-      case 'unit-priorities': {
-        content = (
-          <PrioritiesTab
-            blueprint={blueprint}
-            corridors={corridors}
-            blueprintAcres={blueprintAcres}
-          />
-        )
-        break
-      }
-      case 'unit-indicators': {
-        content = (
-          <IndicatorsTab
-            unitType={unitType}
-            blueprintAcres={blueprintAcres}
-            analysisAcres={analysisAcres}
-            indicators={indicators}
-          />
-        )
-        break
-      }
-      case 'unit-threats': {
-        content = <ThreatsTab unitType={unitType} slr={slr} urban={urban} />
-        break
-      }
-      case 'unit-partners': {
-        content = (
-          <PartnersTab
-            unitType={unitType}
-            analysisAcres={unitAcres}
-            ownership={ownership}
-            protection={protection}
-            counties={counties}
-          />
-        )
-        break
-      }
-    }
+    // const {
+    //   type: unitType,
+    //   acres: unitAcres,
+    //   blueprint,
+    //   blueprint_total: blueprintAcres,
+    //   shape_mask: analysisAcres,
+    //   corridors,
+    //   indicators,
+    //   slr,
+    //   urban,
+    //   ownership,
+    //   protection,
+    //   counties,
+    // } = mapData
+    // // eslint-disable-next-line default-case
+    // switch (tab) {
+    //   case 'mobile-selected-map': {
+    //     // MOBILE ONLY: don't show anything
+    //     content = null
+    //     break
+    //   }
+    //   case 'selected-priorities': {
+    //     content = (
+    //       <PrioritiesTab
+    //         blueprint={blueprint}
+    //         corridors={corridors}
+    //         blueprintAcres={blueprintAcres}
+    //       />
+    //     )
+    //     break
+    //   }
+    //   case 'selected-indicators': {
+    //     content = (
+    //       <IndicatorsTab
+    //         unitType={unitType}
+    //         blueprintAcres={blueprintAcres}
+    //         analysisAcres={analysisAcres}
+    //         indicators={indicators}
+    //       />
+    //     )
+    //     break
+    //   }
+    //   case 'selected-threats': {
+    //     content = <ThreatsTab unitType={unitType} slr={slr} urban={urban} />
+    //     break
+    //   }
+    //   case 'selected-partners': {
+    //     content = (
+    //       <PartnersTab
+    //         unitType={unitType}
+    //         analysisAcres={unitAcres}
+    //         ownership={ownership}
+    //         protection={protection}
+    //         counties={counties}
+    //       />
+    //     )
+    //     break
+    //   }
+    // }
   }
 
   const sidebarCSS = isMobile
@@ -229,7 +229,10 @@ const MapContainer = () => {
       >
         <Flex
           sx={{
-            display: content === null ? 'none !important' : 'flex',
+            display:
+              tab === 'map' || tab === 'mobile-selected-map'
+                ? 'none !important'
+                : 'flex',
 
             height: '100%',
             bg: '#FFF',
@@ -253,7 +256,8 @@ const MapContainer = () => {
 
               <DesktopTabs
                 tab={tab}
-                hasSelectedUnit={mapData !== null}
+                hasMapData={mapData !== null}
+                mode={mapMode}
                 onChange={handleTabChange}
               />
             </Box>
@@ -266,7 +270,7 @@ const MapContainer = () => {
               overflowY: 'auto',
             }}
           >
-            {content}
+            <TabContent tab={tab} mapData={mapData} />
           </Box>
         </Flex>
 

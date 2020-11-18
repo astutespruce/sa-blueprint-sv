@@ -25,7 +25,7 @@ const SidebarHeader = ({ type, id, name, location, acres, onClose }) => {
           justifyContent: 'space-between',
           alignItems: 'flex-start',
           p: '1rem',
-          minHeight: '7rem',
+          minHeight: type === 'pixel' ? null : '7rem',
         }}
       >
         <Box sx={{ mr: '1rem', flex: '1 1 auto' }}>

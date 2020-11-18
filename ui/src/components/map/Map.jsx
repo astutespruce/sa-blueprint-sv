@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState, useCallback, memo } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { Box } from 'theme-ui'
-import { Crosshairs } from '@emotion-icons/fa-solid'
 
 import { useSearch } from 'components/search'
 import { useBreakpoints } from 'components/layout'
@@ -11,10 +10,9 @@ import { useBlueprintPriorities, useMapData } from 'components/data'
 
 import { hasWindow } from 'util/dom'
 import { useIsEqualEffect } from 'util/hooks'
-import { indexBy } from 'util/data'
-import { getPixelValue, decodeBits } from './pixels'
+import { extractPixelData, getPixelValue } from './pixels'
 import { getCenterAndZoom } from './util'
-import { config, sources, layers } from './config'
+import { config, sources, indicatorSources, layers } from './config'
 import { unpackFeatureData } from './features'
 import { Legend } from './legend'
 import MapModeToggle from './MapModeToggle'
@@ -42,14 +40,6 @@ const mapWidgetCSS = {
   },
 }
 
-// select sources that have an encoding defined
-// there are also layers of the same name
-const indicatorSources = Object.entries(sources)
-  .filter(([_, { encoding }]) => !!encoding)
-  .map(([id, _]) => id)
-
-console.log('indicator sources', indicatorSources)
-
 const Map = () => {
   const mapNode = useRef(null)
   const mapRef = useRef(null)
@@ -61,11 +51,9 @@ const Map = () => {
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
   const { data: mapData, mapMode, setData: setMapData } = useMapData()
+  const { colorIndex: blueprintByColor } = useBlueprintPriorities()
   const mapModeRef = useRef(mapMode)
   const { location } = useSearch()
-
-  const { priorities } = useBlueprintPriorities()
-  const blueprintByColor = indexBy(priorities, 'color')
 
   useEffect(() => {
     // if there is no window, we cannot render this component
@@ -191,21 +179,15 @@ const Map = () => {
     // })
 
     map.on('click', ({ lngLat: point }) => {
-      console.log('click', mapModeRef.current, point)
+      // console.log('click', mapModeRef.current, point)
 
       // TODO: make sure zoom is sufficient
-      if (!(isLoaded && mapModeRef.current === 'pixel')) {
-        console.log(
-          'not loaded or right mode, return',
-          isLoaded,
-          mapModeRef.current
-        )
+      if (mapModeRef.current !== 'pixel') {
         return
       }
 
-      if (map.getZoom() < 10) {
+      if (map.getZoom() < 8) {
         // user clicked but not at right zoom
-        console.log('map zoom below thresh', map.getZoom())
         setMapData(null)
         return
       }
@@ -220,10 +202,10 @@ const Map = () => {
 
         map.once('idle', () => {
           map.getCanvas().style.cursor = 'crosshair'
-          extractPixelData(point)
+          getPixelData(point)
         })
       } else {
-        extractPixelData(point)
+        getPixelData(point)
       }
     })
 
@@ -233,7 +215,7 @@ const Map = () => {
     }
     // intentionally not including mapMode in deps since we update via effects
     // on change
-  }, [isMobile, setMapData])
+  }, [isMobile, setMapData, getPixelData])
 
   useEffect(() => {
     mapModeRef.current = mapMode
@@ -324,47 +306,13 @@ const Map = () => {
     }
   }, [location, isLoaded])
 
-  const extractPixelData = useCallback(
+  const getPixelData = useCallback(
     (point) => {
       const { current: map } = mapRef
-      const { lng: longitude, lat: latitude } = point
+      const pixelData = extractPixelData(map, point, blueprintByColor)
 
-      const blueprintValue = getPixelValue(map, point, 'blueprint')
-
-      const blueprint =
-        blueprintValue !== null
-          ? blueprintByColor[`#${blueprintValue.toString(16)}`]
-          : null
-      console.log('blueprint', blueprint)
-
-      const results = [
-        {
-          id: 'blueprint',
-          value: blueprintValue,
-        },
-      ]
-      indicatorSources.forEach((id) => {
-        const layerResults = decodeBits(
-          getPixelValue(map, point, id),
-          map.getSource(id).encoding
-        )
-
-        // merge in results for this source
-        if (layerResults !== null) {
-          // filter for non-null layers
-          results.push(...layerResults)
-        }
-      })
-
-      setMapData({
-        type: 'pixel',
-        location: { latitude, longitude },
-        zoom: map.getZoom(),
-      })
-
-      console.log('results', results)
-
-      // TODO: call callback to load data
+      // NOTE: if outside bounds, this will be null and unselect data
+      setMapData(pixelData)
     },
     [blueprintByColor, setMapData]
   )

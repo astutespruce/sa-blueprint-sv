@@ -10,7 +10,7 @@ import geopandas as gp
 import pygeos as pg
 
 
-from analysis.constants import INDICATORS
+from analysis.constants import INDICATORS, CORRIDORS
 from analysis.lib.io import write_raster
 from analysis.lib.raster import add_overviews
 
@@ -18,6 +18,7 @@ data_dir = Path("data/inputs")
 src_dir = data_dir / "indicators"
 out_dir = Path("data/for_tiles")
 blueprint_filename = data_dir / "blueprint2020.tif"
+corridors_filename = data_dir / "corridors.tif"
 bnd_filename = data_dir / "boundaries/sa_boundary.feather"
 
 
@@ -25,7 +26,7 @@ bnd_filename = data_dir / "boundaries/sa_boundary.feather"
 EPS = 1e-6
 
 
-### Create groups to contain indicators up to 24 bits each
+### Create groups to contain indicators and corridors up to 24 bits each
 groups = [
     [
         "freshwater_imperiledaquaticspecies",
@@ -59,6 +60,7 @@ groups = [
         "land_unalteredbeach",
         "land_marshextent",
         "land_previouslyburnedhabitat",
+        "corridors",
     ],
 ]
 
@@ -69,18 +71,31 @@ df = pd.DataFrame(
         [
             e["id"].split("_")[0],
             e["id"],
-            e["filename"],
+            src_dir / e["filename"],
             min([v["value"] for v in e["values"]]),
             max([v["value"] for v in e["values"]]),
         ]
         for e in INDICATORS
     ],
     columns=["ecosystem", "id", "filename", "min_value", "max_value"],
-).set_index("id")
+)
+df = df.append(
+    {
+        "ecosystem": "",
+        "id": "corridors",
+        "filename": corridors_filename,
+        "min_value": 0,
+        "max_value": 3,
+    },
+    ignore_index=True,
+    sort=False,
+)
+df = df.set_index("id")
+
 df["bits"] = df.max_value.apply(lambda x: ceil(log2(max(x, 2) + EPS)))
 # if min value declared is > 0, then we aren't showing those 0 values elsewhere
 df["ignore_0"] = df.min_value > 0
-df["src"] = df.filename.apply(lambda x: rasterio.open(src_dir / x))
+df["src"] = df.filename.apply(lambda x: rasterio.open(x))
 df["nodata"] = df.src.apply(lambda src: int(src.nodata))
 
 for i, ids in enumerate(groups):
@@ -169,10 +184,7 @@ for i, group in enumerate(groups):
         data_bits = np.dstack(masks + layer_bits)
 
         # packbits must be in little order to read the whole array properly in JS
-        # then convert from BGR order to RGB order
-        packed = np.squeeze(np.packbits(data_bits, axis=-1, bitorder="little"))[
-            ..., ::-1
-        ]
+        packed = np.squeeze(np.packbits(data_bits, axis=-1, bitorder="little"))
 
         window_shape = (window.height, window.width)
 

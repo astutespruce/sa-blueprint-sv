@@ -1,7 +1,18 @@
 /* eslint-disable no-bitwise */
 
+import { arrayToObject } from 'util/data'
+import { indicatorSources } from './config'
+
 const EXTENT = 8192 // from mapbox-gl-js/../extent.js
 
+/**
+ * Extracts RGB data from a pixel at a location, encoded as a uint32 value.
+ * Returns null if data is not yet loaded or point is outside bounds for
+ * available tiles.
+ * @param {Object} map - mapbox GL map object
+ * @param {Object} point - {lat, lng} of point for which to extract pixel data
+ * @param {String} layerId - layer from which to extract pixel data
+ */
 export const getPixelValue = (map, point, layerId) => {
   const sourceCache = map.style.sourceCaches[layerId]
 
@@ -34,7 +45,15 @@ export const getPixelValue = (map, point, layerId) => {
   )
 
   const [{ tile, tileID }] = tilesIn // only need the first, this is highest zoom
-  const { tileSize } = tile
+
+  if (!(tile.texture && tile.texture.size)) {
+    // not fully loaded yet
+    return null
+  }
+
+  // NOTE: raw tiles may be smaller images than they claim to be in the
+  // layer tileSize property (they are overzoomed)
+  const tileSize = tile.texture.size[0]
 
   if (!(tile.texture && tile.texture.texture)) {
     // console.debug(`Tile image not yet loaded ${tileID.toString()}`)
@@ -55,7 +74,7 @@ export const getPixelValue = (map, point, layerId) => {
     return null
   }
 
-  // console.log(
+  // console.debug(
   //   `Extracting data for tile ${tileID.toString()},  coords: x:${tileX}, y:${tileY}`
   // )
 
@@ -81,16 +100,25 @@ export const getPixelValue = (map, point, layerId) => {
   gl.bindFramebuffer(gl.FRAMEBUFFER, null)
   gl.deleteFramebuffer(fb)
 
-  // pixels are decoded as b,g,r values because of how we encode them
-
   // decode to uint
-  const [b, g, r] = pixels
+  const [r, g, b] = pixels
   const value = (r << 16) | (g << 8) | b
   // console.log('pixels', pixels, '==>', value)
 
   return value
 }
 
+/**
+ * Decode a uint32 value containing encoded bit-level data according to encoding.
+ * Returns null if value is null or 0 (all layers absent)
+ * Otherwise returns [{id: <layer id>, value: <decoded value>}, ...]
+ * @param {number} value - uint32 encoded RGB value
+ * @param {Object} encoding - object that provides:
+ * {
+ *    bits: <total bits used>,
+ *    layers: [{id: <layer id>, bits: <bits used by layer>}]
+ * }
+ */
 export const decodeBits = (value, encoding) => {
   // if value is 0, that means pixel was entirely nodata for all layers
   if (value === null || value === 0) {
@@ -131,4 +159,55 @@ export const decodeBits = (value, encoding) => {
       value: layerValue,
     }
   })
+}
+
+export const extractPixelData = (map, point, blueprintByColor) => {
+  const { lng: longitude, lat: latitude } = point
+
+  const [bndFeature] = map.queryRenderedFeatures(map.project(point), {
+    layers: ['bnd'],
+  })
+  console.log('within bounds', !!bndFeature)
+
+  // if no feature is returned, we are outside boundary
+  // don't even bother to extract other data
+  if (!bndFeature) {
+    return null
+  }
+
+  const blueprintColor = getPixelValue(map, point, 'blueprint')
+
+  console.log('blueprint', blueprintColor, blueprintByColor)
+
+  // merge non-null results from all indicatorSources
+  const results = []
+  indicatorSources.forEach((id) => {
+    const layerResults = decodeBits(
+      getPixelValue(map, point, id),
+      map.getSource(id).encoding
+    )
+
+    if (layerResults !== null) {
+      results.push(...layerResults.filter(({ value }) => value !== null))
+    }
+  })
+
+  console.log('indicator results', results)
+  const indicators = arrayToObject(
+    results,
+    ({ id }) => id,
+    ({ value }) => value
+  )
+
+  const data = {
+    type: 'pixel',
+    location: { latitude, longitude, zoom: map.getZoom() },
+    blueprint: blueprintByColor[blueprintColor] || null,
+    indicators: Object.keys(indicators),
+    ...indicators,
+  }
+
+  console.log('data', data)
+
+  return data
 }

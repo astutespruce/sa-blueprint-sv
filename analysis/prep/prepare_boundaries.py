@@ -35,7 +35,6 @@ gp.GeoDataFrame(geometry=[bnd], crs=DATA_CRS).to_feather(
     out_dir / "sa_boundary.feather"
 )
 
-
 write_dataframe(
     gp.GeoDataFrame({"geometry": bnd_geo}, index=[0], crs=GEO_CRS),
     tile_dir / "sa_boundary.geojson",

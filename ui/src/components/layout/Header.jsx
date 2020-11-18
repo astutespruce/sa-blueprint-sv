@@ -6,12 +6,12 @@ import { useMapData } from 'components/data'
 import LogoURL from 'images/logo.svg'
 import HeaderButtons from './HeaderButtons'
 import { useBreakpoints } from './Breakpoints'
-import SelectedUnitHeader from './mobile/SelectedUnitHeader'
+import MobileHeader from './mobile/MobileHeader'
 
 const Header = () => {
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
-  const { data, unsetData, mapMode } = useMapData()
+  const { data, unsetData } = useMapData()
 
   return (
     <Flex
@@ -30,8 +30,7 @@ const Header = () => {
       }}
     >
       {isMobile && data !== null ? (
-        // TODO: pixel mode
-        <SelectedUnitHeader name={data.name} onClose={unsetData} />
+        <MobileHeader {...data} onClose={unsetData} />
       ) : (
         <>
           <Flex

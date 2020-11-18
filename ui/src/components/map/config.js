@@ -8,14 +8,16 @@ export const config = {
   // bounds: [-85.89816168, 28.98417231, -71.28723327, 37.45871183],
   // FIXME
   bounds: [
-    -81.52437938681351,
-    32.51589056924743,
-    -81.29738295319072,
-    32.68051488817807,
-    // -82.32773558,
-    // 32.5711064,
-    // -82.28111864,
-    // 32.61012435,
+    // test area 1
+    // -81.52437938681351,
+    // 32.51589056924743,
+    // -81.29738295319072,
+    // 32.68051488817807,
+    // test area 2
+    -77.28581582039118,
+    37.21040906844688,
+    -77.22931903990204,
+    37.2548924014517,
   ],
 
   maxBounds: [-115, 10, -30, 50],
@@ -34,8 +36,8 @@ export const sources = {
   },
   indicators0: {
     type: 'raster',
-    tileSize: 128,
-    minzoom: 10,
+    tileSize: 512, // NOTE: actual tiles are 128, but this overzooms them
+    minzoom: 8,
     maxzoom: 12,
     bounds: [-86.470361, 28.247338, -74.979055, 38.230341],
     tiles: [`${tileHost}/services/sa_indicators_0/tiles/{z}/{x}/{y}.png`],
@@ -53,8 +55,8 @@ export const sources = {
   },
   indicators1: {
     type: 'raster',
-    tileSize: 128,
-    minzoom: 10,
+    tileSize: 512,
+    minzoom: 8,
     maxzoom: 12,
     bounds: [-85.529559, 27.547354, -70.819089, 38.833195],
     tiles: [`${tileHost}/services/sa_indicators_1/tiles/{z}/{x}/{y}.png`],
@@ -72,8 +74,8 @@ export const sources = {
   },
   indicators2: {
     type: 'raster',
-    tileSize: 128,
-    minzoom: 10,
+    tileSize: 512,
+    minzoom: 8,
     maxzoom: 12,
     bounds: [-86.470361, 27.547354, -70.819089, 38.930327],
     tiles: [`${tileHost}/services/sa_indicators_2/tiles/{z}/{x}/{y}.png`],
@@ -92,13 +94,13 @@ export const sources = {
   },
   indicators3: {
     type: 'raster',
-    tileSize: 128,
-    minzoom: 10,
+    tileSize: 512,
+    minzoom: 8,
     maxzoom: 12,
     bounds: [-86.470361, 27.547354, -70.819089, 38.930327],
     tiles: [`${tileHost}/services/sa_indicators_3/tiles/{z}/{x}/{y}.png`],
     encoding: {
-      bits: 20,
+      bits: 23,
       layers: [
         { id: 'land_amphibianreptiles', bits: 2 },
         { id: 'land_marshextent', bits: 2 },
@@ -106,13 +108,14 @@ export const sources = {
         { id: 'land_resilientterrestrialsites', bits: 3 },
         { id: 'land_unalteredbeach', bits: 2 },
         { id: 'land_urbanopenspace', bits: 3 },
+        { id: 'corridors', bits: 2 },
       ],
     },
   },
 
   mapUnits: {
     type: 'vector',
-    minzoom: 8,
+    minzoom: 4,
     maxzoom: 14,
     bounds: [-86.470357, 27.546173, -70.816397, 38.932193],
     tiles: [`${tileHost}/services/sa_map_units/tiles/{z}/{x}/{y}.pbf`],
@@ -120,6 +123,12 @@ export const sources = {
     promoteId: 'id',
   },
 }
+
+// select sources that have an encoding defined
+// there are also layers of the same name
+export const indicatorSources = Object.entries(sources)
+  .filter(([_, { encoding }]) => !!encoding)
+  .map(([id, _]) => id)
 
 // layer in Mapbox Light that we want to come AFTER our layers here
 const beforeLayer = 'waterway-label'
@@ -242,5 +251,40 @@ export const layers = [
       },
     },
     before: beforeLayer,
+  },
+  // render boundary to capture clicks and determine if pixel is in our outside bounds
+  {
+    id: 'bnd',
+    source: 'mapUnits',
+    'source-layer': 'boundary',
+    type: 'fill',
+    paint: {
+      'fill-opacity': 0,
+      'fill-color': '#FFFFFF',
+    },
+  },
+  {
+    id: 'bnd-outline',
+    source: 'mapUnits',
+    'source-layer': 'boundary',
+    type: 'line',
+    paint: {
+      'line-opacity': 1,
+      'line-color': '#000000',
+      'line-width': {
+        stops: [
+          [4, 0.1],
+          [8, 1],
+        ],
+      },
+      'line-opacity': {
+        stops: [
+          [8, 1],
+          [12, 0.2],
+          [14, 0.1],
+          [15, 0],
+        ],
+      },
+    },
   },
 ]
