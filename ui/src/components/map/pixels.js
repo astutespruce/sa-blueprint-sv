@@ -167,7 +167,6 @@ export const extractPixelData = (map, point, blueprintByColor) => {
   const [bndFeature] = map.queryRenderedFeatures(map.project(point), {
     layers: ['bnd'],
   })
-  console.log('within bounds', !!bndFeature)
 
   // if no feature is returned, we are outside boundary
   // don't even bother to extract other data
@@ -176,8 +175,6 @@ export const extractPixelData = (map, point, blueprintByColor) => {
   }
 
   const blueprintColor = getPixelValue(map, point, 'blueprint')
-
-  console.log('blueprint', blueprintColor, blueprintByColor)
 
   // merge non-null results from all indicatorSources
   const results = []
@@ -202,9 +199,10 @@ export const extractPixelData = (map, point, blueprintByColor) => {
   const data = {
     type: 'pixel',
     location: { latitude, longitude, zoom: map.getZoom() },
-    blueprint: blueprintByColor[blueprintColor] || null,
+    blueprint: blueprintByColor[blueprintColor] || 0, // default to not a priority
     indicators: Object.keys(indicators),
     ...indicators,
+    corridors: indicators.corridors === undefined ? null : indicators.corridors,
   }
 
   console.log('data', data)

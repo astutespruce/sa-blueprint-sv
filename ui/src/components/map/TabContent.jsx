@@ -31,23 +31,23 @@ const TabContent = ({ tab, mapData }) => {
 
   const { type } = mapData
 
-  if (type === 'pixel') {
-    switch (tab) {
-      case 'selected-priorities': {
-        return (
-          <PrioritiesTab
-            blueprint={blueprint}
-            corridors={corridors}
-            blueprintAcres={blueprintAcres}
-          />
-        )
-      }
-      // TODO: implement indicators tab
-      default: {
-        return null
-      }
-    }
-  }
+  // if (type === 'pixel') {
+  //   switch (tab) {
+  //     case 'selected-priorities': {
+  //       return (
+  //         <PrioritiesTab
+  //           blueprint={blueprint}
+  //           corridors={corridors}
+  //           blueprintAcres={blueprintAcres}
+  //         />
+  //       )
+  //     }
+  //     // TODO: implement indicators tab
+  //     default: {
+  //       return null
+  //     }
+  //   }
+  // }
 
   const {
     acres: unitAcres,
@@ -67,6 +67,7 @@ const TabContent = ({ tab, mapData }) => {
     case 'selected-priorities': {
       return (
         <PrioritiesTab
+          type={type}
           blueprint={blueprint}
           corridors={corridors}
           blueprintAcres={blueprintAcres}

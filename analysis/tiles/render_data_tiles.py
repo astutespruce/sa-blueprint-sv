@@ -13,7 +13,7 @@ out_dir = Path("tiles")
 
 
 tile_size = 128
-min_zoom = 8
+min_zoom = 6
 max_zoom = 12  # TODO: maybe 14?
 
 
@@ -21,7 +21,7 @@ df = pd.read_feather(src_dir / "encoding.feather")
 
 start = time()
 
-for group in df.group.unique():
+for group in sorted(df.group.unique()):
     print(f"Processing group {group}...")
     group_start = time()
 

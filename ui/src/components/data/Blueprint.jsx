@@ -1,10 +1,10 @@
 import { useStaticQuery, graphql } from 'gatsby'
 
-import { indexBy, arrayToObject } from 'util/data'
+import { arrayToObject } from 'util/data'
 import { extractNodes } from 'util/graphql'
 
 /**
- * Provides Blueprint priority categories in decreasing priority order
+ * Provides Blueprint priority categories in descending priority order
  */
 export const useBlueprintPriorities = () => {
   const query = useStaticQuery(graphql`

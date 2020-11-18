@@ -37,7 +37,7 @@ export const sources = {
   indicators0: {
     type: 'raster',
     tileSize: 512, // NOTE: actual tiles are 128, but this overzooms them
-    minzoom: 8,
+    minzoom: 6,
     maxzoom: 12,
     bounds: [-86.470361, 28.247338, -74.979055, 38.230341],
     tiles: [`${tileHost}/services/sa_indicators_0/tiles/{z}/{x}/{y}.png`],
@@ -56,7 +56,7 @@ export const sources = {
   indicators1: {
     type: 'raster',
     tileSize: 512,
-    minzoom: 8,
+    minzoom: 6,
     maxzoom: 12,
     bounds: [-85.529559, 27.547354, -70.819089, 38.833195],
     tiles: [`${tileHost}/services/sa_indicators_1/tiles/{z}/{x}/{y}.png`],
@@ -75,7 +75,7 @@ export const sources = {
   indicators2: {
     type: 'raster',
     tileSize: 512,
-    minzoom: 8,
+    minzoom: 6,
     maxzoom: 12,
     bounds: [-86.470361, 27.547354, -70.819089, 38.930327],
     tiles: [`${tileHost}/services/sa_indicators_2/tiles/{z}/{x}/{y}.png`],
@@ -95,7 +95,7 @@ export const sources = {
   indicators3: {
     type: 'raster',
     tileSize: 512,
-    minzoom: 8,
+    minzoom: 6,
     maxzoom: 12,
     bounds: [-86.470361, 27.547354, -70.819089, 38.930327],
     tiles: [`${tileHost}/services/sa_indicators_3/tiles/{z}/{x}/{y}.png`],
@@ -269,7 +269,6 @@ export const layers = [
     'source-layer': 'boundary',
     type: 'line',
     paint: {
-      'line-opacity': 1,
       'line-color': '#000000',
       'line-width': {
         stops: [

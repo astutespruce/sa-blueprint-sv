@@ -103,17 +103,6 @@ const Map = () => {
       setIsLoaded(() => true)
     })
 
-    map.on('click', 'unit-fill', ({ features }) => {
-      if (!(features && features.length > 0)) return
-
-      const { properties } = features[0]
-
-      // highlight selected
-      map.setFilter('unit-outline-highlight', ['==', 'id', properties.id])
-
-      setMapData(unpackFeatureData(features[0].properties))
-    })
-
     // Highlight units on mouseover
     map.on('mousemove', 'unit-fill', ({ features }) => {
       map.getCanvas().style.cursor = 'pointer'
@@ -138,7 +127,17 @@ const Map = () => {
       highlightIDRef.current = id
     })
 
-    // Unhighlight all hover features on mouseout
+    map.on('mouseout', 'unit-fill', () => {
+      const { current: prevId } = highlightIDRef
+      if (prevId !== null) {
+        map.setFeatureState(
+          { source: 'mapUnits', sourceLayer: 'units', id: prevId },
+          { highlight: false }
+        )
+      }
+    })
+
+    // Unhighlight all hover features on mouseout of map
     map.on('mouseout', () => {
       const { current: prevId } = highlightIDRef
       if (prevId !== null) {
@@ -149,40 +148,24 @@ const Map = () => {
       }
     })
 
-    // TODO: Not sure if we want to do this.  OK to zoom in higher but not <10
-    // make sure to update pixel values on zoom end in case we get higher resolution
-    // data
-    // map.on('zoomend', () => {
-    //   if (!(isLoaded && mapMode === 'pixel' && mapData !== null)) {
-    //     return
-    //   }
-
-    //   // if map sources are not done loading, schedule a callback
-    //   const dataSources = ['blueprint'].concat(indicatorSources)
-    //   const sourcesLoaded = dataSources.filter(
-    //     (s) => map.style.sourceCaches[s] && map.style.sourceCaches[s].loaded()
-    //   )
-
-    //   const {
-    //     location: { latitude: lat, longitude: lng },
-    //   } = mapData
-    //   if (sourcesLoaded.length < dataSources.length) {
-    //     map.getCanvas().style.cursor = 'wait'
-
-    //     map.once('idle', () => {
-    //       map.getCanvas().style.cursor = 'crosshair'
-    //       extractPixelData({ lng, lat })
-    //     })
-    //   } else {
-    //     extractPixelData({ lng, lat })
-    //   }
-    // })
-
     map.on('click', ({ lngLat: point }) => {
-      // console.log('click', mapModeRef.current, point)
-
-      // TODO: make sure zoom is sufficient
       if (mapModeRef.current !== 'pixel') {
+        const features = map.queryRenderedFeatures(map.project(point), {
+          layers: ['unit-fill'],
+        })
+
+        if (!(features && features.length > 0)) {
+          setMapData(null)
+          return
+        }
+
+        const { properties } = features[0]
+
+        // highlight selected
+        map.setFilter('unit-outline-highlight', ['==', 'id', properties.id])
+
+        setMapData(unpackFeatureData(features[0].properties))
+
         return
       }
 
@@ -211,6 +194,11 @@ const Map = () => {
 
     // when this component is destroyed, remove the map
     return () => {
+      // remove markers
+
+      removeLocationMarker()
+      removePixelMarker()
+
       map.remove()
     }
     // intentionally not including mapMode in deps since we update via effects
@@ -248,6 +236,8 @@ const Map = () => {
       map.setLayoutProperty('indicators1', 'visibility', 'none')
       map.setLayoutProperty('indicators2', 'visibility', 'none')
       map.setLayoutProperty('indicators3', 'visibility', 'none')
+
+      removePixelMarker()
     }
   }, [isLoaded, mapMode])
 
@@ -260,15 +250,12 @@ const Map = () => {
 
     if (mapData === null) {
       map.setFilter('unit-outline-highlight', ['==', 'id', Infinity])
+
+      removePixelMarker()
     }
 
     if (mapMode === 'pixel') {
-      if (mapData === null) {
-        if (pixelMarkerRef.current !== null) {
-          pixelMarkerRef.current.remove()
-          pixelMarkerRef.current = null
-        }
-      } else {
+      if (mapData !== null) {
         const {
           location: { latitude, longitude },
         } = mapData
@@ -300,9 +287,8 @@ const Map = () => {
       } else {
         locationMarkerRef.current.setLngLat([longitude, latitude])
       }
-    } else if (locationMarkerRef.current !== null) {
-      locationMarkerRef.current.remove()
-      locationMarkerRef.current = null
+    } else {
+      removeLocationMarker()
     }
   }, [location, isLoaded])
 
@@ -316,6 +302,20 @@ const Map = () => {
     },
     [blueprintByColor, setMapData]
   )
+
+  const removeLocationMarker = () => {
+    if (locationMarkerRef.current !== null) {
+      locationMarkerRef.current.remove()
+      locationMarkerRef.current = null
+    }
+  }
+
+  const removePixelMarker = () => {
+    if (pixelMarkerRef.current !== null) {
+      pixelMarkerRef.current.remove()
+      pixelMarkerRef.current = null
+    }
+  }
 
   // if there is no window, we cannot render this component
   if (!hasWindow) {

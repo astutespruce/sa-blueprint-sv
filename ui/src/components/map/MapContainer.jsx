@@ -9,16 +9,6 @@ import { Box, Flex, useThemeUI } from 'theme-ui'
 
 import { useBreakpoints } from 'components/layout'
 import { useMapData } from 'components/data'
-
-// import {
-//   InfoTab,
-//   ContactTab,
-//   FindLocationTab,
-//   PrioritiesTab,
-//   IndicatorsTab,
-//   ThreatsTab,
-//   PartnersTab,
-// } from 'content'
 import { Tabs as MobileTabs } from 'components/layout/mobile'
 import { SidebarHeader, Tabs as DesktopTabs } from 'components/layout/desktop'
 
@@ -27,6 +17,15 @@ import { hasWindow } from 'util/dom'
 
 import Map from './Map'
 import TabContent from './TabContent'
+
+const mobileSidebarCSS = {
+  position: 'absolute',
+  zIndex: 10000,
+  left: 0,
+  right: 0,
+  bottom: 0,
+  top: 0,
+}
 
 const MapContainer = () => {
   const {
@@ -112,100 +111,7 @@ const MapContainer = () => {
     }
   }, [isMobile, location, handleTabChange])
 
-  let content = null
-  if (mapData === null) {
-    // eslint-disable-next-line default-case
-    // switch (tab) {
-    //   case 'info': {
-    //     content = <InfoTab />
-    //     break
-    //   }
-    //   case 'map': {
-    //     // don't show anything
-    //     content = null
-    //     break
-    //   }
-    //   case 'find': {
-    //     content = <FindLocationTab />
-    //     break
-    //   }
-    //   case 'contact': {
-    //     content = <ContactTab />
-    //     break
-    //   }
-    // }
-  } else {
-    // const {
-    //   type: unitType,
-    //   acres: unitAcres,
-    //   blueprint,
-    //   blueprint_total: blueprintAcres,
-    //   shape_mask: analysisAcres,
-    //   corridors,
-    //   indicators,
-    //   slr,
-    //   urban,
-    //   ownership,
-    //   protection,
-    //   counties,
-    // } = mapData
-    // // eslint-disable-next-line default-case
-    // switch (tab) {
-    //   case 'mobile-selected-map': {
-    //     // MOBILE ONLY: don't show anything
-    //     content = null
-    //     break
-    //   }
-    //   case 'selected-priorities': {
-    //     content = (
-    //       <PrioritiesTab
-    //         blueprint={blueprint}
-    //         corridors={corridors}
-    //         blueprintAcres={blueprintAcres}
-    //       />
-    //     )
-    //     break
-    //   }
-    //   case 'selected-indicators': {
-    //     content = (
-    //       <IndicatorsTab
-    //         unitType={unitType}
-    //         blueprintAcres={blueprintAcres}
-    //         analysisAcres={analysisAcres}
-    //         indicators={indicators}
-    //       />
-    //     )
-    //     break
-    //   }
-    //   case 'selected-threats': {
-    //     content = <ThreatsTab unitType={unitType} slr={slr} urban={urban} />
-    //     break
-    //   }
-    //   case 'selected-partners': {
-    //     content = (
-    //       <PartnersTab
-    //         unitType={unitType}
-    //         analysisAcres={unitAcres}
-    //         ownership={ownership}
-    //         protection={protection}
-    //         counties={counties}
-    //       />
-    //     )
-    //     break
-    //   }
-    // }
-  }
-
-  const sidebarCSS = isMobile
-    ? {
-        position: isMobile ? 'absolute' : 'relative',
-        zIndex: 10000,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        top: 0,
-      }
-    : {}
+  const sidebarCSS = isMobile ? mobileSidebarCSS : {}
 
   // Force exit here when building gatsby, otherwise
   // the wrong layout gets built
