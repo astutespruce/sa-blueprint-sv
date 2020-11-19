@@ -37,7 +37,7 @@ LOCATOR_STYLE = {
         },
         {
             "id": "mask",
-            "source": "map_units",
+            "source": "mask",
             "source-layer": "mask",
             "type": "fill",
             "paint": {"fill-color": "#333333", "fill-opacity": 0.5},
