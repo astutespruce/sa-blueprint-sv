@@ -194,7 +194,8 @@ const MapContainer = () => {
         >
           <MobileTabs
             tab={tab}
-            hasSelectedUnit={mapData !== null}
+            mode={mapMode}
+            hasMapData={mapData !== null}
             onChange={handleTabChange}
           />
         </Box>

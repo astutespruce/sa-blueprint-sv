@@ -9,7 +9,6 @@ import LTAList from './LTAList'
 
 const PartnersTab = ({
   type,
-  analysisAcres,
   ownership,
   protection,
   protectedAreas,
@@ -30,8 +29,6 @@ const PartnersTab = ({
   const hasProtection = protection && Object.keys(protection).length > 0
   const hasCounties = counties && Object.keys(counties).length > 0
   const hasProtectedAreas = protectedAreas && protectedAreas.length > 0
-
-  console.log('has protected areas', hasProtectedAreas)
 
   if (type === 'pixel' && !(hasOwnership || hasProtection)) {
     return (

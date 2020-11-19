@@ -89,8 +89,8 @@ const IndicatorPixelValueChart = ({ pixelValue, values, goodThreshold }) => {
                       ml: '-0.25rem',
                       borderBottom: '0.6rem solid',
                       borderBottomColor: 'grey.9',
-                      borderLeft: '0.5rem solid #FFF',
-                      borderRight: '0.5rem solid #FFF',
+                      borderLeft: '0.5rem solid transparent',
+                      borderRight: '0.5rem solid transparent',
                     }}
                   />
                 ) : null}
