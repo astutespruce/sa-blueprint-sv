@@ -33,7 +33,7 @@ const ArrowDown = styled(ArrowDownIcon)({
   flex: '0 0 auto',
 })
 
-const IndicatorPercentTable = ({ values, goodThreshold }) => {
+const IndicatorPercentTable = ({ type, values, goodThreshold }) => {
   const remainder = values.filter(({ value }) => value === null)
 
   if (goodThreshold === null) {
@@ -178,6 +178,7 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
                   value={value}
                   label={label}
                   percent={percent}
+                  percentSuffix={type === 'pixel' ? '' : 'of area'}
                 />
               </Flex>
             ))}
@@ -189,6 +190,7 @@ const IndicatorPercentTable = ({ values, goodThreshold }) => {
 }
 
 IndicatorPercentTable.propTypes = {
+  type: PropTypes.string.isRequired,
   values: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number, // if null, is remainder "not evaluated" value

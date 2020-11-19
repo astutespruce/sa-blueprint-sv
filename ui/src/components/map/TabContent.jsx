@@ -29,27 +29,8 @@ const TabContent = ({ tab, mapData }) => {
     }
   }
 
-  const { type } = mapData
-
-  // if (type === 'pixel') {
-  //   switch (tab) {
-  //     case 'selected-priorities': {
-  //       return (
-  //         <PrioritiesTab
-  //           blueprint={blueprint}
-  //           corridors={corridors}
-  //           blueprintAcres={blueprintAcres}
-  //         />
-  //       )
-  //     }
-  //     // TODO: implement indicators tab
-  //     default: {
-  //       return null
-  //     }
-  //   }
-  // }
-
   const {
+    type,
     acres: unitAcres,
     blueprint,
     blueprint_total: blueprintAcres,
@@ -77,7 +58,7 @@ const TabContent = ({ tab, mapData }) => {
     case 'selected-indicators': {
       return (
         <IndicatorsTab
-          unitType={type}
+          type={type}
           blueprintAcres={blueprintAcres}
           analysisAcres={analysisAcres}
           indicators={indicators}

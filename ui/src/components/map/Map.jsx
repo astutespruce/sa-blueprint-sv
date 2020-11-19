@@ -85,10 +85,6 @@ const Map = () => {
     }
 
     map.on('load', () => {
-      // set default cursor
-      map.getCanvas().style.cursor =
-        mapModeRef.current === 'pixel' ? 'crosshair' : 'grab'
-
       // add sources
       Object.entries(sources).forEach(([id, source]) => {
         map.addSource(id, source)
@@ -169,7 +165,7 @@ const Map = () => {
         return
       }
 
-      if (map.getZoom() < 8) {
+      if (map.getZoom() < 7) {
         // user clicked but not at right zoom
         setMapData(null)
         return
@@ -189,6 +185,14 @@ const Map = () => {
         })
       } else {
         getPixelData(point)
+      }
+    })
+
+    map.on('zoomend', () => {
+      if (mapMode === 'pixel' && map.getZoom() >= 7) {
+        map.getCanvas().style.cursor = 'crosshair'
+      } else {
+        map.getCanvas().style.cursor = 'grab'
       }
     })
 
@@ -214,7 +218,8 @@ const Map = () => {
     // sometimes map is not fully loaded on hot reload
     if (!map.loaded()) return
 
-    map.getCanvas().style.cursor = mapMode === 'pixel' ? 'crosshair' : 'grab'
+    map.getCanvas().style.cursor =
+      mapMode === 'pixel' && map.getZoom() >= 7 ? 'crosshair' : 'grab'
 
     // toggle layer visibility
     if (mapMode === 'pixel') {

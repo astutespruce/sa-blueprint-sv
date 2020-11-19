@@ -130,7 +130,7 @@ export const decodeBits = (value, encoding) => {
   // convert to bitArray
   // reorder to match input order before encoding
   // (since these are decoded in little-endian bit order)
-  const bits = Array.from(value.toString(2).padStart(totalBits, '0'))
+  let bits = Array.from(value.toString(2).padStart(totalBits, '0'))
     .map((bit) => parseInt(bit, 10))
     .reverse()
 
@@ -142,6 +142,7 @@ export const decodeBits = (value, encoding) => {
   let index = 0
   return layers.map(({ id, bits: numLayerBits }, i) => {
     const present = flagBits[i]
+    console.log('present?', id, present)
     if (!present) {
       index += numLayerBits
       return { id, value: null }
@@ -200,8 +201,7 @@ export const extractPixelData = (map, point, blueprintByColor) => {
     type: 'pixel',
     location: { latitude, longitude, zoom: map.getZoom() },
     blueprint: blueprintByColor[blueprintColor] || 0, // default to not a priority
-    indicators: Object.keys(indicators),
-    ...indicators,
+    indicators,
     corridors: indicators.corridors === undefined ? null : indicators.corridors,
   }
 

@@ -17,7 +17,13 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
   // are stored in ascending order
   const priorityCategories = allPriorities.slice().reverse()
 
-  const remainder = type !== 'pixel' ? Math.max(1, 100 - sum(blueprint)) : 0
+  let remainder = 0
+  if (type !== 'pixel') {
+    remainder = 100 - sum(blueprint)
+    if (remainder < 1) {
+      remainder = 0
+    }
+  }
 
   let corridorsColor = '#ffebc2'
   let corridorsLabel = 'Not a hub or corridor'

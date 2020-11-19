@@ -5,16 +5,14 @@ import json
 import pandas as pd
 from tilecutter.mbtiles import tif_to_mbtiles
 
-# from analysis.tiles.lib.render import render
-
 
 src_dir = Path("data/for_tiles")
 out_dir = Path("tiles")
 
 
 tile_size = 128
-min_zoom = 6
-max_zoom = 12  # TODO: maybe 14?
+min_zoom = 7
+max_zoom = 14  # NOTE: z14 takes 2+ hours per tileset
 
 
 df = pd.read_feather(src_dir / "encoding.feather")

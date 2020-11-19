@@ -45,6 +45,9 @@ const MapModeToggle = ({ map, isMobile }) => {
       return undefined
     }
 
+    // set initial value
+    setZoom(map.getZoom())
+
     const updateZoom = () => {
       setZoom(map.getZoom())
     }
@@ -70,7 +73,7 @@ const MapModeToggle = ({ map, isMobile }) => {
     return null
   }
 
-  const showZoomNote = zoom < 8
+  const showZoomNote = zoom < 7
 
   return (
     <Box sx={isMobile ? mobileCSS : desktopCSS}>

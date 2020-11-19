@@ -19,13 +19,13 @@ tippecanoe -f -pg -P -Z 0 -z 8 -ai -o $TILEDIR/sa_mask.mbtiles -l "mask" $TILEIN
 
 # Create tiles from summary units
 echo "Processing summary units..."
-tippecanoe -f -pg -P -Z 8 -z 14 --detect-shared-borders -ai -o $TMPDIR/units.mbtiles -l "units" $TILEINPUTS/units.geojson
+tippecanoe -f -pg -P -Z 7 -z 14 --detect-shared-borders -ai -o $TMPDIR/units.mbtiles -l "units" $TILEINPUTS/units.geojson
 
 # Merge in attributes
 tile-join -f -pg -o $TMPDIR/unit_atts.mbtiles $TMPDIR/units.mbtiles -c $TILEINPUTS/unit_atts.csv
 
 
-# Create tiles from boundary and mask
+# Create tiles from boundary
 echo "Processing boundary..."
 tippecanoe -f -pg -P -Z 0 -z 14 -ai -o $TMPDIR/sa_boundary.mbtiles -l "boundary" $TILEINPUTS/sa_boundary.geojson
 

@@ -102,6 +102,9 @@ for i, ids in enumerate(groups):
     df.loc[df.index.isin(ids), "group"] = i
 
 df.group = df.group.astype("uint8")
+
+# NOTE: groups must be stored in encoding definition
+# in exactly the same order they are encoded
 df[["group", "bits"]].reset_index().to_feather(out_dir / "encoding.feather")
 
 print("Planned bits per group")
@@ -122,8 +125,8 @@ ix = tree.query(bnd, predicate="intersects")
 ix.sort()
 windows = windows[ix]
 
-for i, group in enumerate(groups):
-    rows = df.loc[df.index.isin(group)]
+for i in sorted(df.group.unique()):
+    rows = df.loc[df.group == i]
     total_bits = rows.bits.sum() + len(rows)
 
     if total_bits > 24:
@@ -152,7 +155,7 @@ for i, group in enumerate(groups):
     ).iter(windows):
         masks = []
         layer_bits = []
-        for id in group:
+        for id in rows.index:
             row = rows.loc[id]
 
             data = row.src.read(1, window=window)
@@ -191,7 +194,6 @@ for i, group in enumerate(groups):
         # fill remaining bytes up to dtype bytes
         fill = np.zeros(shape=window_shape, dtype="uint8")
 
-        # packed values are in BGR order, invert them
         encoded = np.dstack([packed] + ([fill] * (num_bytes - packed.shape[-1])))
         out[window.toslices()] = encoded.view(dtype).reshape(window_shape)
 

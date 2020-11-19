@@ -7,15 +7,38 @@ import { indexBy, sum, percentsToAvg } from 'util/data'
 import EcosystemList from './EcosystemList'
 
 const IndicatorsTab = ({
+  type,
   indicators: rawIndicators,
   analysisAcres,
   blueprintAcres,
 }) => {
   const { ecosystems: ECOSYSTEMS, indicators: INDICATORS } = useIndicators()
 
-  // retrieve indicator results by original index
-  const indicators = indexBy(
-    INDICATORS.map((indicator, i) => ({
+  let indicators = []
+  if (type === 'pixel') {
+    // filter indicators that are not present or have 0 values that don't have
+    // corresponding label (effectively NODATA)
+    indicators = INDICATORS.filter(
+      ({ id, values }) =>
+        rawIndicators[id] !== undefined && rawIndicators[id] >= values[0].value
+    ).map((indicator) => {
+      const pixelValue = rawIndicators[indicator.id]
+      const values = indicator.values.map((value) => ({
+        ...value,
+        // percent is used for indicator details view
+        percent: value.value === pixelValue ? 100 : 0,
+      }))
+
+      return {
+        ...indicator,
+        values,
+        pixelValue,
+        total: 100, // hardcode to 100%
+      }
+    })
+  } else {
+    // retrieve indicator results by original index
+    indicators = INDICATORS.map((indicator, i) => ({
       ...indicator,
       index: i,
     }))
@@ -44,9 +67,12 @@ const IndicatorsTab = ({
         }
       })
       // Only include those that have nonzero values
-      .filter(({ total }) => total > 0),
-    'id'
-  )
+      .filter(({ total }) => total > 0)
+  }
+
+  console.log('indicators', indicators)
+
+  indicators = indexBy(indicators, 'id')
 
   const ecosystemsPresent = new Set(
     Object.keys(indicators).map((id) => id.split('_')[0])
@@ -90,6 +116,7 @@ const IndicatorsTab = ({
 
   return (
     <EcosystemList
+      type={type}
       ecosystems={ecosystems}
       analysisAcres={analysisAcres}
       blueprintAcres={blueprintAcres}
@@ -98,15 +125,27 @@ const IndicatorsTab = ({
 }
 
 IndicatorsTab.propTypes = {
-  analysisAcres: PropTypes.number.isRequired,
-  blueprintAcres: PropTypes.number.isRequired,
-  // NOTE: indicators are keyed by index not id
-  indicators: PropTypes.objectOf(
-    PropTypes.shape({
-      percent: PropTypes.arrayOf(PropTypes.number).isRequired,
-      avg: PropTypes.number,
-    })
-  ).isRequired,
+  type: PropTypes.string.isRequired,
+  analysisAcres: PropTypes.number,
+  blueprintAcres: PropTypes.number,
+
+  indicators: PropTypes.oneOfType([
+    // if pixel
+    PropTypes.objectOf(PropTypes.number),
+    // if summary unit
+    // NOTE: indicators for summary units are keyed by index not id
+    PropTypes.objectOf(
+      PropTypes.shape({
+        percent: PropTypes.arrayOf(PropTypes.number),
+        avg: PropTypes.number,
+      })
+    ),
+  ]).isRequired,
+}
+
+IndicatorsTab.defaultProps = {
+  analysisAcres: 0,
+  blueprintAcres: 0,
 }
 
 export default IndicatorsTab
