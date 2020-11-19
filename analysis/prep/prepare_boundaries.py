@@ -35,7 +35,6 @@ gp.GeoDataFrame(geometry=[bnd], crs=DATA_CRS).to_feather(
     out_dir / "sa_boundary.feather"
 )
 
-
 write_dataframe(
     gp.GeoDataFrame({"geometry": bnd_geo}, index=[0], crs=GEO_CRS),
     tile_dir / "sa_boundary.geojson",
@@ -98,11 +97,7 @@ df["geometry"] = pg.make_valid(df.geometry.values.data)
 # Explode the polygons for better spatial index results in downstream functions
 df = explode(df)
 
-write_dataframe(
-    df[["FEE_ORGTYP", "GAP_STATUS", "geometry"]].to_crs(GEO_CRS),
-    tile_dir / "ownership.geojson",
-    driver="GeoJSONSeq",
-)
+write_dataframe(df.to_crs(GEO_CRS), tile_dir / "ownership.geojson", driver="GeoJSONSeq")
 df.to_feather(out_dir / "ownership.feather")
 
 

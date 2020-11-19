@@ -2,16 +2,16 @@ import React from 'react'
 import { Flex, Image, Heading } from 'theme-ui'
 
 import { Link } from 'components/link'
+import { useMapData } from 'components/data'
 import LogoURL from 'images/logo.svg'
 import HeaderButtons from './HeaderButtons'
 import { useBreakpoints } from './Breakpoints'
-import { useSelectedUnit } from './SelectedUnit'
-import SelectedUnitHeader from './mobile/SelectedUnitHeader'
+import MobileHeader from './mobile/MobileHeader'
 
 const Header = () => {
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
-  const { selectedUnit, deselectUnit } = useSelectedUnit()
+  const { data, unsetData } = useMapData()
 
   return (
     <Flex
@@ -29,8 +29,8 @@ const Header = () => {
         boxShadow: '0 2px 6px #333',
       }}
     >
-      {isMobile && selectedUnit !== null ? (
-        <SelectedUnitHeader name={selectedUnit.name} onClose={deselectUnit} />
+      {isMobile && data !== null ? (
+        <MobileHeader {...data} onClose={unsetData} />
       ) : (
         <>
           <Flex

@@ -24,6 +24,7 @@ LOCATOR_STYLE = {
         },
         "states": {"type": "vector", "url": "mbtiles://states"},
         "map_units": {"type": "vector", "url": "mbtiles://sa_map_units"},
+        "mask": {"type": "vector", "url": "mbtiles://sa_mask"},
     },
     "layers": [
         {"id": "basemap", "type": "raster", "source": "basemap"},

@@ -7,6 +7,7 @@ import Indicator from './Indicator'
 import { EcosystemPropType } from './proptypes'
 
 const Ecosystem = ({
+  type,
   id,
   label,
   color,
@@ -20,7 +21,6 @@ const Ecosystem = ({
         width: '100%',
         flex: '1 0 auto',
         '&:not(:first-of-type)': {
-          //   mt: "2rem",
           '&>div:first-of-type': {
             borderTop: '1px solid',
             borderTopColor: borderColor,
@@ -39,6 +39,7 @@ const Ecosystem = ({
         {indicators.map((indicator) => (
           <Indicator
             key={indicator.id}
+            type={type}
             indicator={indicator}
             onSelect={onSelectIndicator}
           />
@@ -49,6 +50,7 @@ const Ecosystem = ({
 }
 
 Ecosystem.propTypes = {
+  type: PropTypes.string.isRequired,
   ...EcosystemPropType,
   onSelectIndicator: PropTypes.func.isRequired,
 }

@@ -20,6 +20,21 @@ export const indexBy = (records, field) =>
   )
 
 /**
+ * Convert an array of objects into an object.
+ * @param {Array} records
+ * @param {function} keyFn - function that returns key value from a record
+ * @param {function} valueFn - function that returns a value from a record
+ */
+export const arrayToObject = (records, keyFn, valueFn) =>
+  records.reduce(
+    (prev, record) =>
+      Object.assign(prev, {
+        [keyFn(record)]: valueFn(record),
+      }),
+    {}
+  )
+
+/**
  * Calculate the sum of an array of numbers
  * @param {Array} values - array of numbers
  */

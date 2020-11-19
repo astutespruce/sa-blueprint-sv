@@ -11,7 +11,7 @@ const ThreatsTab = ({ unitType, slr, urban }) => {
     return (
       <Box sx={{ py: '2rem', pl: '1rem', pr: '2rem' }}>
         <Text sx={{ color: 'grey.7' }}>
-          No information on threats is available for marine units.
+          No information on threats is available for this area.
         </Text>
       </Box>
     )

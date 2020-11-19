@@ -11,6 +11,7 @@ import IndicatorPercentTable from './IndicatorPercentTable'
 import { IndicatorPropType } from './proptypes'
 
 const IndicatorDetails = ({
+  type,
   id,
   label,
   ecosystem: { label: ecosystemLabel, color, borderColor },
@@ -107,11 +108,14 @@ const IndicatorDetails = ({
             </Box>
           </Flex>
         </Flex>
-        <Box sx={{ color: 'grey.8', fontSize: 0, textAlign: 'right' }}>
-          <b>{formatPercent(total)}%</b>
-          <br />
-          of area
-        </Box>
+
+        {type !== 'pixel' ? (
+          <Box sx={{ color: 'grey.8', fontSize: 0, textAlign: 'right' }}>
+            <b>{formatPercent(total)}%</b>
+            <br />
+            of area
+          </Box>
+        ) : null}
       </Flex>
 
       <Box
@@ -120,6 +124,7 @@ const IndicatorDetails = ({
         <Text as="p">{description}</Text>
 
         <IndicatorPercentTable
+          type={type}
           values={percentTableValues}
           goodThreshold={goodThreshold}
         />
@@ -137,6 +142,7 @@ const IndicatorDetails = ({
 }
 
 IndicatorDetails.propTypes = {
+  type: PropTypes.string.isRequired,
   ...IndicatorPropType,
   analysisAcres: PropTypes.number.isRequired,
   blueprintAcres: PropTypes.number.isRequired,
