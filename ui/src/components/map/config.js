@@ -5,25 +5,25 @@ import { siteMetadata } from '../../../gatsby-config'
 const { tileHost } = siteMetadata
 
 export const config = {
-  // bounds: [-85.89816168, 28.98417231, -71.28723327, 37.45871183],
+  bounds: [-85.89816168, 28.98417231, -71.28723327, 37.45871183],
   // FIXME
-  bounds: [
-    //   // test area 1
-    //   // -81.52437938681351,
-    //   // 32.51589056924743,
-    //   // -81.29738295319072,
-    //   // 32.68051488817807,
-    //   // test area 2
-    // -77.28581582039118,
-    // 37.21040906844688,
-    // -77.22931903990204,
-    // 37.2548924014517,
-    // test area 3
-    -76.93915117797323,
-    37.012453160576655,
-    -76.91005681150797,
-    37.03819853841662,
-  ],
+  // bounds: [
+  //   // test area 1
+  //   // -81.52437938681351,
+  //   // 32.51589056924743,
+  //   // -81.29738295319072,
+  //   // 32.68051488817807,
+  //   // test area 2
+  // -77.28581582039118,
+  // 37.21040906844688,
+  // -77.22931903990204,
+  // 37.2548924014517,
+  // test area 3
+  //   -76.93915117797323,
+  //   37.012453160576655,
+  //   -76.91005681150797,
+  //   37.03819853841662,
+  // ],
 
   maxBounds: [-115, 10, -30, 50],
   minZoom: 4,
@@ -119,7 +119,6 @@ export const sources = {
       ],
     },
   },
-
   mapUnits: {
     type: 'vector',
     minzoom: 4,
@@ -128,6 +127,13 @@ export const sources = {
     tiles: [`${tileHost}/services/sa_map_units/tiles/{z}/{x}/{y}.pbf`],
     // note: can use promoteId: 'id' to promote feature properties ID to feature ID
     promoteId: 'id',
+  },
+  ownership: {
+    type: 'vector',
+    minzoom: 7,
+    maxzoom: 15,
+    bounds: [-86.470357, 27.546173, -70.816397, 38.932193],
+    tiles: [`${tileHost}/services/sa_ownership/tiles/{z}/{x}/{y}.pbf`],
   },
 }
 
@@ -141,6 +147,17 @@ export const indicatorSources = Object.entries(sources)
 const beforeLayer = 'waterway-label'
 
 export const layers = [
+  {
+    id: 'ownership',
+    source: 'ownership',
+    'source-layer': 'ownership',
+    type: 'fill',
+    paint: {
+      'fill-color': '#FFF',
+      'fill-opacity': 0,
+    },
+    before: beforeLayer,
+  },
   {
     id: 'indicators0',
     source: 'indicators0',
@@ -185,7 +202,6 @@ export const layers = [
     },
     before: beforeLayer,
   },
-
   {
     id: 'blueprint',
     source: 'blueprint',

@@ -12,7 +12,7 @@ tippecanoe -f -pg -Z 0 -z 5 --detect-shared-borders -o $TILEDIR/states.mbtiles -
 
 # Create tiles from protected areas
 echo "Processing protected areas..."
-tippecanoe -f -pg -P -z 15 -o $TILEDIR/sa_ownership.mbtiles -l "ownership" $TILEINPUTS/ownership.geojson
+tippecanoe -f -pg -P -z 15 --detect-shared-borders -o $TILEDIR/sa_ownership.mbtiles -l "ownership" $TILEINPUTS/ownership.geojson
 
 # NOTE: mask is only used for backend reports and never zoomed very far
 tippecanoe -f -pg -P -Z 0 -z 8 -ai -o $TILEDIR/sa_mask.mbtiles -l "mask" $TILEINPUTS/sa_mask.geojson
@@ -33,8 +33,3 @@ tippecanoe -f -pg -P -Z 0 -z 14 -ai -o $TMPDIR/sa_boundary.mbtiles -l "boundary"
 # Join units and boundaries together
 echo "Merging tilesets..."
 tile-join -f -pg -o $TILEDIR/sa_map_units.mbtiles $TMPDIR/sa_boundary.mbtiles $TMPDIR/unit_atts.mbtiles
-
-
-
-
-

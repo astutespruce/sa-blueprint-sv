@@ -41,6 +41,7 @@ const TabContent = ({ tab, mapData }) => {
     urban,
     ownership,
     protection,
+    protectedAreas,
     counties,
   } = mapData
 
@@ -71,10 +72,10 @@ const TabContent = ({ tab, mapData }) => {
     case 'selected-partners': {
       return (
         <PartnersTab
-          unitType={type}
-          analysisAcres={unitAcres}
+          type={type}
           ownership={ownership}
           protection={protection}
+          protectedAreas={protectedAreas}
           counties={counties}
         />
       )

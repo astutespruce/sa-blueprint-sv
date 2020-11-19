@@ -97,11 +97,7 @@ df["geometry"] = pg.make_valid(df.geometry.values.data)
 # Explode the polygons for better spatial index results in downstream functions
 df = explode(df)
 
-write_dataframe(
-    df[["FEE_ORGTYP", "GAP_STATUS", "geometry"]].to_crs(GEO_CRS),
-    tile_dir / "ownership.geojson",
-    driver="GeoJSONSeq",
-)
+write_dataframe(df.to_crs(GEO_CRS), tile_dir / "ownership.geojson", driver="GeoJSONSeq")
 df.to_feather(out_dir / "ownership.feather")
 
 

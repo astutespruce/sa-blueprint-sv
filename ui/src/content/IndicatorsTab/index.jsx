@@ -70,8 +70,6 @@ const IndicatorsTab = ({
       .filter(({ total }) => total > 0)
   }
 
-  console.log('indicators', indicators)
-
   indicators = indexBy(indicators, 'id')
 
   const ecosystemsPresent = new Set(

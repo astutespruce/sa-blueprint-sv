@@ -142,7 +142,6 @@ export const decodeBits = (value, encoding) => {
   let index = 0
   return layers.map(({ id, bits: numLayerBits }, i) => {
     const present = flagBits[i]
-    console.log('present?', id, present)
     if (!present) {
       index += numLayerBits
       return { id, value: null }
@@ -164,8 +163,9 @@ export const decodeBits = (value, encoding) => {
 
 export const extractPixelData = (map, point, blueprintByColor) => {
   const { lng: longitude, lat: latitude } = point
+  const screenPoint = map.project(point)
 
-  const [bndFeature] = map.queryRenderedFeatures(map.project(point), {
+  const [bndFeature] = map.queryRenderedFeatures(screenPoint, {
     layers: ['bnd'],
   })
 
@@ -186,16 +186,48 @@ export const extractPixelData = (map, point, blueprintByColor) => {
     )
 
     if (layerResults !== null) {
-      results.push(...layerResults.filter(({ value }) => value !== null))
+      // only keep corridors and nonzero indicators
+      results.push(
+        ...layerResults.filter(
+          ({ id: lyrId, value }) =>
+            value !== null && (lyrId === 'corridors' || value > 0)
+        )
+      )
     }
   })
 
-  console.log('indicator results', results)
+  // console.log('indicator results', results)
   const indicators = arrayToObject(
     results,
     ({ id }) => id,
     ({ value }) => value
   )
+
+  // extract ownership info
+  const ownership = {}
+  const protection = {}
+  const protectedAreas = []
+  const ownershipFeatures = map.queryRenderedFeatures(screenPoint, {
+    layers: ['ownership'],
+  })
+
+  if (ownershipFeatures.length > 0) {
+    ownershipFeatures.forEach(
+      ({
+        properties: {
+          FEE_ORGTYP: orgType,
+          GAP_STATUS: gapStatus,
+          AREA_NAME: areaName,
+          FEE_OWNER: owner,
+        },
+      }) => {
+        // hardcode in percent
+        ownership[orgType] = 100
+        protection[gapStatus] = 100
+        protectedAreas.push({ name: areaName, owner })
+      }
+    )
+  }
 
   const data = {
     type: 'pixel',
@@ -203,9 +235,10 @@ export const extractPixelData = (map, point, blueprintByColor) => {
     blueprint: blueprintByColor[blueprintColor] || 0, // default to not a priority
     indicators,
     corridors: indicators.corridors === undefined ? null : indicators.corridors,
+    ownership,
+    protection,
+    protectedAreas,
   }
-
-  console.log('data', data)
 
   return data
 }

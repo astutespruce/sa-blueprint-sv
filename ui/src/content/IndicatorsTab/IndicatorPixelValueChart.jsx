@@ -63,7 +63,7 @@ const IndicatorPixelValueChart = ({ pixelValue, values, goodThreshold }) => {
           ) : null}
 
           {values.map(({ value }) => (
-            <React.Fragment key={value.value}>
+            <React.Fragment key={value}>
               <Box sx={getPatchCSS(value, value === pixelValue, goodThreshold)}>
                 {value === goodThreshold ? (
                   <Text

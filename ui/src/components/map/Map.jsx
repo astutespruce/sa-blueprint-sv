@@ -230,6 +230,7 @@ const Map = () => {
       map.setLayoutProperty('indicators1', 'visibility', 'visible')
       map.setLayoutProperty('indicators2', 'visibility', 'visible')
       map.setLayoutProperty('indicators3', 'visibility', 'visible')
+      map.setLayoutProperty('ownership', 'visibility', 'visible')
 
       // reset selected outline
       map.setFilter('unit-outline-highlight', ['==', 'id', Infinity])
@@ -241,6 +242,7 @@ const Map = () => {
       map.setLayoutProperty('indicators1', 'visibility', 'none')
       map.setLayoutProperty('indicators2', 'visibility', 'none')
       map.setLayoutProperty('indicators3', 'visibility', 'none')
+      map.setLayoutProperty('ownership', 'visibility', 'none')
 
       removePixelMarker()
     }

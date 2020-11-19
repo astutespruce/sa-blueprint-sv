@@ -22,7 +22,7 @@ const Tabs = ({ tab, mode, hasMapData, onChange }) => {
   let tabs = defaultTabs
   if (hasMapData) {
     if (mode === 'pixel') {
-      tabs = unitTabs.slice(0, 2)
+      tabs = unitTabs.slice(0, 2).concat([unitTabs[3]])
     } else {
       tabs = unitTabs
     }
