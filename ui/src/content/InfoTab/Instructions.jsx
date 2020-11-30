@@ -3,6 +3,7 @@ import { Box, Button, Heading, Text } from 'theme-ui'
 import { TimesCircle } from '@emotion-icons/fa-regular'
 
 import { useBreakpoints } from 'components/layout'
+import { OutboundLink } from 'components/link'
 
 const CloseButton = () => (
   <Button
@@ -95,7 +96,12 @@ const DesktopInstructions = () => (
       Note: this approach uses pixels that have been resampled and reprojected
       for each zoom level. This means that the values shown in the tool may not
       exactly match the Blueprint and indicator data for that specific ground
-      location, especially in areas of high variability in the data.
+      location, especially in areas of high variability in the data. To view and
+      / or download more precise spatial data, please visit{' '}
+      <OutboundLink to="https://salcc.databasin.org/galleries/50e3abe922a74c9e9b6d0167dd1e8f2e">
+        the Conservation Planning Atlas
+      </OutboundLink>
+      .
       <br />
       <br />
       To unselect the pixel, click on the <CloseButton /> button in the upper
@@ -119,8 +125,23 @@ const DesktopInstructions = () => (
       present in that area. Click on an indicator for more information about it.
       <br />
       <br />
+      You can download a detailed PDF report of the Blueprint, underlying
+      indicators, and landscape-level threats for your area of interest. Click
+      the &quot;Create summary report&quot; link below the area name.
+      <br />
+      <br />
       To unselect the area, click on the <CloseButton /> button in the upper
       right of the sidebar.
+    </Text>
+
+    <Heading as="h4" sx={{ mt: '2rem' }}>
+      To create a custom report for a specific area of interest:
+    </Heading>
+    <Text as="p" sx={{ mt: '0.25rem' }}>
+      Click on the &quot;Custom Report&quot; button in the upper right. You will
+      be able to upload your area of interest and create a detailed PDF report
+      of the Blueprint, underlying indicators, and landscape-level threats for
+      this summary area.
     </Text>
 
     <Heading as="h4" sx={{ mt: '2rem' }}>

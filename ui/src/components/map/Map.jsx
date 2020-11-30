@@ -189,7 +189,7 @@ const Map = () => {
     })
 
     map.on('zoomend', () => {
-      if (mapMode === 'pixel' && map.getZoom() >= 7) {
+      if (mapModeRef.current === 'pixel' && map.getZoom() >= 7) {
         map.getCanvas().style.cursor = 'crosshair'
       } else {
         map.getCanvas().style.cursor = 'grab'
@@ -214,9 +214,6 @@ const Map = () => {
 
     if (!isLoaded) return
     const { current: map } = mapRef
-
-    // sometimes map is not fully loaded on hot reload
-    if (!map.loaded()) return
 
     map.getCanvas().style.cursor =
       mapMode === 'pixel' && map.getZoom() >= 7 ? 'crosshair' : 'grab'
