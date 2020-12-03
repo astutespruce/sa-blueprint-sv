@@ -3,6 +3,7 @@
 *.egg-info/*
 
 .env
+.credentials/*
 
 /source_data/*
 /data/*

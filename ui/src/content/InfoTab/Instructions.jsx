@@ -99,9 +99,9 @@ const DesktopInstructions = () => (
       location, especially in areas of high variability in the data. To view and
       / or download more precise spatial data, please visit{' '}
       <OutboundLink to="https://salcc.databasin.org/galleries/50e3abe922a74c9e9b6d0167dd1e8f2e">
-        the Conservation Planning Atlas
-      </OutboundLink>
-      .
+        the Blueprint Gallery
+      </OutboundLink>{' '}
+      on the Conservation Planning Atlas.
       <br />
       <br />
       To unselect the pixel, click on the <CloseButton /> button in the upper

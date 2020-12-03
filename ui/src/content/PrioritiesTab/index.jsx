@@ -27,11 +27,24 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
 
   let corridorsColor = '#ffebc2'
   let corridorsLabel = 'Not a hub or corridor'
+  let hasInland = false
+  let hasMarine = false
 
-  if (type === 'pixel' && corridors !== null) {
-    corridorsColor = corridorCategories[corridors].color
-    corridorsLabel = corridorCategories[corridors].label
+  console.log('corridors', corridors)
+
+  if (corridors !== null) {
+    if (type === 'pixel') {
+      corridorsColor = corridorCategories[corridors].color
+      corridorsLabel = corridorCategories[corridors].label
+      hasInland = corridors <= 1
+      hasMarine = corridors > 1
+    } else {
+      hasInland = sum(corridors.slice(0, 2)) > 0
+      hasMarine = sum(corridors.slice(2, corridors.length)) > 0
+    }
   }
+
+  // detect corridor types present
 
   return (
     <Box sx={{ py: '2rem', pl: '1rem', pr: '2rem' }}>
@@ -83,10 +96,39 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
             remainder={remainder}
           />
         )}
-        <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
-          *Note: Includes the full extent of corridors. The Blueprint corridors
-          class includes only corridors not already identified as priority.
-        </Text>
+        {corridors !== null ? (
+          <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
+            {hasInland ? (
+              <>
+                Inland hubs are large patches (>2,000 ha) of highest priority
+                Blueprint areas and large patches (>2,000 ha) of permanently
+                protected lands. Inland corridors are the shortest paths that
+                connect these hubs while routing through as much Blueprint
+                priority as possible.
+                <br />
+                <br />
+              </>
+            ) : null}
+            {hasMarine ? (
+              <>
+                Marine hubs are large patches (>2,000 ha) of highest priority
+                Blueprint areas and all open water estuaries. Marine corridors
+                are the shortest paths that connect these hubs while routing
+                through as much Blueprint priority as possible.
+                <br />
+                <br />
+              </>
+            ) : null}
+
+            {type !== 'pixel' ? (
+              <>
+                Note that the corridors layer includes the full extent of
+                corridors, while the Blueprint corridors class includes only
+                corridors not already identified as priority.
+              </>
+            ) : null}
+          </Text>
+        ) : null}
       </Box>
     </Box>
   )

@@ -10,7 +10,7 @@
     "value": 1,
     "label": "Corridors",
     "percent": 5,
-    "description": "These are connections between large patches of highest priority areas and secured lands, optimized for efficiency and indicator condition in a least cost path analysis.",
+    "description": "Connections between hubs (large patches of highest priority areas and secured lands), optimized for efficiency and indicator condition in a least cost path analysis.",
     "report_description": "This category covers an additional 5% of the South Atlantic geography; in total, the Blueprint covers 50%.",
     "color": "#686868"
   },
