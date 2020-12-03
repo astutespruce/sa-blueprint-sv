@@ -15,7 +15,7 @@ const CorridorsChart = ({ categories, corridors, remainder }) => {
       const { label, color } = categories[i]
       return {
         value: percent,
-        label: label.endsWith('Corridors') ? `${label}*` : label,
+        label,
         color,
       }
     })

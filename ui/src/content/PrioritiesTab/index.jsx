@@ -119,14 +119,9 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
                 <br />
               </>
             ) : null}
-
-            {type !== 'pixel' ? (
-              <>
-                Note that the corridors layer includes the full extent of
-                corridors, while the Blueprint corridors class includes only
-                corridors not already identified as priority.
-              </>
-            ) : null}
+            Note that the corridors layer includes the full extent of corridors,
+            while the Blueprint corridors class includes only corridors not
+            already identified as priority.
           </Text>
         ) : null}
       </Box>
