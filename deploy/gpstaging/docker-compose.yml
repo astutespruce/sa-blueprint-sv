@@ -1,14 +1,14 @@
 version: "3.6"
 services:
   redis:
-    image: "redis:6.0.9-alpine"
+    image: ${DOCKER_REGISTRY}/redis:6.0.9-alpine
     logging:
       driver: journald
     networks:
       - shared
 
   mbtileserver:
-    image: consbio/mbtileserver:latest
+    image: ${DOCKER_REGISTRY}/mbtileserver:latest
     restart: always
     volumes:
       - /data/tiles:/tilesets
@@ -18,7 +18,7 @@ services:
       - shared
 
   renderer:
-    image: consbio/mbgl-renderer:latest
+    image: ${DOCKER_REGISTRY}/mbgl-renderer:latest
     restart: always
     volumes:
       - /data/tiles:/app/tiles
@@ -28,7 +28,7 @@ services:
       - shared
 
   caddy:
-    image: caddy/caddy:2.2.1-alpine
+    image: ${DOCKER_REGISTRY}/caddy:2.2.1-alpine
     depends_on:
       - mbtileserver
     restart: always
