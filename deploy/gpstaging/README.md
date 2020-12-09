@@ -50,7 +50,7 @@ docker-compose pull
 Tag each public image (update version numbers as appropriate):
 
 ```
-docker tag caddy/caddy:2.2.1-alpine $DOCKER_REGISTRY/caddy:2.2.1
+docker tag caddy/caddy:2.2.1-alpine $DOCKER_REGISTRY/caddy:2.2.1-alpine
 docker tag redis:6.0.9-alpine $DOCKER_REGISTRY/redis:6.0.9-alpine
 docker tag consbio/mbtileserver:latest $DOCKER_REGISTRY/mbtileserver:latest
 docker tag consbio/mbgl-renderer:latest $DOCKER_REGISTRY/mbgl-renderer:latest
@@ -59,7 +59,7 @@ docker tag consbio/mbgl-renderer:latest $DOCKER_REGISTRY/mbgl-renderer:latest
 Push each image:
 
 ```
-docker push $DOCKER_REGISTRY/caddy:2.2.1
+docker push $DOCKER_REGISTRY/caddy:2.2.1-alpine
 docker push $DOCKER_REGISTRY/redis:6.0.9-alpine
 docker push $DOCKER_REGISTRY/mbtileserver:latest
 docker push $DOCKER_REGISTRY/mbgl-renderer:latest
@@ -71,14 +71,21 @@ Create the UI build image that is used to build the UI on the server.
 
 ```bash
 docker-compose -f docker-compose.ui.yml build
+docker push $DOCKER_REGISTRY/sa-ui-build
 ```
 
 ## Instance setup
+
+Upgrade `docker-compose`:
+
+1. uninstall installation via `apt-get`: `sudo apt-get remove docker-compose`
+2. Install using `curl` using link on docker-compose website.
 
 Everything is run as `app` user. Create user and transfer ownership of main directories:
 
 ```bash
 sudo useradd app
+sudo usermod -aG docker app
 sudo mkdir /home/app
 sudo chown app:app /home/app
 sudo chown app:app /var/www
@@ -89,14 +96,15 @@ Add current domain user to `app` group:
 
 ```bash
 sudo usermod -a -G app <domain user>
+
 ```
 
 As `app` user:
 
 ```bash
 rm -rf /var/www/html
-mkdir /var/www/sa
-mkdir /var/www/se
+mkdir /var/www/southatlantic
+mkdir /var/www/southeast
 mkdir /data/sa
 mkdir /data/se
 mkdir /data/tiles
@@ -124,4 +132,34 @@ ALLOWED_ORIGINS="<hostname>"
 SENTRY_DSN=<sentry DSN>
 MAP_RENDER_THREADS=1
 MAX_JOBS=1
+```
+
+### Pull images
+
+As `app` user:
+
+Create Docker token:
+
+```bash
+export DOCKER_REGISTRY=<registry>
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin $DOCKER_REGISTRY
+```
+
+Pull images, in `/home/app/deploy/gpstaging/` directory:
+
+```bash
+docker-compose pull
+```
+
+### Build the UI
+
+Note: `--prefix-paths` is required for `gatsby build` to work; this is encapsulated in `build-ui.sh`.
+
+in `/home/app/deploy/gpstaging/ui` directory:
+
+```bash
+chmod 777 build-ui.sh
+docker-compose pull
+docker-compose build
+./build-ui.sh
 ```

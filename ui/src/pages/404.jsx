@@ -6,39 +6,47 @@ import BackgroundImage from 'gatsby-background-image'
 import { graphql } from 'gatsby'
 
 import { Layout } from 'components/layout'
+import { hasWindow } from 'util/dom'
 
 const Image = styled(BackgroundImage)`
   height: 100%;
   background-position: top center !important;
 `
 
-const NotFoundPage = ({ data: { image } }) => (
-  <Layout title="404: Not found">
-    <Image Tag="div" fluid={image.childImageSharp.fluid}>
-      <Flex
-        sx={{
-          alignItems: 'center',
-          justifyContent: 'center',
-          flexDirection: 'column',
-          height: '100%',
-        }}
-      >
-        <Box
+const NotFoundPage = ({ data: { image } }) => {
+  if (!hasWindow) {
+    // prevents initial load of this page for client routes
+    return null
+  }
+
+  return (
+    <Layout title="404: Not found">
+      <Image Tag="div" fluid={image.childImageSharp.fluid}>
+        <Flex
           sx={{
-            color: '#FFF',
-            p: '3rem',
-            background: 'rgba(0,0,0,0.7)',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            height: '100%',
           }}
         >
-          <Heading as="h1">NOT FOUND</Heading>
-          <Heading as="h2">
-            Sorry, we could not find what you were looking for here.
-          </Heading>
-        </Box>
-      </Flex>
-    </Image>
-  </Layout>
-)
+          <Box
+            sx={{
+              color: '#FFF',
+              p: '3rem',
+              background: 'rgba(0,0,0,0.7)',
+            }}
+          >
+            <Heading as="h1">NOT FOUND</Heading>
+            <Heading as="h2">
+              Sorry, we could not find what you were looking for here.
+            </Heading>
+          </Box>
+        </Flex>
+      </Image>
+    </Layout>
+  )
+}
 
 // image: https://unsplash.com/photos/gAvQfrHwbgY
 

@@ -3,7 +3,7 @@
 echo "Removing previous Gatsby build"
 docker-compose run --rm sa-ui-build clean
 
-if docker-compose run --rm sa-ui-build build; then
+if docker-compose run --rm sa-ui-build build --prefix-paths; then
     echo "====> Gatsby build succeeded"
     rm -rf /var/www/sa/*
     cp -r ./public/* /var/www/sa

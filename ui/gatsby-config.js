@@ -24,6 +24,7 @@ module.exports = {
     msFormAreaName: process.env.GATSBY_MS_FORM_AREANAME,
     msFormFileName: process.env.GATSBY_MS_FORM_FILENAME,
   },
+  pathPrefix: process.env.SITE_ROOT_PATH || `/`,
   plugins: [
     {
       resolve: `gatsby-plugin-google-gtag`,
