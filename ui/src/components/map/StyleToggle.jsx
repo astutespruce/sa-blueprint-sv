@@ -23,17 +23,25 @@ const desktopCSS = {
   boxShadow: '0 1px 5px rgba(0, 0, 0, 0.65)',
   width: '64px',
   height: '64px',
+  img: {
+    width: '64px',
+    height: '64px',
+  },
 }
 
 const mobileCSS = {
   ...coreCSS,
   right: '10px',
   top: '24px',
-  width: '40px',
-  height: '40px',
   borderRadius: '32px',
   boxShadow: '0 1px 5px #000',
   border: '1px solid #FFF',
+  width: '40px',
+  height: '40px',
+  img: {
+    width: '40px',
+    height: '40px',
+  },
 }
 
 const styles = [
@@ -129,12 +137,7 @@ const StyleToggle = ({ map, sources, layers, isMobile }) => {
 
   return (
     <Box sx={isMobile ? mobileCSS : desktopCSS}>
-      <Image
-        sx={{ height: '100%', width: '100%' }}
-        alt={label}
-        src={icon}
-        onClick={handleToggle}
-      />
+      <Image alt={label} src={icon} onClick={handleToggle} />
     </Box>
   )
 }
