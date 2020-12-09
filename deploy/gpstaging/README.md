@@ -84,10 +84,8 @@ Upgrade `docker-compose`:
 Everything is run as `app` user. Create user and transfer ownership of main directories:
 
 ```bash
-sudo useradd app
+sudo useradd --create-home app
 sudo usermod -aG docker app
-sudo mkdir /home/app
-sudo chown app:app /home/app
 sudo chown app:app /var/www
 sudo chown app:app /data
 ```
