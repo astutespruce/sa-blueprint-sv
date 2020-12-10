@@ -83,7 +83,7 @@ services:
       - renderer
     env_file:
       - .env
-    command: ["/home/app/.local/bin/arq", "api.worker.WorkerSettings"]
+    command: ["/usr/local/bin/arq", "api.worker.WorkerSettings"]
     volumes:
       - user_upload:/tmp/sa-reports
       - /data/sa:/home/app/data
