@@ -1,29 +1,30 @@
 # IMPORTANT: this is the deploy-ready version of requirements
 # see Pipfile for development environment dependencies
+# last updated 12/9/2020
 
 Cython==0.29.21
 
 # binary deps that use GDAL or GEOS (must be installed first)
-Fiona==1.8.17 --no-binary fiona
-rasterio==1.1.7 --no-binary rasterio
-Shapely==1.7.0 --no-binary shapely
+Fiona==1.8.18 --no-binary fiona
+rasterio==1.1.8 --no-binary rasterio
+Shapely==1.7.1 --no-binary shapely
 pygeos==0.8 --no-binary pygeos
 
 # everything else
 affine==2.3.0
-aiofiles==0.5.0
-arq==0.19
-fastapi==0.61.1
+aiofiles==0.6.0
+arq==0.19.1
+fastapi==0.62.0
 geopandas==0.8.1
 gunicorn==20.0.4
-httpx==0.14.3
+httpx==0.16.1
 jinja2==2.11.2
-pandas==1.1.2
-Pillow==7.2.0
+pandas==1.1.5
+Pillow==8.0.1
 progress==1.5
-pyarrow==1.0.1
-python-dotenv==0.14.0
+pyarrow==2.0.0
+python-dotenv==0.15.0
 python-multipart==0.0.5
-sentry-sdk==0.17.6
-uvicorn==0.11.8
-WeasyPrint==51
+sentry-sdk==0.19.4
+uvicorn[standard]==0.13.0
+WeasyPrint==52.2

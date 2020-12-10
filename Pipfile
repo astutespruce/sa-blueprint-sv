@@ -25,7 +25,7 @@ progress = "*"
 pyogrio = {editable = true,path = "./../pyogrio"}
 python-dotenv = "*"
 python-multipart = "*"
-rasterio = "==1.1.7"
+rasterio = "==1.1.8"
 sentry-sdk = "*"
 uvicorn = "*"
 weasyprint = "*"

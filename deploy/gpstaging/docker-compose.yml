@@ -45,6 +45,56 @@ services:
     networks:
       - shared
 
+  sa-api:
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
+    restart: always
+    external_links:
+      - redis
+    env_file:
+      - .env
+    command: [
+        "/usr/local/bin/gunicorn",
+        "-k",
+        "uvicorn.workers.UvicornWorker",
+        "--name",
+        "uvicorn",
+        "--workers",
+        "1", # TODO: make this higher on production
+        "-b",
+        ":5000",
+        "api.api:app",
+      ]
+    volumes:
+      - user_upload:/tmp/sa-reports
+      - /data/sa:/home/app/data
+      - ../../api:/home/app/api # main API
+      - ../../analysis:/home/app/analysis # needed for analysis utils
+      - ../../constants:/home/app/constants # needed for JSON files for blueprint, indicators
+    logging:
+      driver: journald
+    networks:
+      - shared
+
+  sa-worker:
+    image: ${DOCKER_REGISTRY}/blueprint-api:latest
+    restart: always
+    external_links:
+      - redis
+      - renderer
+    env_file:
+      - .env
+    command: ["/home/app/.local/bin/arq", "api.worker.WorkerSettings"]
+    volumes:
+      - user_upload:/tmp/sa-reports
+      - /data/sa:/home/app/data
+      - ../../api:/home/app/api # main API
+      - ../../analysis:/home/app/analysis # needed for analysis utils
+      - ../../constants:/home/app/constants # needed for JSON files for blueprint, indicators
+    logging:
+      driver: journald
+    networks:
+      - shared
+
 networks:
   shared:
     driver: bridge
@@ -53,3 +103,4 @@ networks:
 volumes:
   caddy_certs:
   caddy_config:
+  user_upload:

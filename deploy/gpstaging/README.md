@@ -37,6 +37,8 @@ aws ecr create-repository --profile geoplatform-test --repository-name blueprint
 aws ecr create-repository --profile geoplatform-test --repository-name blueprint/mbgl-renderer --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=<ARN of key>
 
 aws ecr create-repository --profile geoplatform-test --repository-name blueprint/sa-ui-build --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=<ARN of key>
+
+aws ecr create-repository --profile geoplatform-test --repository-name blueprint/blueprint-api --image-scanning-configuration scanOnPush=true --encryption-configuration encryptionType=KMS,kmsKey=<ARN of key>
 ```
 
 ## Push public images from Docker Hub to ECR
@@ -74,6 +76,15 @@ docker-compose -f docker-compose.ui.yml build
 docker push $DOCKER_REGISTRY/sa-ui-build
 ```
 
+Create the API / background worker image from the base directory in this repo:
+Note: the `PYOGRIO_COMMIT_HASH` must be set to a specific commit hash on that repo.
+
+```bash
+docker build -f docker/api/Dockerfile -t blueprint-api:latest --build-arg PYOGRIO_COMMIT_HASH=<hash> .
+docker tag blueprint-api:latest $DOCKER_REGISTRY/blueprint-api:latest
+docker push $DOCKER_REGISTRY/blueprint-api:latest
+```
+
 ## Instance setup
 
 Upgrade `docker-compose`:
@@ -94,7 +105,6 @@ Add current domain user to `app` group:
 
 ```bash
 sudo usermod -a -G app <domain user>
-
 ```
 
 As `app` user:
@@ -132,7 +142,7 @@ MAP_RENDER_THREADS=1
 MAX_JOBS=1
 ```
 
-### Pull images
+### Pull images (to the EC2 instance)
 
 As `app` user:
 

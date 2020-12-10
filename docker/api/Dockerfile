@@ -14,28 +14,34 @@ RUN apt-get update && apt-get install -y \
 # Southeast: Raleway & Source Sans Pro
 RUN mkdir /usr/share/fonts/google && \
     curl https://fonts.google.com/download?family=Montserrat --output /tmp/Montserrat.zip && \
-    unzip /tmp/Montserrat.zip -d /usr/share/fonts/google && \
+    unzip -o /tmp/Montserrat.zip -d /usr/share/fonts/google && \
     curl https://fonts.google.com/download?family=Lora --output /tmp/Lora.zip && \
     unzip -o /tmp/Lora.zip -d /usr/share/fonts/google && \
     curl https://fonts.google.com/download?family=Raleway --output /tmp/Raleway.zip && \
-    unzip /tmp/Raleway.zip -d /usr/share/fonts/google && \
+    unzip -o /tmp/Raleway.zip -d /usr/share/fonts/google && \
     mv /usr/share/fonts/google/static/* /usr/share/fonts/google/ && \
     curl https://fonts.google.com/download?family=Source+Sans+Pro --output /tmp/SourceSansPro.zip && \
     unzip -o /tmp/SourceSansPro.zip -d /usr/share/fonts/google && \
     fc-cache -fv
 
 RUN useradd --create-home app
+USER app
 WORKDIR /home/app
+
 ENV PYTHONPATH="${PYTHONPATH}:/home/app"
 ENV PYTHONUNBUFFERED 1
 
-# Build & install pyogrio (note: update commit SHA1 as required)
-RUN pip3 install -e git+https://github.com/brendan-ward/pyogrio.git@9bcf43ff7905a1746628f3ff52cacdacb1d1ebfb#egg=pyogrio && \
+# Setup Python dependencies used by API and background worker
+# NOTE: these are the same between South Atlantic and Southeast
+COPY --chown=app:app ./requirements.txt /tmp/requirements.txt
+RUN pip3 install --user --no-warn-script-location -r /tmp/requirements.txt
+
+# Build & install pyogrio (note: update commit SHA1 as required in .env file)
+# PYOGRIO_COMMIT_HASH must be provided via --build-arg for docker build
+ARG PYOGRIO_COMMIT_HASH
+RUN git clone https://github.com/brendan-ward/pyogrio.git /home/app/src/pyogrio && \
     cd /home/app/src/pyogrio && \
+    git checkout ${PYOGRIO_COMMIT_HASH} && \
     python setup.py build_ext && \
-    python setup.py install && \
+    python setup.py install --user && \
     cd /home/app
-
-COPY ./requirements.txt /tmp/requirements.txt
-
-RUN pip3 install -r /tmp/requirements.txt
