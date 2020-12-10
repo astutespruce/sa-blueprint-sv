@@ -25,16 +25,17 @@ RUN mkdir /usr/share/fonts/google && \
     fc-cache -fv
 
 RUN useradd --create-home app
-USER app
 WORKDIR /home/app
+# Note: we are not able to use a user here because we have to mount a volume
+# for sharing between containers, which can only be done as root.
 
 ENV PYTHONPATH="${PYTHONPATH}:/home/app"
 ENV PYTHONUNBUFFERED 1
 
 # Setup Python dependencies used by API and background worker
 # NOTE: these are the same between South Atlantic and Southeast
-COPY --chown=app:app ./requirements.txt /tmp/requirements.txt
-RUN pip3 install --user --no-warn-script-location -r /tmp/requirements.txt
+COPY ./requirements.txt /tmp/requirements.txt
+RUN pip3 install --no-warn-script-location -r /tmp/requirements.txt
 
 # Build & install pyogrio (note: update commit SHA1 as required in .env file)
 # PYOGRIO_COMMIT_HASH must be provided via --build-arg for docker build
@@ -43,5 +44,5 @@ RUN git clone https://github.com/brendan-ward/pyogrio.git /home/app/src/pyogrio 
     cd /home/app/src/pyogrio && \
     git checkout ${PYOGRIO_COMMIT_HASH} && \
     python setup.py build_ext && \
-    python setup.py install --user && \
+    python setup.py install && \
     cd /home/app
