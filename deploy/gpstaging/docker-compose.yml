@@ -10,6 +10,7 @@ services:
   mbtileserver:
     image: ${DOCKER_REGISTRY}/mbtileserver:latest
     restart: always
+    command: "--tiles-only"
     volumes:
       - /data/tiles:/tilesets
     logging:

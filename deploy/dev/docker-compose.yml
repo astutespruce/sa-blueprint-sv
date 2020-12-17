@@ -7,6 +7,7 @@ services:
   mbtileserver:
     image: consbio/mbtileserver:latest
     restart: unless-stopped
+    # command: "--tiles-only"
     volumes:
       - ../../tiles:/tilesets
 
@@ -72,8 +73,8 @@ services:
     image: caddy/caddy:2.2.1-alpine
     depends_on:
       - mbtileserver
-      - api
-      - worker
+      # - api
+      # - worker
     restart: always
     ports:
       - "8080:80"

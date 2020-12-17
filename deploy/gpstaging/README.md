@@ -161,11 +161,33 @@ docker-compose pull
 
 ### Build the UI
 
+Create a `.env.production` file in `/home/app/ui` with the following:
+
+```
+GATSBY_MAPBOX_API_TOKEN=<mb token>
+GATSBY_API_TOKEN=<api token>
+
+SITE_URL=<site root URL>
+SITE_ROOT_PATH=southatlantic
+GATSBY_API_HOST=<site root URL>/southatlantic
+GATSBY_TILE_HOST=<site root URL>
+GATSBY_SENTRY_DSN=<dsn>
+GATSBY_GOOGLE_ANALYTICS_ID=<id>
+
+GATSBY_MS_FORM_EMAIL=<email>
+GATSBY_MS_FORM_NAME=<name>
+GATSBY_MS_FORM_ORG=<org>
+GATSBY_MS_FORM_USE=<use>
+GATSBY_MS_FORM_AREANAME=<areaname>
+GATSBY_MS_FORM_FILENAME=<filename>
+```
+
 Note: `--prefix-paths` is required for `gatsby build` to work; this is encapsulated in `build-ui.sh`.
 
 in `/home/app/deploy/gpstaging/ui` directory:
 
 ```bash
+export DOCKER_REGISTRY=<registry url>
 chmod 777 build-ui.sh
 docker-compose pull
 docker-compose build
