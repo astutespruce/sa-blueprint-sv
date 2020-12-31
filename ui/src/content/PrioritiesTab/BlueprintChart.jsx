@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { PieChart } from 'react-minimal-pie-chart'
-import { Flex } from 'theme-ui'
+import { Flex, Text } from 'theme-ui'
 
 import { PieChartLegend } from 'components/chart'
 
@@ -21,23 +21,43 @@ const BlueprintChart = ({ categories, blueprint, remainder }) => {
       value: remainder,
       color: '#EEE',
       label: 'Outside South Atlantic Blueprint',
+      description: null,
     })
   }
 
   return (
-    <Flex sx={{ alignItems: 'center', mt: '2rem' }}>
-      <PieChart
-        data={blueprintChartData}
-        lineWidth={60}
-        radius={chartWidth / 4 - 2}
-        style={{
-          width: chartWidth,
-          flex: '0 1 auto',
-        }}
-      />
+    <>
+      <Flex sx={{ alignItems: 'center', mt: '2rem' }}>
+        <PieChart
+          data={blueprintChartData}
+          lineWidth={60}
+          radius={chartWidth / 4 - 2}
+          style={{
+            width: chartWidth,
+            flex: '0 1 auto',
+          }}
+        />
 
-      <PieChartLegend elements={blueprintChartData} />
-    </Flex>
+        <PieChartLegend elements={blueprintChartData} />
+      </Flex>
+      {remainder < 100 ? (
+        <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
+          {blueprintChartData
+            .filter(({ description }) => description)
+            .map(({ label, description }, i) => (
+              <>
+                {i > 0 ? (
+                  <>
+                    <br />
+                    <br />
+                  </>
+                ) : null}
+                {label}: {description}
+              </>
+            ))}
+        </Text>
+      ) : null}
+    </>
   )
 }
 

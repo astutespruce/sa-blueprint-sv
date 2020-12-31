@@ -5,7 +5,6 @@ TODO:
 
 import logging
 from pathlib import Path
-import os
 from secrets import compare_digest
 import shutil
 import tempfile
@@ -18,13 +17,11 @@ from arq.jobs import Job, JobStatus
 from fastapi import (
     FastAPI,
     File,
-    Header,
     UploadFile,
     Form,
     HTTPException,
     Depends,
     Security,
-    BackgroundTasks,
 )
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasic, HTTPBasicCredentials

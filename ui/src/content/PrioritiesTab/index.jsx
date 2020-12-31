@@ -53,17 +53,23 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
         <Text sx={{ color: 'grey.7' }}>for shared conservation action</Text>
 
         {type === 'pixel' ? (
-          <Flex sx={{ alignItems: 'center', mt: '0.5rem' }}>
-            <Box
-              sx={{
-                width: '2rem',
-                height: '1.5rem',
-                mr: '0.5rem',
-                bg: priorityCategories[blueprint].color,
-              }}
-            />
-            <Text>{priorityCategories[blueprint].label}</Text>
-          </Flex>
+          <Box>
+            <Flex sx={{ alignItems: 'center', mt: '0.5rem' }}>
+              <Box
+                sx={{
+                  width: '2rem',
+                  height: '1.5rem',
+                  mr: '0.5rem',
+                  flex: '0 0 auto',
+                  bg: priorityCategories[blueprint].color,
+                }}
+              />
+              <Text>{priorityCategories[blueprint].label}</Text>
+            </Flex>
+            <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
+              {priorityCategories[blueprint].description}
+            </Text>
+          </Box>
         ) : (
           <BlueprintChart
             categories={priorityCategories}
@@ -100,30 +106,30 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
           <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
             {hasInland ? (
               <>
-                Inland hubs are large patches (>2,000 ha) of highest priority
-                Blueprint areas and large patches (>2,000 ha) of permanently
+                Inland hubs are large patches (&gt;2,000 ha) of highest priority
+                Blueprint areas and large patches (&gt;2,000 ha) of permanently
                 protected lands. Inland corridors are the shortest paths that
                 connect these hubs while routing through as much Blueprint
                 priority as possible.
-                <br />
                 <br />
               </>
             ) : null}
             {hasMarine ? (
               <>
-                Marine hubs are large patches (>2,000 ha) of highest priority
+                Marine hubs are large patches (&gt;2,000 ha) of highest priority
                 Blueprint areas and all open water estuaries. Marine corridors
                 are the shortest paths that connect these hubs while routing
                 through as much Blueprint priority as possible.
                 <br />
-                <br />
               </>
             ) : null}
-            Note that the corridors layer includes the full extent of corridors,
-            while the Blueprint corridors class includes only corridors not
-            already identified as priority.
           </Text>
         ) : null}
+        <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
+          Note that the corridors layer includes the full extent of corridors,
+          while the Blueprint corridors class includes only corridors not
+          already identified as priority.
+        </Text>
       </Box>
     </Box>
   )
