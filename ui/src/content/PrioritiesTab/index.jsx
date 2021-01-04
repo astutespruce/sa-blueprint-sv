@@ -102,30 +102,23 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
             remainder={remainder}
           />
         )}
-        {corridors !== null ? (
-          <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
-            {hasInland ? (
-              <>
-                Inland hubs are large patches (&gt;2,000 ha) of highest priority
-                Blueprint areas and large patches (&gt;2,000 ha) of permanently
-                protected lands. Inland corridors are the shortest paths that
-                connect these hubs while routing through as much Blueprint
-                priority as possible.
-                <br />
-              </>
-            ) : null}
-            {hasMarine ? (
-              <>
-                Marine hubs are large patches (&gt;2,000 ha) of highest priority
-                Blueprint areas and all open water estuaries. Marine corridors
-                are the shortest paths that connect these hubs while routing
-                through as much Blueprint priority as possible.
-                <br />
-              </>
-            ) : null}
+        {hasInland ? (
+          <Text sx={{ mt: '1em', fontSize: 1, color: 'grey.7' }}>
+            Inland hubs are either large patches (&gt;2,000 ha) of highest
+            priority Blueprint areas or large patches of permanently protected
+            lands. Inland corridors are the shortest paths that connect these
+            hubs while routing through as much Blueprint priority as possible.
           </Text>
         ) : null}
-        <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
+        {hasMarine ? (
+          <Text sx={{ mt: '1em', fontSize: 1, color: 'grey.7' }}>
+            Marine hubs are either large patches (&gt;2,000 ha) of highest
+            priority Blueprint areas or large patches of open water estuaries.
+            Marine corridors are the shortest paths that connect these hubs
+            while routing through as much Blueprint priority as possible.
+          </Text>
+        ) : null}
+        <Text sx={{ mt: '1em', fontSize: 1, color: 'grey.7' }}>
           Note that the corridors layer includes the full extent of corridors,
           while the Blueprint corridors class includes only corridors not
           already identified as priority.
