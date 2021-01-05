@@ -13,6 +13,27 @@ sablueprint.mockuplab.us {
       reverse_proxy sa-api:5000
   }
 
+
+  # most files can be cached indefinitely, they are rebuilt with new names each time
+  @cached_files {
+    path *.jpg *.jpeg *.png *.gif *.ico *.webp *.svg *.css *.js */static/*
+    not path /favicon*
+  }
+  header @cached_files Cache-Control "public, max-age=31536000, immutable"
+
+  # make sure favicons are not cached too long
+  @short_cached_files {
+    path /favicon*
+  }
+  header @short_cached_files Cache-Control "public, max-age=3600"
+
+  # page-data must be fetched each time
+  @no_cache {
+    path *.html *.webmanifest */page-data/* /southatlantic/ /southeast/ */custom_report/
+  }
+  header @no_cache Cache-Control "public, max-age:0, must-revalidate"
+
+
   root * /var/www/sa
   file_server
   encode zstd gzip
