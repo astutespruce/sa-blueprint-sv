@@ -70,9 +70,10 @@ docker push $DOCKER_REGISTRY/mbgl-renderer:latest
 ## Build and push custom images
 
 Create the UI build image that is used to build the UI on the server.
+From within the `ui` folder of the applicable deploy folder:
 
 ```bash
-docker-compose -f docker-compose.ui.yml build
+docker-compose -f docker-compose.yml build
 docker push $DOCKER_REGISTRY/sa-ui-build
 ```
 

@@ -28,7 +28,7 @@ blueprint.mockuplab.us {
 
   # page-data must be fetched each time
   @no_cache {
-    path *.html *.webmanifest */page-data/* /southatlantic/ /southeast/ */custom_report/
+    path *.html *.webmanifest */page-data/* / */custom_report/
   }
   header @no_cache Cache-Control "public, max-age:0, must-revalidate"
 
