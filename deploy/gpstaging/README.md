@@ -99,6 +99,7 @@ sudo useradd --create-home app
 sudo usermod -aG docker app
 sudo chown app:app /var/www
 sudo chown app:app /data
+usermod --shell /bin/bash app
 ```
 
 Add current domain user to `app` group:
@@ -123,7 +124,7 @@ git clone https://github.com/astutespruce/secas-blueprint.git
 
 ### Environment setup
 
-In `/home/app/sa-blueprint-sv/deploy/gpstaging` creating a `.env` file with:
+In `/home/app/sa-blueprint-sv/deploy/gpstaging` create an `.env` file with:
 
 ```
 DOCKER_REGISTRY=<registry>

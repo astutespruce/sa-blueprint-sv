@@ -1,0 +1,61 @@
+:80 {
+  log {
+    level ERROR
+  }
+
+  # redirect site root to southatlantic
+  redir / /southatlantic/
+
+  # everything must be in a route to get proper matching order
+  route {
+    route /services* {
+        header Cache-Control "public, max-age=3600, must-revalidate"
+        reverse_proxy mbtileserver:8000
+    }
+
+    encode zstd gzip
+
+    route /southatlantic/api/* {
+      uri strip_prefix /southatlantic
+      reverse_proxy sa-api:5000
+    }
+
+    # most files can be cached indefinitely, they are rebuilt with new names each time
+    @cached_files {
+      path *.jpg *.jpeg *.png *.gif *.ico *.webp *.svg *.css *.js */static/*
+      not path /favicon*
+    }
+    header @cached_files Cache-Control "public, max-age=31536000, immutable"
+
+    # make sure favicons are not cached too long
+    @short_cached_files {
+      path /favicon*
+    }
+    header @short_cached_files Cache-Control "public, max-age=3600"
+
+    # page-data must be fetched each time
+    @no_cache {
+      path *.html *.webmanifest */page-data/* /southatlantic/ /southeast/ */custom_report/
+    }
+    header @no_cache Cache-Control "public, max-age:0, must-revalidate"
+
+    root * /var/www
+    file_server /southatlantic*
+    file_server /southeast*
+
+    # redirect everything else to a 404 page
+    handle {
+      redir * /southatlantic/404.html
+    }
+  }
+
+  # send any errors to South Atlantic 404 page
+  # note this is redir instead of rewrite, because gatsby doesn't properly handle
+  # URLs rewritten to its error page
+  handle_errors {
+      @404 {
+          expression {http.error.status_code} == 404
+      }
+      redir * /southatlantic/404.html
+  }
+}
