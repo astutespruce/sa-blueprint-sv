@@ -10,7 +10,7 @@ import { useBlueprintPriorities, useMapData } from 'components/data'
 
 import { hasWindow } from 'util/dom'
 import { useIsEqualEffect } from 'util/hooks'
-import { extractPixelData, getPixelValue } from './pixels'
+import { extractPixelData } from './pixels'
 import { getCenterAndZoom } from './util'
 import { config, sources, indicatorSources, layers } from './config'
 import { unpackFeatureData } from './features'
@@ -58,7 +58,7 @@ const Map = () => {
   useEffect(() => {
     // if there is no window, we cannot render this component
     if (!hasWindow) {
-      return null
+      return undefined
     }
 
     const { bounds, maxBounds, minZoom, maxZoom } = config

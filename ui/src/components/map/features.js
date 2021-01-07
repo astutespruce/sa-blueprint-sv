@@ -73,6 +73,10 @@ export const unpackFeatureData = (properties) => {
     values.indicators = []
   }
 
+  values.ecosystems = new Set(
+    Object.keys(values.indicators).map((id) => id.split('_')[0])
+  )
+
   if (values.slr) {
     values.slr = applyFactor(values.slr, 0.1)
   }

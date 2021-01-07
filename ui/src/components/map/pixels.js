@@ -203,6 +203,10 @@ export const extractPixelData = (map, point, blueprintByColor) => {
     ({ value }) => value
   )
 
+  const ecosystems = new Set(
+    Object.keys(indicators).map((id) => id.split('_')[0])
+  )
+
   // extract ownership info
   const ownership = {}
   const protection = {}
@@ -234,6 +238,7 @@ export const extractPixelData = (map, point, blueprintByColor) => {
     location: { latitude, longitude, zoom: map.getZoom() },
     blueprint: blueprintByColor[blueprintColor] || 0, // default to not a priority
     indicators,
+    ecosystems,
     corridors: indicators.corridors === undefined ? null : indicators.corridors,
     ownership,
     protection,

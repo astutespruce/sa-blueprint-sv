@@ -9,7 +9,7 @@ import { sum } from 'util/data'
 import BlueprintChart from './BlueprintChart'
 import CorridorsChart from './CorridorsChart'
 
-const PrioritiesTab = ({ type, blueprint, corridors }) => {
+const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
   const { all: allPriorities } = useBlueprintPriorities()
   const corridorCategories = useCorridors()
 
@@ -30,7 +30,9 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
   let hasInland = false
   let hasMarine = false
 
-  console.log('corridors', corridors)
+  const hasInlandIndicators =
+    ecosystems.has('land') || ecosystems.has('freshwater')
+  const hasMarineIndicators = ecosystems.has('marine')
 
   if (corridors !== null) {
     if (type === 'pixel') {
@@ -43,8 +45,6 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
       hasMarine = sum(corridors.slice(2, corridors.length)) > 0
     }
   }
-
-  // detect corridor types present
 
   return (
     <Box sx={{ py: '2rem', pl: '1rem', pr: '2rem' }}>
@@ -102,7 +102,7 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
             remainder={remainder}
           />
         )}
-        {hasInland ? (
+        {hasInland || hasInlandIndicators || type === 'subwatershed' ? (
           <Text sx={{ mt: '1em', fontSize: 1, color: 'grey.7' }}>
             Inland hubs are either large patches (&gt;2,000 ha) of highest
             priority Blueprint areas or large patches of permanently protected
@@ -110,7 +110,7 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
             hubs while routing through as much Blueprint priority as possible.
           </Text>
         ) : null}
-        {hasMarine ? (
+        {hasMarine || hasMarineIndicators || type === 'marine_block' ? (
           <Text sx={{ mt: '1em', fontSize: 1, color: 'grey.7' }}>
             Marine hubs are either large patches (&gt;2,000 ha) of highest
             priority Blueprint areas or large patches of open water estuaries.
@@ -138,11 +138,13 @@ PrioritiesTab.propTypes = {
     PropTypes.arrayOf(PropTypes.number),
     PropTypes.number,
   ]),
+  ecosystems: PropTypes.instanceOf(Set),
 }
 
 PrioritiesTab.defaultProps = {
   blueprint: [],
   corridors: [],
+  ecosystems: new Set(),
 }
 
 export default PrioritiesTab

@@ -31,12 +31,12 @@ const TabContent = ({ tab, mapData }) => {
 
   const {
     type,
-    acres: unitAcres,
     blueprint,
     blueprint_total: blueprintAcres,
     shape_mask: analysisAcres,
     corridors,
     indicators,
+    ecosystems,
     slr,
     urban,
     ownership,
@@ -52,7 +52,7 @@ const TabContent = ({ tab, mapData }) => {
           type={type}
           blueprint={blueprint}
           corridors={corridors}
-          blueprintAcres={blueprintAcres}
+          ecosystems={ecosystems}
         />
       )
     }

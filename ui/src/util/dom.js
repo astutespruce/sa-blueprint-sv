@@ -7,7 +7,7 @@ export const isUnsupported =
     /MSIE 10/i.test(navigator.userAgent) ||
     /Trident/i.test(navigator.userAgent))
 
-export const isDebug = hasWindow && process.env.NODE_ENV === 'development'
+export const isLocalDev = hasWindow && process.env.NODE_ENV === 'development'
 
 /**
  * URI encode object key:value pairs
