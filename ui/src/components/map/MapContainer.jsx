@@ -7,7 +7,7 @@ import React, {
 } from 'react'
 import { Box, Flex, useThemeUI } from 'theme-ui'
 
-import { useBreakpoints } from 'components/layout'
+import { ClientOnly, useBreakpoints } from 'components/layout'
 import { useMapData } from 'components/data'
 import { Tabs as MobileTabs } from 'components/layout/mobile'
 import { SidebarHeader, Tabs as DesktopTabs } from 'components/layout/desktop'
@@ -145,6 +145,7 @@ const MapContainer = () => {
             flexGrow: 1,
             flexShrink: 0,
             flexBasis: layout.sidebar.width,
+            maxWidth: layout.sidebar.width,
             flexDirection: 'column',
             overflowX: 'hidden',
             overflowY: 'hidden',
@@ -180,7 +181,9 @@ const MapContainer = () => {
           </Box>
         </Flex>
 
-        <Map />
+        <ClientOnly>
+          <Map />
+        </ClientOnly>
       </Flex>
 
       {/* Mobile footer tabs */}
