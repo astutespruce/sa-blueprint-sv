@@ -16,9 +16,16 @@ body {
   }
 
   @bottom-left {
-    content: 'Created {{date}} using {{url}}';
+    content: 'Created {{date}}';
     font-size: 10pt;
     color: #aaaaaa;
+  }
+
+  @bottom-center {
+    content: '{{url}}';
+    font-size: 10pt;
+    color: #aaaaaa;
+    text-align: center;
   }
 
   @bottom-right {

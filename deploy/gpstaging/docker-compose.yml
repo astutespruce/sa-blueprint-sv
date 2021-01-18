@@ -49,6 +49,9 @@ services:
   sa-api:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
     restart: always
+    depends_on:
+      - redis
+      - sa-worker
     external_links:
       - redis
     env_file:
@@ -79,6 +82,9 @@ services:
   sa-worker:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
     restart: always
+    depends_on:
+      - redis
+      - renderer
     external_links:
       - redis
       - renderer

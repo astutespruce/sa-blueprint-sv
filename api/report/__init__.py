@@ -9,6 +9,7 @@ from pathlib import Path
 from weasyprint import HTML
 from jinja2 import Environment, FileSystemLoader
 
+from api.settings import SITE_URL
 from analysis.constants import (
     BLUEPRINT,
     ECOSYSTEMS,
@@ -140,7 +141,7 @@ def create_report(maps, results):
         "date": date.today().strftime("%m/%d/%Y"),
         "title": title,
         "subtitle": subtitle,
-        "url": "https://blueprint.southatlanticlcc.org/",
+        "url": SITE_URL,
         "maps": maps,
         "legends": legends,
         "ecosystems": ecosystems,

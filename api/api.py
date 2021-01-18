@@ -14,15 +14,7 @@ from zipfile import ZipFile
 import arq
 
 from arq.jobs import Job, JobStatus
-from fastapi import (
-    FastAPI,
-    File,
-    UploadFile,
-    Form,
-    HTTPException,
-    Depends,
-    Security,
-)
+from fastapi import FastAPI, File, UploadFile, Form, HTTPException, Depends, Security
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import HTTPBasic, HTTPBasicCredentials
 from fastapi.security.api_key import APIKeyQuery, APIKey
@@ -44,6 +36,7 @@ from api.settings import (
     TEMP_DIR,
     ALLOWED_ORIGINS,
     SENTRY_DSN,
+    SENTRY_ENV,
 )
 from api.progress import get_progress
 
@@ -56,7 +49,7 @@ app = FastAPI()
 
 if SENTRY_DSN:
     log.info("setting up sentry")
-    sentry_sdk.init(dsn=SENTRY_DSN)
+    sentry_sdk.init(dsn=SENTRY_DSN, environment=SENTRY_ENV)
     app.add_middleware(SentryAsgiMiddleware)
 
 

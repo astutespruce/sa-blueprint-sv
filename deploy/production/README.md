@@ -41,12 +41,17 @@ As `app` user:
 rm -rf /var/www/html
 mkdir /var/www/southatlantic
 mkdir /var/www/southeast
-mkdir /data/sa
-mkdir /data/se
-mkdir /data/tiles
 cd ~
 git clone https://github.com/astutespruce/sa-blueprint-sv.git
 git clone https://github.com/astutespruce/secas-blueprint.git
+```
+
+### EFS data sync
+
+After transfer of data to EFS mounted at `/data`, change permissions
+
+```
+sudo chown -R app:app /data
 ```
 
 ### Environment setup
@@ -114,10 +119,14 @@ Note: `--prefix-paths` is required for `gatsby build` to work; this is encapsula
 
 in `/home/app/deploy/gpstaging/ui` directory:
 
+Create a `.env` file with
+
+```
+DOCKER_REGISTRY=<registry url>
+```
+
 ```bash
-export DOCKER_REGISTRY=<registry url>
 chmod 777 build-ui.sh
 docker-compose pull
-docker-compose build
 ./build-ui.sh
 ```

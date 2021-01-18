@@ -7,6 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TEMP_DIR = Path(os.getenv("TEMP_DIR", "/tmp/sa-report"))
+SITE_URL = os.getenv("SITE_URL", "http://localhost")
 MBGL_SERVER_URL = os.getenv("MBGL_SERVER_URL", "http://localhost:8002/render")
 API_TOKEN = os.getenv("API_TOKEN")
 API_SECRET = os.getenv("API_SECRET")
@@ -15,6 +16,7 @@ REDIS_HOST = os.getenv("REDIS_HOST", "localhost")
 REDIS_PORT = os.getenv("REDIS_PORT", 6379)
 ALLOWED_ORIGINS = os.getenv("ALLOWED_ORIGINS", "*").split(",")
 SENTRY_DSN = os.getenv("SENTRY_DSN")
+SENTRY_ENV = os.getenv("SENTRY_ENV")
 
 REDIS = RedisSettings(host=REDIS_HOST, port=REDIS_PORT)
 REDIS_QUEUE = "south_atlantic"

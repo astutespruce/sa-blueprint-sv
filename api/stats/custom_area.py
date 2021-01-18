@@ -5,13 +5,7 @@ import numpy as np
 import pygeos as pg
 import geopandas as gp
 
-from analysis.lib.pygeos_util import (
-    to_crs,
-    to_dict,
-    sjoin,
-    sjoin_geometry,
-    intersection,
-)
+from analysis.lib.pygeos_util import to_crs, to_dict, sjoin, intersection
 from analysis.constants import (
     BLUEPRINT,
     INDICATORS,

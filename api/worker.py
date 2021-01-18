@@ -12,6 +12,7 @@ from api.settings import (
     JOB_TIMEOUT,
     FILE_RETENTION,
     SENTRY_DSN,
+    SENTRY_ENV
     LOGGING_LEVEL,
     REDIS,
     REDIS_QUEUE,
@@ -25,7 +26,7 @@ log.setLevel(LOGGING_LEVEL)
 
 if SENTRY_DSN:
     log.info("setting up sentry in background worker")
-    sentry_sdk.init(dsn=SENTRY_DSN)
+    sentry_sdk.init(dsn=SENTRY_DSN, environment=SENTRY_ENV)
 
 
 """Cleanup user-uploaded files and generated PDFs in a background task.

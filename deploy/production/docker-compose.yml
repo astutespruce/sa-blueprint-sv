@@ -9,7 +9,7 @@ services:
 
   mbtileserver:
     image: ${DOCKER_REGISTRY}/mbtileserver:latest
-    restart: always
+    restart: on-failure:5
     command: "--tiles-only"
     volumes:
       - /data/tiles:/tilesets
@@ -20,7 +20,7 @@ services:
 
   renderer:
     image: ${DOCKER_REGISTRY}/mbgl-renderer:latest
-    restart: always
+    restart: on-failure:5
     volumes:
       - /data/tiles:/app/tiles
     logging:
@@ -48,7 +48,10 @@ services:
 
   sa-api:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: always
+    restart: on-failure:5
+    depends_on:
+      - redis
+      - sa-worker
     external_links:
       - redis
     env_file:
@@ -78,7 +81,10 @@ services:
 
   sa-worker:
     image: ${DOCKER_REGISTRY}/blueprint-api:latest
-    restart: always
+    restart: on-failure:5
+    depends_on:
+      - redis
+      - renderer
     external_links:
       - redis
       - renderer
