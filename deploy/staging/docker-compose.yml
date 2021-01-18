@@ -4,7 +4,10 @@ services:
     build:
       context: ../..
       dockerfile: docker/api/Dockerfile
-    restart: always
+    restart: on-failure:5
+    depends_on:
+      - redis
+      - sa-worker
     external_links:
       - redis
     env_file:
@@ -36,7 +39,9 @@ services:
     build:
       context: ../..
       dockerfile: docker/api/Dockerfile
-    restart: always
+    restart: on-failure:5
+    depends_on:
+      - redis
     external_links:
       - redis
       - renderer
