@@ -12,7 +12,7 @@ from api.settings import (
     JOB_TIMEOUT,
     FILE_RETENTION,
     SENTRY_DSN,
-    SENTRY_ENV
+    SENTRY_ENV,
     LOGGING_LEVEL,
     REDIS,
     REDIS_QUEUE,
