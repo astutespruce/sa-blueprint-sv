@@ -1,6 +1,7 @@
 version: "3.6"
 services:
   redis:
+    restart: always
     image: ${DOCKER_REGISTRY}/redis:6.0.9-alpine
     logging:
       driver: journald
