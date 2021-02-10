@@ -7,12 +7,9 @@ import geopandas as gp
 
 from analysis.lib.pygeos_util import to_crs, to_dict, sjoin, intersection
 from analysis.constants import (
-    BLUEPRINT,
     INDICATORS,
-    INDICATOR_INDEX,
     URBAN_YEARS,
     DATA_CRS,
-    GEO_CRS,
     OWNERSHIP,
     PROTECTION,
     M2_ACRES,

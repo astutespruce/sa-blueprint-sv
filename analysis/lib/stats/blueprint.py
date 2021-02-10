@@ -8,6 +8,7 @@ import pygeos as pg
 import rasterio
 from rasterio.mask import raster_geometry_mask
 
+
 from analysis.constants import (
     BLUEPRINT,
     INDICATORS,

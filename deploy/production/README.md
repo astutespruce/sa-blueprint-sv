@@ -7,6 +7,12 @@ managed by Zivaro. This includes instructions for setting up the companion proje
 Docker images are managed using AWS ECR service within the TEST account and shared
 with the production account.
 
+## Support
+
+All requests for assistance with the environment go to gishelpdesk @ zivaro.com
+
+Zivaro staff provide uptime monitoring, patching, and management of the AWS infrastructure.
+
 ## Docker images
 
 See `deploy/gpstaging/README.md` for information about creating and managing
@@ -130,3 +136,8 @@ chmod 777 build-ui.sh
 docker-compose pull
 ./build-ui.sh
 ```
+
+## Data
+
+Tiles and data files are loaded up to the test environment first, and then synced by Zivaro staff to the production instance when they have been proofed (using a Rundeck script in their AWS orchestration suite). Put in a
+support ticket as specified above to request sync of data from test environment to production.
