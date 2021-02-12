@@ -31,3 +31,7 @@ To start the API in development mode:
 ```
 uvicorn api.api:app --reload --port 5000
 ```
+
+## Deployment
+
+Deployment configuration is managed in the [secas-docker](https://github.com/astutespruce/secas-docker) repository.
