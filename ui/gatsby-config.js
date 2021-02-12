@@ -4,7 +4,7 @@ require('dotenv').config({
 
 module.exports = {
   siteMetadata: {
-    siteUrl: process.env.SITE_URL || `https://blueprint.southatlanticlcc.org`,
+    siteUrl: process.env.SITE_URL || `https://localhost`,
     title: `South Atlantic Conservation Blueprint`,
     description: `Provides user interface to explore the South Atlantic Conservation Blueprint and custom reports for user-defined areas of interest`,
     author: `South Atlantic Conservation Blueprint`,
