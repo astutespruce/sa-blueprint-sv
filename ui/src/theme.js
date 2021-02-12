@@ -208,6 +208,9 @@ export default {
       bg: darken('primary', 0.05),
     },
   },
+  default: {
+    display: 'block', // fix for theme-ui v6 (div => span)
+  },
   styles: {
     root: {
       height: '100%',
