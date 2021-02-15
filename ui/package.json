@@ -1,6 +1,5 @@
 {
   "name": "sa-blueprint-sv",
-  "private": true,
   "description": "South Atlantic Conservation Blueprint 2020 Simple Viewer",
   "version": "0.5.0",
   "author": "Brendan Ward <bcward@astutespruce.com>",
@@ -64,13 +63,11 @@
   ],
   "license": "MIT",
   "scripts": {
-    "build": "gatsby build",
+    "build": "gatsby clean && gatsby build",
     "develop": "gatsby develop",
-    "start": "npm run develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "predeploy": "gatsby clean && gatsby build",
-    "deploy": "rm -rf /var/www/sa/* && cp -r ./public/* /var/www/sa"
+    "deploy": "npm ci && gatsby clean && gatsby build --prefix-paths"
   },
   "repository": {
     "type": "git",

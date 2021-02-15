@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 TEMP_DIR = Path(os.getenv("TEMP_DIR", "/tmp/sa-reports"))
-SITE_URL = os.getenv("SA_SITE_URL", "http://localhost")
+SITE_URL = f'{os.getenv("ROOT_URL", "http://localhost")}/southatlantic'
 MBGLRENDER_HOST = os.getenv("MBGLRENDER_HOST", "localhost:8002")
 API_TOKEN = os.getenv("API_TOKEN")
 API_SECRET = os.getenv("API_SECRET")
