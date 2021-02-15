@@ -56,6 +56,9 @@ export default {
     },
   },
   text: {
+    default: {
+      display: 'block', // fix for theme-ui v6 (div => span)
+    },
     heading: {
       fontFamily: 'heading',
       fontWeight: 'heading',
@@ -207,9 +210,6 @@ export default {
       color: '#FFF',
       bg: darken('primary', 0.05),
     },
-  },
-  default: {
-    display: 'block', // fix for theme-ui v6 (div => span)
   },
   styles: {
     root: {
