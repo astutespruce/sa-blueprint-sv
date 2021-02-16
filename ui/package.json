@@ -67,7 +67,7 @@
     "develop": "gatsby develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "deploy": "npm ci && gatsby clean && gatsby build --prefix-paths"
+    "deploy": "gatsby clean && gatsby build --prefix-paths"
   },
   "repository": {
     "type": "git",
