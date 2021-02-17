@@ -14,40 +14,38 @@ const Ecosystem = ({
   borderColor,
   indicators,
   onSelectIndicator,
-}) => {
-  return (
-    <Box
-      sx={{
-        width: '100%',
-        flex: '1 0 auto',
-        '&:not(:first-of-type)': {
-          '&>div:first-of-type': {
-            borderTop: '1px solid',
-            borderTopColor: borderColor,
-          },
+}) => (
+  <Box
+    sx={{
+      width: '100%',
+      flex: '1 0 auto',
+      '&:not(:first-of-type)': {
+        '&>div:first-of-type': {
+          borderTop: '1px solid',
+          borderTopColor: borderColor,
         },
-      }}
-    >
-      <EcosystemHeader
-        id={id}
-        label={label}
-        color={color}
-        borderColor={borderColor}
-      />
+      },
+    }}
+  >
+    <EcosystemHeader
+      id={id}
+      label={label}
+      color={color}
+      borderColor={borderColor}
+    />
 
-      <Box>
-        {indicators.map((indicator) => (
-          <Indicator
-            key={indicator.id}
-            type={type}
-            indicator={indicator}
-            onSelect={onSelectIndicator}
-          />
-        ))}
-      </Box>
+    <Box>
+      {indicators.map((indicator) => (
+        <Indicator
+          key={indicator.id}
+          type={type}
+          indicator={indicator}
+          onSelect={onSelectIndicator}
+        />
+      ))}
     </Box>
-  )
-}
+  </Box>
+)
 
 Ecosystem.propTypes = {
   type: PropTypes.string.isRequired,

@@ -38,6 +38,4 @@ Provider.propTypes = {
   children: PropTypes.node.isRequired,
 }
 
-export const useMapData = () => {
-  return useContext(Context)
-}
+export const useMapData = () => useContext(Context)

@@ -45,7 +45,7 @@ const BlueprintChart = ({ categories, blueprint, remainder }) => {
           {blueprintChartData
             .filter(({ description }) => description)
             .map(({ label, description }, i) => (
-              <>
+              <React.Fragment key={label}>
                 {i > 0 ? (
                   <>
                     <br />
@@ -53,7 +53,7 @@ const BlueprintChart = ({ categories, blueprint, remainder }) => {
                   </>
                 ) : null}
                 {label}: {description}
-              </>
+              </React.Fragment>
             ))}
         </Text>
       ) : null}

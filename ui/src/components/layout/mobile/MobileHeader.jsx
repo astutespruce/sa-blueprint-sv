@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import { Button, Flex, Text } from 'theme-ui'
 import { TimesCircle } from '@emotion-icons/fa-regular'
 
-const MobileHeader = ({ type, name, location, onClose }) => {
-  return (
+const MobileHeader = ({ type, name, location, onClose }) => (
     <Flex
       sx={{
         justifyContent: 'space-between',
@@ -36,7 +35,6 @@ const MobileHeader = ({ type, name, location, onClose }) => {
       </Button>
     </Flex>
   )
-}
 
 MobileHeader.propTypes = {
   type: PropTypes.string.isRequired,

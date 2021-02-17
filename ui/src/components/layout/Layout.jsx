@@ -4,7 +4,6 @@ import { Box, Flex } from 'theme-ui'
 import { useErrorBoundary } from 'use-error-boundary'
 
 import { Provider as SearchProvider } from 'components/search'
-import { MapDataProvider } from 'components/data'
 import { hasWindow, isUnsupported } from 'util/dom'
 import ErrorMessage from './ErrorMessage'
 import UnsupportedBrowser from './UnsupportedBrowser'
@@ -31,30 +30,28 @@ const Layout = ({ children, title, overflowY }) => {
 
   return (
     <BreakpointProvider>
-      <MapDataProvider>
-        <SearchProvider>
-          <Flex
-            sx={{
-              height: '100%',
-              flexDirection: 'column',
-            }}
-          >
-            <SEO title={title || siteMetadata.title} />
-            <Header />
-            {isUnsupported ? (
-              <UnsupportedBrowser />
-            ) : (
-              <Box sx={{ flex: '1 1 auto', overflowY, height: '100%' }}>
-                {didCatch ? (
-                  <ErrorMessage />
-                ) : (
-                  <ErrorBoundary>{children}</ErrorBoundary>
-                )}
-              </Box>
-            )}
-          </Flex>
-        </SearchProvider>
-      </MapDataProvider>
+      <SearchProvider>
+        <Flex
+          sx={{
+            height: '100%',
+            flexDirection: 'column',
+          }}
+        >
+          <SEO title={title || siteMetadata.title} />
+          <Header />
+          {isUnsupported ? (
+            <UnsupportedBrowser />
+          ) : (
+            <Box sx={{ flex: '1 1 auto', overflowY, height: '100%' }}>
+              {didCatch ? (
+                <ErrorMessage />
+              ) : (
+                <ErrorBoundary>{children}</ErrorBoundary>
+              )}
+            </Box>
+          )}
+        </Flex>
+      </SearchProvider>
     </BreakpointProvider>
   )
 }

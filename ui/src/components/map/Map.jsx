@@ -16,9 +16,7 @@ import { config, sources, indicatorSources, layers } from './config'
 import { unpackFeatureData } from './features'
 import { Legend } from './legend'
 import MapModeToggle from './MapModeToggle'
-
 import StyleToggle from './StyleToggle'
-
 import { siteMetadata } from '../../../gatsby-config'
 
 const { mapboxToken } = siteMetadata
