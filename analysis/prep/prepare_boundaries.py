@@ -95,7 +95,7 @@ df = df.iloc[ix].copy()
 df["geometry"] = pg.make_valid(df.geometry.values.data)
 
 # Explode the polygons for better spatial index results in downstream functions
-df = explode(df)
+df = explode(df).reset_index(drop=True)
 
 write_dataframe(df.to_crs(GEO_CRS), tile_dir / "ownership.geojson", driver="GeoJSONSeq")
 df.to_feather(out_dir / "ownership.feather")
@@ -110,7 +110,7 @@ df = read_dataframe(
     force_2d=True,
 ).rename(columns={"FID": "parca_id", "Name": "name", "Description": "description"})
 
-df = explode(df)
+df = explode(df).reset_index(drop=True)
 tree = pg.STRtree(df.geometry.values.data)
 ix = tree.query(bnd, predicate="intersects")
 df = df.iloc[ix].copy()

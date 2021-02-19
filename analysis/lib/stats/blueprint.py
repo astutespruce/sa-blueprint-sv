@@ -7,6 +7,7 @@ import pandas as pd
 import pygeos as pg
 import rasterio
 from rasterio.mask import raster_geometry_mask
+from analysis.lib.io import write_raster
 
 
 from analysis.constants import (
@@ -53,6 +54,7 @@ def detect_indicators(geometries, indicators):
         return []
 
     with rasterio.open(indicators_mask_dir / indicators[0]["filename"]) as src:
+        # note: this intentionally uses all_touched=True
         geometry_mask, transform, window = raster_geometry_mask(
             src, geometries, crop=True, all_touched=True
         )
@@ -98,7 +100,7 @@ def extract_by_geometry(geometries, bounds, marine=False, zonal_means=False):
     with rasterio.open(blueprint_filename) as src:
         try:
             shape_mask, transform, window = boundless_raster_geometry_mask(
-                src, geometries, bounds, all_touched=True
+                src, geometries, bounds, all_touched=False
             )
 
         except ValueError:
@@ -106,6 +108,15 @@ def extract_by_geometry(geometries, bounds, marine=False, zonal_means=False):
 
         # square meters to acres
         cellsize = src.res[0] * src.res[1] * M2_ACRES
+
+        # DEBUG:
+        # write_raster(
+        #     f"/tmp/shape_mask.tif",
+        #     (~shape_mask).astype("uint8"),
+        #     transform,
+        #     crs=src.crs,
+        #     nodata=0,
+        # )
 
     results["counts"]["shape_mask"] = (
         ((~shape_mask).sum() * cellsize)
@@ -145,8 +156,6 @@ def extract_by_geometry(geometries, bounds, marine=False, zonal_means=False):
 
     if marine:
         # marine areas only have marine indicators
-        # Note: no need to run detect_indicators(), all are present everywhere
-        # in marine area.
         indicators = [i for i in INDICATORS if i["id"].startswith("marine_")]
         indicators = detect_indicators(geometries, indicators)
 
