@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Text } from 'theme-ui'
+import { Box, Grid, Text } from 'theme-ui'
 
 import { PercentBarChart } from 'components/chart'
 import { useOwnership } from 'components/data'
@@ -8,13 +8,16 @@ import { OutboundLink } from 'components/link'
 
 import { sum } from 'util/data'
 
-const Ownership = ({ ownership }) => {
+const Ownership = ({ type, ownership }) => {
   const { ownership: OWNERSHIP } = useOwnership()
 
-  const bars = OWNERSHIP.filter(({ id }) => ownership[id]).map((category) => ({
-    ...category,
-    percent: ownership[category.id],
-  }))
+  // handle null / empty ownership data
+  const bars = OWNERSHIP.filter(({ id }) => (ownership || {})[id]).map(
+    (category) => ({
+      ...category,
+      percent: ownership[category.id],
+    })
+  )
 
   const remainder = 100 - sum(bars.map(({ percent }) => percent))
   if (remainder > 0) {
@@ -24,6 +27,31 @@ const Ownership = ({ ownership }) => {
       color: 'grey.5',
       percent: remainder,
     })
+  }
+
+  if (type === 'pixel') {
+    return (
+      <>
+        {bars.map(({ id, color, label }) => (
+          <Grid
+            columns="2rem 1fr"
+            sx={{ alignItems: 'center', mt: '0.5rem', lineHeight: 1.2 }}
+          >
+            <Box
+              key={id}
+              sx={{
+                height: '100%',
+                minHeight: '1.5rem',
+                width: '100%',
+                flex: '0 0 auto',
+                bg: color,
+              }}
+            />
+            <Text sx={{ width: '100%' }}>{label}</Text>
+          </Grid>
+        ))}
+      </>
+    )
   }
 
   return (
@@ -48,7 +76,12 @@ const Ownership = ({ ownership }) => {
 }
 
 Ownership.propTypes = {
-  ownership: PropTypes.objectOf(PropTypes.number).isRequired,
+  type: PropTypes.string.isRequired,
+  ownership: PropTypes.objectOf(PropTypes.number),
+}
+
+Ownership.defaultProps = {
+  ownership: {},
 }
 
 export default Ownership

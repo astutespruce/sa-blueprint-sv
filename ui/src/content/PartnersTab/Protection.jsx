@@ -1,16 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Text } from 'theme-ui'
+import { Box, Grid, Flex, Text } from 'theme-ui'
 
 import { PercentBarChart } from 'components/chart'
 import { useOwnership } from 'components/data'
 import { OutboundLink } from 'components/link'
 import { sum } from 'util/data'
 
-const Protection = ({ protection }) => {
+const Protection = ({ type, protection }) => {
   const { protection: PROTECTION } = useOwnership()
 
-  const bars = PROTECTION.filter(({ id }) => protection[id]).map(
+  // handle null / empty ownership data
+  const bars = PROTECTION.filter(({ id }) => (protection || {})[id]).map(
     (category) => ({
       ...category,
       percent: protection[category.id],
@@ -25,6 +26,31 @@ const Protection = ({ protection }) => {
       color: 'grey.5',
       percent: remainder,
     })
+  }
+
+  if (type === 'pixel') {
+    return (
+      <>
+        {bars.map(({ id, color, label }) => (
+          <Grid
+            columns="2rem 1fr"
+            sx={{ alignItems: 'center', mt: '0.5rem', lineHeight: 1.2 }}
+          >
+            <Box
+              key={id}
+              sx={{
+                height: '100%',
+                minHeight: '1.5rem',
+                width: '100%',
+                flex: '0 0 auto',
+                bg: color,
+              }}
+            />
+            <Text sx={{ width: '100%' }}>{label}</Text>
+          </Grid>
+        ))}
+      </>
+    )
   }
 
   return (
@@ -49,7 +75,12 @@ const Protection = ({ protection }) => {
 }
 
 Protection.propTypes = {
-  protection: PropTypes.objectOf(PropTypes.number).isRequired,
+  type: PropTypes.string.isRequired,
+  protection: PropTypes.objectOf(PropTypes.number),
+}
+
+Protection.defaultProps = {
+  protection: {},
 }
 
 export default Protection

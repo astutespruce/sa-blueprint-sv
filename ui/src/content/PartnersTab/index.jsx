@@ -25,41 +25,21 @@ const PartnersTab = ({
     )
   }
 
-  const hasOwnership = ownership && Object.keys(ownership).length > 0
-  const hasProtection = protection && Object.keys(protection).length > 0
   const hasCounties = counties && Object.keys(counties).length > 0
   const hasProtectedAreas = protectedAreas && protectedAreas.length > 0
-
-  if (type === 'pixel' && !(hasOwnership || hasProtection)) {
-    return (
-      <Box sx={{ py: '2rem', pl: '1rem', pr: '2rem' }}>
-        <Text sx={{ color: 'grey.7' }}>
-          No information on ownership or protection status is available.
-        </Text>
-      </Box>
-    )
-  }
 
   return (
     <Box sx={{ py: '2rem', pl: '1rem', pr: '2rem' }}>
       <Box as="section">
         <Heading as="h3">Conserved Lands Ownership</Heading>
-        {ownership === null ? (
-          <Text sx={{ color: 'grey.7' }}>No information available.</Text>
-        ) : (
-          <Ownership ownership={ownership} />
-        )}
+        <Ownership type={type} ownership={ownership} />
       </Box>
 
       <Divider variant="styles.hr.light" sx={{ my: '3rem' }} />
 
       <Box as="section">
         <Heading as="h3">Land Protection Status</Heading>
-        {protection === null ? (
-          <Text sx={{ color: 'grey.7' }}>No information available.</Text>
-        ) : (
-          <Protection protection={protection} />
-        )}
+        <Protection type={type} protection={protection} />
       </Box>
 
       {hasProtectedAreas ? (
