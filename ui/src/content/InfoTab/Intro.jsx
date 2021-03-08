@@ -14,16 +14,15 @@ const Intro = () => (
         <br />
         <br />
         The South Atlantic Blueprint is a data-driven plan based on terrestrial,
-        freshwater, marine, and cross-ecosystem indicators. It uses the current
-        condition of those indicators to prioritize the most important areas for
-        natural and cultural resources across the South Atlantic geography.
-        Through a connectivity analysis, the Blueprint also identifies corridors
-        that link coastal and inland areas and span climate gradients. The
-        Blueprint reflects extensive feedback from the broader conservation
-        community, with more than 700 people from over 200 different
-        organizations actively participating in its development so far. The
-        Blueprint integrates with neighboring priorities in a Southeast-wide
-        plan as part of the{' '}
+        freshwater, and marine indicators. It uses the current condition of
+        those indicators to prioritize the most important areas for natural and
+        cultural resources across the South Atlantic geography. Through a
+        connectivity analysis, the Blueprint also identifies corridors that link
+        coastal and inland areas and span climate gradients. The Blueprint
+        reflects extensive feedback from the broader conservation community,
+        with more than 700 people from over 200 different organizations actively
+        participating in its development so far. The Blueprint integrates with
+        neighboring priorities in a Southeast-wide plan as part of the{' '}
         <OutboundLink to="http://secassoutheast.org/">
           Southeast Conservation Adaptation Strategy
         </OutboundLink>
