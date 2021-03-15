@@ -6,17 +6,17 @@
   {
     "value": "PNP",
     "color": "#ad494a",
-    "label": "Privately-owned conservation land (non-profit)"
+    "label": "Private non-profit conserved lands"
   },
   {
     "value": "PFP",
     "color": "#ff7f0e",
-    "label": "Privately-owned conservation land (for-profit)"
+    "label": "Private for-profit conserved lands"
   },
   {
     "value": "PLO",
     "color": "#7D3E07",
-    "label": "Privately-owned conservation land"
+    "label": "Private conservation land"
   },
   { "value": "TRB", "color": "#9467bd", "label": "Tribal" },
   { "value": "UNK", "color": "#c49c94", "label": "Ownership unknown" }
