@@ -3,9 +3,21 @@
   { "value": "STP", "color": "#1f77b4", "label": "State/province" },
   { "value": "LOC", "color": "#aec7e8", "label": "Local" },
   { "value": "TNC", "color": "#98df8a", "label": "The Nature Conservancy" },
-  { "value": "PNP", "color": "#ad494a", "label": "Private non-profit" },
-  { "value": "PFP", "color": "#ff7f0e", "label": "Private for-profit" },
-  { "value": "PLO", "color": "#7D3E07", "label": "Private land owner" },
+  {
+    "value": "PNP",
+    "color": "#ad494a",
+    "label": "Privately-owned conservation land (non-profit)"
+  },
+  {
+    "value": "PFP",
+    "color": "#ff7f0e",
+    "label": "Privately-owned conservation land (for-profit)"
+  },
+  {
+    "value": "PLO",
+    "color": "#7D3E07",
+    "label": "Privately-owned conservation land"
+  },
   { "value": "TRB", "color": "#9467bd", "label": "Tribal" },
   { "value": "UNK", "color": "#c49c94", "label": "Ownership unknown" }
 ]
