@@ -1,7 +1,7 @@
 {
   "name": "sa-blueprint-sv",
   "description": "South Atlantic Conservation Blueprint 2020 Simple Viewer",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "author": "Brendan Ward <bcward@astutespruce.com>",
   "dependencies": {
     "@emotion-icons/fa-regular": "^3.6.0",

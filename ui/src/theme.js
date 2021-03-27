@@ -1,7 +1,7 @@
 import { darken } from '@theme-ui/color'
 
 export default {
-  breakpoints: ['600px', '800px', '1600px'],
+  breakpoints: ['600px', '800px', '1200px', '1600px'],
   colors: {
     text: '#333',
     background: '#fff',

@@ -10,6 +10,7 @@ module.exports = {
     author: `South Atlantic Conservation Blueprint`,
     contactEmail: `hilary_morris@fws.gov`,
     contactPhone: `9197070252`,
+    blueprintVersion: '2020',
     apiToken: process.env.GATSBY_API_TOKEN,
     apiHost: process.env.GATSBY_API_HOST,
     tileHost: process.env.GATSBY_TILE_HOST,
