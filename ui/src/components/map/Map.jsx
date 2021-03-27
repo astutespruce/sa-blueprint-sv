@@ -43,6 +43,7 @@ const Map = () => {
   const mapNode = useRef(null)
   const mapRef = useRef(null)
   const [isLoaded, setIsLoaded] = useState(false)
+  const [isBlueprintVisible, setIsBlueprintVisible] = useState(true)
   const highlightIDRef = useRef(null)
   const locationMarkerRef = useRef(null)
 
@@ -304,6 +305,21 @@ const Map = () => {
     }
   }, [blueprintByColor, setMapData]) // setMapDataLoading
 
+  const handleToggleBlueprintVisibile = useCallback(() => {
+    const { current: map } = mapRef
+    if (!map) return
+
+    setIsBlueprintVisible((prevVisible) => {
+      const newIsVisible = !prevVisible
+      if (newIsVisible) {
+        map.setPaintProperty('blueprint', 'raster-opacity', 0.6)
+      } else {
+        map.setPaintProperty('blueprint', 'raster-opacity', 0)
+      }
+      return newIsVisible
+    })
+  }, [])
+
   const removeLocationMarker = () => {
     if (locationMarkerRef.current !== null) {
       locationMarkerRef.current.remove()
@@ -347,7 +363,12 @@ const Map = () => {
         </Box>
       ) : null}
 
-      {!isMobile ? <Legend /> : null}
+      {!isMobile ? (
+        <Legend
+          isVisible={isBlueprintVisible}
+          onToggleVisibility={handleToggleBlueprintVisibile}
+        />
+      ) : null}
 
       <MapModeToggle map={mapRef.current} isMobile={isMobile} />
 

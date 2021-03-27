@@ -1,15 +1,26 @@
 import React, { memo, useState, useCallback } from 'react'
-import { Box, Text } from 'theme-ui'
+import PropTypes from 'prop-types'
+import { Eye, EyeSlash } from '@emotion-icons/fa-solid'
+import { Box, Flex, Text } from 'theme-ui'
 
 import { useBlueprintPriorities } from 'components/data'
 import LegendElement from './LegendElement'
 
-const Legend = () => {
+const Legend = ({ isVisible, onToggleVisibility }) => {
   const [isOpen, setIsOpen] = useState(true)
 
   const handleClick = useCallback(() => {
     setIsOpen((prevIsOpen) => !prevIsOpen)
   }, [])
+
+  const handleToggleVisibility = useCallback(
+    (e) => {
+      onToggleVisibility()
+      e.stopPropagation()
+      e.nativeEvent.stopImmediatePropagation()
+    },
+    [onToggleVisibility]
+  )
 
   const { priorities } = useBlueprintPriorities()
 
@@ -36,7 +47,28 @@ const Legend = () => {
           }}
           title="Click to hide legend"
         >
-          <Text sx={{ fontWeight: 'bold' }}>Blueprint Priority</Text>
+          <Flex
+            sx={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
+          >
+            <Text sx={{ flex: '1 1 auto', fontWeight: 'bold', mr: '0.5em' }}>
+              Blueprint Priority
+            </Text>
+            <Box
+              sx={{
+                flex: '0 0 auto',
+                bg: 'grey.0',
+                border: '1px solid',
+                borderColor: 'grey.7',
+                borderRadius: '0.25em',
+                padding: '0.25em',
+                lineHeight: 1,
+              }}
+              title={`Click to ${isVisible ? 'hide' : 'show'}`}
+              onClick={handleToggleVisibility}
+            >
+              {isVisible ? <Eye size="1em" /> : <EyeSlash size="1em" />}
+            </Box>
+          </Flex>
           <Box sx={{ fontSize: 1 }}>
             {priorities.map((element) => (
               <Box
@@ -57,6 +89,13 @@ const Legend = () => {
   )
 }
 
-Legend.propTypes = {}
+Legend.propTypes = {
+  isVisible: PropTypes.bool,
+  onToggleVisibility: PropTypes.func.isRequired,
+}
+
+Legend.defaultProps = {
+  isVisible: true,
+}
 
 export default memo(Legend)
