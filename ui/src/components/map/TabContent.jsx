@@ -9,6 +9,7 @@ import {
   ThreatsTab,
   PartnersTab,
 } from 'content'
+import { Box } from 'theme-ui'
 
 const TabContent = ({ tab, mapData }) => {
   if (mapData === null) {
@@ -31,6 +32,7 @@ const TabContent = ({ tab, mapData }) => {
 
   const {
     type,
+    isLoading,
     blueprint,
     blueprint_total: blueprintAcres,
     shape_mask: analysisAcres,
@@ -44,6 +46,10 @@ const TabContent = ({ tab, mapData }) => {
     protectedAreas,
     counties,
   } = mapData
+
+  if (isLoading) {
+    return <Box sx={{ textAlign: 'center', mt: '1rem' }}>Loading...</Box>
+  }
 
   switch (tab) {
     case 'selected-priorities': {

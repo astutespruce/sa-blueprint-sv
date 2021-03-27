@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState, useCallback, memo } from 'react'
 import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { Box } from 'theme-ui'
+import { Crosshairs } from '@emotion-icons/fa-solid'
 
 import { useSearch } from 'components/search'
 import { useBreakpoints } from 'components/layout'
@@ -44,11 +45,15 @@ const Map = () => {
   const [isLoaded, setIsLoaded] = useState(false)
   const highlightIDRef = useRef(null)
   const locationMarkerRef = useRef(null)
-  const pixelMarkerRef = useRef(null)
 
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
-  const { data: mapData, mapMode, setData: setMapData } = useMapData()
+  const {
+    data: mapData,
+    // setLoading: setMapDataLoading,
+    mapMode,
+    setData: setMapData,
+  } = useMapData()
   const { colorIndex: blueprintByColor } = useBlueprintPriorities()
   const mapModeRef = useRef(mapMode)
   const { location } = useSearch()
@@ -151,54 +156,35 @@ const Map = () => {
     })
 
     map.on('click', ({ lngLat: point }) => {
-      if (mapModeRef.current !== 'pixel') {
-        const features = map.queryRenderedFeatures(map.project(point), {
-          layers: ['unit-fill'],
-        })
+      if (mapModeRef.current === 'pixel') return
 
-        if (!(features && features.length > 0)) {
-          setMapData(null)
-          return
-        }
+      // if (mapModeRef.current !== 'pixel') {
+      const features = map.queryRenderedFeatures(map.project(point), {
+        layers: ['unit-fill'],
+      })
 
-        const { properties } = features[0]
-
-        // highlight selected
-        map.setFilter('unit-outline-highlight', ['==', 'id', properties.id])
-
-        setMapData(unpackFeatureData(features[0].properties))
-
-        return
-      }
-
-      if (map.getZoom() < 7) {
-        // user clicked but not at right zoom
+      if (!(features && features.length > 0)) {
         setMapData(null)
         return
       }
 
-      // if map sources are not done loading, schedule a callback
-      const dataSources = ['blueprint'].concat(indicatorSources)
-      const sourcesLoaded = dataSources.filter(
-        (s) => map.style.sourceCaches[s] && map.style.sourceCaches[s].loaded()
-      )
-      if (sourcesLoaded.length < dataSources.length) {
-        map.getCanvas().style.cursor = 'wait'
+      const { properties } = features[0]
 
-        map.once('idle', () => {
-          map.getCanvas().style.cursor = 'crosshair'
-          getPixelData(point)
-        })
-      } else {
-        getPixelData(point)
+      // highlight selected
+      map.setFilter('unit-outline-highlight', ['==', 'id', properties.id])
+
+      setMapData(unpackFeatureData(features[0].properties))
+    })
+
+    map.on('move', () => {
+      if (mapModeRef.current === 'pixel') {
+        getPixelData()
       }
     })
 
     map.on('zoomend', () => {
-      if (mapModeRef.current === 'pixel' && map.getZoom() >= 7) {
-        map.getCanvas().style.cursor = 'crosshair'
-      } else {
-        map.getCanvas().style.cursor = 'grab'
+      if (mapModeRef.current === 'pixel') {
+        getPixelData()
       }
     })
 
@@ -207,8 +193,6 @@ const Map = () => {
       // remove markers
 
       removeLocationMarker()
-      removePixelMarker()
-
       map.remove()
     }
     // intentionally not including mapMode in deps since we update via effects
@@ -221,11 +205,12 @@ const Map = () => {
     if (!isLoaded) return
     const { current: map } = mapRef
 
-    map.getCanvas().style.cursor =
-      mapMode === 'pixel' && map.getZoom() >= 7 ? 'crosshair' : 'grab'
-
     // toggle layer visibility
     if (mapMode === 'pixel') {
+      if (map.getZoom() >= 7) {
+        map.once('idle', getPixelData)
+      }
+
       map.setLayoutProperty('unit-fill', 'visibility', 'none')
       map.setLayoutProperty('unit-outline', 'visibility', 'none')
 
@@ -246,10 +231,8 @@ const Map = () => {
       map.setLayoutProperty('indicators2', 'visibility', 'none')
       map.setLayoutProperty('indicators3', 'visibility', 'none')
       map.setLayoutProperty('ownership', 'visibility', 'none')
-
-      removePixelMarker()
     }
-  }, [isLoaded, mapMode])
+  }, [isLoaded, mapMode, getPixelData])
 
   useIsEqualEffect(() => {
     if (!isLoaded) return
@@ -260,25 +243,6 @@ const Map = () => {
 
     if (mapData === null) {
       map.setFilter('unit-outline-highlight', ['==', 'id', Infinity])
-
-      removePixelMarker()
-    }
-
-    if (mapMode === 'pixel') {
-      if (mapData !== null) {
-        const {
-          location: { latitude, longitude },
-        } = mapData
-        if (pixelMarkerRef.current === null) {
-          pixelMarkerRef.current = new mapboxgl.Marker({
-            color: '#000',
-          })
-            .setLngLat([longitude, latitude])
-            .addTo(map)
-        } else {
-          pixelMarkerRef.current.setLngLat([longitude, latitude])
-        }
-      }
     }
   }, [mapData, isLoaded])
 
@@ -302,28 +266,48 @@ const Map = () => {
     }
   }, [location, isLoaded])
 
-  const getPixelData = useCallback(
-    (point) => {
-      const { current: map } = mapRef
-      const pixelData = extractPixelData(map, point, blueprintByColor)
+  const getPixelData = useCallback(() => {
+    // if (mapModeRef.current !== 'pixel') return
 
+    const { current: map } = mapRef
+    if (!map) return
+
+    if (map.getZoom() < 7) {
+      setMapData(null)
+      return
+    }
+
+    const dataSources = ['blueprint'].concat(indicatorSources)
+    const sourcesLoaded = dataSources.filter(
+      (s) => map.style.sourceCaches[s] && map.style.sourceCaches[s].loaded()
+    )
+    if (sourcesLoaded.length < dataSources.length) {
+      // if map sources are not done loading, schedule a callback
+      // map.once('idle', getPixelData)
+      map.once('idle', () => {
+        setMapData(extractPixelData(map, map.getCenter(), blueprintByColor))
+      })
+      // set loading and pass coordinates for header to avoid jitter
+      // setMapDataLoading(true)
+      const { lng: longitude, lat: latitude } = map.getCenter()
+      setMapData({
+        type: 'pixel',
+        isLoading: true,
+        location: {
+          longitude,
+          latitude,
+        },
+      })
+    } else {
       // NOTE: if outside bounds, this will be null and unselect data
-      setMapData(pixelData)
-    },
-    [blueprintByColor, setMapData]
-  )
+      setMapData(extractPixelData(map, map.getCenter(), blueprintByColor))
+    }
+  }, [blueprintByColor, setMapData]) // setMapDataLoading
 
   const removeLocationMarker = () => {
     if (locationMarkerRef.current !== null) {
       locationMarkerRef.current.remove()
       locationMarkerRef.current = null
-    }
-  }
-
-  const removePixelMarker = () => {
-    if (pixelMarkerRef.current !== null) {
-      pixelMarkerRef.current.remove()
-      pixelMarkerRef.current = null
     }
   }
 
@@ -344,6 +328,24 @@ const Map = () => {
       }}
     >
       <div ref={mapNode} style={{ width: '100%', height: '100%' }} />
+
+      {mapMode === 'pixel' &&
+      mapRef.current &&
+      mapRef.current.getZoom() >= 7 ? (
+        <Box
+          sx={{
+            position: 'absolute',
+            left: '50%',
+            top: '50%',
+            ml: '-1rem',
+            mt: '-1rem',
+            pointerEvents: 'none',
+            opacity: 0.75,
+          }}
+        >
+          <Crosshairs size="2rem" />
+        </Box>
+      ) : null}
 
       {!isMobile ? <Legend /> : null}
 

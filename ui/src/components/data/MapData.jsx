@@ -5,7 +5,7 @@ const Context = createContext()
 
 export const Provider = ({ children }) => {
   const [{ mapMode, data }, setState] = useState({
-    mapMode: 'pixel', // pixel or unit
+    mapMode: 'unit', // pixel or unit
     data: null,
   })
 
@@ -28,7 +28,15 @@ export const Provider = ({ children }) => {
   }, [])
 
   return (
-    <Context.Provider value={{ data, setData, unsetData, mapMode, setMapMode }}>
+    <Context.Provider
+      value={{
+        data,
+        setData,
+        unsetData,
+        mapMode,
+        setMapMode,
+      }}
+    >
       {children}
     </Context.Provider>
   )

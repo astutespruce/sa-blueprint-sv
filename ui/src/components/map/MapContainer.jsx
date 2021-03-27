@@ -35,7 +35,12 @@ const MapContainer = () => {
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
 
-  const { data: mapData, unsetData: unsetMapData, mapMode } = useMapData()
+  const {
+    data: mapData,
+    isLoading: isDataLoading,
+    unsetData: unsetMapData,
+    mapMode,
+  } = useMapData()
 
   const { location } = useSearch()
 
@@ -64,7 +69,7 @@ const MapContainer = () => {
   useEffect(() => {
     hasMapDataRef.current = mapData !== null
 
-    console.log('selected map data', mapData)
+    // console.log('selected map data', mapData)
   }, [mapData])
 
   useLayoutEffect(() => {
@@ -163,7 +168,7 @@ const MapContainer = () => {
 
               <DesktopTabs
                 tab={tab}
-                hasMapData={mapData !== null}
+                hasMapData={mapData !== null && !isDataLoading}
                 mode={mapMode}
                 onChange={handleTabChange}
               />
@@ -177,7 +182,7 @@ const MapContainer = () => {
               overflowY: 'auto',
             }}
           >
-            <TabContent tab={tab} mapData={mapData} />
+            <TabContent tab={tab} mapData={mapData} isLoading={isDataLoading} />
           </Box>
         </Flex>
 
@@ -198,7 +203,8 @@ const MapContainer = () => {
           <MobileTabs
             tab={tab}
             mode={mapMode}
-            hasMapData={mapData !== null}
+            hasMapData={mapData !== null && !isDataLoading}
+            isLoading={isDataLoading}
             onChange={handleTabChange}
           />
         </Box>

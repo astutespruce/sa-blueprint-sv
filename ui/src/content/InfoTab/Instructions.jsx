@@ -19,10 +19,13 @@ const MobileInstructions = () => (
   <>
     <Heading as="h4">Pixel-level details:</Heading>
     <Text as="p" sx={{ mt: '0.25rem' }}>
-      Choose <b>Pixel data</b> from the button bar below the map. Tap on any
-      location in the map to show pixel-level data for that location. You may
-      need to zoom in further to select pixels. Zoom in further to choose a more
-      precise location, especially in areas that are highly pixelated.
+      Choose <b>Pixel data</b> from the button bar below the map. You may need
+      to zoom in further to display pixel information. This will show crosshairs
+      in the center of the map and display pixel-level information in the
+      sidebar. As you pan or zoom the map, the information in the sidebar will
+      update based on the pixel that is underneath the center of the crosshairs.
+      Zoom in further to choose a more precise location, especially in areas
+      that are highly pixelated.
       <br />
       <br />
       Use the tabs in the bottom bar to navigate the different types of
@@ -40,7 +43,7 @@ const MobileInstructions = () => (
       location, especially in areas of high variability in the data.
       <br />
       <br />
-      To unselect the pixel, click on the <CloseButton /> button in top bar.
+      Click on the <CloseButton /> button in top bar.
     </Text>
 
     <Heading as="h4" sx={{ mt: '2rem' }}>
@@ -78,10 +81,12 @@ const DesktopInstructions = () => (
   <>
     <Heading as="h4">Pixel-level details:</Heading>
     <Text as="p" sx={{ mt: '0.25rem' }}>
-      Choose <b>Pixel data</b> from the button bar above the map. Click on any
-      location to show pixel-level data for that location. You may need to zoom
-      in further to select pixels. Zoom in further to choose a more precise
-      location, especially in areas that are highly pixelated.
+      Choose <b>Pixel data</b> from the button bar above the map. You may need
+      to zoom in further to display pixel information. This will show crosshairs
+      in the center of the map. As you pan or zoom the map, the information in
+      the sidebar will update based on the pixel that is underneath the center
+      of the crosshairs. Zoom in further to choose a more precise location,
+      especially in areas that are highly pixelated.
       <br />
       <br />
       Use the tabs in the sidebar to navigate the different types of summary
@@ -127,7 +132,8 @@ const DesktopInstructions = () => (
       <br />
       You can download a detailed PDF report of the Blueprint, underlying
       indicators, and landscape-level threats for your area of interest. Click
-      the &quot;Create summary report&quot; link below the area name.
+      the &quot;Export detailed maps and analysis&quot; link below the area
+      name.
       <br />
       <br />
       To unselect the area, click on the <CloseButton /> button in the upper
