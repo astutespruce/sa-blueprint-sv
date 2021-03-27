@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Box, Grid, Text } from 'theme-ui'
+import { CheckCircle } from '@emotion-icons/fa-regular'
+import { Box, Flex, Text } from 'theme-ui'
 
 import { PercentBarChart } from 'components/chart'
 import { useOwnership } from 'components/data'
@@ -11,13 +12,10 @@ import { sum } from 'util/data'
 const Ownership = ({ type, ownership }) => {
   const { ownership: OWNERSHIP } = useOwnership()
 
-  // handle null / empty ownership data
-  const bars = OWNERSHIP.filter(({ id }) => (ownership || {})[id]).map(
-    (category) => ({
-      ...category,
-      percent: ownership[category.id],
-    })
-  )
+  const bars = OWNERSHIP.map((category) => ({
+    ...category,
+    percent: ownership ? ownership[category.id] || 0 : 0,
+  }))
 
   const remainder = 100 - sum(bars.map(({ percent }) => percent))
   if (remainder > 0) {
@@ -31,26 +29,43 @@ const Ownership = ({ type, ownership }) => {
 
   if (type === 'pixel') {
     return (
-      <>
-        {bars.map(({ id, color, label }) => (
-          <Grid
-            columns="2rem 1fr"
-            sx={{ alignItems: 'center', mt: '0.5rem', lineHeight: 1.2 }}
+      <Box sx={{ ml: '0.5rem', mt: '0.5rem' }}>
+        {bars.map(({ id, label, percent }) => (
+          <Flex
+            key={id}
+            sx={{
+              alignItems: 'baseline',
+              justifyContent: 'space-between',
+              pl: '0.5rem',
+              borderBottom: '1px solid',
+              borderBottomColor: 'grey.2',
+              pb: '0.25rem',
+              '&:not(:first-of-type)': {
+                mt: '0.25rem',
+              },
+            }}
           >
-            <Box
-              key={id}
+            <Text
               sx={{
-                height: '100%',
-                minHeight: '1.5rem',
-                width: '100%',
-                flex: '0 0 auto',
-                bg: color,
+                flex: '1 1 auto',
+                color: percent > 0 ? 'text' : 'grey.6',
+                fontWeight: percent > 0 ? 'bold' : 'normal',
               }}
-            />
-            <Text sx={{ width: '100%' }}>{label}</Text>
-          </Grid>
+            >
+              {label}
+            </Text>
+            {percent === 0 ? (
+              <Text sx={{ flex: '0 0 auto', fontSize: 0, color: 'grey.6' }}>
+                (absent)
+              </Text>
+            ) : (
+              <Box sx={{ flex: '0 0 auto' }}>
+                <CheckCircle size="1em" />
+              </Box>
+            )}
+          </Flex>
         ))}
-      </>
+      </Box>
     )
   }
 

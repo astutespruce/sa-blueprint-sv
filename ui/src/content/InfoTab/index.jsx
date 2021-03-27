@@ -10,8 +10,8 @@ const InfoTab = () => (
   <Box sx={{ py: '1.5rem', pl: '1rem', pr: '2rem' }}>
     <Intro />
     <Divider />
-    <Blueprint />
-    <Divider />
+    {/* <Blueprint />
+    <Divider /> */}
     <Instructions />
     <Divider />
     <Credits />

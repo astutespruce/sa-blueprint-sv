@@ -1,8 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Box, Flex, Text, Heading, Image } from 'theme-ui'
+import { QuestionCircle } from '@emotion-icons/fa-regular'
+import { Box, Flex, Text, Divider, Heading, Image } from 'theme-ui'
 import { Reply } from '@emotion-icons/fa-solid'
 
+import { ContactModal } from 'components/modal'
 import { OutboundLink } from 'components/link'
 import { formatPercent } from 'util/format'
 import theme from 'theme'
@@ -135,6 +137,29 @@ const IndicatorDetails = ({
           >
             View this indicator in the Conservation Planning Atlas
           </OutboundLink>
+        </Box>
+        <Divider variant="styles.hr.light" sx={{ my: '3rem' }} />
+        <Box sx={{ color: 'grey.7', fontSize: 1 }}>
+          <QuestionCircle
+            size="1.25em"
+            style={{ marginTop: '-0.25em', marginRight: '0.5em' }}
+          />
+          Need help interpreting these results or applying Blueprint priorities
+          to your particular project or location? Please{' '}
+          <Box as="span" sx={{ display: 'inline-block' }}>
+            <ContactModal>
+              <Text
+                sx={{
+                  color: 'primary',
+                  cursor: 'pointer',
+                  '&:hover': { textDecoration: 'underline' },
+                }}
+              >
+                Contact Us
+              </Text>
+            </ContactModal>
+          </Box>
+          . We are here to help you!
         </Box>
       </Box>
     </Flex>
