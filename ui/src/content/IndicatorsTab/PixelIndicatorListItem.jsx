@@ -1,16 +1,15 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { Box, Text } from 'theme-ui'
+import { Box, Flex, Text } from 'theme-ui'
 import { lighten } from '@theme-ui/color'
 
 import { useBreakpoints } from 'components/layout'
 
-import IndicatorAverageChart from './IndicatorAverageChart'
 import IndicatorPixelValueChart from './IndicatorPixelValueChart'
 import { IndicatorPropType } from './proptypes'
 
-const Indicator = ({ type, indicator, onSelect }) => {
-  const { label, pixelValue, values, avg, domain, goodThreshold } = indicator
+const PixelIndicatorListItem = ({ indicator, onSelect }) => {
+  const { label, pixelValue, values, goodThreshold } = indicator
 
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
@@ -18,6 +17,37 @@ const Indicator = ({ type, indicator, onSelect }) => {
   const handleClick = useCallback(() => {
     onSelect(indicator)
   }, [indicator, onSelect])
+
+  const present = indicator.total > 0
+
+  if (!present) {
+    return (
+      <Flex
+        sx={{
+          alignItems: 'baseline',
+          justifyContent: 'space-between',
+          px: '1rem',
+          py: '0.25rem',
+          color: 'grey.7',
+          cursor: 'default',
+          '&:not(:first-of-type)': {
+            borderTop: '2px solid',
+            borderTopColor: 'grey.1',
+          },
+        }}
+      >
+        <Text
+          sx={{
+            flex: '1 1 auto',
+            fontSize: 2,
+          }}
+        >
+          {label}
+        </Text>
+        <Text sx={{ flex: '0 0 auto', fontSize: 0 }}>(absent)</Text>
+      </Flex>
+    )
+  }
 
   return (
     <Box
@@ -50,16 +80,11 @@ const Indicator = ({ type, indicator, onSelect }) => {
         {label}
       </Text>
 
-      {type === 'pixel' ? (
-        <IndicatorPixelValueChart
-          pixelValue={pixelValue}
-          values={values}
-          goodThreshold={goodThreshold}
-        />
-      ) : (
-        <IndicatorAverageChart value={avg} domain={domain} />
-      )}
-
+      <IndicatorPixelValueChart
+        pixelValue={pixelValue}
+        values={values}
+        goodThreshold={goodThreshold}
+      />
       <Text
         as="label"
         sx={{
@@ -79,10 +104,9 @@ const Indicator = ({ type, indicator, onSelect }) => {
   )
 }
 
-Indicator.propTypes = {
-  type: PropTypes.string.isRequired,
+PixelIndicatorListItem.propTypes = {
   indicator: PropTypes.shape(IndicatorPropType).isRequired,
   onSelect: PropTypes.func.isRequired,
 }
 
-export default Indicator
+export default PixelIndicatorListItem

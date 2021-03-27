@@ -14,16 +14,16 @@ export const IndicatorPropType = {
   goodThreshold: PropTypes.number,
   units: PropTypes.string,
   pixelValue: PropTypes.number,
-  avg: PropTypes.number,
+  // avg: PropTypes.number, // TODO: remove
   total: PropTypes.number,
-  domain: PropTypes.arrayOf(PropTypes.number).isRequired,
+  // domain: PropTypes.arrayOf(PropTypes.number), // TODO: remove
   values: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number.isRequired,
       label: PropTypes.string.isRequired,
-      percent: PropTypes.number.isRequired,
+      percent: PropTypes.number,
     })
-  ).isRequired,
+  ),
 }
 
 export const EcosystemPropType = {

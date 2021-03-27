@@ -18,10 +18,18 @@ const IndicatorsTab = ({
   if (type === 'pixel') {
     // filter indicators that are not present or have 0 values that don't have
     // corresponding label (effectively NODATA)
-    indicators = INDICATORS.filter(
-      ({ id, values }) =>
-        rawIndicators[id] !== undefined && rawIndicators[id] >= values[0].value
-    ).map((indicator) => {
+    indicators = INDICATORS.map((indicator) => {
+      // absent
+      if (
+        rawIndicators[indicator.id] === undefined ||
+        rawIndicators[indicator.id] < indicator.values[0].value
+      ) {
+        return {
+          ...indicator,
+          total: 0,
+        }
+      }
+
       const pixelValue = rawIndicators[indicator.id]
       const values = indicator.values.map((value) => ({
         ...value,
@@ -41,33 +49,61 @@ const IndicatorsTab = ({
     indicators = INDICATORS.map((indicator, i) => ({
       ...indicator,
       index: i,
-    }))
-      .filter((_, i) => rawIndicators[i] !== undefined)
-      .map(({ index, ...indicator }) => {
-        const { percent, avg = null } = rawIndicators[index]
-
-        const values = indicator.values.map(({ value, ...rest }) => ({
-          value,
-          ...rest,
-          percent: percent[value],
-        }))
-
+    })).map(({ index, ...indicator }) => {
+      // absent
+      if (!rawIndicators[index]) {
         return {
           ...indicator,
           index,
           values,
-          // calculate average based on the values that are present
-          // if values do not start at 1
-          avg:
-            avg !== null
-              ? avg
-              : percentsToAvg(values.map(({ percent: p }) => p)) +
-                values[0].value,
-          total: sum(values.map(({ percent: p }) => p)),
+          total: 0,
         }
-      })
-      // Only include those that have nonzero values
-      .filter(({ total }) => total > 0)
+      }
+
+      const { percent, avg = null } = rawIndicators[index]
+
+      const values = indicator.values.map(({ value, ...rest }) => ({
+        value,
+        ...rest,
+        percent: percent[value],
+      }))
+
+      return {
+        ...indicator,
+        index,
+        values,
+        // calculate average based on the values that are present
+        // if values do not start at 1
+        avg:
+          avg !== null
+            ? avg
+            : percentsToAvg(values.map(({ percent: p }) => p)) +
+              values[0].value,
+        total: sum(values.map(({ percent: p }) => p)),
+      }
+    })
+  }
+
+  // includes indicators that may be present in coastal areas
+  const hasMarine =
+    indicators.filter(({ id, total }) => id.startsWith('marine_') && total > 0)
+      .length > 0
+
+  if (!hasMarine) {
+    // has no marine, likely inland, don't show any marine indicators
+    indicators = indicators.filter(({ id }) => !id.startsWith('marine_'))
+  } else if (type === 'marine lease block') {
+    // has no inland
+    indicators = indicators.filter(({ id }) => id.startsWith('marine_'))
+  } else if (type === 'pixel') {
+    const definitelyMarine =
+      indicators.filter(({ id, total }) => id === 'marine_mammals' && total > 0)
+        .length > 0
+
+    if (definitelyMarine) {
+      // has no inland
+      indicators = indicators.filter(({ id }) => id.startsWith('marine_'))
+    }
   }
 
   indicators = indexBy(indicators, 'id')

@@ -50,7 +50,7 @@ export default {
       maxWidth: '960px',
     },
     sidebar: {
-      width: ['100%', '320px', '468px', '600px'],
+      width: ['100%', '320px', '468px'],
       borderRightWidth: ['0px', '1px'],
       borderRightColor: 'grey.3',
     },
