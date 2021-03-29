@@ -69,6 +69,8 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
             </Flex>
             <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
               {priorityCategories[blueprint].description}
+              <br />
+              {priorityCategories[blueprint].description2}
             </Text>
           </Box>
         ) : (

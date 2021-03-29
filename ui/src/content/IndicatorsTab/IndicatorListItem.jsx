@@ -1,5 +1,6 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
+import { Check } from '@emotion-icons/fa-solid'
 import { Box, Flex, Text } from 'theme-ui'
 import { lighten } from '@theme-ui/color'
 
@@ -38,16 +39,19 @@ const IndicatorListItem = ({ indicator, onSelect }) => {
         >
           {label}
         </Text>
-        <Text sx={{ flex: '0 0 auto', fontSize: 0 }}>(absent)</Text>
+        {/* <Text sx={{ flex: '0 0 auto', fontSize: 0 }}>(absent)</Text> */}
       </Flex>
     )
   }
 
   return (
-    <Box
+    <Flex
       onClick={handleClick}
       sx={{
+        alignItems: 'flex-start',
+        justifyContent: 'space-between',
         cursor: 'pointer',
+        color: 'primary',
         px: '1rem',
         py: '0.25rem',
         '&:hover': {
@@ -64,13 +68,16 @@ const IndicatorListItem = ({ indicator, onSelect }) => {
     >
       <Text
         sx={{
-          color: 'primary',
           fontSize: 2,
+          mr: '0.5rem',
         }}
       >
         {label}
       </Text>
-    </Box>
+      <Box>
+        <Check size="1rem" />
+      </Box>
+    </Flex>
   )
 }
 

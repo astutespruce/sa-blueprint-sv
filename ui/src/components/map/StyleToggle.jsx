@@ -101,6 +101,13 @@ const StyleToggle = ({ map, sources, layers, isMobile }) => {
 
             const layer = { ...l }
 
+            if (l.id === 'blueprint') {
+              const [prevLyr] = styleRef.current.layers.filter(
+                ({ id }) => id === 'blueprint'
+              )
+              layer.paint['raster-opacity'] = prevLyr.paint['raster-opacity']
+            }
+
             if (l.id === 'unit-outline-highlight') {
               const [prevLyr] = styleRef.current.layers.filter(
                 ({ id }) => id === 'unit-outline-highlight'

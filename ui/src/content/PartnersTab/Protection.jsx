@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { CheckCircle } from '@emotion-icons/fa-regular'
+import { Check } from '@emotion-icons/fa-solid'
 import { Box, Flex, Text } from 'theme-ui'
 
 import { PercentBarChart } from 'components/chart'
@@ -53,15 +53,11 @@ const Protection = ({ type, protection }) => {
             >
               {label}
             </Text>
-            {percent === 0 ? (
-              <Text sx={{ flex: '0 0 auto', fontSize: 0, color: 'grey.6' }}>
-                (absent)
-              </Text>
-            ) : (
+            {percent > 0 ? (
               <Box sx={{ flex: '0 0 auto' }}>
-                <CheckCircle size="1em" />
+                <Check size="1em" />
               </Box>
-            )}
+            ) : null}
           </Flex>
         ))}
       </Box>

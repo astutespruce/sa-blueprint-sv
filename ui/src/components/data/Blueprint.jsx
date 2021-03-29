@@ -18,6 +18,7 @@ export const useBlueprintPriorities = () => {
             labelColor
             percent
             description
+            description2: report_description
           }
         }
       }
