@@ -21,6 +21,7 @@ module.exports = {
   },
   flags: {
     // FAST_DEV: true,
+    DEV_SSR: true,
     FAST_REFRESH: true,
   },
   pathPrefix: process.env.SITE_ROOT_PATH || `/`,

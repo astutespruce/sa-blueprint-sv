@@ -14,6 +14,7 @@ const EXTENT = 8192 // from mapbox-gl-js/../extent.js
  * @param {String} layerId - layer from which to extract pixel data
  */
 export const getPixelValue = (map, point, layerId) => {
+  // Note: these are at map.style._otherSourceCaches for mapbox-gl-js >= 2.0
   const sourceCache = map.style.sourceCaches[layerId]
 
   if (!sourceCache) {

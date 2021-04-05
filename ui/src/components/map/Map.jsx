@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback, memo } from 'react'
-import mapboxgl from 'mapbox-gl'
+import mapboxgl from 'mapbox-gl' // TODO: for mapbox-gl-js >= 2.0 skips any babel transforms; see: https://docs.mapbox.com/mapbox-gl-js/api/#migrating-to-v2
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { Box } from 'theme-ui'
 import { Crosshairs } from '@emotion-icons/fa-solid'
@@ -9,7 +9,7 @@ import { useBreakpoints } from 'components/layout'
 
 import { useBlueprintPriorities, useMapData } from 'components/data'
 
-import { hasWindow } from 'util/dom'
+import { hasWindow, isLocalDev } from 'util/dom'
 import { useIsEqualEffect } from 'util/hooks'
 import { extractPixelData } from './pixels'
 import { getCenterAndZoom } from './util'
@@ -19,6 +19,7 @@ import { Legend } from './legend'
 import MapModeToggle from './MapModeToggle'
 import StyleToggle from './StyleToggle'
 import { siteMetadata } from '../../../gatsby-config'
+import { maxParallelImageRequests } from 'mapbox-gl'
 
 const { mapboxToken } = siteMetadata
 
@@ -89,6 +90,14 @@ const Map = () => {
     }
 
     map.on('load', () => {
+      // due to styling components loading at different types, the containing
+      // nodes don't always have height set; force larger view
+      if (isLocalDev) {
+        map.resize()
+        const { center, zoom } = getCenterAndZoom(mapNode.current, bounds, 0.1)
+        map.setZoom(zoom)
+      }
+
       // add sources
       Object.entries(sources).forEach(([id, source]) => {
         map.addSource(id, source)
@@ -279,6 +288,7 @@ const Map = () => {
     }
 
     const dataSources = ['blueprint'].concat(indicatorSources)
+    // Note: these are at map.style._otherSourceCaches for mapbox-gl-js >= 2.0
     const sourcesLoaded = dataSources.filter(
       (s) => map.style.sourceCaches[s] && map.style.sourceCaches[s].loaded()
     )
