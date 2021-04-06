@@ -14,9 +14,7 @@ export const IndicatorPropType = {
   goodThreshold: PropTypes.number,
   units: PropTypes.string,
   pixelValue: PropTypes.number,
-  // avg: PropTypes.number, // TODO: remove
   total: PropTypes.number,
-  // domain: PropTypes.arrayOf(PropTypes.number), // TODO: remove
   values: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number.isRequired,

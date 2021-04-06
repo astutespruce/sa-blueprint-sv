@@ -58,15 +58,13 @@ export const unpackFeatureData = (properties) => {
   values.blueprint = values.blueprint ? applyFactor(values.blueprint, 0.1) : []
   values.corridors = values.corridors ? applyFactor(values.corridors, 0.1) : []
 
-  // merge avg and percents together
+  // extract percents
   if (values.indicators) {
     Object.keys(values.indicators).forEach((k) => {
       const percent = applyFactor(values.indicators[k], 0.1)
 
       values.indicators[k] = {
         percent,
-        // calculate avg bin from percents if not a continuous indicator
-        avg: values.indicator_avg ? values.indicator_avg[k] || null : null,
       }
     })
   } else {

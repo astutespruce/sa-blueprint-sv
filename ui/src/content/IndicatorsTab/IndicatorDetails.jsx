@@ -140,29 +140,6 @@ const IndicatorDetails = ({
           </OutboundLink>
         </Box>
         <NeedHelp />
-        {/* <Divider variant="styles.hr.light" sx={{ my: '3rem' }} />
-        <Box sx={{ color: 'grey.7', fontSize: 1 }}>
-          <QuestionCircle
-            size="1.25em"
-            style={{ marginTop: '-0.25em', marginRight: '0.5em' }}
-          />
-          Need help interpreting these results or applying Blueprint priorities
-          to your particular project or location? Please{' '}
-          <Box as="span" sx={{ display: 'inline-block' }}>
-            <ContactModal>
-              <Text
-                sx={{
-                  color: 'primary',
-                  cursor: 'pointer',
-                  '&:hover': { textDecoration: 'underline' },
-                }}
-              >
-                Contact Us
-              </Text>
-            </ContactModal>
-          </Box>
-          . We are here to help you!
-        </Box> */}
       </Box>
     </Flex>
   )

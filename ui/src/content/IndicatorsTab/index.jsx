@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import { useIndicators } from 'components/data'
-import { indexBy, sum, percentsToAvg } from 'util/data'
+import { indexBy, sum } from 'util/data'
 
 import EcosystemList from './EcosystemList'
 
@@ -60,7 +60,7 @@ const IndicatorsTab = ({
         }
       }
 
-      const { percent, avg = null } = rawIndicators[index]
+      const { percent } = rawIndicators[index]
 
       const values = indicator.values.map(({ value, ...rest }) => ({
         value,
@@ -72,13 +72,6 @@ const IndicatorsTab = ({
         ...indicator,
         index,
         values,
-        // calculate average based on the values that are present
-        // if values do not start at 1
-        avg:
-          avg !== null
-            ? avg
-            : percentsToAvg(values.map(({ percent: p }) => p)) +
-              values[0].value,
         total: sum(values.map(({ percent: p }) => p)),
       }
     })
@@ -171,7 +164,6 @@ IndicatorsTab.propTypes = {
     PropTypes.objectOf(
       PropTypes.shape({
         percent: PropTypes.arrayOf(PropTypes.number),
-        avg: PropTypes.number,
       })
     ),
   ]).isRequired,

@@ -64,16 +64,6 @@ export const applyFactor = (values, factor) => {
   return values.map((v) => v * factor)
 }
 
-/**
- * Calculate the average bin based on using percents vs total percent as weights
- * and bin index as value.
- * @param {*} percents
- */
-export const percentsToAvg = (percents) => {
-  const total = sum(percents)
-  return sum(percents.map((p, i) => i * (p / total)))
-}
-
 const numericRegex = /\d+/
 const nonNumericRegex = /[^0-9|]/
 
