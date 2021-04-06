@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import {
   Box,
@@ -13,8 +13,6 @@ import {
 } from 'theme-ui'
 import { FormProvider, useForm } from 'react-hook-form'
 
-import { getFromStorage } from 'util/dom'
-
 import Thumbnail1 from 'images/report/report_1_sm.png'
 import Thumbnail2 from 'images/report/report_2_sm.png'
 import Thumbnail3 from 'images/report/report_3_sm.png'
@@ -27,7 +25,7 @@ import { siteMetadata } from '../../../gatsby-config'
 
 const { contactEmail } = siteMetadata
 
-const UploadForm = ({ onFileChange, onCreateReport, onSubmitUserInfo }) => {
+const UploadForm = ({ onFileChange, onCreateReport }) => {
   const methods = useForm({
     mode: 'onBlur',
   })
@@ -41,27 +39,13 @@ const UploadForm = ({ onFileChange, onCreateReport, onSubmitUserInfo }) => {
 
   const file = watch('file', null)
 
-  useEffect(() => {
-    const savedUserInfo = getFromStorage('reportForm')
-    if (savedUserInfo) {
-      Object.entries(savedUserInfo).forEach(([field, value]) => {
-        setValue(field, value)
-      })
-    }
-  }, [setValue])
-
   const handleSubmit = useCallback(
     (values) => {
-      const { areaName, file: fileProp, ...userInfo } = values
+      const { areaName, file: fileProp } = values
 
       onCreateReport(fileProp, areaName)
-
-      // only submit user info if it is non-empty
-      if (Object.values(userInfo).filter((v) => v).length > 0) {
-        onSubmitUserInfo({ ...userInfo, areaName, fileName: fileProp.name })
-      }
     },
-    [onCreateReport, onSubmitUserInfo]
+    [onCreateReport]
   )
 
   const handleResetFile = () => {
@@ -203,7 +187,6 @@ const UploadForm = ({ onFileChange, onCreateReport, onSubmitUserInfo }) => {
 UploadForm.propTypes = {
   onFileChange: PropTypes.func.isRequired,
   onCreateReport: PropTypes.func.isRequired,
-  onSubmitUserInfo: PropTypes.func.isRequired,
 }
 
 export default UploadForm
