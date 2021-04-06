@@ -14,6 +14,7 @@ const Protection = ({ type, protection }) => {
   const bars = PROTECTION.map((category) => ({
     ...category,
     percent: protection ? protection[category.id] || 0 : 0,
+    color: '#2ca02c',
   }))
 
   const remainder = 100 - sum(bars.map(({ percent }) => percent))

@@ -13,7 +13,6 @@ export const useOwnership = () => {
           node {
             id: value
             label
-            color
           }
         }
       }
@@ -22,7 +21,6 @@ export const useOwnership = () => {
           node {
             id: value
             label
-            color
           }
         }
       }
