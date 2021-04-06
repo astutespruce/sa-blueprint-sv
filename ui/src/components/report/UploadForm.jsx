@@ -13,6 +13,8 @@ import {
 } from 'theme-ui'
 import { FormProvider, useForm } from 'react-hook-form'
 
+import { OutboundLink } from 'components/link'
+
 import Thumbnail1 from 'images/report/report_1_sm.png'
 import Thumbnail2 from 'images/report/report_2_sm.png'
 import Thumbnail3 from 'images/report/report_3_sm.png'
@@ -124,6 +126,14 @@ const UploadForm = ({ onFileChange, onCreateReport }) => {
             your area of interest. It includes a map and summary table for every
             indicator present in the area, as well as additional information
             about urbanization and sea-level rise.
+            <br />
+            <br />
+            Don&apos;t have a shapefile? You can create one using{' '}
+            <OutboundLink to="https://geojson.io/#map=6/32.861/-81.519">
+              geojson.io
+            </OutboundLink>{' '}
+            to draw your area of interest, save as a shapefile, then upload
+            here.
             <br />
             <br />
             <a href={`mailto:${contactEmail}`}>
