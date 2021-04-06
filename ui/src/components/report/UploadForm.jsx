@@ -157,7 +157,7 @@ const UploadForm = ({ onFileChange, onCreateReport }) => {
           mb: '4rem',
         }}
       >
-        <Heading as="h3">Examples of what is inside</Heading>
+        <Heading as="h3">Examples from another report</Heading>
         <Grid
           columns={5}
           sx={{

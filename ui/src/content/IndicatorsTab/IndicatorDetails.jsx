@@ -1,15 +1,16 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { QuestionCircle } from '@emotion-icons/fa-regular'
-import { Box, Flex, Text, Divider, Heading, Image } from 'theme-ui'
+
+import { Box, Flex, Text, Heading, Image } from 'theme-ui'
 import { Reply } from '@emotion-icons/fa-solid'
 
-import { ContactModal } from 'components/modal'
 import { OutboundLink } from 'components/link'
+import NeedHelp from 'content/NeedHelp'
 import { formatPercent } from 'util/format'
 import theme from 'theme'
 
 import IndicatorPercentTable from './IndicatorPercentTable'
+
 import { IndicatorPropType } from './proptypes'
 
 const IndicatorDetails = ({
@@ -138,7 +139,8 @@ const IndicatorDetails = ({
             View this indicator in the Conservation Planning Atlas
           </OutboundLink>
         </Box>
-        <Divider variant="styles.hr.light" sx={{ my: '3rem' }} />
+        <NeedHelp />
+        {/* <Divider variant="styles.hr.light" sx={{ my: '3rem' }} />
         <Box sx={{ color: 'grey.7', fontSize: 1 }}>
           <QuestionCircle
             size="1.25em"
@@ -160,7 +162,7 @@ const IndicatorDetails = ({
             </ContactModal>
           </Box>
           . We are here to help you!
-        </Box>
+        </Box> */}
       </Box>
     </Flex>
   )

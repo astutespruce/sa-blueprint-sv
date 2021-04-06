@@ -9,14 +9,11 @@ const Intro = () => (
       <p>
         The South Atlantic Conservation Blueprint is a living spatial plan to
         conserve natural and cultural resources for future generations. It
-        identifies shared conservation priorities across the South Atlantic
-        region.
-        <br />
-        <br />
-        The Blueprint is a data-driven plan based on terrestrial, freshwater,
-        and marine indicators. It uses the current condition of those indicators
-        to prioritize the most important areas for natural and cultural
-        resources across the South Atlantic geography.
+        prioritizes the lands and waters of the South Atlantic based on the
+        current condition of terrestrial, freshwater, and marine indicators.
+        Through a connectivity analysis, it also identifies important hubs and
+        corridors. More than 700 people from over 200 different organizations
+        have participated in its development so far.
         <br />
         <br />
         For more information, visit{' '}
@@ -24,11 +21,8 @@ const Intro = () => (
           the Blueprint webpage
         </OutboundLink>
         . On that page, you can see who’s using the Blueprint to inform
-        conservation action and investment.
-        <br />
-        <br />
-        If you want to overlay additional datasets, view indicator layers, and
-        download Blueprint data, visit{' '}
+        conservation action and investment. If you want to overlay additional
+        datasets, view indicator layers, and download Blueprint data, visit{' '}
         <OutboundLink to="https://salcc.databasin.org/">
           the Conservation Planning Atlas
         </OutboundLink>{' '}
