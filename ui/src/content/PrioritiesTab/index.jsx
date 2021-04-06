@@ -67,8 +67,7 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
               <Text>{priorityCategories[blueprint].label}</Text>
             </Flex>
             <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
-              {priorityCategories[blueprint].description}
-              <br />
+              {priorityCategories[blueprint].description}{' '}
               {priorityCategories[blueprint].description2}
             </Text>
           </Box>
@@ -120,11 +119,6 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
             while routing through as much Blueprint priority as possible.
           </Text>
         ) : null}
-        <Text sx={{ mt: '1em', fontSize: 1, color: 'grey.7' }}>
-          Note that the corridors layer includes the full extent of corridors,
-          while the Blueprint corridors class includes only corridors not
-          already identified as priority.
-        </Text>
       </Box>
 
       <NeedHelp />

@@ -52,9 +52,7 @@ const BlueprintChart = ({ categories, blueprint, remainder }) => {
                     <br />
                   </>
                 ) : null}
-                {label}: {description}
-                <br />
-                {description2}
+                {label}: {description} {description2}
               </React.Fragment>
             ))}
         </Text>
