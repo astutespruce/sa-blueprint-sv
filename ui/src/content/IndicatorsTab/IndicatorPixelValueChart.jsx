@@ -24,29 +24,13 @@ const currentPatchCSS = {
   bg: 'grey.6',
 }
 
-const goodPatchCSS = {
-  ...patchCSS,
-  bg: '#5fb785',
-}
-
-const notGoodPatchCSS = {
-  ...patchCSS,
-  bg: '#e77778',
-}
-
-const getPatchCSS = (value, isCurrent, goodThreshold) => {
-  if (goodThreshold !== null) {
-    return value >= goodThreshold ? goodPatchCSS : notGoodPatchCSS
-  }
-  return isCurrent ? currentPatchCSS : patchCSS
-}
-
 const IndicatorPixelValueChart = ({ pixelValue, values, goodThreshold }) => {
   const [currentValue] = values.filter(({ value: v }) => v === pixelValue)
+  const present = currentValue !== undefined
 
   return (
-    <Box sx={{ mt: '1.5rem' }}>
-      <Flex sx={{ alignItems: 'center' }}>
+    <Box sx={{ mt: goodThreshold ? '1.5rem' : '0.25rem' }}>
+      <Flex sx={{ alignItems: 'center', opacity: present ? 1 : 0.5 }}>
         <Text sx={labelCSS}>Low</Text>
         <Flex
           sx={{
@@ -54,17 +38,15 @@ const IndicatorPixelValueChart = ({ pixelValue, values, goodThreshold }) => {
             flex: '1 1 auto',
             mx: '1rem',
             border: '1px solid',
-            borderColor: 'grey.6',
+            borderColor: present ? 'grey.6' : 'grey.4',
           }}
         >
           {/* always have a 0 value bin */}
-          {values[0].value > 0 ? (
-            <Box sx={getPatchCSS(0, false, goodThreshold)} />
-          ) : null}
+          {values[0].value > 0 ? <Box sx={patchCSS} /> : null}
 
           {values.map(({ value }) => (
             <React.Fragment key={value}>
-              <Box sx={getPatchCSS(value, value === pixelValue, goodThreshold)}>
+              <Box sx={value === pixelValue ? currentPatchCSS : patchCSS}>
                 {value === goodThreshold ? (
                   <Text
                     sx={{
@@ -101,17 +83,15 @@ const IndicatorPixelValueChart = ({ pixelValue, values, goodThreshold }) => {
         <Text sx={labelCSS}>High</Text>
       </Flex>
 
-      {currentValue ? (
-        <Text sx={{ color: 'grey.6', fontSize: 1, mt: '1rem' }}>
-          Value: {currentValue.label}
-        </Text>
-      ) : null}
+      <Text sx={{ color: 'grey.6', fontSize: 0, mt: '1rem' }}>
+        Value: {present ? currentValue.label : 'Not present'}
+      </Text>
     </Box>
   )
 }
 
 IndicatorPixelValueChart.propTypes = {
-  pixelValue: PropTypes.number.isRequired,
+  pixelValue: PropTypes.number,
   values: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number.isRequired,
@@ -123,6 +103,7 @@ IndicatorPixelValueChart.propTypes = {
 
 IndicatorPixelValueChart.defaultProps = {
   goodThreshold: null,
+  pixelValue: null,
 }
 
 export default IndicatorPixelValueChart

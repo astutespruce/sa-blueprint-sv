@@ -31,8 +31,9 @@ const IndicatorDetails = ({
   // eslint-disable-next-line global-require,import/no-dynamic-require
   const icon = require(`images/${ecosystemId}.svg`)
 
-  const remainder =
-    (100 * Math.abs(analysisAcres - blueprintAcres)) / analysisAcres
+  const remainder = analysisAcres
+    ? (100 * Math.abs(analysisAcres - blueprintAcres)) / analysisAcres
+    : 0
 
   const percentTableValues = values
     .map((value, i) => ({

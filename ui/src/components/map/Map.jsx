@@ -50,12 +50,7 @@ const Map = () => {
 
   const breakpoint = useBreakpoints()
   const isMobile = breakpoint === 0
-  const {
-    data: mapData,
-    // setLoading: setMapDataLoading,
-    mapMode,
-    setData: setMapData,
-  } = useMapData()
+  const { data: mapData, mapMode, setData: setMapData } = useMapData()
   const { colorIndex: blueprintByColor } = useBlueprintPriorities()
   const mapModeRef = useRef(mapMode)
   const { location } = useSearch()
@@ -299,7 +294,6 @@ const Map = () => {
         setMapData(extractPixelData(map, map.getCenter(), blueprintByColor))
       })
       // set loading and pass coordinates for header to avoid jitter
-      // setMapDataLoading(true)
       const { lng: longitude, lat: latitude } = map.getCenter()
       setMapData({
         type: 'pixel',

@@ -4,15 +4,17 @@ import PropTypes from 'prop-types'
 const Context = createContext()
 
 export const Provider = ({ children }) => {
-  const [{ mapMode, data }, setState] = useState({
+  const [{ mapMode, data, selectedIndicator }, setState] = useState({
     mapMode: 'unit', // pixel or unit
     data: null,
+    selectedIndicator: null,
   })
 
   const setData = useCallback((newData) => {
     setState((prevState) => ({
       ...prevState,
       data: newData,
+      selectedIndicator: newData === null ? null : prevState.selectedIndicator,
     }))
   }, [])
 
@@ -27,6 +29,13 @@ export const Provider = ({ children }) => {
     }))
   }, [])
 
+  const setSelectedIndicator = useCallback((newSelectedIndicator) => {
+    setState((prevState) => ({
+      ...prevState,
+      selectedIndicator: newSelectedIndicator,
+    }))
+  }, [])
+
   return (
     <Context.Provider
       value={{
@@ -35,6 +44,8 @@ export const Provider = ({ children }) => {
         unsetData,
         mapMode,
         setMapMode,
+        selectedIndicator,
+        setSelectedIndicator,
       }}
     >
       {children}

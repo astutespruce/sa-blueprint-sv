@@ -19,18 +19,11 @@ const IndicatorsTab = ({
     // filter indicators that are not present or have 0 values that don't have
     // corresponding label (effectively NODATA)
     indicators = INDICATORS.map((indicator) => {
-      // absent
-      if (
-        rawIndicators[indicator.id] === undefined ||
-        rawIndicators[indicator.id] < indicator.values[0].value
-      ) {
-        return {
-          ...indicator,
-          total: 0,
-        }
-      }
+      const present =
+        rawIndicators[indicator.id] &&
+        rawIndicators[indicator.id] >= indicator.values[0].value
 
-      const pixelValue = rawIndicators[indicator.id]
+      const pixelValue = present ? rawIndicators[indicator.id] : null
       const values = indicator.values.map((value) => ({
         ...value,
         // percent is used for indicator details view
@@ -41,7 +34,7 @@ const IndicatorsTab = ({
         ...indicator,
         values,
         pixelValue,
-        total: 100, // hardcode to 100%
+        total: present ? 100 : 0,
       }
     })
   } else {
@@ -50,22 +43,23 @@ const IndicatorsTab = ({
       ...indicator,
       index: i,
     })).map(({ index, ...indicator }) => {
+      const present = !!rawIndicators[index]
       // absent
-      if (!rawIndicators[index]) {
-        return {
-          ...indicator,
-          index,
-          values,
-          total: 0,
-        }
-      }
+      // if (!rawIndicators[index]) {
+      //   return {
+      //     ...indicator,
+      //     index,
+      //     values,
+      //     total: 0,
+      //   }
+      // }
 
-      const { percent } = rawIndicators[index]
+      // const { percent } = rawIndicators[index]
 
       const values = indicator.values.map(({ value, ...rest }) => ({
         value,
         ...rest,
-        percent: percent[value],
+        percent: present ? rawIndicators[index].percent[value] : 0,
       }))
 
       return {

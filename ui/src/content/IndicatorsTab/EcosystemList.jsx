@@ -2,6 +2,7 @@ import React, { useState, useCallback, memo } from 'react'
 import PropTypes from 'prop-types'
 import { dequal as deepEqual } from 'dequal'
 
+import { useMapData } from 'components/data'
 import { flatten, indexBy } from 'util/data'
 import { useIsEqualEffect } from 'util/hooks'
 
@@ -10,41 +11,43 @@ import IndicatorDetails from './IndicatorDetails'
 import { EcosystemPropType } from './proptypes'
 
 const EcosystemList = ({ type, ecosystems, analysisAcres, blueprintAcres }) => {
+  const { selectedIndicator, setSelectedIndicator } = useMapData()
   const indicators = flatten(
     Object.values(ecosystems).map(({ indicators: i }) => i)
   )
   const indicatorsIndex = indexBy(indicators, 'id')
 
-  const [selectedIndicator, setSelectedIndicator] = useState(null)
-
   useIsEqualEffect(() => {
-    if (selectedIndicator === null) {
+    if (!selectedIndicator) {
       return
     }
 
-    if (indicatorsIndex[selectedIndicator.id]) {
-      setSelectedIndicator(() => indicatorsIndex[selectedIndicator.id])
-    } else {
-      // reset selected indicator, it isn't present in this set
-      setSelectedIndicator(() => null)
+    if (!indicatorsIndex[selectedIndicator]) {
+      // reset selected indicator, it isn't present in this set (outside valid ecosystems)
+      setSelectedIndicator(null)
     }
-  }, [indicators])
+  }, [indicators, selectedIndicator])
 
-  const handleSelectIndicator = useCallback((indicator) => {
-    setSelectedIndicator(indicator)
-  }, [])
+  const handleSelectIndicator = useCallback(
+    (indicator) => {
+      setSelectedIndicator(indicator.id)
+    },
+    [setSelectedIndicator]
+  )
 
-  const handleCloseIndicator = useCallback(() => setSelectedIndicator(null), [])
+  const handleCloseIndicator = useCallback(() => setSelectedIndicator(null), [
+    setSelectedIndicator,
+  ])
 
   return (
     <>
-      {selectedIndicator ? (
+      {selectedIndicator && indicatorsIndex[selectedIndicator] ? (
         <IndicatorDetails
           type={type}
           analysisAcres={analysisAcres}
           blueprintAcres={blueprintAcres}
           onClose={handleCloseIndicator}
-          {...selectedIndicator}
+          {...indicatorsIndex[selectedIndicator]}
         />
       ) : (
         ecosystems.map((ecosystem) => (

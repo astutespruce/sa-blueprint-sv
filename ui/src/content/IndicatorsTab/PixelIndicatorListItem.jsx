@@ -20,59 +20,34 @@ const PixelIndicatorListItem = ({ indicator, onSelect }) => {
 
   const present = indicator.total > 0
 
-  if (!present) {
-    return (
-      <Flex
-        sx={{
-          alignItems: 'baseline',
-          justifyContent: 'space-between',
-          px: '1rem',
-          py: '0.25rem',
-          color: 'grey.7',
-          cursor: 'default',
-          '&:not(:first-of-type)': {
-            borderTop: '2px solid',
-            borderTopColor: 'grey.1',
-          },
-        }}
-      >
-        <Text
-          sx={{
-            flex: '1 1 auto',
-            fontSize: 2,
-          }}
-        >
-          {label}
-        </Text>
-        <Text sx={{ flex: '0 0 auto', fontSize: '10px' }}>(absent)</Text>
-      </Flex>
-    )
-  }
-
   return (
     <Box
-      onClick={handleClick}
+      onClick={present ? handleClick : undefined}
       sx={{
-        cursor: 'pointer',
+        cursor: present ? 'pointer' : 'unset',
         px: '1rem',
         pt: '1rem',
-        pb: '2.5rem',
+        pb: '1.5rem',
         position: 'relative',
-        '&:hover': {
-          bg: lighten('grey.0', 0.01),
-          '& label': {
-            display: 'block',
-          },
-        },
         '&:not(:first-of-type)': {
           borderTop: '2px solid',
           borderTopColor: 'grey.1',
         },
+        ...(present
+          ? {
+              '&:hover': {
+                bg: lighten('grey.0', 0.01),
+                '& label': {
+                  display: 'block',
+                },
+              },
+            }
+          : {}),
       }}
     >
       <Text
         sx={{
-          color: 'primary',
+          color: present ? 'primary' : 'grey.7',
           fontSize: 2,
           fontWeight: 'bold',
         }}
@@ -85,21 +60,24 @@ const PixelIndicatorListItem = ({ indicator, onSelect }) => {
         values={values}
         goodThreshold={goodThreshold}
       />
-      <Text
-        as="label"
-        sx={{
-          color: 'primary',
-          fontSize: 'small',
-          textAlign: 'center',
-          position: 'absolute',
-          bottom: 0,
-          left: 0,
-          right: 0,
-          display: 'none',
-        }}
-      >
-        {isMobile ? 'tap' : 'click'} for more details
-      </Text>
+
+      {present ? (
+        <Text
+          as="label"
+          sx={{
+            color: 'primary',
+            fontSize: 'small',
+            textAlign: 'center',
+            position: 'absolute',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            display: 'none',
+          }}
+        >
+          {isMobile ? 'tap' : 'click'} for more details
+        </Text>
+      ) : null}
     </Box>
   )
 }
