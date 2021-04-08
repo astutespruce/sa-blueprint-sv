@@ -44,18 +44,6 @@ const IndicatorsTab = ({
       index: i,
     })).map(({ index, ...indicator }) => {
       const present = !!rawIndicators[index]
-      // absent
-      // if (!rawIndicators[index]) {
-      //   return {
-      //     ...indicator,
-      //     index,
-      //     values,
-      //     total: 0,
-      //   }
-      // }
-
-      // const { percent } = rawIndicators[index]
-
       const values = indicator.values.map(({ value, ...rest }) => ({
         value,
         ...rest,

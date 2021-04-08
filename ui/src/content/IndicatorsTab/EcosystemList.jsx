@@ -1,4 +1,4 @@
-import React, { useState, useCallback, memo } from 'react'
+import React, { useCallback, memo } from 'react'
 import PropTypes from 'prop-types'
 import { dequal as deepEqual } from 'dequal'
 

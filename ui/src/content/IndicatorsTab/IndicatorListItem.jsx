@@ -39,7 +39,6 @@ const IndicatorListItem = ({ indicator, onSelect }) => {
         >
           {label}
         </Text>
-        {/* <Text sx={{ flex: '0 0 auto', fontSize: 0 }}>(absent)</Text> */}
       </Flex>
     )
   }

@@ -19,7 +19,6 @@ import { Legend } from './legend'
 import MapModeToggle from './MapModeToggle'
 import StyleToggle from './StyleToggle'
 import { siteMetadata } from '../../../gatsby-config'
-import { maxParallelImageRequests } from 'mapbox-gl'
 
 const { mapboxToken } = siteMetadata
 
