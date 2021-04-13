@@ -49,7 +49,7 @@ const PixelIndicatorListItem = ({ indicator, onSelect }) => {
         sx={{
           color: present ? 'primary' : 'grey.7',
           fontSize: 2,
-          fontWeight: 'bold',
+          fontWeight: present ? 'bold' : 'unset',
         }}
       >
         {label}

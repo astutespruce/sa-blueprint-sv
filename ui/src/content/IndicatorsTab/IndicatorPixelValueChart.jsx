@@ -30,7 +30,7 @@ const IndicatorPixelValueChart = ({ pixelValue, values, goodThreshold }) => {
 
   return (
     <Box sx={{ mt: goodThreshold ? '1.5rem' : '0.25rem' }}>
-      <Flex sx={{ alignItems: 'center', opacity: present ? 1 : 0.5 }}>
+      <Flex sx={{ alignItems: 'center', opacity: present ? 1 : 0.25 }}>
         <Text sx={labelCSS}>Low</Text>
         <Flex
           sx={{
@@ -83,7 +83,7 @@ const IndicatorPixelValueChart = ({ pixelValue, values, goodThreshold }) => {
         <Text sx={labelCSS}>High</Text>
       </Flex>
 
-      <Text sx={{ color: 'grey.6', fontSize: 0, mt: '1rem' }}>
+      <Text sx={{ color: 'grey.7', fontSize: 0, mt: '1rem' }}>
         Value: {present ? currentValue.label : 'Not present'}
       </Text>
     </Box>

@@ -46,6 +46,8 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
     }
   }
 
+  console.log('priorityCategories', priorityCategories)
+
   return (
     <Box sx={{ py: '2rem', pl: '1rem', pr: '2rem' }}>
       <Box as="section">
@@ -66,10 +68,6 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
               />
               <Text>{priorityCategories[blueprint].label}</Text>
             </Flex>
-            <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
-              {priorityCategories[blueprint].description}{' '}
-              {priorityCategories[blueprint].description2}
-            </Text>
           </Box>
         ) : (
           <BlueprintChart
@@ -78,6 +76,26 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
             remainder={remainder}
           />
         )}
+
+        {remainder < 100 ? (
+          <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
+            {priorityCategories
+              .slice()
+              .reverse()
+              .filter(({ description }) => description)
+              .map(({ label, description, description2 }, i) => (
+                <React.Fragment key={label}>
+                  {i > 0 ? (
+                    <>
+                      <br />
+                      <br />
+                    </>
+                  ) : null}
+                  {label}: {description} {description2}
+                </React.Fragment>
+              ))}
+          </Text>
+        ) : null}
       </Box>
 
       <Divider variant="styles.hr.light" sx={{ my: '3rem' }} />
