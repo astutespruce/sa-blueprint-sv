@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { PieChart } from 'react-minimal-pie-chart'
-import { Flex, Text } from 'theme-ui'
+import { Flex } from 'theme-ui'
 
 import { PieChartLegend } from 'components/chart'
 
@@ -27,7 +27,7 @@ const BlueprintChart = ({ categories, blueprint, remainder }) => {
 
   return (
     <>
-      <Flex sx={{ alignItems: 'center', mt: '2rem' }}>
+      <Flex sx={{ alignItems: 'center', mt: '1rem' }}>
         <PieChart
           data={blueprintChartData}
           lineWidth={60}

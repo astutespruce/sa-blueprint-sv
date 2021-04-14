@@ -12,7 +12,7 @@ const baseCSS = {
   pb: '0.5em',
   px: '1em',
   bg: '#FFF',
-  color: 'grey.7',
+  color: 'grey.8',
   boxShadow: '0 2px 6px #666',
 }
 
@@ -120,6 +120,12 @@ const MapModeToggle = ({ map, isMobile }) => {
               Zoom in to select {mapMode === 'pixel' ? 'a pixel' : 'an area'}
             </Text>
           </Flex>
+        ) : null}
+
+        {!showZoomNote && mapMode === 'pixel' ? (
+          <Text sx={{ fontSize: 0, textAlign: 'left', ml: '0.5rem' }}>
+            Pan the map behind the crosshairs <br /> to show details in sidebar
+          </Text>
         ) : null}
       </Flex>
     </Box>

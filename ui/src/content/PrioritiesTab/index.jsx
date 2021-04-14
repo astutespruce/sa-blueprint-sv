@@ -8,6 +8,7 @@ import { sum } from 'util/data'
 
 import BlueprintChart from './BlueprintChart'
 import CorridorsChart from './CorridorsChart'
+import PriorityCategories from './PriorityCategories'
 
 const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
   const { all: allPriorities } = useBlueprintPriorities()
@@ -54,7 +55,7 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
         <Heading as="h3">Blueprint Priority</Heading>
         <Text sx={{ color: 'grey.7' }}>for shared conservation action</Text>
 
-        {type === 'pixel' ? (
+        {/* {type === 'pixel' ? (
           <Box>
             <Flex sx={{ alignItems: 'center', mt: '0.5rem' }}>
               <Box
@@ -69,33 +70,42 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
               <Text>{priorityCategories[blueprint].label}</Text>
             </Flex>
           </Box>
-        ) : (
+        ) :  */}
+
+        {type !== 'pixel' ? (
           <BlueprintChart
             categories={priorityCategories}
             blueprint={blueprint}
             remainder={remainder}
           />
-        )}
+        ) : null}
 
         {remainder < 100 ? (
-          <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
-            {priorityCategories
+          <PriorityCategories
+            categories={priorityCategories
               .slice()
               .reverse()
-              .filter(({ description }) => description)
-              .map(({ label, description, description2 }, i) => (
-                <React.Fragment key={label}>
-                  {i > 0 ? (
-                    <>
-                      <br />
-                      <br />
-                    </>
-                  ) : null}
-                  {label}: {description} {description2}
-                </React.Fragment>
-              ))}
-          </Text>
-        ) : null}
+              .filter(({ value }) => value > 0)}
+            value={type === 'pixel' ? blueprint : null}
+          />
+        ) : // <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
+        //   {priorityCategories
+        //     .slice()
+        //     .reverse()
+        //     .filter(({ description }) => description)
+        //     .map(({ label, description, description2 }, i) => (
+        //       <React.Fragment key={label}>
+        //         {i > 0 ? (
+        //           <>
+        //             <br />
+        //             <br />
+        //           </>
+        //         ) : null}
+        //         {label}: {description} {description2}
+        //       </React.Fragment>
+        //     ))}
+        // </Text>
+        null}
       </Box>
 
       <Divider variant="styles.hr.light" sx={{ my: '3rem' }} />
