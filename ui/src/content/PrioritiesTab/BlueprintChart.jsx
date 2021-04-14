@@ -31,7 +31,7 @@ const BlueprintChart = ({ categories, blueprint, remainder }) => {
         <PieChart
           data={blueprintChartData}
           lineWidth={60}
-          radius={chartWidth / 4 - 2}
+          radius={chartWidth / 3.5 - 2}
           style={{
             width: chartWidth,
             flex: '0 1 auto',

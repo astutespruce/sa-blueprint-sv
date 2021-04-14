@@ -3,26 +3,23 @@ import PropTypes from 'prop-types'
 import { Box, Flex, Text } from 'theme-ui'
 
 const defaultCSS = {
-  '&:not(:first-of-type)': {
-    mt: '1rem',
-  },
   color: 'grey.8',
+  border: '1px solid transparent',
+  py: '0.5rem',
+  px: '1rem',
 }
 
 const activeCSS = {
   ...defaultCSS,
-  border: '1px solid',
   borderRadius: '0.5rem',
   bg: '#FFF',
   borderColor: 'grey.2',
   boxShadow: '1px 1px 6px #dce2e3',
-  p: '1rem',
-  ml: '-1rem',
   color: 'text',
 }
 
 const PriorityCategories = ({ categories, value: currentValue }) => (
-  <Box sx={{ fontSize: 1, ml: '1.5rem', mt: '1rem' }}>
+  <Box sx={{ fontSize: 1, pt: '0.5rem' }}>
     {categories.map(({ value, label, color, description, description2 }) => (
       <Box key={value} sx={value === currentValue ? activeCSS : defaultCSS}>
         <Flex sx={{ alignItems: 'center' }}>
@@ -44,9 +41,11 @@ const PriorityCategories = ({ categories, value: currentValue }) => (
             {label}
           </Box>
         </Flex>
-        <Text sx={{ fontSize: 0, ml: '1.5rem' }}>
-          {description} {description2}
-        </Text>
+        {description ? (
+          <Text sx={{ fontSize: 0, ml: '1.5rem' }}>
+            {description} {description2}
+          </Text>
+        ) : null}
       </Box>
     ))}
   </Box>
@@ -58,8 +57,8 @@ PriorityCategories.propTypes = {
       value: PropTypes.number.isRequired,
       label: PropTypes.string.isRequired,
       color: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
-      description2: PropTypes.string.isRequired,
+      description: PropTypes.string,
+      description2: PropTypes.string,
     })
   ).isRequired,
   value: PropTypes.number,

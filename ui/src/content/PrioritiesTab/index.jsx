@@ -47,30 +47,11 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
     }
   }
 
-  console.log('priorityCategories', priorityCategories)
-
   return (
     <Box sx={{ py: '2rem', pl: '1rem', pr: '2rem' }}>
       <Box as="section">
         <Heading as="h3">Blueprint Priority</Heading>
         <Text sx={{ color: 'grey.7' }}>for shared conservation action</Text>
-
-        {/* {type === 'pixel' ? (
-          <Box>
-            <Flex sx={{ alignItems: 'center', mt: '0.5rem' }}>
-              <Box
-                sx={{
-                  width: '2rem',
-                  height: '1.5rem',
-                  mr: '0.5rem',
-                  flex: '0 0 auto',
-                  bg: priorityCategories[blueprint].color,
-                }}
-              />
-              <Text>{priorityCategories[blueprint].label}</Text>
-            </Flex>
-          </Box>
-        ) :  */}
 
         {type !== 'pixel' ? (
           <BlueprintChart
@@ -85,27 +66,10 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
             categories={priorityCategories
               .slice()
               .reverse()
-              .filter(({ value }) => value > 0)}
+              .filter(({ value }) => (type === 'pixel' ? true : value > 0))}
             value={type === 'pixel' ? blueprint : null}
           />
-        ) : // <Text sx={{ mt: '1rem', fontSize: 1, color: 'grey.7' }}>
-        //   {priorityCategories
-        //     .slice()
-        //     .reverse()
-        //     .filter(({ description }) => description)
-        //     .map(({ label, description, description2 }, i) => (
-        //       <React.Fragment key={label}>
-        //         {i > 0 ? (
-        //           <>
-        //             <br />
-        //             <br />
-        //           </>
-        //         ) : null}
-        //         {label}: {description} {description2}
-        //       </React.Fragment>
-        //     ))}
-        // </Text>
-        null}
+        ) : null}
       </Box>
 
       <Divider variant="styles.hr.light" sx={{ my: '3rem' }} />
