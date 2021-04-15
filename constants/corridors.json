@@ -1,6 +1,32 @@
 [
-  { "value": 0, "color": "#464646", "label": "Inland Hubs" },
-  { "value": 1, "color": "#9B9B9B", "label": "Inland Corridors" },
-  { "value": 2, "color": "#454F89", "label": "Marine Hubs" },
-  { "value": 3, "color": "#9EBBD7", "label": "Marine Corridors" }
+  {
+    "value": 0,
+    "color": "#464646",
+    "label": "Inland Hubs",
+    "description": "Inland hubs are either large patches (>2,000 ha) of highest priority Blueprint areas or large patches of permanently protected lands. "
+  },
+  {
+    "value": 1,
+    "color": "#9B9B9B",
+    "label": "Inland Corridors",
+    "description": "Inland corridors are the shortest paths that connect these hubs while routing through as much Blueprint priority as possible."
+  },
+  {
+    "value": 2,
+    "color": "#454F89",
+    "label": "Marine Hubs",
+    "description": "Marine hubs are either large patches (>2,000 ha) of highest priority Blueprint areas or large patches of open water estuaries."
+  },
+  {
+    "value": 3,
+    "color": "#9EBBD7",
+    "label": "Marine Corridors",
+    "description": "Marine corridors are the shortest paths that connect these hubs while routing through as much Blueprint priority as possible."
+  },
+  {
+    "value": 4,
+    "color": "#ffebc2",
+    "label": "Not a hub or corridor",
+    "description": null
+  }
 ]
