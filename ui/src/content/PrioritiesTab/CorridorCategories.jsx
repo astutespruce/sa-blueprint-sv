@@ -19,63 +19,46 @@ const activeCSS = {
   color: 'text',
 }
 
-const PriorityCategories = ({ categories, value: currentValue }) => (
+const CorridorCategories = ({ categories, value: currentValue }) => (
   <Box sx={{ fontSize: 1, pt: '0.5rem' }}>
-    {categories.map(({ value, label, color, description, description2 }) => (
+    {categories.map(({ value, label, description }) => (
       <Box key={value} sx={value === currentValue ? activeCSS : defaultCSS}>
         <Flex
           sx={{ justifyContent: 'space-between', alignItems: 'flex-start' }}
         >
-          <Flex sx={{ alignItems: 'center', flex: '1 1 auto' }}>
-            <Box
-              sx={{
-                bg: color,
-                width: '1rem',
-                height: '1rem',
-                border: '1px solid #CCC',
-                mr: '0.5rem',
-              }}
-            />
-            <Box
-              sx={{
-                fontWeight: 'bold',
-                lineHeight: 1,
-              }}
-            >
-              {label}
-            </Box>
-          </Flex>
+          <Text
+            sx={{
+              fontWeight: 'bold',
+              flex: '1 1 auto',
+            }}
+          >
+            {label}
+          </Text>
           {value === currentValue ? (
             <Box sx={{ flex: '0 0 auto' }}>
               <Check size="1em" />
             </Box>
           ) : null}
         </Flex>
-        {description ? (
-          <Text sx={{ fontSize: 0, ml: '1.5rem' }}>
-            {description} {description2}
-          </Text>
-        ) : null}
+        {description ? <Text sx={{ fontSize: 0 }}>{description}</Text> : null}
       </Box>
     ))}
   </Box>
 )
 
-PriorityCategories.propTypes = {
+CorridorCategories.propTypes = {
   categories: PropTypes.arrayOf(
     PropTypes.shape({
       value: PropTypes.number.isRequired,
       label: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired,
       description: PropTypes.string,
-      description2: PropTypes.string,
     })
   ).isRequired,
   value: PropTypes.number,
 }
 
-PriorityCategories.defaultProps = {
+CorridorCategories.defaultProps = {
   value: null,
 }
 
-export default PriorityCategories
+export default CorridorCategories

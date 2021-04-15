@@ -1,18 +1,29 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Box, Flex, Divider, Heading, Text } from 'theme-ui'
+import { Box, Divider, Heading, Text } from 'theme-ui'
 
-import { useBlueprintPriorities, useCorridors } from 'components/data'
+import {
+  useBlueprintPriorities,
+  useCorridors,
+  useIndicators,
+} from 'components/data'
 import NeedHelp from 'content/NeedHelp'
 import { sum } from 'util/data'
 
 import BlueprintChart from './BlueprintChart'
 import CorridorsChart from './CorridorsChart'
 import PriorityCategories from './PriorityCategories'
+import CorridorCategories from './CorridorCategories'
 
-const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
+const PrioritiesTab = ({
+  type,
+  blueprint,
+  corridors,
+  indicators: rawIndicators,
+}) => {
   const { all: allPriorities } = useBlueprintPriorities()
   const corridorCategories = useCorridors()
+  const { indicators: INDICATORS } = useIndicators()
 
   // Note: incoming priorities are in descending order but percents
   // are stored in ascending order
@@ -26,25 +37,43 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
     }
   }
 
-  let corridorsColor = '#ffebc2'
-  let corridorsLabel = 'Not a hub or corridor'
-  let hasInland = false
-  let hasMarine = false
+  let indicators = []
+  if (type === 'pixel') {
+    indicators = INDICATORS.filter(({ id }) => rawIndicators[id])
+  } else {
+    // retrieve indicator results by original index
+    indicators = INDICATORS.filter((indicator, i) => !!rawIndicators[i])
+  }
+  const ecosystems = new Set(indicators.map(({ id }) => id.split('_')[0]))
 
   const hasInlandIndicators =
     ecosystems.has('land') || ecosystems.has('freshwater')
   const hasMarineIndicators = ecosystems.has('marine')
 
+  let hasInland = false
+  let hasMarine = false
   if (corridors !== null) {
     if (type === 'pixel') {
-      corridorsColor = corridorCategories[corridors].color
-      corridorsLabel = corridorCategories[corridors].label
       hasInland = corridors <= 1
-      hasMarine = corridors > 1
+      hasMarine = corridors > 1 && corridors < 4
     } else {
       hasInland = sum(corridors.slice(0, 2)) > 0
+      // Note: value 4 is not present in the summarized data
       hasMarine = sum(corridors.slice(2, corridors.length)) > 0
     }
+  }
+
+  const filterCorridors = ({ value }) => {
+    if (value === 4) {
+      return type === 'pixel'
+    }
+    if (!(hasInland || hasInlandIndicators) && value <= 1) {
+      return false
+    }
+    if (!(hasMarine || hasMarineIndicators) && value > 1) {
+      return false
+    }
+    return true
   }
 
   return (
@@ -76,40 +105,19 @@ const PrioritiesTab = ({ type, blueprint, corridors, ecosystems }) => {
       <Box as="section">
         <Heading as="h3">Hubs &amp; Corridors</Heading>
 
-        {type === 'pixel' ? (
-          <Flex sx={{ alignItems: 'center', mt: '0.5rem' }}>
-            <Box
-              sx={{
-                width: '2rem',
-                height: '1.5rem',
-                mr: '0.5rem',
-                bg: corridorsColor,
-              }}
-            />
-            <Text>{corridorsLabel}</Text>
-          </Flex>
-        ) : (
+        {type !== 'pixel' ? (
           <CorridorsChart
             categories={corridorCategories}
             corridors={corridors}
             remainder={remainder}
           />
-        )}
-        {hasInland || hasInlandIndicators || type === 'subwatershed' ? (
-          <Text sx={{ mt: '1em', fontSize: 1, color: 'grey.7' }}>
-            Inland hubs are either large patches (&gt;2,000 ha) of highest
-            priority Blueprint areas or large patches of permanently protected
-            lands. Inland corridors are the shortest paths that connect these
-            hubs while routing through as much Blueprint priority as possible.
-          </Text>
         ) : null}
-        {hasMarine || hasMarineIndicators || type === 'marine_block' ? (
-          <Text sx={{ mt: '1em', fontSize: 1, color: 'grey.7' }}>
-            Marine hubs are either large patches (&gt;2,000 ha) of highest
-            priority Blueprint areas or large patches of open water estuaries.
-            Marine corridors are the shortest paths that connect these hubs
-            while routing through as much Blueprint priority as possible.
-          </Text>
+
+        {remainder < 100 ? (
+          <CorridorCategories
+            categories={corridorCategories.filter(filterCorridors)}
+            value={type === 'pixel' ? corridors || 4 : null}
+          />
         ) : null}
       </Box>
 
@@ -128,13 +136,22 @@ PrioritiesTab.propTypes = {
     PropTypes.arrayOf(PropTypes.number),
     PropTypes.number,
   ]),
-  ecosystems: PropTypes.instanceOf(Set),
+  indicators: PropTypes.oneOfType([
+    // if pixel
+    PropTypes.objectOf(PropTypes.number),
+    // if summary unit
+    // NOTE: indicators for summary units are keyed by index not id
+    PropTypes.objectOf(
+      PropTypes.shape({
+        percent: PropTypes.arrayOf(PropTypes.number),
+      })
+    ),
+  ]).isRequired,
 }
 
 PrioritiesTab.defaultProps = {
   blueprint: [],
   corridors: [],
-  ecosystems: new Set(),
 }
 
 export default PrioritiesTab

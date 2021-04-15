@@ -38,7 +38,6 @@ const TabContent = ({ tab, mapData }) => {
     shape_mask: analysisAcres,
     corridors,
     indicators,
-    ecosystems,
     slr,
     urban,
     ownership,
@@ -58,7 +57,7 @@ const TabContent = ({ tab, mapData }) => {
           type={type}
           blueprint={blueprint}
           corridors={corridors}
-          ecosystems={ecosystems}
+          indicators={indicators}
         />
       )
     }

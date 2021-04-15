@@ -11,8 +11,10 @@ export const useCorridors = () => {
       corridors: allCorridorsJson(sort: { fields: value, order: ASC }) {
         edges {
           node {
+            value
             label
             color
+            description
           }
         }
       }
