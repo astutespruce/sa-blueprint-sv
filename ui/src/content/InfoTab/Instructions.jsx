@@ -37,7 +37,9 @@ const MobileInstructions = () => (
       To unselect the area, click on the <CloseButton /> button in the top bar.
     </Text>
 
-    <Heading as="h4">Pixel-level details:</Heading>
+    <Heading as="h4" sx={{ mt: '2rem' }}>
+      Pixel-level details:
+    </Heading>
     <Text as="p" sx={{ mt: '0.25rem' }}>
       Choose <b>Pixel data</b> from the button bar below the map. You may need
       to zoom in further to display pixel information. This will show crosshairs
@@ -106,7 +108,9 @@ const DesktopInstructions = () => (
       right of the sidebar.
     </Text>
 
-    <Heading as="h4">Pixel-level details:</Heading>
+    <Heading as="h4" sx={{ mt: '2rem' }}>
+      Pixel-level details:
+    </Heading>
     <Text as="p" sx={{ mt: '0.25rem' }}>
       Choose <b>Pixel data</b> from the button bar above the map. You may need
       to zoom in further to display pixel information. This will show crosshairs
