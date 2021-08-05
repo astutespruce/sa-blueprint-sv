@@ -9,15 +9,15 @@ const Intro = () => (
     <Box as="section">
       <Alert sx={{ bg: 'blue.1', fontWeight: 'normal', py: '0.5em' }}>
         <Paragraph sx={{ fontSize: 1 }}>
-          <b>Head&apos;s up!</b>
+          <b>Heads up!</b>
           <br />
           The South Atlantic Conservation Blueprint 2021 is now available, but
           not yet integerated into this viewer (we&apos;re working on it!). In
           the meantime, please visit the{' '}
           <OutboundLink to="https://salcc.databasin.org/galleries/f3c66628b531496f8c9b52648a9167ca/">
-            Conservation Planning Atlas
+            2021 Data Gallery on the Conservation Planning Atlas
           </OutboundLink>
-          <br /> for the 2021 version data.
+          <br /> for the latest version.
         </Paragraph>
       </Alert>
 
