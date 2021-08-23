@@ -2,11 +2,6 @@
 
 ## Data
 
-GeoTIFFs of the blueprint and all indicators were provided by SA staff on 7/27/2020.
-GeoTIFFs of the marine and inland hubs & corridors were provided by SA staff on 3/13/2020.
-
-Other data were downloaded as described below.
-
 ### SA Blueprint analysis extent
 
 ### Blueprint & indicators
@@ -16,8 +11,8 @@ Most indicators and the Blueprint are mapped at a resolution of 30m.
 The 3 marine and 1 estuarine indicators were originally mapped at 200m. These were
 resampled to 30m by USFWS staff for consistency with the other indicators and provided separately.
 
-The final Blueprint 2020 data were posted by USFWS to https://www.sciencebase.gov/catalog/file/get/5f13148d82ce21d4c40a4ac8?name=Blueprint_2020_Data_Download.zip
-on 8/14/2020.
+The final Blueprint 2021 data were posted by USFWS to https://www.sciencebase.gov/catalog/file/get/607f1b76d34e8564d6809f2f?name=Blueprint_2021_Data_Download.zip
+on 8/13/2021.
 
 Binned versions of continuous indicators were prepared by USFWS and sent separately.
 
@@ -55,9 +50,9 @@ dataset for tile creation:
 State and county information is used to determine which land trusts may be active
 in a given subwatershed. State boundaries are used in the locator map in the report.
 
-States were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=States+%28and+equivalent%29
+States were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2020&layergroup=States+%28and+equivalent%29
 
-Counties were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2018&layergroup=Counties+%28and+equivalent%29
+Counties were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2020&layergroup=Counties+%28and+equivalent%29
 
 Processed using `util/prepare_boundaries.py`.
 

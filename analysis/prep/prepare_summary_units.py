@@ -23,9 +23,8 @@ tile_dir = data_dir / "for_tiles"
 
 ### Extract the boundary
 
-sa_df = read_dataframe(src_dir / "boundaries/SABlueprint2020_Extent.shp")[["geometry"]]
-# boundary has self-intersections and 4 geometries, need to clean up
-bnd = pg.union_all(pg.make_valid(sa_df.geometry.values.data))
+sa_df = read_dataframe(src_dir / "boundaries/SouthAtlantic2021Extent.shp")[["geometry"]]
+bnd = pg.make_valid(sa_df.geometry.values.data[0])
 
 ### Extract HUC12 within boundary
 print("Reading source HUC12s...")
