@@ -18,6 +18,10 @@ Binned versions of continuous indicators were prepared by USFWS and sent separat
 
 #### Preprocessing
 
+See `analysis/prep/read_indicator_labels.py` to extract indicator labels, which
+are stored in `*.tif.vat.dbf` for each GeoTIFF, into dedicated CSV files for
+easier copy / paste to the `indicators.json` file.
+
 See `analysis/prep/prepare_indicators.py`.
 
 Greenways and Trails were preprocessed before using, to set 0 values to NODATA.
