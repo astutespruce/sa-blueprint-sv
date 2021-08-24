@@ -37,7 +37,7 @@ export const sources = {
     minzoom: 0,
     maxzoom: 15,
     bounds: [-86.470357, 27.546173, -70.816397, 38.932193],
-    tiles: [`${tileHost}/services/sa_blueprint_2020/tiles/{z}/{x}/{y}.png`],
+    tiles: [`${tileHost}/services/sa_blueprint_2021/tiles/{z}/{x}/{y}.png`],
   },
   // Note: encoding order was stored incorrectly during previous encoding
   // it was fixed manually here

@@ -28,7 +28,7 @@ src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
 continuous_indicator_dir = Path("data/continuous_indicators")
 indicators_mask_dir = indicators_dir / "masks"
-blueprint_filename = src_dir / "blueprint2020.tif"
+blueprint_filename = src_dir / "blueprint2021.tif"
 corridors_filename = src_dir / "corridors.tif"
 
 

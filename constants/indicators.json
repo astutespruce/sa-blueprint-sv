@@ -22,17 +22,17 @@
       {
         "value": 3,
         "label": "3 aquatic SGCN observed",
-        "color": "#4B7D77"
+        "color": "#4C7D77"
       },
       {
         "value": 4,
         "label": "4 or more aquatic Species of Greatest Conservation Need (SGCN) observed",
-        "color": "#144F49"
+        "color": "#154F4A"
       }
     ],
     "domain": [0, 4],
     "datasetID": "7b048eec40b24deab27cf76fec5681e2",
-    "description": "Imperiled aquatic species measures the number of aquatic species within each watershed that are listed as G1 (globally critically imperiled), G2 (globally imperiled), or threatened/endangered under the U.S. Endangered Species Act. This indicator captures patterns of rare and endemic species diversity not well-represented by other freshwater aquatic indicators. It applies only to the estimated floodplain, which spatially defines areas estimated to be inundated by a 100-year flood, also known as the 1% annual chance flood."
+    "description": "This indicator measures the number of aquatic animal Species of Greatest Conservation Need (SGCN) observed within each HUC12 subwatershed. SGCN are identified in State Wildlife Action Plans as most in need of conservation action."
   },
   {
     "id": "freshwater_atlanticmigratoryfishhabitat",
@@ -47,51 +47,52 @@
       {
         "value": 1,
         "label": "Final score of 10",
-        "color": "#B1B5F0"
+        "color": "#FFF7FB"
       },
       {
         "value": 2,
         "label": "Final score of 20",
-        "color": "#8F98E3"
+        "color": "#E8E4F0"
       },
       {
         "value": 3,
         "label": "Final score of 30 (restoration opportunity areas)",
-        "color": "#7180D6"
+        "color": "#C4CBE3"
       },
       {
         "value": 4,
         "label": "Final score of 40 (restoration opportunity areas)",
-        "color": "#556CC9"
+        "color": "#91B4D6"
       },
       {
         "value": 5,
         "label": "Final score of 50 (restoration opportunity areas)",
-        "color": "#3A5CBA"
+        "color": "#519BC6"
       },
       {
         "value": 6,
         "label": "Final score of 60 (areas of excellent fish habitat)",
-        "color": "#264DAD"
+        "color": "#1379B5"
       },
       {
         "value": 7,
         "label": "Final score of 70 (areas of excellent fish habitat)",
-        "color": "#1445A1"
+        "color": "#045D92"
       },
       {
         "value": 8,
         "label": "Final score of 80 (areas of excellent fish habitat)",
-        "color": "#003894"
+        "color": "#023858"
       }
     ],
     "domain": [0, 8],
+    "goodThreshold": 6,
     "datasetID": "7e550584d4f24a6cb8e17e82c4563b5c",
     "description": "This indicator measures the condition of migratory fish habitat along the Atlantic coast, by catchment. It incorporates metrics of water quality, aquatic connectivity, habitat fragmentation, flow alteration, and more."
   },
   {
     "id": "freshwater_gulfmigratoryfishhabitat",
-    "filename": "GulfMigratoryFishHabitat.tif",
+    "filename": "GulfMigratoryFishConnectivity.tif",
     "label": "Migratory fish connectivity",
     "values": [
       {
@@ -106,6 +107,7 @@
       }
     ],
     "domain": [1, 2],
+    "goodThreshold": 1,
     "datasetID": "754841e65fb141509711b26ecdbc6597",
     "description": "This indicator is an index capturing how far upstream migratory fish in the Gulf of Mexico have been observed."
   },
@@ -293,22 +295,22 @@
       {
         "value": 4,
         "label": "Area where a new park would create nearby equitable access for >50-150 people",
-        "color": "#77C679"
+        "color": "#78C679"
       },
       {
         "value": 5,
         "label": "Area where a new park would create nearby equitable access for >150-500 people",
-        "color": "#42AB5D"
+        "color": "#41AB5D"
       },
       {
         "value": 6,
         "label": "Area where a new park would create nearby equitable access for >500-2,000 people",
-        "color": "#218442"
+        "color": "#238443"
       },
       {
         "value": 7,
         "label": "Area where a new park would create nearby equitable access for >2,000 people",
-        "color": "#005A31"
+        "color": "#005A32"
       }
     ],
     "domain": [0, 7],
@@ -338,16 +340,16 @@
       {
         "value": 3,
         "label": "Burned 3 times from 2010-2019",
-        "color": "#FE992A"
+        "color": "#FE9929"
       },
       {
         "value": 4,
         "label": "Burned 4 or more times from 2010-2019",
-        "color": "#CC4B00"
+        "color": "#CC4C02"
       }
     ],
     "domain": [0, 4],
-    "goodThreshold": 1,
+    "goodThreshold": 2,
     "datasetID": "c69936f3cc864436a515604327486480",
     "description": "This indicator uses remote sensing to estimate the number of times an area has been burned from 2010-2019. Many Southeastern ecosystems rely on regular, low intensity fires to maintain habitat, encourage native plant growth, and reduce wildfire risk."
   },
@@ -549,20 +551,21 @@
       {
         "value": 1,
         "label": ">1-5 ha patch (less potential for presence of marsh bird index species)",
-        "color": "#CBF5EA"
+        "color": "#89E8AC"
       },
       {
         "value": 2,
         "label": ">5-20 ha patch (potential for presence of least bittern, Northern pintail, and Northern shoveler)",
-        "color": "#82E3BC"
+        "color": "#4CC8A3"
       },
       {
         "value": 3,
         "label": ">20 ha patch (potential for presence of king rail, least bittern, Northern pintail, and Northern shoveler)",
-        "color": "#2ECF91"
+        "color": "#2C98A0"
       }
     ],
     "domain": [0, 3],
+    "goodThreshold": 2,
     "datasetID": "73d1525eb2d648b2a3303c8434e3c943",
     "description": "This indicator is an index based on the size of freshwater and saltwater marsh patches. Patch size thresholds are based on the habitat needs of four species of marsh birds."
   },
@@ -649,7 +652,7 @@
       {
         "value": 1,
         "label": "Least resilient",
-        "color": "#9C5521"
+        "color": "#9C551F"
       },
       {
         "value": 2,
@@ -674,12 +677,12 @@
       {
         "value": 6,
         "label": "More resilient",
-        "color": "#5D8A3A"
+        "color": "#5E8A3A"
       },
       {
         "value": 7,
         "label": "Most resilient",
-        "color": "#21580B"
+        "color": "#205905"
       }
     ],
     "domain": [0, 7],
@@ -704,18 +707,54 @@
       {
         "value": 3,
         "label": ">25-40 acre urban park",
-        "color": "#AC80A7"
+        "color": "#AC81A7"
       },
       {
         "value": 4,
         "label": ">40-100 acre urban park",
         "color": "#75408E"
       },
-      { "value": 5, "label": ">100 acre urban park", "color": "#2E2E55" }
+      { "value": 5, "label": ">100 acre urban park", "color": "#2D2C55" }
     ],
     "domain": [0, 5],
     "datasetID": "35ab5c0caf094e2cbf9abcefaac1fa23",
     "description": "This indicator measures the size of parks larger than 10 acres in the urban environment."
+  },
+  {
+    "id": "land_shorelinecondition",
+    "filename": "ShorelineCondition.tif",
+    "label": "Shoreline condition",
+    "values": [
+      {
+        "value": 0,
+        "label": "Armored",
+        "color": null
+      },
+      {
+        "value": 1,
+        "label": "Partially armored",
+        "color": "#FFCCFF"
+      },
+      {
+        "value": 2,
+        "label": "Partially armored and harder to develop",
+        "color": "#F092EE"
+      },
+      {
+        "value": 3,
+        "label": "Natural",
+        "color": "#DB58D9"
+      },
+      {
+        "value": 4,
+        "label": "Natural and harder to develop",
+        "color": "#C700C7"
+      }
+    ],
+    "domain": [0, 4],
+    "goodThreshold": 3,
+    "datasetID": "889122d99dc94d1ba2d4dcd495859a37",
+    "description": "This indicator assesses shoreline condition based on the presence of hardened structures like jetties, groins, and riprap, as well as other human development. Natural shorelines in harder-to-develop coastal areas receive the highest shoreline condition scores, while hardened shorelines receive the lowest scores."
   },
   {
     "id": "marine_estuarinecondition",
@@ -786,42 +825,42 @@
       {
         "value": 1,
         "label": "Final score of 10",
-        "color": "#95D1ED"
+        "color": "#FFF7FB"
       },
       {
         "value": 2,
         "label": "Final score of 20",
-        "color": "#74B4E8"
+        "color": "#E8E4F0"
       },
       {
         "value": 3,
         "label": "Final score of 30 (restoration opportunity areas)",
-        "color": "#519BE5"
+        "color": "#C4CBE3"
       },
       {
         "value": 4,
         "label": "Final score of 40 (restoration opportunity areas)",
-        "color": "#2183E1"
+        "color": "#91B4D6"
       },
       {
         "value": 5,
         "label": "Final score of 50 (restoration opportunity areas)",
-        "color": "#2162CC"
+        "color": "#519BC6"
       },
       {
         "value": 6,
         "label": "Final score of 60 (areas of excellent fish habitat)",
-        "color": "#1B45B7"
+        "color": "#1379B5"
       },
       {
         "value": 7,
         "label": "Final score of 70 (areas of excellent fish habitat)",
-        "color": "#1B45B7"
+        "color": "#045D92"
       },
       {
         "value": 8,
         "label": "Final score of 80 (areas of excellent fish habitat)",
-        "color": "#0B0B91"
+        "color": "#023858"
       }
     ],
     "domain": [0, 8],
@@ -892,7 +931,7 @@
       {
         "value": 5,
         "label": "Observed coral or hardbottom",
-        "color": "#141B67"
+        "color": "#141C66"
       }
     ],
     "domain": [0, 5],

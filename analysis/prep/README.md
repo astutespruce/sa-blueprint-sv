@@ -28,9 +28,6 @@ Greenways and Trails were preprocessed before using, to set 0 values to NODATA.
 This is so that this still appear in lower-resolution overviews created from the
 data (these are derived from linear features).
 
-Migratory fish connectivity values were preprocessed to subtract 1 from all values,
-so that it starts at 0 similar to other indicators.
-
 ### Summary units
 
 Blueprint data were summarized to HUC12 subwatersheds and marine lease blocks.
@@ -121,9 +118,9 @@ Raster tiles for the Blueprint were created using `render_blueprint_tiles.py`.
 
 ### Summary unit statistics
 
-The count in each bin, and zonal mean (where applicable) were calculated for the
-Blueprint, all indicators present in each summary unit, urbanization, SLR, counties,
-land ownership, and land protection status were extracted using `tabulate_area.py`.
+The count in each bin is calculated for the Blueprint, all indicators present in
+each summary unit, urbanization, SLR, counties, land ownership, and land
+protection status were extracted using `tabulate_area.py`.
 
 This takes roughly 2.5 hours for HUC12s and marine blocks with the 30m input data.
 
@@ -131,7 +128,7 @@ This depends on ~480m resolution indicator masks that are used as a quick check
 for indicator presence in an area of interest. These are created using
 `create_indicator_masks.py`.
 
-################ In progress
+### Map tiles
 
 Create tile attributes for each summary unit in `package_unit_data.py`.
 

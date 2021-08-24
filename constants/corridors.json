@@ -14,14 +14,14 @@
   {
     "value": 2,
     "color": "#454F89",
-    "label": "Marine Hubs",
-    "description": "Marine hubs are either large patches (>2,000 ha) of highest priority Blueprint areas or large patches of open water estuaries."
+    "label": "Marine & Estuarine Hubs",
+    "description": "Marine and estuarine hubs are either large patches (>2,000 ha) of highest priority Blueprint areas or large patches of open water estuaries."
   },
   {
     "value": 3,
     "color": "#9EBBD7",
-    "label": "Marine Corridors",
-    "description": "Marine corridors are the shortest paths that connect these hubs while routing through as much Blueprint priority as possible."
+    "label": "Marine & Estuarine Corridors",
+    "description": "Marine and estuarine corridors are the shortest paths that connect these hubs while routing through as much Blueprint priority as possible."
   },
   {
     "value": 4,
