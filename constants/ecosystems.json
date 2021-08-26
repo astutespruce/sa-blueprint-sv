@@ -7,20 +7,21 @@
     "indicators": [
       "amphibianreptiles",
       "beachbirds",
+      "equitableparkaccess",
+      "firefrequency",
       "forestbirds",
       "forestedwetlandextent",
       "greenways",
       "intactcores",
       "lowurbanhistoric",
       "maritimeforestextent",
+      "marshbirds",
       "marshextent",
-      "marshpatchsize",
+      "piedmontprairie",
       "pinebirds",
-      "previouslyburnedhabitat",
-      "resilientcoastalsites",
-      "resilientterrestrialsites",
-      "unalteredbeach",
-      "urbanopenspace"
+      "resilientsites",
+      "shorelinecondition",
+      "urbanparksize"
     ]
   },
   {
@@ -29,8 +30,9 @@
     "color": "#eef7fc",
     "borderColor": "#c3e3f4",
     "indicators": [
+      "atlanticmigratoryfishhabitat",
+      "gulfmigratoryfishhabitat",
       "imperiledaquaticspecies",
-      "migratoryfishconnectivity",
       "networkcomplexity",
       "permeablesurface",
       "riparianbuffers"
@@ -42,10 +44,11 @@
     "color": "#f5f5ff",
     "borderColor": "#c2c2ff",
     "indicators": [
-      "estuarinecondition",
       "birds",
-      "mammals",
-      "potentialhardbottomcondition"
+      "estuarinecondition",
+      "fishhabitat",
+      "hardbottomcoral",
+      "mammals"
     ]
   }
 ]

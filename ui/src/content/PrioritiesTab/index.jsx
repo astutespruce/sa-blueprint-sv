@@ -2,11 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Box, Divider, Heading, Text } from 'theme-ui'
 
-import {
-  useBlueprintPriorities,
-  useCorridors,
-  useIndicators,
-} from 'components/data'
+import { useBlueprintPriorities, useCorridors } from 'components/data'
 import NeedHelp from 'content/NeedHelp'
 import { sum } from 'util/data'
 
@@ -15,15 +11,9 @@ import CorridorsChart from './CorridorsChart'
 import PriorityCategories from './PriorityCategories'
 import CorridorCategories from './CorridorCategories'
 
-const PrioritiesTab = ({
-  type,
-  blueprint,
-  corridors,
-  indicators: rawIndicators,
-}) => {
+const PrioritiesTab = ({ type, blueprint, corridors }) => {
   const { all: allPriorities } = useBlueprintPriorities()
   const corridorCategories = useCorridors()
-  const { indicators: INDICATORS } = useIndicators()
 
   // Note: incoming priorities are in descending order but percents
   // are stored in ascending order
@@ -36,19 +26,6 @@ const PrioritiesTab = ({
       remainder = 0
     }
   }
-
-  let indicators = []
-  if (type === 'pixel') {
-    indicators = INDICATORS.filter(({ id }) => rawIndicators[id])
-  } else {
-    // retrieve indicator results by original index
-    indicators = INDICATORS.filter((indicator, i) => !!rawIndicators[i])
-  }
-  const ecosystems = new Set(indicators.map(({ id }) => id.split('_')[0]))
-
-  const hasInlandIndicators =
-    ecosystems.has('land') || ecosystems.has('freshwater')
-  const hasMarineIndicators = ecosystems.has('marine')
 
   let hasInland = false
   let hasMarine = false
@@ -67,10 +44,10 @@ const PrioritiesTab = ({
     if (value === 4) {
       return type === 'pixel'
     }
-    if (!(hasInland || hasInlandIndicators) && value <= 1) {
+    if (!hasInland && value <= 1) {
       return false
     }
-    if (!(hasMarine || hasMarineIndicators) && value > 1) {
+    if (!hasMarine && value > 1) {
       return false
     }
     return true
@@ -80,7 +57,7 @@ const PrioritiesTab = ({
     <Box sx={{ py: '2rem', pl: '1rem', pr: '2rem' }}>
       <Box as="section">
         <Heading as="h3">Blueprint Priority</Heading>
-        <Text sx={{ color: 'grey.7' }}>for shared conservation action</Text>
+        <Text sx={{ color: 'grey.8' }}>for shared conservation action</Text>
 
         {type !== 'pixel' ? (
           <BlueprintChart
@@ -136,17 +113,6 @@ PrioritiesTab.propTypes = {
     PropTypes.arrayOf(PropTypes.number),
     PropTypes.number,
   ]),
-  indicators: PropTypes.oneOfType([
-    // if pixel
-    PropTypes.objectOf(PropTypes.number),
-    // if summary unit
-    // NOTE: indicators for summary units are keyed by index not id
-    PropTypes.objectOf(
-      PropTypes.shape({
-        percent: PropTypes.arrayOf(PropTypes.number),
-      })
-    ),
-  ]).isRequired,
 }
 
 PrioritiesTab.defaultProps = {

@@ -42,7 +42,7 @@ const CorridorsChart = ({ categories, corridors, remainder }) => {
 
   return (
     <Box>
-      <Paragraph>
+      <Paragraph sx={{ color: 'grey.8' }}>
         The Blueprint uses a least-cost path connectivity analysis to identify
         corridors that link hubs across the shortest distance possible, while
         also routing through as much Blueprint priority as possible.

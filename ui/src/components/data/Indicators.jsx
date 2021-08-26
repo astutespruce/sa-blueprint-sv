@@ -22,7 +22,6 @@ export const useIndicators = () => {
             label
             datasetID
             description
-            units
             domain
             continuous
             goodThreshold
