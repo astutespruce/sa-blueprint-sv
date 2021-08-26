@@ -17,10 +17,6 @@ Note: indicators are keyed based on their index within the indicators array;
 this must be used in the frontend in same order and must remain in consistent
 order.
 
-Continuous indicators were encoded into an index:<avg> comma-delimited string.
-Indicators that were not present were omitted (0 values are meaningful here).
-All values are converted to integers.
-
 Time-series values (SLR, urban) were converted to percent * 10 then delta encoded
 into caret-delimited strings:
 <baseline>^<delta_value0>^<delta_value1>
@@ -86,7 +82,7 @@ corridors_percent = encode_values(blueprint[corridor_cols], shape_mask, 1000).re
 indicators = dict()
 # serialized id is based on position
 for i, id in enumerate(INDICATOR_INDEX.keys()):
-    cols = [c for c in blueprint.columns if c.startswith(id) and not c.endswith("avg")]
+    cols = [c for c in blueprint.columns if c.startswith(id)]
     values = blueprint[cols]
 
     # drop indicators that are not present in this area
@@ -103,20 +99,6 @@ indicators = (
     .rename("indicators")
 )
 
-indicator_avgs = dict()
-for i, id in enumerate(INDICATOR_INDEX.keys()):
-    col = f"{id}_avg"
-    if col in blueprint.columns:
-        # all averages should be unsigned integer where present
-        indicator_avgs[i] = blueprint[col].apply(
-            lambda v: str(round(v)) if not pd.isnull(v) else ""
-        )
-
-indicator_avgs = (
-    pd.DataFrame(indicator_avgs)
-    .apply(lambda g: ",".join((f"{k}:{v}" for k, v in g.items() if v)), axis=1)
-    .rename("indicator_avg")
-)
 
 blueprint_df = (
     blueprint[["shape_mask"]]
@@ -126,7 +108,6 @@ blueprint_df = (
     .join(blueprint_percent)
     .join(corridors_percent)
     .join(indicators)
-    .join(indicator_avgs)
 ).fillna("")
 
 
@@ -255,7 +236,7 @@ corridors_percent = encode_values(blueprint[corridor_cols], shape_mask, 1000).re
 indicators = dict()
 # serialized id is based on position
 for i, id in enumerate(INDICATOR_INDEX.keys()):
-    cols = [c for c in blueprint.columns if c.startswith(id) and not c.endswith("avg")]
+    cols = [c for c in blueprint.columns if c.startswith(id)]
     values = blueprint[cols]
 
     # drop indicators that are not present in this area
@@ -272,20 +253,6 @@ indicators = (
     .rename("indicators")
 )
 
-indicator_avgs = dict()
-for i, id in enumerate(INDICATOR_INDEX.keys()):
-    col = f"{id}_avg"
-    if col in blueprint.columns:
-        # all averages should be unsigned integer where present
-        indicator_avgs[i] = blueprint[col].apply(
-            lambda v: str(round(v)) if not pd.isnull(v) else ""
-        )
-
-indicator_avgs = (
-    pd.DataFrame(indicator_avgs)
-    .apply(lambda g: ",".join((f"{k}:{v}" for k, v in g.items() if v)), axis=1)
-    .rename("indicator_avg")
-)
 
 blueprint_df = (
     blueprint[["shape_mask"]]
@@ -295,7 +262,6 @@ blueprint_df = (
     .join(blueprint_percent)
     .join(corridors_percent)
     .join(indicators)
-    .join(indicator_avgs)
 )
 
 marine = marine.join(blueprint_df, how="left").fillna("")

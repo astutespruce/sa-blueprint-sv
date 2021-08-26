@@ -20,13 +20,11 @@ from analysis.constants import (
 from analysis.lib.raster import (
     boundless_raster_geometry_mask,
     extract_count_in_geometry,
-    extract_zonal_mean,
 )
 from analysis.lib.pygeos_util import to_dict
 
 src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
-continuous_indicator_dir = Path("data/continuous_indicators")
 indicators_mask_dir = indicators_dir / "masks"
 blueprint_filename = src_dir / "blueprint2021.tif"
 corridors_filename = src_dir / "corridors.tif"
@@ -74,7 +72,7 @@ def detect_indicators(geometries, indicators):
     return indicators_with_data
 
 
-def extract_by_geometry(geometries, bounds, marine=False, zonal_means=False):
+def extract_by_geometry(geometries, bounds, marine=False):
     """Calculate the area of overlap between geometries and Blueprint,
     corridors, and indicators.
 
@@ -86,8 +84,6 @@ def extract_by_geometry(geometries, bounds, marine=False, zonal_means=False):
     bounds : list-like of [xmin, ymin, xmax, ymax]
     marine : bool (default False)
         if True will use only marine indicators
-    zonal_means : bool (default False)
-        if True, will calculate zonal means for continuous indicators
 
     Returns
     -------
@@ -182,16 +178,6 @@ def extract_by_geometry(geometries, bounds, marine=False, zonal_means=False):
             (counts * cellsize).round(ACRES_PRECISION).astype("float32")
         )
 
-        if zonal_means and indicator.get("continuous"):
-            continuous_filename = continuous_indicator_dir / indicator[
-                "filename"
-            ].replace("_Binned", "")
-            mean = extract_zonal_mean(
-                continuous_filename, shape_mask, window, boundless=True
-            )
-            if mean is not None:
-                results["means"][id] = mean
-
     return results
 
 
@@ -205,10 +191,7 @@ def summarize_blueprint_by_geometry(geometries, outfilename, marine=False):
         max=len(geometries),
     ).iter(geometries.iteritems()):
         zone_results = extract_by_geometry(
-            [to_dict(geometry)],
-            bounds=pg.total_bounds(geometry),
-            marine=marine,
-            zonal_means=True,
+            [to_dict(geometry)], bounds=pg.total_bounds(geometry), marine=marine
         )
 
         if zone_results is None:

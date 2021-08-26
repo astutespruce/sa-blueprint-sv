@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { PieChart } from 'react-minimal-pie-chart'
-import { Flex } from 'theme-ui'
+import { Box, Flex, Paragraph } from 'theme-ui'
 
 import { PieChartLegend } from 'components/chart'
 
@@ -41,19 +41,26 @@ const CorridorsChart = ({ categories, corridors, remainder }) => {
   }
 
   return (
-    <Flex sx={{ alignItems: 'center', mt: '2rem' }}>
-      <PieChart
-        data={corridorChartData}
-        lineWidth={60}
-        radius={chartWidth / 4 - 2}
-        style={{
-          width: chartWidth,
-          flex: '0 1 auto',
-        }}
-      />
+    <Box>
+      <Paragraph>
+        The Blueprint uses a least-cost path connectivity analysis to identify
+        corridors that link hubs across the shortest distance possible, while
+        also routing through as much Blueprint priority as possible.
+      </Paragraph>
+      <Flex sx={{ alignItems: 'center', mt: '2rem' }}>
+        <PieChart
+          data={corridorChartData}
+          lineWidth={60}
+          radius={chartWidth / 4 - 2}
+          style={{
+            width: chartWidth,
+            flex: '0 1 auto',
+          }}
+        />
 
-      <PieChartLegend elements={corridorChartData} />
-    </Flex>
+        <PieChartLegend elements={corridorChartData} />
+      </Flex>
+    </Box>
   )
 }
 

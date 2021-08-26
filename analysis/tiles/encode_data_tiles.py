@@ -17,7 +17,7 @@ from analysis.lib.raster import add_overviews
 data_dir = Path("data/inputs")
 src_dir = data_dir / "indicators"
 out_dir = Path("data/for_tiles")
-blueprint_filename = data_dir / "blueprint2020.tif"
+blueprint_filename = data_dir / "blueprint2021.tif"
 corridors_filename = data_dir / "corridors.tif"
 bnd_filename = data_dir / "boundaries/sa_boundary.feather"
 

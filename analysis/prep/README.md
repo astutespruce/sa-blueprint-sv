@@ -12,9 +12,9 @@ The 3 marine and 1 estuarine indicators were originally mapped at 200m. These we
 resampled to 30m by USFWS staff for consistency with the other indicators and provided separately.
 
 The final Blueprint 2021 data were posted by USFWS to https://www.sciencebase.gov/catalog/file/get/607f1b76d34e8564d6809f2f?name=Blueprint_2021_Data_Download.zip
-on 8/13/2021.
+on 8/25/2021.
 
-Binned versions of continuous indicators were prepared by USFWS and sent separately.
+Binned versions of continuous indicators were prepared by USFWS and sent separately on 8/25/2021.
 
 #### Preprocessing
 

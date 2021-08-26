@@ -17,7 +17,7 @@ from analysis.constants import (
     INDICATORS,
 )
 
-from analysis.pygeos_util import to_crs, to_dict
+from analysis.lib.pygeos_util import to_crs, to_dict
 from api.report.map import render_maps
 from api.stats import SummaryUnits, CustomArea
 

@@ -8,9 +8,9 @@
   },
   {
     "value": 1,
-    "label": "Corridors",
+    "label": "Priority connections",
     "percent": 5,
-    "description": "Connections between hubs (large patches of highest priority areas and secured lands), optimized for efficiency and indicator condition in a least cost path analysis.",
+    "description": "Connections between priority areas based on a least-cost path analysis. This category covers an additional 5% of the South Atlantic geography; in total, the Blueprint covers 50%.",
     "report_description": "This category covers an additional 5% of the South Atlantic geography; in total, the Blueprint covers 50%.",
     "color": "#686868"
   },
