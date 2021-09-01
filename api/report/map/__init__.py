@@ -17,6 +17,7 @@ from .util import pad_bounds, get_center, to_base64, merge_maps
 
 from analysis.constants import (
     BLUEPRINT_COLORS,
+    CORRIDORS_COLORS,
     INDICATOR_INDEX,
     URBAN_LEGEND,
     SLR_LEGEND,
@@ -121,11 +122,7 @@ async def render_raster_maps(
 
     task_args = [
         ("blueprint", blueprint_filename, BLUEPRINT_COLORS),
-        (
-            "corridors",
-            corridors_filename,
-            {i: e["color"] for i, e in enumerate(CORRIDORS)},
-        ),
+        ("corridors", corridors_filename, CORRIDORS_COLORS),
     ]
 
     for id in indicators:

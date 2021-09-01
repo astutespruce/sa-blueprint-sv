@@ -10,7 +10,7 @@
     "value": 1,
     "label": "Priority connections",
     "percent": 5,
-    "description": "Connections between priority areas based on a least-cost path analysis. This category covers an additional 5% of the South Atlantic geography; in total, the Blueprint covers 50%.",
+    "description": "Connections between priority areas based on a least-cost path analysis.",
     "report_description": "This category covers an additional 5% of the South Atlantic geography; in total, the Blueprint covers 50%.",
     "color": "#686868"
   },

@@ -37,7 +37,7 @@
   {
     "id": "freshwater_atlanticmigratoryfishhabitat",
     "filename": "AtlanticMigratoryFishHabitat.tif",
-    "label": "Atlantic Migratory fish habitat",
+    "label": "Atlantic migratory fish habitat",
     "values": [
       {
         "value": 0,
@@ -88,12 +88,12 @@
     "domain": [0, 8],
     "goodThreshold": 7,
     "datasetID": "7e550584d4f24a6cb8e17e82c4563b5c",
-    "description": "Atlantic migratory fish habitat measures the condition of migratory fish habitat along the Atlantic coast, by catchment. It incorporates metrics of water quality, aquatic connectivity, habitat fragmentation, flow alteration, and more. Areas of excellent fish habitat are already in good condition and face few threats; restoration opportunity areas are doing well in some respects, but restoration projects could significantly improve them; degraded areas of opportunity face many challenges, and restoration projects are unlikely to increase available fish habitat unless particularly large in scope and scale."
+    "description": "This indicator measures the condition of migratory fish habitat along the Atlantic coast, by catchment. It incorporates metrics of water quality, aquatic connectivity, habitat fragmentation, flow alteration, and more. Areas of excellent fish habitat are already in good condition and face few threats; restoration opportunity areas are doing well in some respects, but restoration projects could significantly improve them; degraded areas of opportunity face many challenges, and restoration projects are unlikely to increase available fish habitat unless particularly large in scope and scale."
   },
   {
     "id": "freshwater_gulfmigratoryfishhabitat",
     "filename": "GulfMigratoryFishConnectivity.tif",
-    "label": "Migratory fish connectivity",
+    "label": "Gulf migratory fish connectivity",
     "values": [
       {
         "value": 1,
@@ -526,7 +526,7 @@
     ],
     "domain": [0, 1],
     "datasetID": "e782d704c4d04770ab7fc2c9415e744a",
-    "description": "Maritime forest extent represents the overall acres of maritime forest currently present in the South Atlantic geography. Since maritime forest has been substantially reduced from its historic extent, protecting the remaining acreage of existing maritime forest is important."
+    "description": "Maritime forest extent depicts maritime forest currently present in the South Atlantic geography. Since maritime forest has been substantially reduced from its historic extent, protecting the remaining acreage of existing maritime forest is important."
   },
   {
     "id": "land_marshextent",
@@ -572,7 +572,7 @@
   {
     "id": "land_piedmontprairie",
     "filename": "PiedmontPrairie.tif",
-    "label": "",
+    "label": "Piedmont prairie",
 
     "values": [
       {
@@ -607,8 +607,9 @@
       }
     ],
     "domain": [0, 5],
+    "goodThreshold": 4,
     "datasetID": "e24e9a28b15b4378940cefc308310b96",
-    "description": ""
+    "description": "This indicator represents Piedmont prairies, which are grasslands with and without trees that once covered most Piedmont uplands and support important plants, birds, and pollinators. It captures known Piedmont prairies; known and predicted glades, outcrops, and interior longleaf habitat; areas of potentially compatible prairie management in power line rights-of-way and pasture; and other grass and pasture locations."
   },
 
   {
@@ -687,7 +688,7 @@
     ],
     "domain": [0, 7],
     "datasetID": "2bb9da95c93047b7a8267b08d4b0a580",
-    "description": "Resilient sites depicts an area’s capacity to continue supporting species diversity and ecosystem function in the face of climate change. It evaluates the ability of coastal habitats to migrate to adjacent lowlands in response to sea-level rise, based on the physical and condition characteristics of current tidal complexes, their predicted migration space, and surrounding buffer areas—characteristics like marsh complex size, sediment balance, water quality, and many others. In inland terrestrial areas, this indicator measures landscape diversity (topographic complexity) and local connectedness (connected natural landcover) to identify resilient sites that contain many different microclimates and allow species to move to adjust to changing conditions."
+    "description": "Resilient sites depicts an area’s capacity to continue supporting species diversity and ecosystem function in the face of climate change. It evaluates the ability of coastal habitats to migrate to adjacent lowlands in response to sea-level rise, based on the physical and condition characteristics of current tidal complexes, their predicted migration space, and surrounding buffer areas—characteristics like marsh complex size, sediment balance, water quality, and many others. In inland terrestrial areas, this indicator measures landscape diversity and local connectedness to identify resilient sites that contain many different microclimates and allow species to move to adjust to changing conditions."
   },
   {
     "id": "land_urbanparksize",
@@ -907,7 +908,7 @@
   {
     "id": "marine_hardbottomcoral",
     "filename": "HardbottomAndDeepSeaCoral.tif",
-    "label": "Hardbottom & Deep-Sea Coral",
+    "label": "Hardbottom & deep-sea coral",
     "values": [
       {
         "value": 1,

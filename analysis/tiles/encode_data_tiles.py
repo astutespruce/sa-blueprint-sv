@@ -27,41 +27,42 @@ EPS = 1e-6
 
 
 ### Create groups to contain indicators and corridors up to 24 bits each
+# NOTE: this is partly based on extent
 groups = [
     [
         "freshwater_imperiledaquaticspecies",
-        "freshwater_migratoryfishconnectivity",
         "freshwater_networkcomplexity",
         "freshwater_permeablesurface",
         "freshwater_riparianbuffers",
-        "land_forestbirds",
+        "freshwater_atlanticmigratoryfishhabitat",
     ],
     [
-        "land_beachbirds",
-        "land_resilientcoastalsites",
-        "marine_birds",
         "marine_estuarinecondition",
+        "marine_fishhabitat",
+        "marine_hardbottomcoral",
         "marine_mammals",
-        "marine_potentialhardbottomcondition",
+        "land_maritimeforestextent",
+        "land_shorelinecondition",
     ],
     [
+        "freshwater_gulfmigratoryfishhabitat",
+        "land_equitableparkaccess",
         "land_forestedwetlandextent",
         "land_greenways",
         "land_intactcores",
         "land_lowurbanhistoric",
-        "land_maritimeforestextent",
-        "land_marshpatchsize",
         "land_pinebirds",
     ],
     [
         "land_amphibianreptiles",
-        "land_resilientterrestrialsites",
-        "land_urbanopenspace",
-        "land_unalteredbeach",
+        "land_marshbirds",
         "land_marshextent",
-        "land_previouslyburnedhabitat",
+        "land_piedmontprairie",
+        "land_resilientsites",
+        "land_urbanparksize",
         "corridors",
     ],
+    ["land_beachbirds", "land_firefrequency", "land_forestbirds", "marine_birds"],
 ]
 
 

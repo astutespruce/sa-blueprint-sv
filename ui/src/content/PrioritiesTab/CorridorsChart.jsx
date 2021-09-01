@@ -68,7 +68,7 @@ CorridorsChart.propTypes = {
   categories: PropTypes.arrayOf(
     PropTypes.shape({
       label: PropTypes.string.isRequired,
-      color: PropTypes.string.isRequired,
+      color: PropTypes.string,
     })
   ).isRequired,
   corridors: PropTypes.arrayOf(PropTypes.number),
