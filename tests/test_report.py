@@ -54,10 +54,10 @@ def read_cache(path):
 
 ### Create reports for an AOI
 aois = [
-    {
-        "name": "NWFL Sentinel Landscapes Geography",
-        "path": "NWFL_SentinelLandscapesGeography_20210812",
-    }
+    # {
+    #     "name": "NWFL Sentinel Landscapes Geography",
+    #     "path": "NWFL_SentinelLandscapesGeography_20210812",
+    # }
     # {"name": "CFLCP 3 mile buffer", "path": "CFLCP_Buffer_3mi"}
     # {"name": "Florida 5 Star County Boundary", "path": "FL_5StarCounty_Boundary"},
     # {"name": "Dell Murphy wetlands", "path": "Dell Murphy wetlands"}
@@ -169,22 +169,23 @@ for aoi in aois:
 
 ### Create reports for summary units
 ids = {
-    # "huc12": [
-    # "030601100303"
-    # "030601030404"  # has no protected areas
-    # "031200030902"
-    #     # "031501060512",  # partial overlap with SA raster inputs
-    #     "030300050503",  # multiple PARCA
-    #     #     # "030602040101",
-    #     #     # "030802010501",  # THIS ONE  # partial overlap with Blueprint
-    #     #     # "030602040601",
-    #     #     #     "030601030510",
-    #     #     # "031501040301",
-    #     #     #     "030102020505",
-    #     #     #     "030203020403",
-    #     #     #     "030203020404",
-    #     #     #     "030203020405",
-    # ],
+    "huc12": [
+        # "030601100303",
+        # "030601030404",  # has no protected areas
+        # # "031200030902"
+        # "031501041004",  # partial overlap with SA raster inputs
+        "030502060308",
+        "030601070305",
+        # "030300050503",  # multiple PARCA
+        #     #     # "030602040101",
+        #     #     # "030602040601",
+        #     #     #     "030601030510",
+        #     #     # "031501040301",
+        #     #     #     "030102020505",
+        #     #     #     "030203020403",
+        #     #     #     "030203020404",
+        #     #     #     "030203020405",
+    ],
     # "marine_blocks": ["NI18-07-6210"],
 }
 

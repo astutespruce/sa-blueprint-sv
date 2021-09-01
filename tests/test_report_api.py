@@ -8,8 +8,8 @@ from api.settings import API_TOKEN
 
 DELAY = 2  # seconds
 
-# API_URL = "http://localhost:5000"
-API_URL = "http://localhost:8080/southatlantic"
+API_URL = "http://localhost:5000"
+# API_URL = "http://localhost:8080/southatlantic"
 # API_URL = "http://localhost/southatlantic"
 # API_URL = "https://blueprint-test.geoplatform.gov/southatlantic"
 # API_URL = (
