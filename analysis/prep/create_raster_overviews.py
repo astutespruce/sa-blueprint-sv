@@ -4,20 +4,16 @@ Create coarser resolution overviews in raster files.
 
 
 from pathlib import Path
-from math import ceil
 
-import geopandas as gp
-from affine import Affine
 import rasterio
 from rasterio.enums import Resampling
-from rasterio.vrt import WarpedVRT
 
 from analysis.constants import INDICATORS, OVERVIEW_FACTORS
 
 
 src_dir = Path("data/inputs")
 indicators_dir = src_dir / "indicators"
-blueprint_filename = src_dir / "blueprint2020.tif"
+blueprint_filename = src_dir / "blueprint2021.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_dir = src_dir / "threats/urban"
 slr_dir = src_dir / "threats/slr"

@@ -2,11 +2,6 @@
 
 ## Data
 
-GeoTIFFs of the blueprint and all indicators were provided by SA staff on 7/27/2020.
-GeoTIFFs of the marine and inland hubs & corridors were provided by SA staff on 3/13/2020.
-
-Other data were downloaded as described below.
-
 ### SA Blueprint analysis extent
 
 ### Blueprint & indicators
@@ -16,21 +11,22 @@ Most indicators and the Blueprint are mapped at a resolution of 30m.
 The 3 marine and 1 estuarine indicators were originally mapped at 200m. These were
 resampled to 30m by USFWS staff for consistency with the other indicators and provided separately.
 
-The final Blueprint 2020 data were posted by USFWS to https://www.sciencebase.gov/catalog/file/get/5f13148d82ce21d4c40a4ac8?name=Blueprint_2020_Data_Download.zip
-on 8/14/2020.
+The final Blueprint 2021 data were posted by USFWS to https://www.sciencebase.gov/catalog/file/get/607f1b76d34e8564d6809f2f?name=Blueprint_2021_Data_Download.zip
+on 8/25/2021.
 
-Binned versions of continuous indicators were prepared by USFWS and sent separately.
+Binned versions of continuous indicators were prepared by USFWS and sent separately on 8/25/2021.
 
 #### Preprocessing
+
+See `analysis/prep/read_indicator_labels.py` to extract indicator labels, which
+are stored in `*.tif.vat.dbf` for each GeoTIFF, into dedicated CSV files for
+easier copy / paste to the `indicators.json` file.
 
 See `analysis/prep/prepare_indicators.py`.
 
 Greenways and Trails were preprocessed before using, to set 0 values to NODATA.
 This is so that this still appear in lower-resolution overviews created from the
 data (these are derived from linear features).
-
-Migratory fish connectivity values were preprocessed to subtract 1 from all values,
-so that it starts at 0 similar to other indicators.
 
 ### Summary units
 
@@ -55,9 +51,9 @@ dataset for tile creation:
 State and county information is used to determine which land trusts may be active
 in a given subwatershed. State boundaries are used in the locator map in the report.
 
-States were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2019&layergroup=States+%28and+equivalent%29
+States were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2020&layergroup=States+%28and+equivalent%29
 
-Counties were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2018&layergroup=Counties+%28and+equivalent%29
+Counties were downloaded from: https://www.census.gov/cgi-bin/geo/shapefiles/index.php?year=2020&layergroup=Counties+%28and+equivalent%29
 
 Processed using `util/prepare_boundaries.py`.
 
@@ -122,9 +118,9 @@ Raster tiles for the Blueprint were created using `render_blueprint_tiles.py`.
 
 ### Summary unit statistics
 
-The count in each bin, and zonal mean (where applicable) were calculated for the
-Blueprint, all indicators present in each summary unit, urbanization, SLR, counties,
-land ownership, and land protection status were extracted using `tabulate_area.py`.
+The count in each bin is calculated for the Blueprint, all indicators present in
+each summary unit, urbanization, SLR, counties, land ownership, and land
+protection status were extracted using `tabulate_area.py`.
 
 This takes roughly 2.5 hours for HUC12s and marine blocks with the 30m input data.
 
@@ -132,7 +128,7 @@ This depends on ~480m resolution indicator masks that are used as a quick check
 for indicator presence in an area of interest. These are created using
 `create_indicator_masks.py`.
 
-################ In progress
+### Map tiles
 
 Create tile attributes for each summary unit in `package_unit_data.py`.
 

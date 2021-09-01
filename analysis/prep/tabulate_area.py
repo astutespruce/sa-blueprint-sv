@@ -3,7 +3,6 @@ Calculate statistics for each HUC12 and marine lease block using
 the Blueprint, indicators, SLR, Urbanization, and ownership datasets.
 """
 
-import csv
 import os
 from pathlib import Path
 from time import time

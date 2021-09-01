@@ -39,6 +39,10 @@ BLUEPRINT_COLORS = {
     if "color" in entry and entry["value"] > 0
 }
 
+CORRIDORS_COLORS = {
+    i: entry["color"] for i, entry in enumerate(CORRIDORS) if "color" in entry
+}
+
 INDICATOR_INDEX = OrderedDict({indicator["id"]: indicator for indicator in INDICATORS})
 ECOSYSTEM_INDEX = {ecosystem["id"]: ecosystem for ecosystem in ECOSYSTEMS}
 

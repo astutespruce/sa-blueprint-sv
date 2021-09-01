@@ -7,7 +7,7 @@ TILEINPUTS="data/for_tiles"
 
 # Create tiles from states
 echo "Processing states..."
-ogr2ogr -t_srs EPSG:4326 -f GeoJSONSeq -select STATEFP $TMPDIR/states.geojson source_data/boundaries/tl_2019_us_state.shp
+ogr2ogr -t_srs EPSG:4326 -f GeoJSONSeq -select STATEFP $TMPDIR/states.geojson source_data/boundaries/tl_2020_us_state.shp
 tippecanoe -f -pg -Z 0 -z 5 --detect-shared-borders -o $TILEDIR/states.mbtiles -l states /tmp/states.geojson
 
 # Create tiles from protected areas

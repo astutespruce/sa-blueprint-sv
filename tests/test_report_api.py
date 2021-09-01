@@ -9,7 +9,12 @@ from api.settings import API_TOKEN
 DELAY = 2  # seconds
 
 API_URL = "http://localhost:5000"
-# API_URL = "http://localhost:8080"
+# API_URL = "http://localhost:8080/southatlantic"
+# API_URL = "http://localhost/southatlantic"
+# API_URL = "https://blueprint-test.geoplatform.gov/southatlantic"
+# API_URL = (
+#     "http://latency-test-15d24564423b274e.elb.us-east-1.amazonaws.com/southatlantic"
+# )
 
 OUT_DIR = Path("/tmp/api")
 
@@ -100,6 +105,7 @@ def test_huc12_report(huc12_id):
 
 if __name__ == "__main__":
     test_upload_file("examples/api/Razor.zip")
+    # test_upload_file("examples/api/LCP_BlackRiver.zip")
     # test_upload_file("examples/api/OCMU_SRS_StudyArea.zip")
     # test_upload_file("examples/api/tmpkv0d98lv.zip")
     # test_upload_file("examples/api/Groton.zip")

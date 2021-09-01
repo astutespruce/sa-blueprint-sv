@@ -21,21 +21,14 @@ const PrioritiesTab = ({
   corridors,
   indicators: rawIndicators,
 }) => {
+  let corridorValue = null
+  if (type === 'pixel') {
+    corridorValue = corridors === null ? 4 : corridors
+  }
+
   const { all: allPriorities } = useBlueprintPriorities()
   const corridorCategories = useCorridors()
   const { indicators: INDICATORS } = useIndicators()
-
-  // Note: incoming priorities are in descending order but percents
-  // are stored in ascending order
-  const priorityCategories = allPriorities.slice().reverse()
-
-  let remainder = 0
-  if (type !== 'pixel') {
-    remainder = 100 - sum(blueprint)
-    if (remainder < 1) {
-      remainder = 0
-    }
-  }
 
   let indicators = []
   if (type === 'pixel') {
@@ -49,6 +42,18 @@ const PrioritiesTab = ({
   const hasInlandIndicators =
     ecosystems.has('land') || ecosystems.has('freshwater')
   const hasMarineIndicators = ecosystems.has('marine')
+
+  // Note: incoming priorities are in descending order but percents
+  // are stored in ascending order
+  const priorityCategories = allPriorities.slice().reverse()
+
+  let remainder = 0
+  if (type !== 'pixel') {
+    remainder = 100 - sum(blueprint)
+    if (remainder < 1) {
+      remainder = 0
+    }
+  }
 
   let hasInland = false
   let hasMarine = false
@@ -64,13 +69,26 @@ const PrioritiesTab = ({
   }
 
   const filterCorridors = ({ value }) => {
-    if (value === 4) {
-      return type === 'pixel'
+    if (type === 'pixel') {
+      if (value === 4) {
+        return true
+      }
+      if (!(hasInland || hasInlandIndicators) && value <= 1) {
+        return false
+      }
+      if (!(hasMarine || hasMarineIndicators) && value > 1) {
+        return false
+      }
+      return true
     }
-    if (!(hasInland || hasInlandIndicators) && value <= 1) {
+
+    if (value === 4) {
       return false
     }
-    if (!(hasMarine || hasMarineIndicators) && value > 1) {
+    if (!hasInland && value <= 1) {
+      return false
+    }
+    if (!hasMarine && value > 1) {
       return false
     }
     return true
@@ -80,7 +98,7 @@ const PrioritiesTab = ({
     <Box sx={{ py: '2rem', pl: '1rem', pr: '2rem' }}>
       <Box as="section">
         <Heading as="h3">Blueprint Priority</Heading>
-        <Text sx={{ color: 'grey.7' }}>for shared conservation action</Text>
+        <Text sx={{ color: 'grey.8' }}>for shared conservation action</Text>
 
         {type !== 'pixel' ? (
           <BlueprintChart
@@ -116,7 +134,7 @@ const PrioritiesTab = ({
         {remainder < 100 ? (
           <CorridorCategories
             categories={corridorCategories.filter(filterCorridors)}
-            value={type === 'pixel' ? corridors || 4 : null}
+            value={corridorValue}
           />
         ) : null}
       </Box>

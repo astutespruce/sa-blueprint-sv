@@ -1,26 +1,11 @@
 import React from 'react'
-import { Alert, Box, Paragraph } from 'theme-ui'
-import { lighten } from '@theme-ui/color'
+import { Box } from 'theme-ui'
 
 import { OutboundLink } from 'components/link'
 
 const Intro = () => (
   <>
     <Box as="section">
-      <Alert sx={{ bg: 'blue.1', fontWeight: 'normal', py: '0.5em' }}>
-        <Paragraph sx={{ fontSize: 1 }}>
-          <b>Heads up!</b>
-          <br />
-          The South Atlantic Conservation Blueprint 2021 is now available, but
-          not yet integerated into this viewer (we&apos;re working on it!). In
-          the meantime, please visit the{' '}
-          <OutboundLink to="https://salcc.databasin.org/galleries/f3c66628b531496f8c9b52648a9167ca/">
-            2021 Data Gallery on the Conservation Planning Atlas
-          </OutboundLink>
-          <br /> for the latest version.
-        </Paragraph>
-      </Alert>
-
       <p>
         The South Atlantic Conservation Blueprint is a living spatial plan to
         conserve natural and cultural resources for future generations. It

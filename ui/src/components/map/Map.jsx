@@ -222,6 +222,7 @@ const Map = () => {
       map.setLayoutProperty('indicators1', 'visibility', 'visible')
       map.setLayoutProperty('indicators2', 'visibility', 'visible')
       map.setLayoutProperty('indicators3', 'visibility', 'visible')
+      map.setLayoutProperty('indicators4', 'visibility', 'visible')
       map.setLayoutProperty('ownership', 'visibility', 'visible')
 
       // reset selected outline
@@ -234,6 +235,7 @@ const Map = () => {
       map.setLayoutProperty('indicators1', 'visibility', 'none')
       map.setLayoutProperty('indicators2', 'visibility', 'none')
       map.setLayoutProperty('indicators3', 'visibility', 'none')
+      map.setLayoutProperty('indicators4', 'visibility', 'none')
       map.setLayoutProperty('ownership', 'visibility', 'none')
     }
   }, [isLoaded, mapMode, getPixelData])

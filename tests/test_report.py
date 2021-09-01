@@ -12,14 +12,14 @@ from pyogrio.geopandas import read_dataframe
 
 from api.report import create_report
 from api.report.map import render_maps
-from analysis.constants import BLUEPRINT, INDICATORS, GEO_CRS, DATA_CRS
+from analysis.constants import BLUEPRINT, INDICATORS, GEO_CRS, DATA_CRS, M2_ACRES
 from api.report.format import format_number
 from api.stats import SummaryUnits, CustomArea
-from analysis.pygeos_util import to_crs
+from analysis.lib.pygeos_util import to_crs
 
 
 # if True, cache maps if not previously created, then reuse
-CACHE_MAPS = True
+CACHE_MAPS = False  # FIXME
 
 
 def write_cache(maps, scale, path):
@@ -54,7 +54,15 @@ def read_cache(path):
 
 ### Create reports for an AOI
 aois = [
-    {"name": "Pied_LowerBroad", "path": "Pied_LowerBroad"},
+    # {
+    #     "name": "NWFL Sentinel Landscapes Geography",
+    #     "path": "NWFL_SentinelLandscapesGeography_20210812",
+    # }
+    # {"name": "CFLCP 3 mile buffer", "path": "CFLCP_Buffer_3mi"}
+    # {"name": "Florida 5 Star County Boundary", "path": "FL_5StarCounty_Boundary"},
+    # {"name": "Dell Murphy wetlands", "path": "Dell Murphy wetlands"}
+    # {"name": "Cumberland Plateau Focus Area", "path": "NFWF_Cumberland_Fund_TN"}
+    # {"name": "Pied_LowerBroad", "path": "Pied_LowerBroad"},
     # {"name": "Pied_Saluda", "path": "Pied_Saluda"},
     # {"name": "UCP: Lower Pee Dee", "path": "UCP_LowerPeeDee"},
     # {"name": "LCP: Broad", "path": "LCP_Broad"},
@@ -94,6 +102,12 @@ for aoi in aois:
 
     # dissolve
     geometry = np.asarray([pg.union_all(geometry)])
+
+    extent_area = (
+        pg.area(pg.box(*pg.total_bounds(to_crs(geometry, df.crs, DATA_CRS)))) * M2_ACRES
+    )
+
+    print(f"Analysis extent: {extent_area:,.0f}")
 
     ### calculate results, data must be in DATA_CRS
     print("Calculating results...")
@@ -156,19 +170,23 @@ for aoi in aois:
 ### Create reports for summary units
 ids = {
     "huc12": [
-        "031501060512",  # partial overlap with SA raster inputs
+        # "030601100303",
+        # "030601030404",  # has no protected areas
+        # # "031200030902"
+        # "031501041004",  # partial overlap with SA raster inputs
+        "030502060308",
+        "030601070305",
         # "030300050503",  # multiple PARCA
-        #     # "030602040101",
-        #     # "030802010501",  # THIS ONE  # partial overlap with Blueprint
-        #     # "030602040601",
-        #     #     "030601030510",
-        #     # "031501040301",
-        #     #     "030102020505",
-        #     #     "030203020403",
-        #     #     "030203020404",
-        #     #     "030203020405",
+        #     #     # "030602040101",
+        #     #     # "030602040601",
+        #     #     #     "030601030510",
+        #     #     # "031501040301",
+        #     #     #     "030102020505",
+        #     #     #     "030203020403",
+        #     #     #     "030203020404",
+        #     #     #     "030203020405",
     ],
-    "marine_blocks": ["NI18-07-6210"],
+    # "marine_blocks": ["NI18-07-6210"],
 }
 
 

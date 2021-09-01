@@ -15,61 +15,70 @@ out_dir = Path("data/inputs")
 ### Rasterize and merge hubs and corridors
 print("Processing hubs & corridors")
 corridors_dir = src_dir / "corridors"
-inland_hubs = read_dataframe(corridors_dir / "TerrestrialHubs.shp")
-marine_hubs = read_dataframe(corridors_dir / "MarineHubs.shp")
+inland_hubs = read_dataframe(corridors_dir / "InlandHubs2021.shp")
+marine_hubs = read_dataframe(corridors_dir / "MarineEstuarineHubs2021.shp")
 
 
-# The rasters have the same footprint, but inland is at 30m and marine is at 200m
-with rasterio.open(corridors_dir / "TerrestrialCorridors.tif") as inland, rasterio.open(
-    corridors_dir / "MarineCorridors.tif"
+# The rasters have the same footprint and are 90m; raster / resample to 30m to
+# match Blueprint
+with rasterio.open(out_dir / "blueprint2021.tif") as blueprint, rasterio.open(
+    corridors_dir / "InlandCorridors2021.tif"
+) as inland, rasterio.open(
+    corridors_dir / "MarineEstuarineCorridors2021.tif"
 ) as marine:
     print("Rasterizing hubs...")
     # rasterize hubs to match inland
     inland_hubs_data = rasterize(
         to_dict_all(inland_hubs.geometry.values.data),
-        inland.shape,
-        transform=inland.transform,
+        blueprint.shape,
+        transform=blueprint.transform,
         dtype="uint8",
     )
     marine_hubs_data = rasterize(
         to_dict_all(marine_hubs.geometry.values.data),
-        inland.shape,
-        transform=inland.transform,
+        blueprint.shape,
+        transform=blueprint.transform,
         dtype="uint8",
     )
 
-    inland_data = inland.read(1)
-
-    # Marine data must be resampled to 30m with matching offset to inland
+    # Resample inland and marine data
+    print("Reading and warping inland corridors...")
     vrt = WarpedVRT(
-        marine,
-        width=inland.width,
-        height=inland.height,
-        nodata=marine.nodata,
-        transform=inland.transform,
+        inland,
+        width=blueprint.width,
+        height=blueprint.height,
+        nodata=blueprint.nodata,
+        transform=blueprint.transform,
         resampling=Resampling.nearest,
     )
-    print("Reading and warping marine corridors...")
+    inland_data = vrt.read()[0]
 
+    print("Reading and warping marine corridors...")
+    vrt = WarpedVRT(
+        marine,
+        width=blueprint.width,
+        height=blueprint.height,
+        nodata=blueprint.nodata,
+        transform=blueprint.transform,
+        resampling=Resampling.nearest,
+    )
     marine_data = vrt.read()[0]
 
     # consolidate all values into a single raster, writing hubs over corridors
-    data = np.ones(shape=inland_data.shape, dtype="uint8") * 255
+    data = np.ones(shape=blueprint.shape, dtype="uint8") * 255
     data[inland_data == 1] = 1
     data[marine_data == 1] = 3
     data[inland_hubs_data == 1] = 0
     data[marine_hubs_data == 1] = 2
 
-    meta = inland.profile.copy()
+    # stamp back in nodata from Blueprint
+    blueprint_data = blueprint.read(1)
+    data[blueprint_data == 255] = 255
+
+    meta = blueprint.profile.copy()
     meta["dtype"] = "uint8"
     meta["nodata"] = 255
 
     with rasterio.open(out_dir / "corridors.tif", "w", **meta) as out:
         out.write(data.astype("uint8"), 1)
 
-########
-with rasterio.open("/tmp/inland.tif", "w", **inland.profile) as out:
-    out.write_band(1, inland_hubs_data)
-
-with rasterio.open("/tmp/marine.tif", "w", **inland.profile) as out:
-    out.write_band(1, marine_hubs_data)

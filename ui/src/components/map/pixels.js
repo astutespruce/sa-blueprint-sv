@@ -131,7 +131,7 @@ export const decodeBits = (value, encoding) => {
   // convert to bitArray
   // reorder to match input order before encoding
   // (since these are decoded in little-endian bit order)
-  let bits = Array.from(value.toString(2).padStart(totalBits, '0'))
+  const bits = Array.from(value.toString(2).padStart(totalBits, '0'))
     .map((bit) => parseInt(bit, 10))
     .reverse()
 

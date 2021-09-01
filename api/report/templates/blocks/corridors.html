@@ -2,14 +2,17 @@
     <h2 id="Corridors">Hubs and Corridors</h2>
 
     <p>
+        The Blueprint uses a least-cost path connectivity analysis to identify corridors that link hubs across the shortest distance possible, while also routing through as much Blueprint priority as possible.
+        <br>
+        <br>
+
         {% if results.corridors[0] or results.corridors[1] %}
-            Inland hubs are either large patches (&gt;2,000 ha) of highest priority Blueprint areas or large patches of permanently protected lands. Inland corridors are the shortest paths that connect these hubs while routing through as much Blueprint priority as possible.
+        Inland hubs are large patches (~5,000+ acres) of highest priority Blueprint areas and/or protected lands. Inland corridors connect those hubs within broad areas of established conservation interest for connectivity.
         {% endif %}
 
         {% if results.corridors[2] or results.corridors[3] %}
-            Marine hubs are either large patches (&gt;2,000 ha) of highest priority Blueprint areas or large patches of open water estuaries. Marine corridors are the shortest paths that connect these hubs while routing through as much Blueprint priority as possible.
+        Marine and estuarine hubs are large estuaries and large patches (~5,000+ acres) of highest priority Blueprint areas. Marine and estuarine corridors connect those hubs within broad marine mammal movement areas.
         {% endif %}
-        Note that the corridors layer includes the full extent of corridors, while the Blueprint corridors class includes only corridors not already identified as priority.
     </p>
 
     {% if maps.corridors %}

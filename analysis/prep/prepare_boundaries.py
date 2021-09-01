@@ -17,23 +17,24 @@ src_dir = Path("source_data")
 data_dir = Path("data")
 out_dir = data_dir / "inputs/boundaries"  # used as inputs for other steps
 tile_dir = data_dir / "for_tiles"
+gis_dir = data_dir / "boundaries"
 
 
-sa_df = read_dataframe(src_dir / "boundaries/SABlueprint2020_Extent.shp")
+sa_df = read_dataframe(src_dir / "boundaries/SouthAtlantic2021Extent.shp")
+sa_df["geometry"] = pg.make_valid(sa_df.geometry.values.data)
+bnd = sa_df.geometry.values.data[0]
 
 ### Create mask by cutting SA bounds out of world bounds
 print("Creating mask...")
 world = pg.box(-180, -85, 180, 85)
 
-# boundary has self-intersections and 4 geometries, need to clean up
-
-bnd = pg.union_all(pg.make_valid(sa_df.geometry.values.data))
-bnd_geo = pg.union_all(pg.make_valid(sa_df.to_crs(GEO_CRS).geometry.values.data))
+bnd_geo = sa_df.to_crs(GEO_CRS).geometry.values.data[0]
 mask = pg.normalize(pg.difference(world, bnd_geo))
 
-gp.GeoDataFrame(geometry=[bnd], crs=DATA_CRS).to_feather(
+gp.GeoDataFrame(sa_df[["geometry"]], crs=DATA_CRS).to_feather(
     out_dir / "sa_boundary.feather"
 )
+write_dataframe(sa_df, gis_dir / "sa_bnd.fgb")
 
 write_dataframe(
     gp.GeoDataFrame({"geometry": bnd_geo}, index=[0], crs=GEO_CRS),
@@ -51,7 +52,7 @@ write_dataframe(
 print("Extracting states and counties...")
 states = (
     read_dataframe(
-        src_dir / "boundaries/tl_2019_us_state.shp",
+        src_dir / "boundaries/tl_2020_us_state.shp",
         read_geometry=False,
         columns=["STATEFP", "NAME"],
     )
@@ -61,8 +62,9 @@ states = (
 
 counties = (
     read_dataframe(
-        src_dir / "boundaries/tl_2018_us_county.shp",
+        src_dir / "boundaries/tl_2020_us_county.shp",
         columns=["STATEFP", "GEOID", "NAME", "geometry"],
+        bbox=tuple(pg.bounds(bnd_geo)),
     )
     .rename(columns={"GEOID": "FIPS", "NAME": "county"})
     .to_crs(DATA_CRS)
@@ -74,7 +76,7 @@ ix = tree.query(bnd, predicate="intersects")
 counties = counties.iloc[ix].join(states, on="STATEFP").drop(columns=["STATEFP"])
 
 
-# write_dataframe(counties, out_dir / "counties.gpkg", driver="GPKG")
+write_dataframe(counties, gis_dir / "counties.gpkg")
 counties.to_feather(out_dir / "counties.feather")
 
 
@@ -97,6 +99,7 @@ df["geometry"] = pg.make_valid(df.geometry.values.data)
 # Explode the polygons for better spatial index results in downstream functions
 df = explode(df).reset_index(drop=True)
 
+write_dataframe(df, gis_dir / "ownership.gpkg")
 write_dataframe(df.to_crs(GEO_CRS), tile_dir / "ownership.geojson", driver="GeoJSONSeq")
 df.to_feather(out_dir / "ownership.feather")
 
@@ -117,5 +120,6 @@ df = df.iloc[ix].copy()
 
 df.geometry = pg.make_valid(df.geometry.values.data)
 
+write_dataframe(df, gis_dir / "parca.gpkg")
 df.to_feather(out_dir / "parca.feather")
 

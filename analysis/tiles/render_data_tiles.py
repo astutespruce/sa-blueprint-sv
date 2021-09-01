@@ -40,9 +40,9 @@ for group in sorted(df.group.unique()):
         max_zoom=max_zoom,
         tile_size=tile_size,
         metadata={
-            "name": "South Atlantic Conservation Blueprint 2020 Indicators",
-            "description": "Indicators used in the South Atlantic Conservation Blueprint 2020",
-            "attribution": "South Atlantic Conservation Blueprint 2020",
+            "name": "South Atlantic Conservation Blueprint 2021 Indicators",
+            "description": "Indicators used in the South Atlantic Conservation Blueprint 2021",
+            "attribution": "South Atlantic Conservation Blueprint 2021",
             "encoding": json.dumps(encoding),
         },
     )
