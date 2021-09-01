@@ -2,7 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Box, Divider, Heading, Text } from 'theme-ui'
 
-import { useBlueprintPriorities, useCorridors } from 'components/data'
+import {
+  useBlueprintPriorities,
+  useCorridors,
+  useIndicators,
+} from 'components/data'
 import NeedHelp from 'content/NeedHelp'
 import { sum } from 'util/data'
 
@@ -11,9 +15,33 @@ import CorridorsChart from './CorridorsChart'
 import PriorityCategories from './PriorityCategories'
 import CorridorCategories from './CorridorCategories'
 
-const PrioritiesTab = ({ type, blueprint, corridors }) => {
+const PrioritiesTab = ({
+  type,
+  blueprint,
+  corridors,
+  indicators: rawIndicators,
+}) => {
+  let corridorValue = null
+  if (type === 'pixel') {
+    corridorValue = corridors === null ? 4 : corridors
+  }
+
   const { all: allPriorities } = useBlueprintPriorities()
   const corridorCategories = useCorridors()
+  const { indicators: INDICATORS } = useIndicators()
+
+  let indicators = []
+  if (type === 'pixel') {
+    indicators = INDICATORS.filter(({ id }) => rawIndicators[id])
+  } else {
+    // retrieve indicator results by original index
+    indicators = INDICATORS.filter((indicator, i) => !!rawIndicators[i])
+  }
+  const ecosystems = new Set(indicators.map(({ id }) => id.split('_')[0]))
+
+  const hasInlandIndicators =
+    ecosystems.has('land') || ecosystems.has('freshwater')
+  const hasMarineIndicators = ecosystems.has('marine')
 
   // Note: incoming priorities are in descending order but percents
   // are stored in ascending order
@@ -41,8 +69,21 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
   }
 
   const filterCorridors = ({ value }) => {
+    if (type === 'pixel') {
+      if (value === 4) {
+        return true
+      }
+      if (!(hasInland || hasInlandIndicators) && value <= 1) {
+        return false
+      }
+      if (!(hasMarine || hasMarineIndicators) && value > 1) {
+        return false
+      }
+      return true
+    }
+
     if (value === 4) {
-      return type === 'pixel'
+      return false
     }
     if (!hasInland && value <= 1) {
       return false
@@ -93,7 +134,7 @@ const PrioritiesTab = ({ type, blueprint, corridors }) => {
         {remainder < 100 ? (
           <CorridorCategories
             categories={corridorCategories.filter(filterCorridors)}
-            value={type === 'pixel' ? corridors || 4 : null}
+            value={corridorValue}
           />
         ) : null}
       </Box>
@@ -113,6 +154,17 @@ PrioritiesTab.propTypes = {
     PropTypes.arrayOf(PropTypes.number),
     PropTypes.number,
   ]),
+  indicators: PropTypes.oneOfType([
+    // if pixel
+    PropTypes.objectOf(PropTypes.number),
+    // if summary unit
+    // NOTE: indicators for summary units are keyed by index not id
+    PropTypes.objectOf(
+      PropTypes.shape({
+        percent: PropTypes.arrayOf(PropTypes.number),
+      })
+    ),
+  ]).isRequired,
 }
 
 PrioritiesTab.defaultProps = {
