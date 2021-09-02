@@ -134,7 +134,7 @@ const DesktopInstructions = () => (
       exactly match the Blueprint and indicator data for that specific ground
       location, especially in areas of high variability in the data. To view and
       / or download more precise spatial data, please visit{' '}
-      <OutboundLink to="https://salcc.databasin.org/galleries/50e3abe922a74c9e9b6d0167dd1e8f2e">
+      <OutboundLink to="https://salcc.databasin.org/galleries/f3c66628b531496f8c9b52648a9167ca/">
         the Blueprint Gallery
       </OutboundLink>{' '}
       on the Conservation Planning Atlas.
