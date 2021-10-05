@@ -39,9 +39,9 @@ const Intro = () => (
 
       <p>
         This <b>Simple Viewer</b> summarizes the Blueprint priorities and
-        supporting information within subwatersheds and marine lease blocks as
-        well as pixel-level details of what indicators are driving the Blueprint
-        priorities.
+        supporting information within subwatersheds (HUC12) and marine lease
+        blocks as well as pixel-level details of what indicators are driving the
+        Blueprint priorities.
       </p>
     </Box>
   </>
