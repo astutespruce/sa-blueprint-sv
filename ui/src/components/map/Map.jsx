@@ -386,6 +386,7 @@ const Map = () => {
         map={mapRef.current}
         sources={sources}
         layers={layers}
+        mapMode={mapMode}
         isMobile={isMobile}
       />
     </Box>

@@ -173,6 +173,7 @@ export const layers = [
       'fill-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'indicators0',
@@ -184,6 +185,7 @@ export const layers = [
       'raster-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'indicators1',
@@ -195,6 +197,7 @@ export const layers = [
       'raster-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'indicators2',
@@ -206,6 +209,7 @@ export const layers = [
       'raster-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'indicators3',
@@ -217,6 +221,7 @@ export const layers = [
       'raster-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'indicators4',
@@ -228,6 +233,7 @@ export const layers = [
       'raster-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'blueprint',
@@ -245,9 +251,6 @@ export const layers = [
     source: 'mapUnits',
     'source-layer': 'units',
     type: 'fill',
-    layout: {
-      visibility: 'none',
-    },
     paint: {
       'fill-color': '#0892D0',
       'fill-opacity': [
@@ -258,15 +261,13 @@ export const layers = [
       ],
     },
     before: beforeLayer,
+    mode: 'summary',
   },
   {
     id: 'unit-outline',
     source: 'mapUnits',
     'source-layer': 'units',
     type: 'line',
-    layout: {
-      visibility: 'none',
-    },
     paint: {
       'line-opacity': 1,
       'line-color': theme.colors.blue[7],
@@ -283,6 +284,7 @@ export const layers = [
       ],
     },
     before: beforeLayer,
+    mode: 'summary',
   },
   {
     id: 'unit-outline-highlight',
@@ -301,6 +303,7 @@ export const layers = [
       },
     },
     before: beforeLayer,
+    mode: 'summary',
   },
   // render boundary to capture clicks and determine if pixel is in our outside bounds
   {
