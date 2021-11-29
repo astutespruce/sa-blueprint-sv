@@ -29,7 +29,7 @@ const IndicatorDetails = ({
 }) => {
   const ecosystemId = id.split('_')[0]
   // eslint-disable-next-line global-require,import/no-dynamic-require
-  const icon = require(`images/${ecosystemId}.svg`)
+  const icon = require(`images/${ecosystemId}.svg`).default
 
   const remainder = analysisAcres
     ? (100 * Math.abs(analysisAcres - blueprintAcres)) / analysisAcres

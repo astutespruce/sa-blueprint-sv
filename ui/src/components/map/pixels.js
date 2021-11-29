@@ -1,7 +1,7 @@
 /* eslint-disable no-bitwise */
 
 import { arrayToObject } from 'util/data'
-import { indicatorSources } from './config'
+import { indicatorSources } from './mapConfig'
 
 const EXTENT = 8192 // from mapbox-gl-js/../extent.js
 

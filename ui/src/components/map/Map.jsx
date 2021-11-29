@@ -13,7 +13,12 @@ import { hasWindow, isLocalDev } from 'util/dom'
 import { useIsEqualEffect } from 'util/hooks'
 import { extractPixelData } from './pixels'
 import { getCenterAndZoom } from './util'
-import { config, sources, indicatorSources, layers } from './config'
+import {
+  mapConfig as config,
+  sources,
+  indicatorSources,
+  layers,
+} from './mapConfig'
 import { unpackFeatureData } from './features'
 import { Legend } from './legend'
 import MapModeToggle from './MapModeToggle'

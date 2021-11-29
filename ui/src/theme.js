@@ -1,6 +1,6 @@
-import { darken } from '@theme-ui/color'
+const { darken } = require('@theme-ui/color')
 
-export default {
+module.exports = {
   breakpoints: ['600px', '800px', '1200px', '1600px'],
   colors: {
     text: '#333',
@@ -214,9 +214,15 @@ export default {
   },
   styles: {
     root: {
-      height: '100%',
-      width: '100%',
+      height: '100vh',
+      overflowX: 'hidden',
       overflowY: 'hidden',
+      margin: 0,
+      body: {
+        margin: 0,
+        height: '100%',
+        width: '100%',
+      },
       '#___gatsby': {
         height: '100%',
       },
