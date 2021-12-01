@@ -1,5 +1,6 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useEffect, useRef, useState, useCallback, memo } from 'react'
-import mapboxgl from 'mapbox-gl' // TODO: for mapbox-gl-js >= 2.0 skips any babel transforms; see: https://docs.mapbox.com/mapbox-gl-js/api/#migrating-to-v2
+import mapboxgl from 'mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { Box } from 'theme-ui'
 import { Crosshairs } from '@emotion-icons/fa-solid'
@@ -93,8 +94,8 @@ const Map = () => {
       // nodes don't always have height set; force larger view
       if (isLocalDev) {
         map.resize()
-        const { center, zoom } = getCenterAndZoom(mapNode.current, bounds, 0.1)
-        map.setZoom(zoom)
+        const { zoom: curZoom } = getCenterAndZoom(mapNode.current, bounds, 0.1)
+        map.setZoom(curZoom)
       }
 
       // add sources
@@ -291,7 +292,9 @@ const Map = () => {
     const dataSources = ['blueprint'].concat(indicatorSources)
     // Note: these are at map.style._otherSourceCaches for mapbox-gl-js >= 2.0
     const sourcesLoaded = dataSources.filter(
-      (s) => map.style.sourceCaches[s] && map.style.sourceCaches[s].loaded()
+      (s) =>
+        map.style._otherSourceCaches[s] &&
+        map.style._otherSourceCaches[s].loaded()
     )
     if (sourcesLoaded.length < dataSources.length) {
       // if map sources are not done loading, schedule a callback
