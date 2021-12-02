@@ -4,27 +4,8 @@ import { siteMetadata } from '../../../gatsby-config'
 
 const { tileHost } = siteMetadata
 
-export const config = {
+export const mapConfig = {
   bounds: [-85.89816168, 28.98417231, -71.28723327, 37.45871183],
-  // FIXME
-  // bounds: [
-  //   // test area 1
-  //   // -81.52437938681351,
-  //   // 32.51589056924743,
-  //   // -81.29738295319072,
-  //   // 32.68051488817807,
-  //   // test area 2
-  // -77.28581582039118,
-  // 37.21040906844688,
-  // -77.22931903990204,
-  // 37.2548924014517,
-  // test area 3
-  //   -76.93915117797323,
-  //   37.012453160576655,
-  //   -76.91005681150797,
-  //   37.03819853841662,
-  // ],
-
   maxBounds: [-115, 10, -30, 50],
   minZoom: 4,
   maxZoom: 16,
@@ -173,6 +154,7 @@ export const layers = [
       'fill-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'indicators0',
@@ -184,6 +166,7 @@ export const layers = [
       'raster-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'indicators1',
@@ -195,6 +178,7 @@ export const layers = [
       'raster-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'indicators2',
@@ -206,6 +190,7 @@ export const layers = [
       'raster-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'indicators3',
@@ -217,6 +202,7 @@ export const layers = [
       'raster-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'indicators4',
@@ -228,6 +214,7 @@ export const layers = [
       'raster-opacity': 0,
     },
     before: beforeLayer,
+    mode: 'pixel',
   },
   {
     id: 'blueprint',
@@ -245,9 +232,6 @@ export const layers = [
     source: 'mapUnits',
     'source-layer': 'units',
     type: 'fill',
-    layout: {
-      visibility: 'none',
-    },
     paint: {
       'fill-color': '#0892D0',
       'fill-opacity': [
@@ -258,15 +242,13 @@ export const layers = [
       ],
     },
     before: beforeLayer,
+    mode: 'summary',
   },
   {
     id: 'unit-outline',
     source: 'mapUnits',
     'source-layer': 'units',
     type: 'line',
-    layout: {
-      visibility: 'none',
-    },
     paint: {
       'line-opacity': 1,
       'line-color': theme.colors.blue[7],
@@ -283,6 +265,7 @@ export const layers = [
       ],
     },
     before: beforeLayer,
+    mode: 'summary',
   },
   {
     id: 'unit-outline-highlight',
@@ -301,6 +284,7 @@ export const layers = [
       },
     },
     before: beforeLayer,
+    mode: 'summary',
   },
   // render boundary to capture clicks and determine if pixel is in our outside bounds
   {

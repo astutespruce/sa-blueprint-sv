@@ -1,9 +1,47 @@
 /* eslint-disable no-bitwise */
+/* eslint-disable no-underscore-dangle */
 
 import { arrayToObject } from 'util/data'
-import { indicatorSources } from './config'
+import { indicatorSources } from './mapConfig'
 
-const EXTENT = 8192 // from mapbox-gl-js/../extent.js
+/**
+ * Calculate a Mapbox GL JS tile key to use for querying the tile cache.
+ * Adapted from mapbox-gl-js::tile_id.js::calculateKey and other functions / classes
+ * and simplified for no wrap or overscaledZ.
+ * @param {number} zoom
+ * @param {number} mercX - mercator X coordinate
+ * @param {number} mercY - mercator Y coordinate
+ * @returns
+ */
+const calculateTileKey = (zoom, mercX, mercY) => {
+  const tiles = 1 << zoom
+  const x = Math.floor(mercX * tiles)
+  const y = Math.floor(mercY * tiles)
+  const dim = 1 << Math.min(zoom, 22)
+  const xy = dim * (+y % dim) + (+x % dim)
+  const key = (xy * 32 + zoom) * 16
+  return key
+}
+
+/**
+ * Find the first available loaded tile starting from max zoom
+ * @param {Object} cache - tile cache object
+ * @param {number} maxzoom - max zoom to start search
+ * @param {number} minzoom - min zoom to end search
+ * @param {number} mercX - mercator X coordinate
+ * @param {number} mercY - mercator Y coordinate
+ * @returns Tile or null
+ */
+const findLoadedTile = (cache, maxzoom, minzoom, mercX, mercY) => {
+  for (let z = maxzoom; z >= minzoom; z -= 1) {
+    const key = calculateTileKey(z, mercX, mercY)
+    const tile = cache[key]
+    if (tile && tile.hasData()) {
+      return tile
+    }
+  }
+  return null
+}
 
 /**
  * Extracts RGB data from a pixel at a location, encoded as a uint32 value.
@@ -14,41 +52,41 @@ const EXTENT = 8192 // from mapbox-gl-js/../extent.js
  * @param {String} layerId - layer from which to extract pixel data
  */
 export const getPixelValue = (map, point, layerId) => {
-  // Note: these are at map.style._otherSourceCaches for mapbox-gl-js >= 2.0
-  const sourceCache = map.style.sourceCaches[layerId]
+  // TODO: pass in screen point as param instead
+  const screenPoint = map.project(point)
+
+  const sourceCache = map.style._otherSourceCaches[layerId]
 
   if (!sourceCache) {
-    console.error('map source cache not available for', layerId)
+    // console.error('map source cache not available for', layerId)
     return null
   }
 
   const { transform } = sourceCache
+  const { minzoom, maxzoom } = sourceCache.getSource()
 
-  const tilesIn = sourceCache.tilesIn(
-    [map.project(point)],
-    transform.maxPitchScaleFactor(),
-    false
-  )
+  // also mostly equivalent to transform.locationCoordinate(point)
+  // both return mercator coords
+  const { x, y } = transform.pointCoordinate(screenPoint)
 
-  if (tilesIn.length === 0) {
+  // first, try to get tile for the current zoom level since this is called
+  // after tiles should have loaded
+  const tileKey = calculateTileKey(Math.floor(map.getZoom()), x, y)
+  let tile = sourceCache._tiles[tileKey]
+
+  // if we don't have a tile at the current zoom, look for other tiles in the
+  // cache
+  if (!(tile && tile.hasData())) {
+    tile = findLoadedTile(sourceCache._tiles, maxzoom, minzoom, x, y)
+  }
+
+  if (!tile) {
     // console.debug(`No tiles in ${layerId} available for point`)
     return null
   }
 
-  // sort tiles
-  // from mapbox-gl-js/.../query_features.js
-  tilesIn.sort(
-    ({ tileID: idA }, { tileID: idB }) =>
-      idA.overscaledZ - idB.overscaledZ ||
-      idA.canonical.y - idB.canonical.y ||
-      idA.wrap - idB.wrap ||
-      idA.canonical.x - idB.canonical.x
-  )
-
-  const [{ tile, tileID }] = tilesIn // only need the first, this is highest zoom
-
-  if (!(tile.texture && tile.texture.size)) {
-    // not fully loaded yet
+  if (!(tile.texture && tile.texture.texture)) {
+    // console.debug(`Tile image not yet loaded ${tile.tileID.toString()}`)
     return null
   }
 
@@ -56,27 +94,20 @@ export const getPixelValue = (map, point, layerId) => {
   // layer tileSize property (they are overzoomed)
   const tileSize = tile.texture.size[0]
 
-  if (!(tile.texture && tile.texture.texture)) {
-    // console.debug(`Tile image not yet loaded ${tileID.toString()}`)
-    return null
-  }
-
-  // get scaled tile coordinate for point
-  const { x: scaledX, y: scaledY } = tileID.getTilePoint(
-    transform.locationCoordinate(point)
-  )
-
-  // rescale to tile coords
-  const tileX = Math.floor((scaledX / EXTENT) * tileSize)
-  const tileY = Math.floor((scaledY / EXTENT) * tileSize)
+  // rescale Mercator coordinates to tile coords
+  const {
+    tileTransform: { scale, x: tfX, y: tfY },
+  } = tile
+  const tileX = Math.floor((x * scale - tfX) * tileSize)
+  const tileY = Math.floor((y * scale - tfY) * tileSize)
 
   if (tileX < 0 || tileY < 0 || tileX > tileSize || tileY > tileSize) {
-    // console.debug(`Outside bounds of tile ${tileID.toString()}`)
+    // console.debug(`Outside bounds of tile ${tile.tileID.toString()}`)
     return null
   }
 
   // console.debug(
-  //   `Extracting data for tile ${tileID.toString()},  coords: x:${tileX}, y:${tileY}`
+  //   `Extracting data for tile ${tile.tileID.toString()},  coords: x:${tileX}, y:${tileY}`
   // )
 
   const {
@@ -104,7 +135,7 @@ export const getPixelValue = (map, point, layerId) => {
   // decode to uint
   const [r, g, b] = pixels
   const value = (r << 16) | (g << 8) | b
-  // console.log('pixels', pixels, '==>', value)
+  // console.debug('pixels', pixels, '==>', value)
 
   return value
 }

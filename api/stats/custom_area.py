@@ -43,6 +43,7 @@ class CustomArea(object):
         """
 
         self.geometry = to_crs(geometry, crs, DATA_CRS)
+        self.gdf = gp.GeoDataFrame({"geometry": self.geometry}, crs=DATA_CRS)
         self.bounds = pg.total_bounds(self.geometry)
         # wrap geometry as a dict for rasterio
         self.shapes = np.asarray([to_dict(self.geometry[0])])
@@ -141,9 +142,7 @@ class CustomArea(object):
         ]
 
         df = (
-            sjoin(pd.DataFrame({"geometry": self.geometry}), counties)[
-                ["FIPS", "state", "county"]
-            ]
+            sjoin(self.gdf, counties)[["FIPS", "state", "county"]]
             .reset_index(drop=True)
             .sort_values(by=["state", "county"])
         )
@@ -155,7 +154,7 @@ class CustomArea(object):
 
     def get_parca(self):
         parca = gp.read_feather(parca_filename)
-        df = intersection(pd.DataFrame({"geometry": self.geometry}), parca)
+        df = intersection(self.gdf, parca)
 
         if not len(df):
             return None
@@ -181,7 +180,7 @@ class CustomArea(object):
 
     def get_ownership(self):
         ownership = gp.read_feather(ownership_filename)
-        df = intersection(pd.DataFrame({"geometry": self.geometry}), ownership)
+        df = intersection(self.gdf, ownership)
 
         if not len(df):
             return None

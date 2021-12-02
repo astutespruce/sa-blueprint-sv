@@ -20,9 +20,9 @@ module.exports = {
     mapboxToken: process.env.GATSBY_MAPBOX_API_TOKEN,
   },
   flags: {
-    // FAST_DEV: true,
-    DEV_SSR: true,
-    FAST_REFRESH: true,
+    FAST_DEV: true,
+    DEV_SSR: false, // appears to throw '"filePath" is not allowed to be empty' when true
+    PARALLEL_SOURCING: process.env.NODE_ENV !== `production`, // uses a lot of memory on server
   },
   pathPrefix: process.env.SITE_ROOT_PATH || `/`,
   plugins: [

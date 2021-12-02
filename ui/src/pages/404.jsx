@@ -1,19 +1,20 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Box, Heading, Flex } from 'theme-ui'
-import styled from '@emotion/styled'
-import BackgroundImage from 'gatsby-background-image'
 import { graphql } from 'gatsby'
+import { Box, Flex, Heading } from 'theme-ui'
+import { convertToBgImage } from 'gbimage-bridge'
+import BackgroundImage from 'gatsby-background-image'
 
 import { Layout } from 'components/layout'
 import { hasWindow } from 'util/dom'
 
-const Image = styled(BackgroundImage)`
-  height: 100%;
-  background-position: top center !important;
-`
-
-const NotFoundPage = ({ data: { image } }) => {
+const NotFoundPage = ({
+  data: {
+    image: {
+      childImageSharp: { gatsbyImageData: image },
+    },
+  },
+}) => {
   if (!hasWindow) {
     // prevents initial load of this page for client routes
     return null
@@ -21,13 +22,22 @@ const NotFoundPage = ({ data: { image } }) => {
 
   return (
     <Layout title="404: Not found">
-      <Image Tag="div" fluid={image.childImageSharp.fluid}>
+      <BackgroundImage
+        {...convertToBgImage(image)}
+        style={{
+          height: '100%',
+        }}
+        alt=""
+        preserveStackingContext
+      >
         <Flex
           sx={{
-            alignItems: 'center',
             justifyContent: 'center',
+            alignItems: 'center',
             flexDirection: 'column',
             height: '100%',
+            flex: '1 1 auto',
+            px: '1rem',
           }}
         >
           <Box
@@ -43,7 +53,7 @@ const NotFoundPage = ({ data: { image } }) => {
             </Heading>
           </Box>
         </Flex>
-      </Image>
+      </BackgroundImage>
     </Layout>
   )
 }
@@ -54,9 +64,11 @@ export const pageQuery = graphql`
   query NotFoundPageQuery {
     image: file(relativePath: { eq: "jack-kelly-gAvQfrHwbgY-unsplash.jpg" }) {
       childImageSharp {
-        fluid(maxWidth: 3200) {
-          ...GatsbyImageSharpFluid_withWebp
-        }
+        gatsbyImageData(
+          layout: FULL_WIDTH
+          formats: [AUTO, WEBP]
+          placeholder: BLURRED
+        )
       }
     }
   }
