@@ -1,6 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useRef, useState, useCallback, memo } from 'react'
-import mapboxgl from 'mapbox-gl'
+// exclude Mapbox GL from babel transpilation per https://docs.mapbox.com/mapbox-gl-js/guides/migrate-to-v2/
+/* eslint-disable-next-line */
+import mapboxgl from '!mapbox-gl'
 import 'mapbox-gl/dist/mapbox-gl.css'
 import { Box } from 'theme-ui'
 import { Crosshairs } from '@emotion-icons/fa-solid'
