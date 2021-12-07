@@ -44,16 +44,16 @@
     "stream-browserify": "^3.0.0",
     "theme-ui": "^0.12.1",
     "use-error-boundary": "^2.0.4",
-    "util": "^0.12.4"
-  },
-  "devDependencies": {
+    "util": "^0.12.4",
+    "babel-eslint": "^10.1.0",
+    "babel-preset-gatsby": "^2.2.0",
     "@babel/plugin-transform-react-jsx": "^7.13.12",
     "@babel/preset-react": "^7.13.13",
     "@emotion/babel-plugin": "^11.2.0",
-    "@emotion/babel-plugin-jsx-pragmatic": "^0.1.5",
+    "@emotion/babel-plugin-jsx-pragmatic": "^0.1.5"
+  },
+  "devDependencies": {
     "@emotion/eslint-plugin": "^11.2.0",
-    "babel-eslint": "^10.1.0",
-    "babel-preset-gatsby": "^2.2.0",
     "eslint": "^7.23.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-prettier": "^8.3.0",
@@ -76,7 +76,7 @@
     "develop": "gatsby develop",
     "serve": "gatsby serve",
     "clean": "gatsby clean",
-    "deploy": "gatsby clean && gatsby build --prefix-paths"
+    "deploy": "npm ci --production --no-audit && npm install gatsby-cli@3.4 --no-audit && gatsby telemetry --disable && gatsby clean && gatsby build --prefix-paths"
   },
   "repository": {
     "type": "git",
