@@ -121,7 +121,7 @@ p {
 }
 
 section {
-  break-before: always;
+  page-break-before: always;
 }
 
 ul {
@@ -433,7 +433,7 @@ table tr.above-threshold td {
 }
 
 .indicator {
-  break-before: always;
+  page-break-before: always;
 }
 
 .indicator-absent {
@@ -480,7 +480,7 @@ table tr.above-threshold td {
 
 .indicator + .indicator,
 .ownership-section + .ownership-section {
-  break-before: always;
+  page-break-before: always;
 }
 
 img.logo {
