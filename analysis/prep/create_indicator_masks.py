@@ -7,7 +7,6 @@ import os
 from pathlib import Path
 from math import ceil
 
-import geopandas as gp
 from affine import Affine
 import rasterio
 from rasterio.enums import Resampling
@@ -62,4 +61,3 @@ for indicator in INDICATORS:
 
             with rasterio.open(out_dir / filename.name, "w", **meta) as out:
                 out.write(data)
-

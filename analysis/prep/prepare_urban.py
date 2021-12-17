@@ -12,7 +12,6 @@ import geopandas as gp
 import pygeos as pg
 import numpy as np
 import rasterio
-from affine import Affine
 from rasterio.enums import Resampling
 
 from analysis.constants import URBAN_YEARS, DATA_CRS, OVERVIEW_FACTORS

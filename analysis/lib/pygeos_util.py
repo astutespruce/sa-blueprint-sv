@@ -5,7 +5,6 @@ import numpy as np
 import pandas as pd
 import pygeos as pg
 from pyproj.transformer import Transformer
-from shapely.wkb import loads
 
 
 def to_crs(geometries, src_crs, target_crs):
@@ -301,4 +300,3 @@ def explode(df):
     return gp.GeoDataFrame({"geometry": parts}, index=ix, crs=df.crs).join(
         df.drop(columns=["geometry"])
     )
-

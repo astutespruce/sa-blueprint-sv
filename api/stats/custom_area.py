@@ -1,6 +1,5 @@
 from pathlib import Path
 
-import pandas as pd
 import numpy as np
 import pygeos as pg
 import geopandas as gp

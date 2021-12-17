@@ -138,7 +138,7 @@ for i in sorted(df.group.unique()):
         dtype = "uint8"
         num_bytes = 1
 
-    elif total_bits > 8 and total_bits <= 16:
+    elif total_bits <= 16:
         dtype = "uint16"
         num_bytes = 2
 

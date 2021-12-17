@@ -1,19 +1,13 @@
-from collections import defaultdict
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
-import geopandas as gp
-import pygeos as pg
 
 
 from analysis.constants import (
-    BLUEPRINT,
-    INDICATORS,
     INDICATOR_INDEX,
     OWNERSHIP,
     PROTECTION,
-    ACRES_PRECISION,
 )
 
 input_dir = Path("data/inputs")

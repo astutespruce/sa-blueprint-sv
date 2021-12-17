@@ -25,8 +25,6 @@ from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 
 from api.errors import DataError
 from api.geo import get_dataset
-from api.custom_report import create_custom_report
-from api.summary_unit_report import create_summary_unit_report
 from api.settings import (
     LOGGING_LEVEL,
     REDIS,
@@ -295,7 +293,6 @@ async def job_status_endpoint(job_id: str):
 
         except Exception as ex:
             log.error(ex)
-            message = "Internal server error"
             raise HTTPException(status_code=500, detail="Internal server error")
 
         return {"status": "failed", "detail": message}
@@ -377,4 +374,3 @@ async def get_jobs(credentials: HTTPBasicCredentials = Depends(security)):
     finally:
         redis.close()
         await redis.wait_closed()
-

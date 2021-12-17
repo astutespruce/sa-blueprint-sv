@@ -1,6 +1,6 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { Box, Flex, Text } from 'theme-ui'
+import { Box, Text } from 'theme-ui'
 import { lighten } from '@theme-ui/color'
 
 import { useBreakpoints } from 'components/layout'

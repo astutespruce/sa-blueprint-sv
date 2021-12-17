@@ -6,7 +6,6 @@ import pandas as pd
 import pygeos as pg
 import rasterio
 from rasterio.mask import raster_geometry_mask
-from analysis.lib.io import write_raster
 
 
 from analysis.constants import (
@@ -136,7 +135,6 @@ def extract_by_geometry(geometries, bounds, marine=False):
     results["counts"]["blueprint"] = (
         (blueprint_counts * cellsize).round(ACRES_PRECISION).astype("float32")
     )
-    blueprint_total = blueprint_counts.sum()
 
     corridor_counts = extract_count_in_geometry(
         corridors_filename,

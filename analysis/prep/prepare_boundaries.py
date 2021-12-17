@@ -1,5 +1,4 @@
 from pathlib import Path
-import pandas as pd
 import geopandas as gp
 import pygeos as pg
 from pyogrio.geopandas import read_dataframe, write_dataframe
@@ -122,4 +121,3 @@ df.geometry = pg.make_valid(df.geometry.values.data)
 
 write_dataframe(df, gis_dir / "parca.gpkg")
 df.to_feather(out_dir / "parca.feather")
-

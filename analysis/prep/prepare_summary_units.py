@@ -1,6 +1,4 @@
 from pathlib import Path
-import geopandas as gp
-import pandas as pd
 from pyogrio.geopandas import read_dataframe, write_dataframe
 import pygeos as pg
 import numpy as np

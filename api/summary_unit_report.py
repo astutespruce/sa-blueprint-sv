@@ -1,10 +1,6 @@
 import logging
-from pathlib import Path
 import tempfile
 
-import numpy as np
-from pyogrio import read_dataframe
-import pygeos as pg
 
 from api.errors import DataError
 from api.report.map import render_maps

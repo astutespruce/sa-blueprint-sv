@@ -37,11 +37,10 @@ Counties are encoded as:
 from pathlib import Path
 import csv
 
-import numpy as np
 import pandas as pd
 
 
-from analysis.constants import INDICATOR_INDEX, URBAN_YEARS, DEBUG
+from analysis.constants import INDICATOR_INDEX, DEBUG
 from analysis.lib.attribute_encoding import encode_values, delta_encode_values
 
 

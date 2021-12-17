@@ -1,7 +1,6 @@
 """Create a custom report for a user-uploaded area of interest.
 """
 import logging
-from pathlib import Path
 import tempfile
 
 import numpy as np

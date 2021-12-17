@@ -62,6 +62,46 @@ const Map = () => {
   const mapModeRef = useRef(mapMode)
   const { location } = useSearch()
 
+  const getPixelData = useCallback(() => {
+    // if (mapModeRef.current !== 'pixel') return
+
+    const { current: map } = mapRef
+    if (!map) return
+
+    if (map.getZoom() < 7) {
+      setMapData(null)
+      return
+    }
+
+    const dataSources = ['blueprint'].concat(indicatorSources)
+    // Note: these are at map.style._otherSourceCaches for mapbox-gl-js >= 2.0
+    const sourcesLoaded = dataSources.filter(
+      (s) =>
+        map.style._otherSourceCaches[s] &&
+        map.style._otherSourceCaches[s].loaded()
+    )
+    if (sourcesLoaded.length < dataSources.length) {
+      // if map sources are not done loading, schedule a callback
+      // map.once('idle', getPixelData)
+      map.once('idle', () => {
+        setMapData(extractPixelData(map, map.getCenter(), blueprintByColor))
+      })
+      // set loading and pass coordinates for header to avoid jitter
+      const { lng: longitude, lat: latitude } = map.getCenter()
+      setMapData({
+        type: 'pixel',
+        isLoading: true,
+        location: {
+          longitude,
+          latitude,
+        },
+      })
+    } else {
+      // NOTE: if outside bounds, this will be null and unselect data
+      setMapData(extractPixelData(map, map.getCenter(), blueprintByColor))
+    }
+  }, [blueprintByColor, setMapData]) // setMapDataLoading
+
   useEffect(() => {
     // if there is no window, we cannot render this component
     if (!hasWindow) {
@@ -279,46 +319,6 @@ const Map = () => {
       removeLocationMarker()
     }
   }, [location, isLoaded])
-
-  const getPixelData = useCallback(() => {
-    // if (mapModeRef.current !== 'pixel') return
-
-    const { current: map } = mapRef
-    if (!map) return
-
-    if (map.getZoom() < 7) {
-      setMapData(null)
-      return
-    }
-
-    const dataSources = ['blueprint'].concat(indicatorSources)
-    // Note: these are at map.style._otherSourceCaches for mapbox-gl-js >= 2.0
-    const sourcesLoaded = dataSources.filter(
-      (s) =>
-        map.style._otherSourceCaches[s] &&
-        map.style._otherSourceCaches[s].loaded()
-    )
-    if (sourcesLoaded.length < dataSources.length) {
-      // if map sources are not done loading, schedule a callback
-      // map.once('idle', getPixelData)
-      map.once('idle', () => {
-        setMapData(extractPixelData(map, map.getCenter(), blueprintByColor))
-      })
-      // set loading and pass coordinates for header to avoid jitter
-      const { lng: longitude, lat: latitude } = map.getCenter()
-      setMapData({
-        type: 'pixel',
-        isLoading: true,
-        location: {
-          longitude,
-          latitude,
-        },
-      })
-    } else {
-      // NOTE: if outside bounds, this will be null and unselect data
-      setMapData(extractPixelData(map, map.getCenter(), blueprintByColor))
-    }
-  }, [blueprintByColor, setMapData]) // setMapDataLoading
 
   const handleToggleBlueprintVisibile = useCallback(() => {
     const { current: map } = mapRef

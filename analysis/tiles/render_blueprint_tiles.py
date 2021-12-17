@@ -8,12 +8,7 @@ Creating blueprint tiles takes about 3 hours sequentially.  Zoom 15 takes 2 hour
 This can be done more quickly (total time) in batches and merge them back later.
 """
 
-from time import time
 from pathlib import Path
-
-from tilecutter.mbtiles import render_tif_to_mbtiles
-from pymbtiles.ops import union, extend
-from pymbtiles import MBtiles
 
 from analysis.constants import BLUEPRINT
 
