@@ -152,6 +152,11 @@ def validate_file_type(file):
         )
 
 
+@app.get("/api/health")
+async def health_endpoint():
+    return Response(status_code=200)
+
+
 @app.post("/api/reports/custom")
 async def custom_report_endpoint(
     file: UploadFile = File(...),
