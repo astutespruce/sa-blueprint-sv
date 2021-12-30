@@ -60,10 +60,6 @@ def extract_by_geometry(geometries, bounds):
         # square meters to acres
         cellsize = src.res[0] * src.res[1] * M2_ACRES
 
-        data = src.read(1, window=window, boundless=True)
-        nodata = src.nodatavals[0]
-        mask = (data == nodata) | shape_mask
-
     results["shape_mask"] = (
         ((~shape_mask).sum() * cellsize).round(ACRES_PRECISION).astype("float32")
     )
