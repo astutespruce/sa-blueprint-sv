@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useStaticQuery, graphql } from 'gatsby'
 
 import { arrayToObject } from 'util/data'
@@ -34,13 +35,18 @@ export const useBlueprintPriorities = () => {
     color: parseInt(color.slice(1, color.length), 16), // hex => uint32
   }))
 
-  return {
-    all,
-    priorities,
-    colorIndex: arrayToObject(
-      colors,
-      ({ color }) => color,
-      ({ value }) => value
-    ),
-  }
+  return useMemo(
+    () => ({
+      all,
+      priorities,
+      colorIndex: arrayToObject(
+        colors,
+        ({ color }) => color,
+        ({ value }) => value
+      ),
+    }),
+    // intentionally omitting deps
+    /* eslint-disable-next-line react-hooks/exhaustive-deps */
+    []
+  )
 }
