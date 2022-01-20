@@ -214,7 +214,10 @@ module.exports = {
   },
   styles: {
     root: {
-      height: '100vh',
+      // height: '100vh',
+      height: '100%',
+      // fix for mobile:
+      // minHeight: '-webkit-fill-available',
       overflowX: 'hidden',
       overflowY: 'hidden',
       margin: 0,

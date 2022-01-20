@@ -395,7 +395,7 @@ const Map = () => {
             opacity: 0.75,
           }}
         >
-          <Crosshairs size="2rem" />
+          <Crosshairs size="32px" />
         </Box>
       ) : null}
 
