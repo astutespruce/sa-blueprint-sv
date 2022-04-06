@@ -1,6 +1,12 @@
+import json
+
+from PIL import Image
+from pymgl import Map
+
+
+from api.settings import TILE_DIR
 from analysis.constants import OWNERSHIP
 
-from .util import render_mbgl_map
 
 
 # interleave keys and colors for mapbox
@@ -11,12 +17,12 @@ color_expr = (
 )
 
 
-STYLE = {
+STYLE = json.dumps({
     "version": 8,
     "sources": {
         "ownership": {
             "type": "vector",
-            "url": "mbtiles://sa_ownership",
+            "url": f"mbtiles://{TILE_DIR}/sa_ownership.mbtiles",
             "tileSize": 256,
         }
     },
@@ -36,10 +42,10 @@ STYLE = {
             "paint": {"line-width": 0.5, "line-color": "#AAAAAA", "line-opacity": 1},
         },
     ],
-}
+})
 
 
-async def get_ownership_map_image(center, zoom, width, height):
+def get_ownership_map_image(center, zoom, width, height):
     """Create a rendered map image of land owner values from ownership data.
 
     Parameters
@@ -56,18 +62,9 @@ async def get_ownership_map_image(center, zoom, width, height):
     Image object
     """
 
-    params = {
-        "style": STYLE,
-        "center": center,
-        "zoom": zoom,
-        "width": width,
-        "height": height,
-    }
-
     try:
-        map = await render_mbgl_map(params)
+        img_data = Map(STYLE, width, height, 1, *center, zoom=zoom).renderBuffer()
+        return Image.frombytes("RGBA", (width, height), img_data), None
 
     except Exception as ex:
         return None, f"Error generating ownership image ({type(ex)}): {ex}"
-
-    return map, None

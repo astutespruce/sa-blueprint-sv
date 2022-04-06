@@ -1,9 +1,11 @@
 from copy import deepcopy
+import json
 
 import pygeos as pg
+from pymgl import Map
 
+from api.settings import MAPBOX_ACCESS_TOKEN, TILE_DIR
 from analysis.lib.pygeos_util import to_dict
-from .util import render_mbgl_map
 
 
 ZOOM = 2.6
@@ -19,12 +21,12 @@ LOCATOR_STYLE = {
     "sources": {
         "basemap": {
             "type": "raster",
-            "url": "mbtiles://basemap_esri_ocean",
+            "url": f"mbtiles://{TILE_DIR}/basemap_esri_ocean.mbtiles",
             "tileSize": 256,
         },
-        "states": {"type": "vector", "url": "mbtiles://states"},
-        "map_units": {"type": "vector", "url": "mbtiles://sa_map_units"},
-        "mask": {"type": "vector", "url": "mbtiles://sa_mask"},
+        "states": {"type": "vector", "url": f"mbtiles://{TILE_DIR}/states.mbtiles"},
+        "map_units": {"type": "vector", "url": f"mbtiles://{TILE_DIR}/sa_map_units.mbtiles"},
+        "mask": {"type": "vector", "url": f"mbtiles://{TILE_DIR}/sa_mask.mbtiles"},
     },
     "layers": [
         {"id": "basemap", "type": "raster", "source": "basemap"},
@@ -62,7 +64,7 @@ LOCATOR_STYLE = {
 }
 
 
-async def get_locator_map_image(longitude, latitude, bounds, geometry=None):
+def get_locator_map_image(longitude, latitude, bounds, geometry=None):
     """
     Create a rendered locator map image.
 
@@ -84,7 +86,8 @@ async def get_locator_map_image(longitude, latitude, bounds, geometry=None):
 
     Returns
     -------
-    Image object
+    bytes
+        PNG image bytes
     """
 
     style = deepcopy(LOCATOR_STYLE)
@@ -123,18 +126,9 @@ async def get_locator_map_image(longitude, latitude, bounds, geometry=None):
             "data": {"type": "Point", "coordinates": [longitude, latitude]},
         }
 
-    params = {
-        "style": style,
-        "center": CENTER,
-        "zoom": ZOOM,
-        "width": WIDTH,
-        "height": HEIGHT,
-    }
-
     try:
-        map = await render_mbgl_map(params)
+        return Map(json.dumps(style), WIDTH, HEIGHT, 1, *CENTER, zoom=ZOOM, token=MAPBOX_ACCESS_TOKEN, provider="mapbox").renderPNG(), None
 
     except Exception as ex:
         return None, f"Error generating locator image ({type(ex)}): {ex}"
 
-    return map, None
