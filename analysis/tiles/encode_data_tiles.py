@@ -26,43 +26,52 @@ bnd_filename = data_dir / "boundaries/sa_boundary.feather"
 EPS = 1e-6
 
 
+# IMPORTANT: this is getting reworked so that indicator presence masks are avoided
+# and where needed value ranges are shifted up by 1 value so that 0 is always NODATA
+
+
 ### Create groups to contain indicators and corridors up to 24 bits each
 # NOTE: this is partly based on extent
 groups = [
     [
-        "freshwater_imperiledaquaticspecies",
-        "freshwater_networkcomplexity",
-        "freshwater_permeablesurface",
-        "freshwater_riparianbuffers",
-        "freshwater_atlanticmigratoryfishhabitat",
+        "blueprint",  # temporary, so we can render it at same resolution
+        "corridors", # may go away?
+        "freshwater_imperiledaquaticspecies", # 0 is meaningful, shift values up 1
+        "freshwater_networkcomplexity", # 0 = absent
+        "freshwater_permeablesurface", # 0 = absent
+        "freshwater_riparianbuffers", # 0 = absent
+        "freshwater_atlanticmigratoryfishhabitat", # 0 is meaningful, shift values up 1
+        "freshwater_gulfmigratoryfishhabitat",
     ],
+    # marine / coastal indicators
     [
+        "land_beachbirds",
+        "land_maritimeforestextent",
+        "land_shorelinecondition",
         "marine_estuarinecondition",
         "marine_fishhabitat",
         "marine_hardbottomcoral",
         "marine_mammals",
-        "land_maritimeforestextent",
-        "land_shorelinecondition",
+        "marine_birds"
     ],
     [
-        "freshwater_gulfmigratoryfishhabitat",
+        "land_amphibianreptiles",
         "land_equitableparkaccess",
         "land_forestedwetlandextent",
         "land_greenways",
         "land_intactcores",
         "land_lowurbanhistoric",
+        "land_marshbirds",
+        "land_marshextent",
         "land_pinebirds",
     ],
     [
-        "land_amphibianreptiles",
-        "land_marshbirds",
-        "land_marshextent",
+        "land_firefrequency",
+        "land_forestbirds",
         "land_piedmontprairie",
         "land_resilientsites",
         "land_urbanparksize",
-        "corridors",
     ],
-    ["land_beachbirds", "land_firefrequency", "land_forestbirds", "marine_birds"],
 ]
 
 
@@ -80,39 +89,68 @@ df = pd.DataFrame(
     ],
     columns=["ecosystem", "id", "filename", "min_value", "max_value"],
 )
-df = df.append(
-    {
-        "ecosystem": "",
-        "id": "corridors",
-        "filename": corridors_filename,
-        "min_value": 0,
-        "max_value": 3,
-    },
-    ignore_index=True,
-    sort=False,
+df = pd.concat([df,
+    pd.DataFrame([
+        # temp, so that we can render blueprint at same resolution
+        {
+            "ecosystem": "",
+            "id": "blueprint",
+            "filename": blueprint_filename,
+            "min_value": 0,
+            "max_value": 4,
+        },
+        {
+            "ecosystem": "",
+            "id": "corridors",
+            "filename": corridors_filename,
+            "min_value": 0,
+            "max_value": 3,
+        }
+    ])]
 )
 df = df.set_index("id")
 
+# any indicators that have listed 0 values need to be shifted up 1
+df['value_shift'] = (df.min_value == 0).astype('uint8')
+df.loc[df.value_shift==1, 'max_value'] += 1
+
 df["bits"] = df.max_value.apply(lambda x: ceil(log2(max(x, 2) + EPS)))
-# if min value declared is > 0, then we aren't showing those 0 values elsewhere
-df["ignore_0"] = df.min_value > 0
 df["src"] = df.filename.apply(lambda x: rasterio.open(x))
 df["nodata"] = df.src.apply(lambda src: int(src.nodata))
 
+df['group'] = 0
+df['position'] = 0
+id = pd.Series(df.index)
 for i, ids in enumerate(groups):
-    df.loc[df.index.isin(ids), "group"] = i
+    ix = df.index.isin(ids)
+    df.loc[ix, "group"] = i
+    df.loc[ix, 'position'] = id.loc[ix].apply(lambda x: ids.index(x)).values
 
-df.group = df.group.astype("uint8")
+df = df.sort_values(by=['group', 'position'])
+
+df['offset'] = 0
+
+# calculate bit offsets for each entity within each group
+for group in df.group.unique():
+    df.loc[df.group==group, 'offset'] = np.cumsum(df.loc[df.group==group].bits) - df.loc[df.group==group].bits
+
+for col in ['group', 'position', 'bits', 'offset', 'min_value', 'max_value']:
+    df[col] = df[col].astype('uint8')
 
 # NOTE: groups must be stored in encoding definition
 # in exactly the same order they are encoded
-df[["group", "bits"]].reset_index().to_feather(out_dir / "encoding.feather")
+df[["group", "position", "offset", "bits", "value_shift"]].reset_index().to_feather(out_dir / "encoding.feather")
+
+group_bits = df.groupby("group").bits.sum()
 
 print("Planned bits per group")
-print(df.groupby("group").size() + df.groupby("group").bits.sum())
+print(group_bits)
+
+if group_bits.max() > 24:
+    raise ValueError("Group bits must be <= 24")
 
 
-### determine the windows that overlap bounds
+### determine the block windows that overlap bounds
 # everything else will be filled with 0
 print("Calculating overlapping windows")
 bnd = gp.read_feather(bnd_filename).geometry.values.data[0]
@@ -126,12 +164,10 @@ ix = tree.query(bnd, predicate="intersects")
 ix.sort()
 windows = windows[ix]
 
+
 for i in sorted(df.group.unique()):
     rows = df.loc[df.group == i]
-    total_bits = rows.bits.sum() + len(rows)
-
-    if total_bits > 24:
-        raise ValueError("Bits per group must be <= 24")
+    total_bits = rows.bits.sum()
 
     # Find least number of bands that will hold the encoded data
     if total_bits <= 8:
@@ -148,55 +184,30 @@ for i in sorted(df.group.unique()):
 
     out = np.zeros(shape=blueprint.shape, dtype=dtype)
 
-    # FIXME:
-    # windows = windows[57469:]
+    # windows = windows[957:958] # example window with data
 
     for window in Bar(
         f"Processing group {i} ({total_bits} bits)", max=len(windows)
     ).iter(windows):
-        masks = []
+        window_shape = (window.height, window.width)
+        ix = window.toslices()
+        has_data = False
         layer_bits = []
         for id in rows.index:
             row = rows.loc[id]
 
             data = row.src.read(1, window=window)
 
-            # extract presence mask
-            if row.ignore_0:
-                mask = (data != row.nodata) & (data != 0)
+            # shift values up if needed
+            if row.value_shift:
+                data[data!=row.nodata] += 1
 
-            else:
-                mask = data != row.nodata
+            # set nodata pixels to 0 (combined with existing 0 values that are below row.min_value)
+            data[data==row.nodata] = 0
 
-            masks.append(mask)
+            if data.max() > 0:
+                out[ix] = np.bitwise_or(np.left_shift(data.astype('uint32'), row.offset), out[ix])
 
-            # set nodata pixels to 0
-            data[~mask] = 0
-
-            # the inner unpack must be in big bit order to get bits in right direction
-            bits = np.unpackbits(data, bitorder="big").reshape(data.shape + (8,))[
-                :, :, -row.bits :
-            ]
-            layer_bits.append(bits)
-
-        # if masks are all false for this window, we can skip this step
-        if not np.asarray(masks).sum():
-            continue
-
-        # stack mask bits and layer_bits along inner dimension so that we have a shape of
-        # (height, width, total_bits)
-        data_bits = np.dstack(masks + layer_bits)
-
-        # packbits must be in little order to read the whole array properly in JS
-        packed = np.squeeze(np.packbits(data_bits, axis=-1, bitorder="little"))
-
-        window_shape = (window.height, window.width)
-
-        # fill remaining bytes up to dtype bytes
-        fill = np.zeros(shape=window_shape, dtype="uint8")
-
-        encoded = np.dstack([packed] + ([fill] * (num_bytes - packed.shape[-1])))
-        out[window.toslices()] = encoded.view(dtype).reshape(window_shape)
 
     # determine the window where data are available, and write out a smaller output
     print("Calculating data window...")
@@ -209,3 +220,10 @@ for i in sorted(df.group.unique()):
     write_raster(outfilename, out, transform=transform, crs=blueprint.crs, nodata=0)
 
     add_overviews(outfilename)
+
+
+#### Notes
+# to verify that values are encoded correctly
+# 1. cast encoded values to correct type (e.g., uint16): value = encoded[106,107].view('uint16')
+# 2. use bit shifting and bit AND logic to extract value, based on offset and nbits:
+# (value >> offset) & ((2**nbits)-1) # => original value

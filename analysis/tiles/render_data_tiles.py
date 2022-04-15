@@ -10,16 +10,19 @@ src_dir = Path("data/for_tiles")
 out_dir = Path("tiles")
 
 
-tile_size = 128
+# tile_size = 128
+tile_size = 512
 min_zoom = 7
-max_zoom = 14  # NOTE: z14 takes 2+ hours per tileset
+max_zoom = 10
+# max_zoom = 14  # NOTE: z14 takes 2+ hours per tileset
 
 
 df = pd.read_feather(src_dir / "encoding.feather")
 
 start = time()
 
-for group in sorted(df.group.unique()):
+# FIXME:
+for group in sorted(df.group.unique())[1:]:
     print(f"Processing group {group}...")
     group_start = time()
 
@@ -28,10 +31,7 @@ for group in sorted(df.group.unique()):
 
     rows = df.loc[df.group == group]
 
-    encoding = {
-        "bits": rows.bits.sum().item() + len(rows),
-        "layers": rows[["id", "bits"]].to_dict(orient="records"),
-    }
+    encoding = rows[["id", "offset", "bits", "value_shift"]].to_dict(orient="records")
 
     tif_to_mbtiles(
         filename,
