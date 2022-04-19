@@ -4,6 +4,7 @@ import json
 
 import pandas as pd
 from tilecutter.mbtiles import tif_to_mbtiles
+from tilecutter.png import to_smallest_png
 
 
 src_dir = Path("data/for_tiles")
@@ -12,17 +13,21 @@ out_dir = Path("tiles")
 
 # tile_size = 128
 tile_size = 512
-min_zoom = 7
+min_zoom = 4
 max_zoom = 10
 # max_zoom = 14  # NOTE: z14 takes 2+ hours per tileset
+
+# IMPORTANT: need to force tile renderer to always use RGB output even if individual
+# tile can fit into a palette, otherwise we can't decode properly
+renderer = lambda arr: to_smallest_png(arr, image_type="RGB")
 
 
 df = pd.read_feather(src_dir / "encoding.feather")
 
 start = time()
 
-# FIXME:
-for group in sorted(df.group.unique())[1:]:
+
+for group in sorted(df.group.unique()):
     print(f"Processing group {group}...")
     group_start = time()
 
@@ -39,6 +44,7 @@ for group in sorted(df.group.unique())[1:]:
         min_zoom=min_zoom,
         max_zoom=max_zoom,
         tile_size=tile_size,
+        tile_renderer=renderer,
         metadata={
             "name": "South Atlantic Conservation Blueprint 2021 Indicators",
             "description": "Indicators used in the South Atlantic Conservation Blueprint 2021",

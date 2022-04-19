@@ -154,7 +154,6 @@ if group_bits.max() > 24:
 # everything else will be filled with 0
 print("Calculating overlapping windows")
 bnd = gp.read_feather(bnd_filename).geometry.values.data[0]
-
 blueprint = rasterio.open(blueprint_filename)
 windows = np.array([w for _, w in blueprint.block_windows(1)])
 bounds = np.array([blueprint.window_bounds(w) for w in windows]).T
@@ -207,7 +206,6 @@ for i in sorted(df.group.unique()):
 
             if data.max() > 0:
                 out[ix] = np.bitwise_or(np.left_shift(data.astype('uint32'), row.offset), out[ix])
-
 
     # determine the window where data are available, and write out a smaller output
     print("Calculating data window...")
