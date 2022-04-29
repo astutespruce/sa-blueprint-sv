@@ -17,9 +17,9 @@ min_zoom = 4
 max_zoom = 10
 # max_zoom = 14  # NOTE: z14 takes 2+ hours per tileset
 
-# IMPORTANT: need to force tile renderer to always use RGB output even if individual
-# tile can fit into a palette, otherwise we can't decode properly
-renderer = lambda arr: to_smallest_png(arr, image_type="RGB")
+# IMPORTANT: need to force tile renderer to always use either paletted RGB or
+# full RGB; cannot use grayscale (L) or it won't be decoded properly
+renderer = lambda arr: to_smallest_png(arr, image_type="P" if arr.max() < 255 else "RGB")
 
 
 df = pd.read_feather(src_dir / "encoding.feather")
