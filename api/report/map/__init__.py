@@ -10,10 +10,10 @@ from .basemap import get_basemap_image
 from .locator import get_locator_map_image
 from .ownership import get_ownership_map_image
 from .protection import get_protection_map_image
-from .raster import render_raster, extract_data_for_map
+from .raster import render_raster
 from .summary_unit import get_summary_unit_map_image
 from .mercator import get_zoom, get_map_bounds, get_map_scale
-from .util import pad_bounds, get_center, to_base64, merge_maps
+from .util import pad_bounds, get_center, png_bytes_to_base64, to_base64, merge_maps
 
 from analysis.constants import (
     BLUEPRINT_COLORS,
@@ -37,27 +37,6 @@ blueprint_filename = src_dir / "blueprint2021.tif"
 corridors_filename = src_dir / "corridors.tif"
 urban_filename = src_dir / "threats/urban/urban_2060.tif"
 slr_filename = src_dir / "threats/slr/slr.vrt"
-
-
-async def render_mbgl_maps(**kwargs):
-    """Asynchronously render MBGL maps based on number of MAP_RENDER_THREADS
-
-    Returns
-    -------
-    dict, dict
-        tuple of (maps, errors) keyed by map ID
-    """
-    results = await asyncio.gather(*kwargs.values())
-    results = zip(kwargs.keys(), results)
-
-    maps = {}
-    errors = {}
-    for key, (map, error) in results:
-        maps[key] = map
-        if error is not None:
-            errors[key] = error
-
-    return maps, errors
 
 
 def render_raster_map(bounds, scale, basemap_image, aoi_image, id, path, colors):
@@ -207,43 +186,50 @@ async def render_maps(
     bounds = get_map_bounds(center, zoom, WIDTH, HEIGHT)
     scale = get_map_scale(bounds, WIDTH)
 
-    tasks = {
-        "locator": get_locator_map_image(*center, bounds=bounds, geometry=geometry),
-        "basemap": get_basemap_image(center, zoom, WIDTH, HEIGHT),
-    }
+    locator_image, error = get_locator_map_image(
+        *center, bounds=bounds, geometry=geometry
+    )
+    if error:
+        errors["locator"] = error
+    else:
+        maps["locator"] = png_bytes_to_base64(locator_image)
 
+    basemap_image, error = get_basemap_image(center, zoom, WIDTH, HEIGHT)
+    if error:
+        errors["basemap"] = error
+
+    aoi_image = None
     if geometry:
-        tasks["aoi"] = get_aoi_map_image(geometry, center, zoom, WIDTH, HEIGHT)
+        aoi_image, error = get_aoi_map_image(geometry, center, zoom, WIDTH, HEIGHT)
+        if error:
+            errors["aoi"] = error
 
     elif summary_unit_id:
-        tasks["aoi"] = get_summary_unit_map_image(
+        aoi_image, error = get_summary_unit_map_image(
             summary_unit_id, center, zoom, WIDTH, HEIGHT
         )
+        if error:
+            errors["aoi"] = error
 
+    ownership_image = None
     if ownership:
-        tasks["ownership"] = get_ownership_map_image(center, zoom, WIDTH, HEIGHT)
+        ownership_image, error = get_ownership_map_image(center, zoom, WIDTH, HEIGHT)
+        if error:
+            errors["ownership"] = error
+        else:
+            maps["ownership"] = to_base64(
+                merge_maps([basemap_image, ownership_image, aoi_image])
+            )
 
+    protection_image = None
     if protection:
-        tasks["protection"] = get_protection_map_image(center, zoom, WIDTH, HEIGHT)
-
-    mbgl_maps, mbgl_map_errors = await render_mbgl_maps(**tasks)
-    errors.update(mbgl_map_errors)
-
-    maps["locator"] = to_base64(mbgl_maps["locator"])
-    basemap_image = mbgl_maps.get("basemap", None)
-    aoi_image = mbgl_maps.get("aoi", None)
-
-    ownership_image = mbgl_maps.get("ownership", None)
-    if ownership_image is not None:
-        maps["ownership"] = to_base64(
-            merge_maps([basemap_image, mbgl_maps["ownership"], aoi_image])
-        )
-
-    protection_image = mbgl_maps.get("protection", None)
-    if protection_image is not None:
-        maps["protection"] = to_base64(
-            merge_maps([basemap_image, mbgl_maps["protection"], aoi_image])
-        )
+        protection_image, error = get_protection_map_image(center, zoom, WIDTH, HEIGHT)
+        if error:
+            errors["protection"] = error
+        else:
+            maps["protection"] = to_base64(
+                merge_maps([basemap_image, protection_image, aoi_image])
+            )
 
     # Use background threads for rendering rasters
     raster_maps, raster_map_errors = await render_raster_maps(

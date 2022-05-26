@@ -1,8 +1,10 @@
 from copy import deepcopy
+import json
+
+from PIL import Image
+from pymgl import Map
 
 from analysis.lib.pygeos_util import to_dict
-
-from .util import render_mbgl_map
 
 
 STYLE = {
@@ -19,7 +21,7 @@ STYLE = {
 }
 
 
-async def get_aoi_map_image(geometry, center, zoom, width, height):
+def get_aoi_map_image(geometry, center, zoom, width, height):
     """Create a rendered map image of the area of interest.
 
     Parameters
@@ -40,18 +42,10 @@ async def get_aoi_map_image(geometry, center, zoom, width, height):
     style = deepcopy(STYLE)
     style["sources"]["aoi"]["data"] = to_dict(geometry)
 
-    params = {
-        "style": style,
-        "center": center,
-        "zoom": zoom,
-        "width": width,
-        "height": height,
-    }
-
     try:
-        map = await render_mbgl_map(params)
+        img_data = Map(json.dumps(style), width, height, 1, *center, zoom=zoom).renderBuffer()
+        return Image.frombytes("RGBA", (width, height), img_data), None
 
     except Exception as ex:
         return None, f"Error generating aoi image ({type(ex)}): {ex}"
 
-    return map, None

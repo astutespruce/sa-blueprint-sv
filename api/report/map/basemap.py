@@ -1,7 +1,10 @@
-from .util import render_mbgl_map
+import json
+
+from PIL import Image
+from pymgl import Map
 
 
-STYLE = {
+STYLE = json.dumps({
     "version": 8,
     "sources": {
         "basemap": {
@@ -13,10 +16,11 @@ STYLE = {
         }
     },
     "layers": [{"id": "basemap", "type": "raster", "source": "basemap"}],
-}
+})
 
 
-async def get_basemap_image(center, zoom, width, height):
+
+def get_basemap_image(center, zoom, width, height):
     """Create a rendered map image of the basemap.
 
     Parameters
@@ -32,18 +36,10 @@ async def get_basemap_image(center, zoom, width, height):
     -------
     Image object
     """
-    params = {
-        "style": STYLE,
-        "center": center,
-        "zoom": zoom,
-        "width": width,
-        "height": height,
-    }
 
     try:
-        map = await render_mbgl_map(params)
+        img_data = Map(STYLE, width, height, 1, *center, zoom=zoom).renderBuffer()
+        return Image.frombytes("RGBA", (width, height), img_data), None
 
     except Exception as ex:
         return None, f"Error generating basemap image ({type(ex)}): {ex}"
-
-    return map, None
