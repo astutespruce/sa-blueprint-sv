@@ -1,6 +1,4 @@
-import arq
-
-from api.settings import REDIS, JOB_TIMEOUT
+from api.settings import JOB_TIMEOUT
 
 
 JOB_PREFIX = "arq:job-progress:"

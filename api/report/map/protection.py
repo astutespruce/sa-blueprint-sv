@@ -1,12 +1,10 @@
 import json
-from analysis.constants import PROTECTION
 
 from PIL import Image
 from pymgl import Map
 
 from api.settings import TILE_DIR
-
-
+from analysis.constants import PROTECTION
 
 
 # interleave keys and colors for mapbox
@@ -17,32 +15,38 @@ color_expr = (
 )
 
 
-STYLE = json.dumps({
-    "version": 8,
-    "sources": {
-        "ownership": {
-            "type": "vector",
-            "url": f"mbtiles://{TILE_DIR}/sa_ownership.mbtiles",
-            "tileSize": 256,
-        }
-    },
-    "layers": [
-        {
-            "id": "fill",
-            "source": "ownership",
-            "source-layer": "ownership",
-            "type": "fill",
-            "paint": {"fill-opacity": 0.7, "fill-color": color_expr},
+STYLE = json.dumps(
+    {
+        "version": 8,
+        "sources": {
+            "ownership": {
+                "type": "vector",
+                "url": f"mbtiles://{TILE_DIR}/sa_ownership.mbtiles",
+                "tileSize": 256,
+            }
         },
-        {
-            "id": "outline",
-            "source": "ownership",
-            "source-layer": "ownership",
-            "type": "line",
-            "paint": {"line-width": 0.5, "line-color": "#AAAAAA", "line-opacity": 1},
-        },
-    ],
-})
+        "layers": [
+            {
+                "id": "fill",
+                "source": "ownership",
+                "source-layer": "ownership",
+                "type": "fill",
+                "paint": {"fill-opacity": 0.7, "fill-color": color_expr},
+            },
+            {
+                "id": "outline",
+                "source": "ownership",
+                "source-layer": "ownership",
+                "type": "line",
+                "paint": {
+                    "line-width": 0.5,
+                    "line-color": "#AAAAAA",
+                    "line-opacity": 1,
+                },
+            },
+        ],
+    }
+)
 
 
 def get_protection_map_image(center, zoom, width, height):

@@ -39,7 +39,6 @@ urban_filename = src_dir / "threats/urban/urban_2060.tif"
 slr_filename = src_dir / "threats/slr/slr.vrt"
 
 
-
 def render_raster_map(bounds, scale, basemap_image, aoi_image, id, path, colors):
     """Render raster dataset map based on bounds.  Merge this over basemap image
     and under aoi_image.
@@ -187,13 +186,15 @@ async def render_maps(
     bounds = get_map_bounds(center, zoom, WIDTH, HEIGHT)
     scale = get_map_scale(bounds, WIDTH)
 
-    locator_image, error = get_locator_map_image(*center, bounds=bounds, geometry=geometry)
+    locator_image, error = get_locator_map_image(
+        *center, bounds=bounds, geometry=geometry
+    )
     if error:
         errors["locator"] = error
     else:
-        locator_image = png_bytes_to_base64(locator_image)
+        maps["locator"] = png_bytes_to_base64(locator_image)
 
-    basemap_image, error= get_basemap_image(center, zoom, WIDTH, HEIGHT)
+    basemap_image, error = get_basemap_image(center, zoom, WIDTH, HEIGHT)
     if error:
         errors["basemap"] = error
 
