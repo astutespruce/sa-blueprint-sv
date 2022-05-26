@@ -3,6 +3,7 @@
 import logging
 import tempfile
 
+import arq
 import numpy as np
 from pyogrio import read_dataframe
 import pygeos as pg
@@ -10,7 +11,7 @@ import pygeos as pg
 from api.errors import DataError
 from api.report.map import render_maps
 from api.report import create_report
-from api.settings import LOGGING_LEVEL, TEMP_DIR, CUSTOM_REPORT_MAX_ACRES
+from api.settings import LOGGING_LEVEL, TEMP_DIR, CUSTOM_REPORT_MAX_ACRES, REDIS
 from api.stats import CustomArea
 from api.progress import set_progress
 
@@ -50,7 +51,7 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
 
     errors = []
 
-    await set_progress(ctx["job_id"], 0, "Loading data")
+    await set_progress(ctx["redis"], ctx["job_id"], 0, "Loading data")
 
     path = f"/vsizip/{zip_filename}/{dataset}"
 
@@ -58,7 +59,7 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
 
     geometry = pg.make_valid(df.geometry.values.data)
 
-    await set_progress(ctx["job_id"], 5, "Preparing area of interest")
+    await set_progress(ctx["redis"], ctx["job_id"], 5, "Preparing area of interest")
 
     # dissolve
     geometry = np.asarray([pg.union_all(geometry)])
@@ -76,7 +77,7 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
         )
 
     await set_progress(
-        ctx["job_id"], 10, "Calculating results (this might take a while)"
+        ctx["redis"], ctx["job_id"], 10, "Calculating results (this might take a while)"
     )
 
     ### calculate results, data must be in DATA_CRS
@@ -95,7 +96,9 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
     has_ownership = "ownership" in results
     has_protection = "protection" in results
 
-    await set_progress(ctx["job_id"], 25, "Creating maps (this might take a while)")
+    await set_progress(
+        ctx["redis"], ctx["job_id"], 25, "Creating maps (this might take a while)"
+    )
 
     print("Rendering maps...")
     maps, scale, map_errors = await render_maps(
@@ -120,20 +123,24 @@ async def create_custom_report(ctx, zip_filename, dataset, layer, name=""):
             errors.append("Error creating one or more maps")
 
     await set_progress(
-        ctx["job_id"], 75, "Creating PDF (this might take a while)", errors=errors
+        ctx["redis"],
+        ctx["job_id"],
+        75,
+        "Creating PDF (this might take a while)",
+        errors=errors,
     )
 
     results["scale"] = scale
 
     pdf = create_report(maps=maps, results=results)
 
-    await set_progress(ctx["job_id"], 95, "Nearly done", errors=errors)
+    await set_progress(ctx["redis"], ctx["job_id"], 95, "Nearly done", errors=errors)
 
     fp, name = tempfile.mkstemp(suffix=".pdf", dir=TEMP_DIR)
     with open(fp, "wb") as out:
         out.write(pdf)
 
-    await set_progress(ctx["job_id"], 100, "All done!", errors=errors)
+    await set_progress(ctx["redis"], ctx["job_id"], 100, "All done!", errors=errors)
 
     log.debug(f"Created PDF at: {name}")
 
