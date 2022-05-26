@@ -32,7 +32,7 @@ uvicorn = "*"
 weasyprint = "*"
 pygeos = "*"
 pyarrow = "*"
-pymgl = "==0.2.0"
+pymgl = "*"
 
 [requires]
 python_version = "3.9"
