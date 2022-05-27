@@ -127,8 +127,19 @@ def get_locator_map_image(longitude, latitude, bounds, geometry=None):
         }
 
     try:
-        return Map(json.dumps(style), WIDTH, HEIGHT, 1, *CENTER, zoom=ZOOM, token=MAPBOX_ACCESS_TOKEN, provider="mapbox").renderPNG(), None
+        return (
+            Map(
+                json.dumps(style),
+                WIDTH,
+                HEIGHT,
+                1,
+                *CENTER,
+                zoom=ZOOM,
+                token=MAPBOX_ACCESS_TOKEN,
+                provider="mapbox",
+            ).renderPNG(),
+            None,
+        )
 
     except Exception as ex:
         return None, f"Error generating locator image ({type(ex)}): {ex}"
-

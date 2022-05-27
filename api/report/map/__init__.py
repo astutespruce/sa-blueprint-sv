@@ -1,9 +1,6 @@
 import asyncio
-import json
 from pathlib import Path
 from concurrent.futures import ThreadPoolExecutor
-
-import rasterio
 
 from .aoi import get_aoi_map_image
 from .basemap import get_basemap_image
@@ -21,7 +18,6 @@ from analysis.constants import (
     INDICATOR_INDEX,
     URBAN_LEGEND,
     SLR_LEGEND,
-    CORRIDORS,
 )
 from api.settings import MAP_RENDER_THREADS
 
