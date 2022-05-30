@@ -42,6 +42,7 @@ from api.progress import get_progress
 log = logging.getLogger("api")
 log.setLevel(LOGGING_LEVEL)
 
+
 ### Create the main API app
 app = FastAPI()
 
@@ -193,8 +194,7 @@ async def custom_report_endpoint(
         raise HTTPException(status_code=500, detail="Internal server error")
 
     finally:
-        redis.close()
-        await redis.wait_closed()
+        await redis.close()
 
 
 @app.post("/api/reports/huc12/{unit_id}")
@@ -212,8 +212,7 @@ async def huc12_report_endpoint(unit_id: str, token: APIKey = Depends(get_token)
         raise HTTPException(status_code=500, detail="Internal server error")
 
     finally:
-        redis.close()
-        await redis.wait_closed()
+        await redis.close()
 
 
 @app.post("/api/reports/marine_blocks/{unit_id}")
@@ -235,8 +234,7 @@ async def marine_blocks_report_endpoint(
         raise HTTPException(status_code=500, detail="Internal server error")
 
     finally:
-        redis.close()
-        await redis.wait_closed()
+        await redis.close()
 
 
 @app.get("/api/reports/status/{job_id}")
@@ -269,7 +267,7 @@ async def job_status_endpoint(job_id: str):
             raise HTTPException(status_code=404, detail="Job not found")
 
         if status != JobStatus.complete:
-            progress, message, errors = await get_progress(job_id)
+            progress, message, errors = await get_progress(redis, job_id)
 
             return {
                 "status": status,
@@ -303,8 +301,7 @@ async def job_status_endpoint(job_id: str):
         return {"status": "failed", "detail": message}
 
     finally:
-        redis.close()
-        await redis.wait_closed()
+        await redis.close()
 
 
 @app.get("/api/reports/results/{job_id}")
@@ -335,8 +332,7 @@ async def report_pdf_endpoint(job_id: str):
         return FileResponse(path, filename=f"{name}.pdf", media_type="application/pdf")
 
     finally:
-        redis.close()
-        await redis.wait_closed()
+        await redis.close()
 
 
 security = HTTPBasic()
@@ -377,5 +373,4 @@ async def get_jobs(credentials: HTTPBasicCredentials = Depends(security)):
         return {"queued": queued, "completed": results}
 
     finally:
-        redis.close()
-        await redis.wait_closed()
+        await redis.close()
