@@ -19,6 +19,8 @@ src_dir = data_dir / "indicators"
 out_dir = Path("data/for_tiles")
 blueprint_filename = data_dir / "blueprint2021.tif"
 corridors_filename = data_dir / "corridors.tif"
+urban_filename = out_dir / "stacked_urban_30m.tif"
+slr_filename = out_dir / "slr_30m.tif"
 bnd_filename = data_dir / "boundaries/sa_boundary.feather"
 
 
@@ -34,25 +36,25 @@ EPS = 1e-6
 # NOTE: this is partly based on extent
 groups = [
     [
-        "blueprint",  # temporary, so we can render it at same resolution
-        "corridors", # may go away?
-        "freshwater_imperiledaquaticspecies", # 0 is meaningful, shift values up 1
-        "freshwater_networkcomplexity", # 0 = absent
-        "freshwater_permeablesurface", # 0 = absent
-        "freshwater_riparianbuffers", # 0 = absent
-        "freshwater_atlanticmigratoryfishhabitat", # 0 is meaningful, shift values up 1
+        "blueprint",  # include in tiles so that we can render it after applying masks
+        "corridors",  # may go away?
+        "freshwater_imperiledaquaticspecies",  # 0 is meaningful, shift values up 1
+        "freshwater_networkcomplexity",  # 0 = absent
+        "freshwater_permeablesurface",  # 0 = absent
+        "freshwater_riparianbuffers",  # 0 = absent
+        "freshwater_atlanticmigratoryfishhabitat",  # 0 is meaningful, shift values up 1
         "freshwater_gulfmigratoryfishhabitat",
     ],
     # marine / coastal indicators
     [
-        "land_beachbirds",
         "land_maritimeforestextent",
+        "land_beachbirds",
         "land_shorelinecondition",
+        "slr",
         "marine_estuarinecondition",
         "marine_fishhabitat",
+        "marine_birds",
         "marine_hardbottomcoral",
-        "marine_mammals",
-        "marine_birds"
     ],
     [
         "land_amphibianreptiles",
@@ -71,6 +73,9 @@ groups = [
         "land_piedmontprairie",
         "land_resilientsites",
         "land_urbanparksize",
+        "urban",
+        # spillover from others
+        "marine_mammals",
     ],
 ]
 
@@ -89,57 +94,91 @@ df = pd.DataFrame(
     ],
     columns=["ecosystem", "id", "filename", "min_value", "max_value"],
 )
-df = pd.concat([df,
-    pd.DataFrame([
-        # temp, so that we can render blueprint at same resolution
-        {
-            "ecosystem": "",
-            "id": "blueprint",
-            "filename": blueprint_filename,
-            "min_value": 0,
-            "max_value": 4,
-        },
-        {
-            "ecosystem": "",
-            "id": "corridors",
-            "filename": corridors_filename,
-            "min_value": 0,
-            "max_value": 3,
-        }
-    ])]
+df = pd.concat(
+    [
+        df,
+        pd.DataFrame(
+            [
+                # temp, so that we can render blueprint at same resolution
+                {
+                    "ecosystem": "",
+                    "id": "blueprint",
+                    "filename": blueprint_filename,
+                    "min_value": 0,
+                    "max_value": 4,
+                },
+                {
+                    "ecosystem": "",
+                    "id": "corridors",
+                    "filename": corridors_filename,
+                    "min_value": 0,
+                    "max_value": 3,
+                },
+                {
+                    "ecosystem": "",
+                    "id": "urban",
+                    "filename": urban_filename,
+                    "min_value": 0,
+                    "max_value": 10,
+                },
+                {
+                    "ecosystem": "",
+                    "id": "slr",
+                    "filename": slr_filename,
+                    "min_value": 0,
+                    "max_value": 6,
+                },
+            ]
+        ),
+    ]
 )
 df = df.set_index("id")
 
 # any indicators that have listed 0 values need to be shifted up 1
-df['value_shift'] = (df.min_value == 0).astype('uint8')
-df.loc[df.value_shift==1, 'max_value'] += 1
+df["value_shift"] = (df.min_value == 0).astype("uint8")
+df.loc[df.value_shift == 1, "max_value"] += 1
 
 df["bits"] = df.max_value.apply(lambda x: ceil(log2(max(x, 2) + EPS)))
 df["src"] = df.filename.apply(lambda x: rasterio.open(x))
 df["nodata"] = df.src.apply(lambda src: int(src.nodata))
 
-df['group'] = 0
-df['position'] = 0
+df["group"] = 0
+df["position"] = 0
 id = pd.Series(df.index)
 for i, ids in enumerate(groups):
     ix = df.index.isin(ids)
     df.loc[ix, "group"] = i
-    df.loc[ix, 'position'] = id.loc[ix].apply(lambda x: ids.index(x)).values
+    df.loc[ix, "position"] = id.loc[ix].apply(lambda x: ids.index(x)).values
 
-df = df.sort_values(by=['group', 'position'])
+df = df.sort_values(by=["group", "position"])
 
-df['offset'] = 0
+df["offset"] = 0
 
 # calculate bit offsets for each entity within each group
 for group in df.group.unique():
-    df.loc[df.group==group, 'offset'] = np.cumsum(df.loc[df.group==group].bits) - df.loc[df.group==group].bits
+    df.loc[df.group == group, "offset"] = (
+        np.cumsum(df.loc[df.group == group].bits) - df.loc[df.group == group].bits
+    )
 
-for col in ['group', 'position', 'bits', 'offset', 'min_value', 'max_value']:
-    df[col] = df[col].astype('uint8')
+for col in ["group", "position", "bits", "offset", "min_value", "max_value"]:
+    df[col] = df[col].astype("uint8")
 
 # NOTE: groups must be stored in encoding definition
 # in exactly the same order they are encoded
-df[["group", "position", "offset", "bits", "value_shift"]].reset_index().to_feather(out_dir / "encoding.feather")
+df[["group", "position", "offset", "bits", "value_shift"]].reset_index().to_feather(
+    out_dir / "encoding.feather"
+)
+
+# save encoding JSON for frontend
+for group in sorted(df.group.unique()):
+    with open(out_dir / f"indicators_{group}.json", "w") as out:
+        out.write(
+            df.loc[df.group == group, ["position", "offset", "bits", "value_shift"]]
+            .rename(columns={"value_shift": "valueShift"})
+            .reset_index()
+            .to_json(orient="records")
+        )
+
 
 group_bits = df.groupby("group").bits.sum()
 
@@ -199,13 +238,15 @@ for i in sorted(df.group.unique()):
 
             # shift values up if needed
             if row.value_shift:
-                data[data!=row.nodata] += 1
+                data[data != row.nodata] += 1
 
             # set nodata pixels to 0 (combined with existing 0 values that are below row.min_value)
-            data[data==row.nodata] = 0
+            data[data == row.nodata] = 0
 
             if data.max() > 0:
-                out[ix] = np.bitwise_or(np.left_shift(data.astype('uint32'), row.offset), out[ix])
+                out[ix] = np.bitwise_or(
+                    np.left_shift(data.astype("uint32"), row.offset), out[ix]
+                )
 
     # determine the window where data are available, and write out a smaller output
     print("Calculating data window...")
