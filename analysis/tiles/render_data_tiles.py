@@ -4,20 +4,28 @@ import json
 
 import pandas as pd
 from tilecutter.mbtiles import tif_to_mbtiles
+from tilecutter.png import to_smallest_png
 
 
 src_dir = Path("data/for_tiles")
 out_dir = Path("tiles")
 
 
-tile_size = 128
-min_zoom = 7
-max_zoom = 14  # NOTE: z14 takes 2+ hours per tileset
+# tile_size = 128
+tile_size = 512
+min_zoom = 4
+max_zoom = 10
+# max_zoom = 14  # NOTE: z14 takes 2+ hours per tileset
+
+# IMPORTANT: need to force tile renderer to always use either paletted RGB or
+# full RGB; cannot use grayscale (L) or it won't be decoded properly
+renderer = lambda arr: to_smallest_png(arr, image_type="P" if arr.max() < 255 else "RGB")
 
 
 df = pd.read_feather(src_dir / "encoding.feather")
 
 start = time()
+
 
 for group in sorted(df.group.unique()):
     print(f"Processing group {group}...")
@@ -28,10 +36,7 @@ for group in sorted(df.group.unique()):
 
     rows = df.loc[df.group == group]
 
-    encoding = {
-        "bits": rows.bits.sum().item() + len(rows),
-        "layers": rows[["id", "bits"]].to_dict(orient="records"),
-    }
+    encoding = rows[["id", "offset", "bits", "value_shift"]].to_dict(orient="records")
 
     tif_to_mbtiles(
         filename,
@@ -39,6 +44,7 @@ for group in sorted(df.group.unique()):
         min_zoom=min_zoom,
         max_zoom=max_zoom,
         tile_size=tile_size,
+        tile_renderer=renderer,
         metadata={
             "name": "South Atlantic Conservation Blueprint 2021 Indicators",
             "description": "Indicators used in the South Atlantic Conservation Blueprint 2021",
