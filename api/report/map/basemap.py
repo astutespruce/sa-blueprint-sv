@@ -4,20 +4,22 @@ from PIL import Image
 from pymgl import Map
 
 
-STYLE = json.dumps({
-    "version": 8,
-    "sources": {
-        "basemap": {
-            "type": "raster",
-            "tiles": [
-                "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
-            ],
-            "tileSize": 256,
-        }
-    },
-    "layers": [{"id": "basemap", "type": "raster", "source": "basemap"}],
-})
-
+STYLE = json.dumps(
+    {
+        "version": 8,
+        "sources": {
+            "basemap": {
+                "type": "raster",
+                "tiles": [
+                    "https://services.arcgisonline.com/arcgis/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+                ],
+                "tileSize": 256,
+                "maxzoom": 16,
+            }
+        },
+        "layers": [{"id": "basemap", "type": "raster", "source": "basemap"}],
+    }
+)
 
 
 def get_basemap_image(center, zoom, width, height):
