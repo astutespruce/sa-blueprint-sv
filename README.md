@@ -2,13 +2,25 @@
 
 ## Development environment
 
-Install python dependencies using `pipenv` and JS dependencies (in `/ui`) using NPM.
+Python dependencies are managed using `poetry`. First, install poetry, then
+`poetry install` to install most of them.
 
-### Installation issues
+`pymgl` requires extra steps on Arm64 architectures because no wheel is yet available.
+It is currently built locally in a sibling folder and added as a wheel here.
 
-Weasyprint is used to generate PDF files. It depends on `cairocffi` which sometimes does not install correctly.
+### Other dependencies
 
-Run `pip install --no-cache-dir cairocffi` to correctly install it.
+On MacOS, install other dependencies:
+
+- `brew install gdal`
+- `brew install pango`
+
+For Macos M1 (Arm64), you also need to setup a symlink for one of the libraries
+to be found:
+
+```
+sudo ln -s /opt/homebrew/opt/fontconfig/lib/libfontconfig.1.dylib /usr/local/lib/fontconfig-1
+```
 
 ### Starting background jobs and API server
 
