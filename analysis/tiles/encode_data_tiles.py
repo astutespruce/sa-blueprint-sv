@@ -12,7 +12,6 @@ import pygeos as pg
 
 from analysis.constants import INDICATORS, CORRIDORS
 from analysis.lib.io import write_raster
-from analysis.lib.raster import add_overviews
 
 data_dir = Path("data/inputs")
 src_dir = data_dir / "indicators"
@@ -258,7 +257,8 @@ for i in sorted(df.group.unique()):
     outfilename = out_dir / f"indicators_{i}.tif"
     write_raster(outfilename, out, transform=transform, crs=blueprint.crs, nodata=0)
 
-    add_overviews(outfilename)
+    # NOTE: we intentionally don't create overviews because this messes up the
+    # data when converting to WGS84
 
 
 #### Notes

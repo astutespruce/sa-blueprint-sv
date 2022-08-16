@@ -26,6 +26,9 @@ def write_raster(filename, data, transform, crs, nodata, **kwargs):
         "crs": crs,
         "transform": transform,
         "compress": "lzw",
+        "tiled": True,
+        "blockxsize": 256,
+        "blockysize": 256,
     }
 
     if kwargs:
@@ -37,4 +40,3 @@ def write_raster(filename, data, transform, crs, nodata, **kwargs):
         else:
             # rework from row, col, z to z,row, col
             out.write(np.rollaxis(data, axis=-1))
-
