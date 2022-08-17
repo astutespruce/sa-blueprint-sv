@@ -11,7 +11,11 @@
     {% set table = namespace(counter=1) %}
     {% include "blocks/cover.html" %}
 
+    {% include "blocks/blank_page.html" %}
+
     {% include "blocks/about.html" %}
+
+    {% include "blocks/blank_page.html" %}
 
     {% include "blocks/blueprint.html" %}
 
@@ -22,6 +26,8 @@
     {% endif %}
 
     {% include "blocks/indicator_summary.html" %}
+
+    {% include "blocks/blank_page.html" %}
 
     {% include "blocks/ecosystems.html" %}
 

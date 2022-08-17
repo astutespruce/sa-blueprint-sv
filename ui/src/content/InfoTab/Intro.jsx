@@ -1,11 +1,31 @@
 import React from 'react'
-import { Box } from 'theme-ui'
+import { Alert, Box, Paragraph } from 'theme-ui'
 
 import { OutboundLink } from 'components/link'
 
 const Intro = () => (
   <>
     <Box as="section">
+      <Alert sx={{ bg: 'blue.1', fontWeight: 'normal', py: '0.5em' }}>
+        <Paragraph sx={{ fontSize: 1 }}>
+          <b>Head&apos;s up!</b>
+          <br />
+          The South Atlantic Conservation Blueprint is being replaced by the
+          Southeast Conservation Blueprint 2022 version, which will be available
+          in Fall 2022. The{' '}
+          <OutboundLink to="https://blueprint.geoplatform.gov/southeast/">
+            beta version of the Southeast Conservation Blueprint viewer (2021
+            version)
+          </OutboundLink>{' '}
+          will be substantially expanded in functionality as part of the
+          upcoming Southeast Conservation Blueprint 2022 release, and will
+          replace the South Atlantic Conservation Blueprint Simple Viewer to
+          provide even more functionality across a broader area.
+          <br />
+          Stay tuned!
+        </Paragraph>
+      </Alert>
+
       <p>
         The South Atlantic Conservation Blueprint is a living spatial plan to
         conserve natural and cultural resources for future generations. It
