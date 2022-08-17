@@ -11,10 +11,10 @@ const Intro = () => (
           <b>Head&apos;s up!</b>
           <br />
           This fall, the 2022 version of the Southeast Conservation Blueprint
-          will replace the South Atlantic Blueprint. As part of this update, the
+          will replace the South Atlantic Blueprint. As part of this update, the{' '}
           <OutboundLink to="https://blueprint.geoplatform.gov/southeast/">
             Southeast Blueprint Explorer (currently in beta)
-          </OutboundLink>
+          </OutboundLink>{' '}
           will expand its functionality and replace the South Atlantic Blueprint
           Simple Viewer to provide more features across a broader area. Stay
           tuned!
