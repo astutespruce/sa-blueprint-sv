@@ -10,19 +10,14 @@ const Intro = () => (
         <Paragraph sx={{ fontSize: 1 }}>
           <b>Head&apos;s up!</b>
           <br />
-          The South Atlantic Conservation Blueprint is being replaced by the
-          Southeast Conservation Blueprint 2022 version, which will be available
-          in Fall 2022. The{' '}
+          This fall, the 2022 version of the Southeast Conservation Blueprint
+          will replace the South Atlantic Blueprint. As part of this update, the
           <OutboundLink to="https://blueprint.geoplatform.gov/southeast/">
-            beta version of the Southeast Conservation Blueprint viewer (2021
-            version)
-          </OutboundLink>{' '}
-          will be substantially expanded in functionality as part of the
-          upcoming Southeast Conservation Blueprint 2022 release, and will
-          replace the South Atlantic Conservation Blueprint Simple Viewer to
-          provide even more functionality across a broader area.
-          <br />
-          Stay tuned!
+            Southeast Blueprint Explorer (currently in beta)
+          </OutboundLink>
+          will expand its functionality and replace the South Atlantic Blueprint
+          Simple Viewer to provide more features across a broader area. Stay
+          tuned!
         </Paragraph>
       </Alert>
 
