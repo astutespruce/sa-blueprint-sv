@@ -1,5 +1,14 @@
 # South Atlantic Conservation Blueprint Custom Reporting
 
+## ARCHIVED
+
+This project has been superseded by the
+[Southeast Blueprint Explorer](https://blueprint.geoplatform.gov/southeast/),
+which uses a similar overall approach to visualizing landscape-level priorities
+but for a much larger region.
+
+Repository is located at: https://github.com/astutespruce/secas-blueprint
+
 ## Development environment
 
 Python dependencies are managed using `poetry`. First, install poetry, then
@@ -47,3 +56,8 @@ uvicorn api.api:app --reload --port 5000
 ## Deployment
 
 Deployment configuration is managed in the [secas-docker](https://github.com/astutespruce/secas-docker) repository.
+
+## Credits
+
+This project is developed under a grant from the U.S. Fish and Wildlife Service
+to support the [Southeast Conservation Adaptation Strategy](https://secassoutheast.org/).
